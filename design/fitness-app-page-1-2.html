@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness App</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #16161f;
+    --card2: #1e1e2a;
+    --border: #2a2a38;
+    --orange: #f5a623;
+    --orange-dim: rgba(245,166,35,0.15);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.18);
+    --green-light: rgba(34,197,94,0.35);
+    --blue: #3b82f6;
+    --pink: #ec4899;
+    --red: #ef4444;
+    --text: #f0f0f8;
+    --muted: #6b6b80;
+    --sub: #9999aa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #080810;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 28px;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+
+  /* PHONE FRAME */
+  .phone {
+    width: 360px;
+    min-height: 780px;
+    background: var(--bg);
+    border-radius: 40px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 0 0 1px #1a1a28, 0 40px 80px rgba(0,0,0,0.7);
+    animation: fadeUp 0.6s ease both;
+  }
+  .phone:nth-child(2) { animation-delay: 0.12s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .phone-content {
+    flex: 1;
+    padding: 28px 20px 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* PAGE TITLE */
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+
+  /* SESSION CARD */
+  .session-card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.18s, border-color 0.18s;
+    position: relative;
+    overflow: hidden;
+  }
+  .session-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--orange);
+    border-radius: 3px 0 0 3px;
+  }
+  .session-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--orange);
+  }
+
+  .session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .session-date {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 0.2px;
+  }
+
+  .tag {
+    background: var(--orange-dim);
+    color: var(--orange);
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(245,166,35,0.3);
+  }
+
+  .session-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stat-item:last-child { text-align: right; }
+  .stat-item:last-child .stat-value { color: var(--text); }
+
+  .stat-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--sub);
+  }
+  .stat-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    padding: 16px 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+
+  .nav-link {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s;
+    letter-spacing: -0.2px;
+  }
+  .nav-link.active {
+    color: var(--orange);
+  }
+  .nav-link:hover { color: var(--text); }
+
+  .fab {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 300;
+    color: #000;
+    box-shadow: 0 4px 20px rgba(245,166,35,0.4);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    line-height: 1;
+    padding-bottom: 2px;
+  }
+  .fab:hover {
+    transform: scale(1.07);
+    box-shadow: 0 6px 28px rgba(245,166,35,0.55);
+  }
+
+  /* ---- STATS PAGE ---- */
+
+  /* Month selector */
+  .month-selector {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+  }
+  .month-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .month-arrow {
+    font-size: 10px;
+    color: var(--orange);
+  }
+
+  /* Heatmap card */
+  .stats-card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 18px;
+    border: 1px solid var(--border);
+  }
+
+  .stats-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+    letter-spacing: -0.2px;
+  }
+
+  .heatmap {
+    display: grid;
+    grid-template-columns: 28px repeat(7, 1fr);
+    gap: 6px;
+  }
+
+  .hm-header {
+    display: contents;
+  }
+  .hm-day-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.5px;
+    padding-bottom: 2px;
+  }
+  .hm-week-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    letter-spacing: 0.3px;
+  }
+
+  .hm-cell {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: var(--card2);
+    transition: transform 0.12s;
+    cursor: pointer;
+  }
+  .hm-cell:hover { transform: scale(1.15); }
+  .hm-cell.done { background: var(--green); box-shadow: 0 2px 8px rgba(34,197,94,0.3); }
+  .hm-cell.partial { background: var(--green-light); }
+  .hm-cell.dim { background: rgba(34,197,94,0.08); }
+  .hm-cell.empty { background: #1e1e2a; }
+
+  /* Pie chart */
+  .pie-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0;
+    gap: 20px;
+  }
+
+  .pie-svg {
+    width: 150px;
+    height: 150px;
+  }
+
+  .pie-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .legend-text {
+    font-size: 12px;
+    color: var(--sub);
+    font-weight: 500;
+  }
+  .legend-pct {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    margin-left: auto;
+  }
+
+  /* Summary stats */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+  .summary-stat { display: flex; flex-direction: column; gap: 3px; }
+  .summary-stat:last-child { text-align: right; }
+  .summary-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .summary-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SESSIONS PAGE ===== -->
+<div class="phone">
+  <div class="phone-content">
+    <div class="page-title">Sessions</div>
+
+    <!-- Session 1 -->
+    <div class="session-card">
+      <div class="session-header">
+        <span class="session-date">Jeu 26 Mars 2026</span>
+        <span class="tag">Biceps</span>
+      </div>
+      <div class="session-stats">
+        <div class="stat-item">
+          <span class="stat-value" style="color:var(--orange)">1,5 t</span>
+          <span class="stat-label">Poids</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" style="color:var(--blue)">6</span>
+          <span class="stat-label">Exercices</span>
+        </div>
+        <div class="stat-item" style="text-align:right">
+          <span class="stat-value" style="color:var(--text)">01:23</span>
+          <span class="stat-label">Temps</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session 2 -->
+    <div class="session-card">
+      <div class="session-header">
+        <span class="session-date">Jeu 26 Mars 2026</span>
+        <span class="tag">Biceps</span>
+      </div>
+      <div class="session-stats">
+        <div class="stat-item">
+          <span class="stat-value" style="color:var(--orange)">1,5 t</span>
+          <span class="stat-label">Poids</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" style="color:var(--blue)">6</span>
+          <span class="stat-label">Exercices</span>
+        </div>
+        <div class="stat-item" style="text-align:right">
+          <span class="stat-value" style="color:var(--text)">01:23</span>
+          <span class="stat-label">Temps</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <span class="nav-link active">Sessions</span>
+    <div class="fab">+</div>
+    <span class="nav-link">Stats</span>
+  </div>
+</div>
+
+<!-- ===== STATS PAGE ===== -->
+<div class="phone">
+  <div class="phone-content">
+
+    <!-- Month selector -->
+    <div class="month-selector">
+      <span class="month-label">March</span>
+      <span class="month-arrow">▼</span>
+    </div>
+
+    <!-- Heatmap -->
+    <div class="stats-card">
+      <div class="stats-card-title">Training recurrences</div>
+      <div class="heatmap">
+        <!-- Header row -->
+        <div></div>
+        <div class="hm-day-label">M</div>
+        <div class="hm-day-label">T</div>
+        <div class="hm-day-label">W</div>
+        <div class="hm-day-label">T</div>
+        <div class="hm-day-label">F</div>
+        <div class="hm-day-label">S</div>
+        <div class="hm-day-label">S</div>
+
+        <!-- S1 -->
+        <div class="hm-week-label">S1</div>
+        <div class="hm-cell partial"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell done"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell done"></div>
+        <div class="hm-cell empty"></div>
+
+        <!-- S2 -->
+        <div class="hm-week-label">S2</div>
+        <div class="hm-cell done"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell done"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell empty"></div>
+
+        <!-- S3 -->
+        <div class="hm-week-label">S3</div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell done"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell done"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell done"></div>
+        <div class="hm-cell empty"></div>
+
+        <!-- S4 -->
+        <div class="hm-week-label">S4</div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell done"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell done"></div>
+        <div class="hm-cell empty"></div>
+
+        <!-- S5 -->
+        <div class="hm-week-label">S5</div>
+        <div class="hm-cell empty"></div>
+        <div class="hm-cell dim"></div>
+        <div class="hm-cell dim"></div>
+        <div class="hm-cell partial"></div>
+        <div class="hm-cell dim"></div>
+        <div class="hm-cell dim"></div>
+        <div class="hm-cell dim"></div>
+      </div>
+    </div>
+
+    <!-- Worked muscles -->
+    <div class="stats-card">
+      <div class="stats-card-title">Worked muscles</div>
+      <div class="pie-container">
+        <svg class="pie-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <!-- Donut chart using proper arc paths -->
+          <!-- Biceps 55% → 197.9deg -->
+          <path d="M80,80 L80,18 A62,62 0 1,1 26.2,111 Z" fill="#ef4444" opacity="0.95"/>
+          <!-- Triceps 25% → 90deg -->
+          <path d="M80,80 L26.2,111 A62,62 0 0,1 36.5,32.8 Z" fill="#f5a623" opacity="0.95"/>
+          <!-- Dos 20% → 72deg -->
+          <path d="M80,80 L36.5,32.8 A62,62 0 0,1 80,18 Z" fill="#3b82f6" opacity="0.95"/>
+          <!-- Center hole -->
+          <circle cx="80" cy="80" r="40" fill="var(--card)"/>
+          <text x="80" y="76" text-anchor="middle" fill="var(--text)" font-family="IBM Plex Mono" font-size="16" font-weight="600">8</text>
+          <text x="80" y="91" text-anchor="middle" fill="var(--muted)" font-family="DM Sans" font-size="9" font-weight="500" letter-spacing="1">sessions</text>
+        </svg>
+        <div class="pie-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#ef4444"></div>
+            <span class="legend-text">Biceps</span>
+            <span class="legend-pct">55%</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#f5a623"></div>
+            <span class="legend-text">Triceps</span>
+            <span class="legend-pct">25%</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#3b82f6"></div>
+            <span class="legend-text">Dos</span>
+            <span class="legend-pct">20%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="stats-card">
+      <div class="stats-card-title">Résumé du mois</div>
+      <div class="divider"></div>
+      <div style="height:12px"></div>
+      <div class="summary-grid">
+        <div class="summary-stat">
+          <span class="summary-value" style="color:var(--orange)">7,5 t</span>
+          <span class="summary-label">Poids</span>
+        </div>
+        <div class="summary-stat" style="text-align:center">
+          <span class="summary-value" style="color:var(--green);text-align:center">8</span>
+          <span class="summary-label">Sessions</span>
+        </div>
+        <div class="summary-stat" style="text-align:right">
+          <span class="summary-value">07:43</span>
+          <span class="summary-label">Temps</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <span class="nav-link">Sessions</span>
+    <div class="fab">+</div>
+    <span class="nav-link active">Stats</span>
+  </div>
+</div>
+
+</body>
+</html>
