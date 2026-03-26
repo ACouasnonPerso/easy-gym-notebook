@@ -1,34 +1,35 @@
-.drum-wrapper {
-  position: relative;
-  height: 120px;
-  overflow: hidden;
-}
-.drum-scroll {
-  height: 120px;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.drum-scroll::-webkit-scrollbar {
-  display: none;
-}
-.drum-item {
-  height: 40px;
-  scroll-snap-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 15px;
-  opacity: 0.4;
-  transition: transform 0.15s, opacity 0.15s;
-}
-.drum-item.phantom {
-  visibility: hidden;
-}
-.drum-item.active {
-  opacity: 1;
-  font-weight: 700;
-  transform: scale(1.2);
-}
+
+    .drum-wrapper {
+      position: relative;
+      height: 120px;
+      overflow: hidden;
+    }
+    .drum-scroll {
+      height: 120px;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .drum-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .drum-item {
+      height: 40px;
+      scroll-snap-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 15px;
+      opacity: 0.4;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .drum-item.phantom {
+      visibility: hidden;
+    }
+    .drum-item.active {
+      opacity: 1;
+      font-weight: 700;
+      transform: scale(1.2);
+    }

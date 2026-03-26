@@ -22,6 +22,8 @@
     "add": "Add",
     "delete": "Delete",
     "duration": "Duration",
+    "distance": "Distance",
+    "distanceKm": "Distance (km)",
     "hours": "Hours",
     "minutes": "Minutes",
     "seconds": "Seconds",
@@ -37,14 +39,20 @@
     "noData": "No data",
     "sessions": "Sessions",
     "max": "Max",
-    "merge": "Merge"
+    "merge": "Merge",
+    "cardio": "Cardio",
+    "weekShort": "W",
+    "unitMin": "min",
+    "unitKg": "kg",
+    "unitSec": "s"
   },
   "sessionList": {
     "title": "Sessions",
     "empty": "No session yet. Tap + to start.",
     "deleteConfirm": "Delete this session?",
     "duplicate": "Duplicate",
-    "delete": "Delete"
+    "delete": "Delete",
+    "tip": "Long press a session to duplicate it"
   },
   "exercise": {
     "new": "New exercise",
@@ -53,14 +61,17 @@
     "page": "Exercise page",
     "empty": "No exercise.",
     "addHint": "Add one!",
-    "deleteConfirm": "Delete this exercise?"
+    "deleteConfirm": "Delete this exercise?",
+    "validateAria": "Validate exercise",
+    "cancelAria": "Cancel exercise"
   },
   "session": {
     "endConfirm": "End the session?"
   },
   "statsExercise": {
     "empty": "No data for this exercise",
-    "volumeFormula": "= Weight x Reps x Sets"
+    "volumeFormula": "= Weight x Reps x Sets",
+    "distanceKm": "km"
   },
   "statsGlobal": {
     "trainingRecurrences": "Training recurrences",
@@ -73,7 +84,8 @@
     "confirmMergeBody": "Rename {{count}} exercise(s) to \"{{name}}\"? This action is irreversible.",
     "currentYear": "Current year",
     "total": "Total",
-    "noDataMonth": "No data this month"
+    "noDataMonth": "No data this month",
+    "trainingTime": "Training time"
   },
   "chrono": {
     "startTraining": "START TRAINING",

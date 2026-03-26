@@ -54,4 +54,13 @@ export class SessionService {
     this.currentSession.set(updated);
     await this.sessionRepo.save(updated);
   }
+
+  removeExerciseFromSessions(exerciseId: string): void {
+    this._sessions.update(sessions =>
+      sessions.map(session => ({
+        ...session,
+        exercises: session.exercises.filter(e => e.id !== exerciseId),
+      }))
+    );
+  }
 }

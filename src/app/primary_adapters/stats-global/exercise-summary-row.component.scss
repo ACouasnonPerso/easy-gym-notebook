@@ -1,49 +1,79 @@
-.history-card {
-  background: var(--card2);
-  border-radius: 12px;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: border-color 0.15s;
-  position: relative;
-  overflow: hidden;
-}
-.history-card::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--blue);
-  border-radius: 3px 0 0 3px;
-}
-.history-card:hover { border-color: var(--blue); }
-.history-header {
-  margin-bottom: 8px;
-}
-.exercise-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-}
-.history-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-}
-.h-stat { display: flex; flex-direction: column; gap: 2px; }
-.h-stat.right { text-align: right; }
-.h-stat-value {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-}
-.h-stat-value.orange { color: var(--orange); }
-.h-stat-label {
-  font-size: 8px;
-  font-weight: 600;
-  color: var(--muted);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
+    .history-card {
+      background: var(--card2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+    .history-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--blue);
+      border-radius: 3px 0 0 3px;
+    }
+    .history-card:hover { border-color: var(--blue); }
+    .history-header {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .exercise-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .tag-list {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 4px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .muscle-tag {
+      font-size: 8px;
+      font-weight: 700;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 20px;
+    }
+    .cardio-tag {
+      background: rgba(52,152,219,0.15);
+      color: #3498db;
+      border: 1px solid rgba(52,152,219,0.3);
+    }
+    .history-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+    .h-stat { display: flex; flex-direction: column; gap: 2px; }
+    .h-stat.right { text-align: right; }
+    .h-stat-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .h-stat-value.orange { color: var(--orange); }
+    .h-stat-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }

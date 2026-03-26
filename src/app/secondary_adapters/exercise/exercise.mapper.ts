@@ -15,6 +15,9 @@ export class ExerciseMapper {
       reps: raw.reps,
       breakDurationSeconds: raw.breakDurationSeconds,
       status: raw.status,
+      isCardio: raw.isCardio ?? false,
+      durationSeconds: raw.durationSeconds ?? 0,
+      distanceKm: raw.distanceKm ?? null,
     };
   }
 
@@ -29,6 +32,9 @@ export class ExerciseMapper {
       reps: exercise.reps,
       breakDurationSeconds: exercise.breakDurationSeconds,
       status: exercise.status,
+      isCardio: exercise.isCardio,
+      durationSeconds: exercise.durationSeconds,
+      distanceKm: exercise.distanceKm,
     };
   }
 }

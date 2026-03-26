@@ -1,3 +1,4 @@
+
 <div class="page">
 
   <!-- Month selector -->
@@ -22,135 +23,38 @@
 
   <!-- Heatmap -->
   @if (showHeatmap()) {
-    <div class="stats-card">
-      <div class="stats-card-title">{{ 'statsGlobal.trainingRecurrences' | translate }}</div>
-      <app-heatmap [data]="getGlobalStatsUseCase.heatmapData()" />
-    </div>
+    <app-stats-heatmap-card [data]="getGlobalStatsUseCase.heatmapData()" />
   }
 
   <!-- Worked muscles -->
-  <div class="stats-card">
-    <div class="stats-card-title">{{ 'statsGlobal.workedMuscles' | translate }}</div>
-    <app-donut-chart [distribution]="getGlobalStatsUseCase.muscleGroupDistribution()" />
-  </div>
+  <app-stats-muscle-donut-card [distribution]="getGlobalStatsUseCase.muscleGroupDistribution()" />
 
-  <!-- Résumé de la semaine -->
-  @if (isCurrentMonth()) {
-    <div class="stats-card">
-      <div class="stats-card-title">{{ 'statsGlobal.weekSummary' | translate }}</div>
-      <div class="divider"></div>
-      <div style="height:12px"></div>
-      <div class="summary-grid">
-        <div class="summary-stat">
-          <span class="summary-value" style="color:var(--orange)">{{ formatWeight(getGlobalStatsUseCase.weekSummary().totalWeightKg) }}</span>
-          <span class="summary-label">{{ 'common.weight' | translate }}</span>
-        </div>
-        <div class="summary-stat" style="text-align:center">
-          <span class="summary-value" style="color:var(--green)">{{ getGlobalStatsUseCase.weekSummary().sessionCount }}</span>
-          <span class="summary-label">{{ 'common.sessions' | translate }}</span>
-        </div>
-        <div class="summary-stat" style="text-align:right">
-          <span class="summary-value">{{ formatDuration(getGlobalStatsUseCase.weekSummary().totalDurationSeconds) }}</span>
-          <span class="summary-label">{{ 'common.time' | translate }}</span>
-        </div>
-      </div>
-    </div>
+  <!-- Week summary -->
+  @if (isCurrentMonth() && !weekSameAsMonth()) {
+    <app-stats-summary-card
+      [title]="'statsGlobal.weekSummary' | translate"
+      [summary]="getGlobalStatsUseCase.weekSummary()"
+    />
   }
 
-  <!-- Résumé du mois -->
-  <div class="stats-card">
-    <div class="stats-card-title">{{ 'statsGlobal.monthSummary' | translate }}</div>
-    <div class="divider"></div>
-    <div style="height:12px"></div>
-    <div class="summary-grid">
-      <div class="summary-stat">
-        <span class="summary-value" style="color:var(--orange)">{{ formatWeight(getGlobalStatsUseCase.monthSummary().totalWeightKg) }}</span>
-        <span class="summary-label">{{ 'common.weight' | translate }}</span>
-      </div>
-      <div class="summary-stat" style="text-align:center">
-        <span class="summary-value" style="color:var(--green)">{{ getGlobalStatsUseCase.monthSummary().sessionCount }}</span>
-        <span class="summary-label">{{ 'common.sessions' | translate }}</span>
-      </div>
-      <div class="summary-stat" style="text-align:right">
-        <span class="summary-value">{{ formatDuration(getGlobalStatsUseCase.monthSummary().totalDurationSeconds) }}</span>
-        <span class="summary-label">{{ 'common.time' | translate }}</span>
-      </div>
-    </div>
-  </div>
+  <!-- Month summary -->
+  <app-stats-summary-card
+    [title]="'statsGlobal.monthSummary' | translate"
+    [summary]="getGlobalStatsUseCase.monthSummary()"
+  />
 
-  <!-- Exercices -->
+  <!-- Training time bar chart -->
+  @if (getGlobalStatsUseCase.sessionDurationsInMonth().length > 0) {
+    <app-stats-training-time-card [sessions]="getGlobalStatsUseCase.sessionDurationsInMonth()" />
+  }
+
+  <!-- Exercise list -->
   @if (getGlobalStatsUseCase.exerciseSummaries().length > 0) {
-    <div class="stats-card">
-      <div class="exercise-card-header">
-        <div class="stats-card-title" style="margin-bottom:0">{{ 'common.exercises' | translate }}</div>
-        <button
-          data-testid="merge-btn"
-          class="merge-btn"
-          [class.active]="isMergeMode()"
-          (click)="toggleMergeMode()"
-        >{{ 'common.merge' | translate }}</button>
-      </div>
-
-      @if (isMergeMode()) {
-        <div class="merge-controls">
-          <input
-            data-testid="merge-name-input"
-            class="merge-name-input"
-            type="text"
-            [placeholder]="'statsGlobal.newNamePlaceholder' | translate"
-            [value]="mergeNewName()"
-            (input)="mergeNewName.set($any($event.target).value)"
-          />
-          <button
-            data-testid="merge-submit-btn"
-            class="merge-submit-btn"
-            [disabled]="mergeSelectedNames().size < 2 || !mergeNewName().trim()"
-            (click)="onMergeSubmit()"
-          >{{ 'statsGlobal.mergeCount' | translate:{ count: mergeSelectedNames().size } }}</button>
-        </div>
-      }
-
-      <div class="exercise-list" [style.margin-top]="isMergeMode() ? '12px' : '0'">
-        @for (exercise of getGlobalStatsUseCase.exerciseSummaries(); track exercise.name) {
-          @if (isMergeMode()) {
-            <div
-              class="exercise-merge-row"
-              [class.selected]="mergeSelectedNames().has(exercise.name)"
-              (click)="toggleMergeSelection(exercise.name)"
-            >
-              <span data-testid="exercise-merge-checkbox" class="merge-checkbox" [class.checked]="mergeSelectedNames().has(exercise.name)">
-                @if (mergeSelectedNames().has(exercise.name)) { ✓ }
-              </span>
-              <span class="merge-exercise-name">{{ exercise.name }}</span>
-            </div>
-          } @else {
-            <app-exercise-summary-row
-              [exerciseName]="exercise.name"
-              [maxWeightKg]="exercise.maxWeightKg"
-              [totalVolumeKg]="exercise.totalVolumeKg"
-              [occurrenceCount]="exercise.occurrenceCount"
-              (selected)="navigateToExerciseStats($event)"
-            />
-          }
-        }
-      </div>
-    </div>
-  }
-
-  <!-- Confirmation popup -->
-  @if (showMergeConfirm()) {
-    <div class="popup-backdrop" (click)="showMergeConfirm.set(false)">
-      <div data-testid="merge-confirm-popup" class="popup" (click)="$event.stopPropagation()">
-        <div class="popup-title">{{ 'statsGlobal.confirmMergeTitle' | translate }}</div>
-        <p class="popup-body">
-          {{ 'statsGlobal.confirmMergeBody' | translate:{ count: mergeSelectedNames().size, name: mergeNewName() } }}
-        </p>
-        <div class="popup-actions">
-          <button class="popup-cancel-btn" (click)="showMergeConfirm.set(false)">{{ 'common.cancel' | translate }}</button>
-          <button data-testid="merge-confirm-ok-btn" class="popup-ok-btn" (click)="onMergeConfirm()">{{ 'common.confirm' | translate }}</button>
-        </div>
-      </div>
-    </div>
+    <app-stats-exercise-list-card
+      [exercises]="getGlobalStatsUseCase.exerciseSummaries()"
+      (exerciseSelected)="navigateToExerciseStats($event)"
+      (mergeSubmit)="onMergeSubmit($event)"
+    />
   }
 
 </div>

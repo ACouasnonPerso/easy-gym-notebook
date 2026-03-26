@@ -9,11 +9,18 @@ export class UpdateExerciseUseCase {
   private readonly muscleDetector = inject(MuscleGroupDetectorService);
 
   execute(exerciseId: string, changes: Partial<Exercise>): void {
-    if (changes.name !== undefined) {
+    const currentExercise = this.exerciseService.exercises().find(e => e.id === exerciseId);
+    const isCardio = changes.isCardio ?? currentExercise?.isCardio ?? false;
+
+    if (changes.name !== undefined && !isCardio) {
       const name = changes.name.slice(0, 60);
       const { muscleGroups } = this.muscleDetector.detect(name);
       changes = { ...changes, name, muscleGroup: muscleGroups[0] ?? null, muscleGroups };
+    } else if (changes.name !== undefined && isCardio) {
+      const name = changes.name.slice(0, 60);
+      changes = { ...changes, name, muscleGroup: null, muscleGroups: [] };
     }
+
     this.exerciseService.update(exerciseId, changes);
   }
 }

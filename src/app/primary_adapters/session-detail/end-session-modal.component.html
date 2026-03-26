@@ -1,0 +1,9 @@
+<div class="overlay" (click)="cancelled.emit()">
+  <div class="form-card" (click)="$event.stopPropagation()">
+    <h2 class="form-title">{{ 'session.endConfirm' | translate }}</h2>
+    <div class="actions">
+      <button class="btn-cancel" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
+      <button class="btn-primary" (click)="confirmed.emit()">{{ 'common.end' | translate }}</button>
+    </div>
+  </div>
+</div>

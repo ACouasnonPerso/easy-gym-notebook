@@ -82,10 +82,37 @@ const ALL_SYNONYMS: SynonymEntry[] = SYNONYMS_BY_GROUP
   .flatMap(({ groups, terms }) => terms.map(term => ({ term, groups })))
   .sort((a, b) => b.term.length - a.term.length);
 
+const CARDIO_KEYWORDS: string[] = [
+  'cardio',
+  'course', 'run', 'running',
+  'vélo', 'velo', 'cycling', 'bike',
+  'natation', 'swim', 'swimming',
+  'marche', 'walk', 'walking',
+  'elliptique', 'elliptical',
+  'rameur', 'rowing',
+];
+
+function matchesWholeWord(text: string, keyword: string): boolean {
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(^|\\s)${escaped}(\\s|$)`).test(text);
+}
+
 @Injectable({ providedIn: 'root' })
 export class MuscleGroupDetectorService {
-  detect(name: string): { muscleGroups: MuscleGroup[]; cleanedName: string } {
-    let normalizedRemaining = normalize(name);
+  detect(name: string): { muscleGroups: MuscleGroup[]; cleanedName: string; isCardio: boolean } {
+    const normalizedName = normalize(name);
+
+    const isCardio = CARDIO_KEYWORDS.some(kw => matchesWholeWord(normalizedName, normalize(kw)));
+
+    if (isCardio) {
+      return {
+        muscleGroups: [],
+        cleanedName: name,
+        isCardio: true,
+      };
+    }
+
+    let normalizedRemaining = normalizedName;
     let cleanedName = name;
     const groupsFound = new Set<MuscleGroup>();
 
@@ -101,6 +128,7 @@ export class MuscleGroupDetectorService {
     return {
       muscleGroups: [...groupsFound],
       cleanedName: cleanedName.replace(/\s+/g, ' ').trim() || name,
+      isCardio: false,
     };
   }
 }

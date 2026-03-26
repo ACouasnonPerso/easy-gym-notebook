@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { ExerciseChronoUseCase } from '../../primary_ports/exercise-chrono/exercise-chrono.usecase';
 import { EditDurationPopupComponent } from '../session-detail/edit-duration-popup.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { HapticService } from '../../core_logic/shared/haptic.service';
 
 @Component({
   selector: 'app-exercise-chrono',
@@ -18,6 +19,7 @@ export class ExerciseChronoComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   protected readonly location = inject(Location);
   private readonly translate = inject(TranslateService);
+  protected readonly haptic = inject(HapticService);
 
   readonly _breakDuration = signal(120);
   readonly hasExercise = signal(false);

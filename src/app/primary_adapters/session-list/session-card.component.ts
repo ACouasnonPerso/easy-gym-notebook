@@ -10,122 +10,8 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DatePipe, LongPressDirective, NgStyle, TranslateModule],
-  template: `
-    <div class="session-card" appLongPress (longPress)="longPress.emit()">
-      <div class="session-header">
-        <span class="session-date">{{ session().date | date:'EEE d MMM yyyy' }}</span>
-        <div class="tag-list">
-          @for (muscle of visibleTags(); track muscle) {
-            <span class="muscle-tag" [ngStyle]="tagStyle(muscle)">{{ muscle }}</span>
-          }
-          @if (extraTagCount() > 0) {
-            <span class="muscle-tag extra-tag">+{{ extraTagCount() }}</span>
-          }
-        </div>
-      </div>
-      <div class="session-stats">
-        <div class="stat-item">
-          <span class="stat-value orange">{{ totalWeightFormatted() }}</span>
-          <span class="stat-label">{{ 'common.weight' | translate }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value blue">{{ exerciseCount() }}</span>
-          <span class="stat-label">{{ 'common.exercises' | translate }}</span>
-        </div>
-        <div class="stat-item right">
-          <span class="stat-value">{{ duration() }}</span>
-          <span class="stat-label">{{ 'common.time' | translate }}</span>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .session-card {
-      background: var(--card);
-      border-radius: 18px;
-      padding: 16px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: transform 0.18s, border-color 0.18s;
-      position: relative;
-      overflow: hidden;
-      user-select: none;
-    }
-    .session-card::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: var(--orange);
-      border-radius: 3px 0 0 3px;
-    }
-    .session-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--orange);
-    }
-    .session-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-      gap: 6px;
-    }
-    .session-date {
-      font-family: 'Syne', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--orange);
-      letter-spacing: 0.2px;
-      flex-shrink: 0;
-    }
-    .tag-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      align-items: center;
-    }
-    .muscle-tag {
-      font-size: 9px;
-      font-weight: 700;
-      font-family: 'Syne', sans-serif;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      padding: 3px 7px;
-      border-radius: 20px;
-    }
-    .extra-tag {
-      background: var(--card2);
-      color: var(--sub);
-      border: 1px solid var(--border);
-    }
-    .session-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-    }
-    .stat-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .stat-item.right { text-align: right; }
-    .stat-value {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--sub);
-    }
-    .stat-value.orange { color: var(--orange); }
-    .stat-value.blue { color: var(--blue); }
-    .stat-label {
-      font-size: 9px;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-    }
-  `],
+  templateUrl: './session-card.component.html',
+  styleUrl: './session-card.component.scss',
 })
 export class SessionCardComponent {
   readonly session = input.required<Session>();
@@ -161,6 +47,8 @@ export class SessionCardComponent {
       result.push(this.session().muscleGroup as MuscleGroup);
     return result;
   });
+
+  readonly hasCardio = computed(() => this.session().exercises.some(e => e.isCardio));
 
   readonly visibleTags = computed(() => this.muscleTags().slice(0, 2));
 

@@ -5,8 +5,7 @@
       type="date"
       class="date-input"
       [value]="currentDateStr()"
-      [min]="minDateStr()"
-      (change)="onDateChange($any($event.target).value)"
+(change)="onDateChange($any($event.target).value)"
       (blur)="showDateInput.set(false)"
     />
   }

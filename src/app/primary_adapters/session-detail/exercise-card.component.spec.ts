@@ -28,6 +28,9 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     reps: 10,
     breakDurationSeconds: 90,
     status: 'pending',
+    isCardio: false,
+    durationSeconds: 0,
+    distanceKm: null,
     ...overrides,
   };
 }
@@ -50,6 +53,41 @@ async function setup(exercise: Exercise) {
 }
 
 describe('ExerciseCardComponent', () => {
+  describe('affichage des stats selon le type exercice', () => {
+    it('should render weight, sets and reps for a strength exercise', async () => {
+      const { fixture } = await setup(makeExercise({
+        isCardio: false,
+        weightKg: 60,
+        sets: 3,
+        reps: 10,
+        durationSeconds: 0,
+        distanceKm: null,
+      }));
+
+      const el: HTMLElement = fixture.nativeElement;
+      expect(el.textContent).toContain('60');
+      expect(el.textContent).toContain('3');
+      expect(el.textContent).toContain('10');
+    });
+
+    it('should render duration and distance for a cardio exercise, not weight/sets/reps', async () => {
+      const { fixture } = await setup(makeExercise({
+        isCardio: true,
+        durationSeconds: 3600,
+        distanceKm: 10,
+        weightKg: 0,
+        sets: 0,
+        reps: 0,
+      }));
+
+      const el: HTMLElement = fixture.nativeElement;
+      const statsEl = el.querySelector('.exercise-stats') as HTMLElement;
+      expect(statsEl.textContent).toContain('60');
+      expect(statsEl.textContent).toContain('10');
+      expect(statsEl.querySelector('.ex-stat-value.orange')?.textContent?.trim()).not.toContain('0 kg');
+    });
+  });
+
   describe('affichage des tags muscleGroups', () => {
     it('naffiche aucun tag quand muscleGroups est vide', async () => {
       const { fixture } = await setup(makeExercise({ muscleGroup: null, muscleGroups: [] }));

@@ -1,53 +1,82 @@
-<div class="expanded-panel" (click)="$event.stopPropagation()">
-  <div class="name-row">
-    <input
-      class="name-input"
-      type="text"
-      [ngModel]="exercise().name"
-      (ngModelChange)="update.emit({ name: $event })"
-      [placeholder]="'exercise.name' | translate"
-      maxlength="60"
-    />
-  </div>
-  <div class="pickers-row">
-    <div class="picker-col">
-      <span class="picker-label">{{ 'common.weight' | translate }}</span>
-      <app-drum-picker
-        [values]="weightValues"
-        [selectedValue]="exercise().weightKg"
-        unit="kg"
-        (valueChange)="update.emit({ weightKg: +$event })"
-      />
-    </div>
-    <div class="picker-col">
-      <span class="picker-label">{{ 'common.sets' | translate }}</span>
-      <app-drum-picker
-        [values]="setsValues"
-        [selectedValue]="exercise().sets"
-        (valueChange)="update.emit({ sets: +$event })"
-      />
-    </div>
-    <div class="picker-col">
-      <span class="picker-label">{{ 'common.reps' | translate }}</span>
-      <app-drum-picker
-        [values]="repsValues"
-        [selectedValue]="exercise().reps"
-        (valueChange)="update.emit({ reps: +$event })"
-      />
-    </div>
-    <div class="picker-col">
-      <span class="picker-label">{{ 'common.rest' | translate }}</span>
-      <app-drum-picker
-        [values]="breakValues"
-        [selectedValue]="breakSelectedValue()"
-        (valueChange)="emitBreakUpdate($event)"
-      />
-    </div>
-  </div>
 
-  <div class="actions-row">
-    <button class="btn btn-secondary" (click)="openChrono.emit()">{{ 'nav.chrono' | translate }}</button>
+    <div class="expanded-panel" (click)="$event.stopPropagation()">
+      <div class="name-row">
+        <input
+          class="name-input"
+          type="text"
+          [ngModel]="exercise().name"
+          (ngModelChange)="update.emit({ name: $event })"
+          [placeholder]="'exercise.name' | translate"
+        />
+      </div>
+      @if (exercise().isCardio) {
+        <div class="pickers-row">
+          <div class="picker-col">
+            <span class="picker-label">{{ 'common.hours' | translate }}</span>
+            <app-drum-picker
+              [values]="hoursValues"
+              [selectedValue]="durationHours()"
+              (valueChange)="emitDurationUpdate('hours', +$event)"
+            />
+          </div>
+          <div class="picker-col">
+            <span class="picker-label">{{ 'common.minutes' | translate }}</span>
+            <app-drum-picker
+              [values]="minutesValues"
+              [selectedValue]="durationMinutes()"
+              (valueChange)="emitDurationUpdate('minutes', +$event)"
+            />
+          </div>
+          <div class="picker-col">
+            <span class="picker-label">{{ 'statsExercise.distanceKm' | translate }}</span>
+            <app-drum-picker
+              [values]="kmValues"
+              [selectedValue]="exercise().distanceKm ?? '-'"
+              (valueChange)="update.emit({ distanceKm: $event === '-' ? null : +$event })"
+            />
+          </div>
+        </div>
+      } @else {
+        <div class="pickers-row">
+          <div class="picker-col">
+            <span class="picker-label">{{ 'common.weight' | translate }}</span>
+            <app-drum-picker
+              [values]="weightValues"
+              [selectedValue]="exercise().weightKg"
+              unit="kg"
+              (valueChange)="update.emit({ weightKg: +$event })"
+            />
+          </div>
+          <div class="picker-col">
+            <span class="picker-label">{{ 'common.sets' | translate }}</span>
+            <app-drum-picker
+              [values]="setsValues"
+              [selectedValue]="exercise().sets"
+              (valueChange)="update.emit({ sets: +$event })"
+            />
+          </div>
+          <div class="picker-col">
+            <span class="picker-label">{{ 'common.reps' | translate }}</span>
+            <app-drum-picker
+              [values]="repsValues"
+              [selectedValue]="exercise().reps"
+              (valueChange)="update.emit({ reps: +$event })"
+            />
+          </div>
+          <div class="picker-col" style="min-width: 100px">
+            <span class="picker-label">{{ 'common.rest' | translate }}</span>
+            <app-drum-picker style="min-width: 100px"
+              [values]="breakValues"
+              [selectedValue]="breakSelectedValue()"
+              (valueChange)="emitBreakUpdate($event)"
+            />
+          </div>
+        </div>
+      }
+
+      <div class="actions-row">
+        <button class="btn btn-secondary" (click)="openChrono.emit()">{{ 'nav.chrono' | translate }}</button>
 <button class="btn btn-secondary" (click)="openStats.emit()">{{ 'exercise.page' | translate }}</button>
-    <button class="btn btn-delete" (click)="delete.emit()">{{ 'common.delete' | translate }}</button>
-  </div>
-</div>
+        <button class="btn btn-delete" (click)="delete.emit()">{{ 'common.delete' | translate }}</button>
+      </div>
+    </div>

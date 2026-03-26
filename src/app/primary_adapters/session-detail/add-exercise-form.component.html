@@ -1,70 +1,102 @@
-<div class="overlay" (click)="cancelled.emit()">
-  <div class="form-card" (click)="$event.stopPropagation()">
-    <h2 class="form-title">{{ 'exercise.new' | translate }}</h2>
 
-    <div class="name-field">
-      <label class="field-label">{{ 'common.name' | translate }}</label>
-      <input
-        type="text"
-        [value]="name()"
-        (input)="onNameInput($event)"
-        [placeholder]="'exercise.namePlaceholder' | translate"
-        class="input"
-        maxlength="60"
-      />
-      @if (suggestions().length > 0) {
-        <div class="suggestions">
-          @for (suggestion of suggestions(); track suggestion) {
-            <button type="button" class="suggestion-item" (click)="onSuggestionSelect(suggestion)">
-              {{ suggestion }}
-            </button>
+    <div class="overlay" (click)="cancelled.emit()">
+      <div class="form-card" (click)="$event.stopPropagation()">
+        <h2 class="form-title">{{ 'exercise.new' | translate }}</h2>
+
+        <div class="name-field">
+          <label class="field-label">{{ 'common.name' | translate }}</label>
+          <input
+            type="text"
+            [value]="name()"
+            (input)="onNameInput($event)"
+            [placeholder]="'exercise.namePlaceholder' | translate"
+            class="input"
+          />
+          @if (suggestions().length > 0) {
+            <div class="suggestions">
+              @for (suggestion of suggestions(); track suggestion) {
+                <button type="button" class="suggestion-item" (click)="onSuggestionSelect(suggestion)">
+                  {{ suggestion }}
+                </button>
+              }
+            </div>
+          }
+          @if (detectedGroup()) {
+            <span class="detected-group">{{ detectedGroup() }}</span>
+          }
+          @if (isCardio()) {
+            <span class="detected-cardio">{{ 'common.cardio' | translate }}</span>
           }
         </div>
-      }
-      @if (detectedGroup()) {
-        <span class="detected-group">{{ detectedGroup() }}</span>
-      }
-    </div>
 
-    <div class="pickers-row">
-      <div class="picker-col">
-        <span class="picker-label">{{ 'common.weight' | translate }}</span>
-        <app-drum-picker
-          [values]="weightValues"
-          [selectedValue]="weightKg()"
-          unit="kg"
-          (valueChange)="weightKg.set(+$event)"
-        />
-      </div>
-      <div class="picker-col">
-        <span class="picker-label">{{ 'common.sets' | translate }}</span>
-        <app-drum-picker
-          [values]="setsValues"
-          [selectedValue]="sets()"
-          (valueChange)="sets.set(+$event)"
-        />
-      </div>
-      <div class="picker-col">
-        <span class="picker-label">{{ 'common.reps' | translate }}</span>
-        <app-drum-picker
-          [values]="repsValues"
-          [selectedValue]="reps()"
-          (valueChange)="reps.set(+$event)"
-        />
-      </div>
-      <div class="picker-col">
-        <span class="picker-label">{{ 'common.rest' | translate }}</span>
-        <app-drum-picker  style="min-width: 90px !important"
-          [values]="breakValues"
-          [selectedValue]="breakSelectedValue()"
-          (valueChange)="setBreakFromMmss($event)"
-        />
-      </div>
-    </div>
+        @if (isCardio()) {
+          <div class="pickers-row">
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.hours' | translate }}</span>
+              <app-drum-picker
+                [values]="hoursValues"
+                [selectedValue]="durationHours()"
+                (valueChange)="durationHours.set(+$event)"
+              />
+            </div>
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.minutes' | translate }}</span>
+              <app-drum-picker
+                [values]="minutesValues"
+                [selectedValue]="durationMinutes()"
+                (valueChange)="durationMinutes.set(+$event)"
+              />
+            </div>
+            <div class="picker-col">
+              <span class="picker-label">{{ 'statsExercise.distanceKm' | translate }}</span>
+              <app-drum-picker
+                [values]="kmValues"
+                [selectedValue]="distanceKm() ?? '-'"
+                (valueChange)="setDistanceKm($event)"
+              />
+            </div>
+          </div>
+        } @else {
+          <div class="pickers-row">
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.weight' | translate }}</span>
+              <app-drum-picker
+                [values]="weightValues"
+                [selectedValue]="weightKg()"
+                unit="kg"
+                (valueChange)="weightKg.set(+$event)"
+              />
+            </div>
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.sets' | translate }}</span>
+              <app-drum-picker
+                [values]="setsValues"
+                [selectedValue]="sets()"
+                (valueChange)="sets.set(+$event)"
+              />
+            </div>
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.reps' | translate }}</span>
+              <app-drum-picker
+                [values]="repsValues"
+                [selectedValue]="reps()"
+                (valueChange)="reps.set(+$event)"
+              />
+            </div>
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.rest' | translate }}</span>
+              <app-drum-picker  style="min-width: 90px !important"
+                [values]="breakValues"
+                [selectedValue]="breakSelectedValue()"
+                (valueChange)="setBreakFromMmss($event)"
+              />
+            </div>
+          </div>
+        }
 
-    <div class="actions">
-      <button class="btn-cancel" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
-      <button class="btn-submit" (click)="onSubmit()">{{ 'common.add' | translate }}</button>
+        <div class="actions">
+          <button class="btn-cancel" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
+          <button class="btn-submit" [disabled]="isSubmitDisabled()" (click)="onSubmit()">{{ 'common.add' | translate }}</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>

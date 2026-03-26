@@ -18,6 +18,9 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     reps: 10,
     breakDurationSeconds: 60,
     status: 'pending',
+    isCardio: false,
+    durationSeconds: 0,
+    distanceKm: null,
     ...overrides,
   };
 }
@@ -111,6 +114,46 @@ describe('UpdateExerciseUseCase', () => {
       const saved: Exercise = exerciseRepoSpy.save.calls.mostRecent().args[0];
       expect(saved.muscleGroups).toContain(MuscleGroup.Triceps);
       expect(saved.muscleGroups).toContain(MuscleGroup.Chest);
+    });
+  });
+
+  describe('cardio exercise update', () => {
+    it('should NOT run muscle detection when updating durationSeconds on a cardio exercise', async () => {
+      const exercise = makeExercise({
+        isCardio: true,
+        durationSeconds: 1800,
+        distanceKm: 5,
+        muscleGroup: null,
+        muscleGroups: [],
+      });
+      await seedExercise(exercise);
+
+      await useCase.execute('ex-1', { durationSeconds: 3600 });
+
+      const saved: Exercise = exerciseRepoSpy.save.calls.mostRecent().args[0];
+      expect(saved.isCardio).toBeTrue();
+      expect(saved.durationSeconds).toBe(3600);
+      expect(saved.muscleGroup).toBeNull();
+      expect(saved.muscleGroups).toEqual([]);
+    });
+
+    it('should preserve isCardio and distanceKm when updating name of a cardio exercise', async () => {
+      const exercise = makeExercise({
+        isCardio: true,
+        name: 'Course à pied',
+        durationSeconds: 1800,
+        distanceKm: 5,
+        muscleGroup: null,
+        muscleGroups: [],
+      });
+      await seedExercise(exercise);
+
+      await useCase.execute('ex-1', { name: 'Vélo' });
+
+      const saved: Exercise = exerciseRepoSpy.save.calls.mostRecent().args[0];
+      expect(saved.isCardio).toBeTrue();
+      expect(saved.muscleGroups).toEqual([]);
+      expect(saved.muscleGroup).toBeNull();
     });
   });
 });

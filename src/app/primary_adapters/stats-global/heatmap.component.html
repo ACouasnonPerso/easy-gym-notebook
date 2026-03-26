@@ -1,18 +1,31 @@
-<div class="heatmap">
-  <!-- Header row -->
-  <div></div>
-  <div class="hm-day-label">L</div>
-  <div class="hm-day-label">M</div>
-  <div class="hm-day-label">M</div>
-  <div class="hm-day-label">J</div>
-  <div class="hm-day-label">V</div>
-  <div class="hm-day-label">S</div>
-  <div class="hm-day-label">D</div>
 
-  @for (week of weeks(); track $index) {
-    <div class="hm-week-label">S{{ $index + 1 }}</div>
-    @for (cell of week; track cell.date.toISOString()) {
-      <div [class]="getCellClass(cell)"></div>
-    }
-  }
-</div>
+    <div class="heatmap-wrapper">
+      <div class="heatmap">
+        <!-- Header row -->
+        <div></div>
+        <div class="hm-day-label">{{ 'days.mon' | translate }}</div>
+        <div class="hm-day-label">{{ 'days.tue' | translate }}</div>
+        <div class="hm-day-label">{{ 'days.wed' | translate }}</div>
+        <div class="hm-day-label">{{ 'days.thu' | translate }}</div>
+        <div class="hm-day-label">{{ 'days.fri' | translate }}</div>
+        <div class="hm-day-label">{{ 'days.sat' | translate }}</div>
+        <div class="hm-day-label">{{ 'days.sun' | translate }}</div>
+
+        @for (week of weeks(); track $index) {
+          <div class="hm-week-label">{{ 'common.weekShort' | translate }}{{ $index + 1 }}</div>
+          @for (cell of week; track cell.date.toISOString()) {
+            <div
+              [class]="getCellClass(cell)"
+              [class.selected]="selectedCell() === cell"
+              (click)="onCellClick(cell)"
+            ></div>
+          }
+        }
+      </div>
+
+      @if (selectedCell(); as cell) {
+        <div class="hm-popover" data-testid="heatmap-popover">
+          <span class="hm-popover-label">{{ formatPopoverLabel(cell) }}</span>
+        </div>
+      }
+    </div>

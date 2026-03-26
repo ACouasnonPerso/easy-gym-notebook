@@ -11,6 +11,7 @@ export class GetGlobalStatsUseCase {
   readonly weeklyAverage = this.statsService.weeklyAverage;
   readonly muscleGroupDistribution = this.statsService.muscleGroupDistribution;
   readonly exerciseSummaries = this.statsService.exerciseSummaries;
+  readonly sessionDurationsInMonth = this.statsService.sessionDurationsInMonth;
   readonly selectedMonth = this.statsService.selectedMonth;
 
   execute(): Promise<void> {

@@ -1,10 +1,55 @@
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { signal } from '@angular/core';
+import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
 import { StatsGlobalComponent } from './stats-global.component';
+import { StatsExerciseListCardComponent } from './stats-exercise-list-card.component';
 import { GetGlobalStatsUseCase } from '../../primary_ports/stats-global/get-global-stats.usecase';
 import { SelectMonthUseCase } from '../../primary_ports/stats-global/select-month.usecase';
 import { MergeExercisesUseCase } from '../../primary_ports/stats-global/merge-exercises.usecase';
 import { Router } from '@angular/router';
+
+const FR_TRANSLATIONS = {
+  statsGlobal: {
+    currentYear: 'Annee en cours',
+    total: 'Total',
+    trainingRecurrences: 'Training recurrences',
+    weekSummary: 'Resume de la semaine',
+    monthSummary: 'Resume du mois',
+    workedMuscles: 'Muscles sollicites',
+    newNamePlaceholder: 'Nouveau nom',
+    mergeCount: 'Fusionner ({{ count }})',
+    confirmMergeTitle: 'Confirmer la fusion',
+    confirmMergeBody: '',
+  },
+  common: {
+    cancel: 'Annuler',
+    confirm: 'Confirmer',
+    weight: 'Poids',
+    exercises: 'Exercices',
+    time: 'Temps',
+    sessions: 'Sessions',
+    merge: 'Fusionner',
+  },
+  days: { mon: 'L', tue: 'M', wed: 'M', thu: 'J', fri: 'V', sat: 'S', sun: 'D' },
+};
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation(_lang: string): Observable<TranslationObject> {
+    return of(FR_TRANSLATIONS as unknown as TranslationObject);
+  }
+}
+
+const translateModuleConfig = TranslateModule.forRoot({
+  loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
+});
+
+function setupI18n() {
+  const translate = TestBed.inject(TranslateService);
+  translate.setDefaultLang('fr');
+  translate.use('fr');
+}
 
 function makeGetGlobalStatsUseCaseSpy() {
   return {
@@ -14,6 +59,7 @@ function makeGetGlobalStatsUseCaseSpy() {
     weeklyAverage: signal({ avgWeightKg: 0, sessionsPerWeek: 0, avgDurationSeconds: 0 }),
     muscleGroupDistribution: signal([]),
     exerciseSummaries: signal([]),
+    sessionDurationsInMonth: signal([] as { date: Date; durationSeconds: number }[]),
     selectedMonth: signal(new Date()),
     execute: jasmine.createSpy('execute').and.returnValue(Promise.resolve()),
   };
@@ -48,7 +94,7 @@ describe("StatsGlobalComponent — formatDuration", () => {
     const routerSpy = { navigate: jasmine.createSpy('navigate') };
 
     TestBed.configureTestingModule({
-      imports: [StatsGlobalComponent],
+      imports: [StatsGlobalComponent, translateModuleConfig],
       providers: [
         { provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
         { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
@@ -57,6 +103,7 @@ describe("StatsGlobalComponent — formatDuration", () => {
       ],
     });
 
+    setupI18n();
     component = TestBed.createComponent(StatsGlobalComponent).componentInstance;
   });
 
@@ -87,7 +134,7 @@ describe("StatsGlobalComponent — sélecteur de vue (année en cours et total)"
     const routerSpy = { navigate: jasmine.createSpy('navigate') };
 
     TestBed.configureTestingModule({
-      imports: [StatsGlobalComponent],
+      imports: [StatsGlobalComponent, translateModuleConfig],
       providers: [
         { provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
         { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
@@ -96,16 +143,17 @@ describe("StatsGlobalComponent — sélecteur de vue (année en cours et total)"
       ],
     });
 
+    setupI18n();
     fixture = TestBed.createComponent(StatsGlobalComponent);
     fixture.componentInstance.showDropdown.set(true);
     fixture.detectChanges();
   });
 
-  it("devrait inclure 'Année en cours' et 'Total' dans la liste des options", () => {
+  it("devrait inclure 'Annee en cours' et 'Total' dans la liste des options", () => {
     const el: HTMLElement = fixture.nativeElement;
     const items = Array.from(el.querySelectorAll('.dropdown-item')).map(i => i.textContent?.trim());
 
-    expect(items).toContain('Année en cours');
+    expect(items).toContain('Annee en cours');
     expect(items).toContain('Total');
   });
 
@@ -120,7 +168,7 @@ describe("StatsGlobalComponent — sélecteur de vue (année en cours et total)"
     expect(heatmapCard).toBeTruthy();
   });
 
-  it("devrait masquer la heatmap quand 'Année en cours' est sélectionné (index 0)", () => {
+  it("devrait masquer la heatmap quand 'Annee en cours' est sélectionné (index 0)", () => {
     fixture.componentInstance.selectedMonthIndex.set(0);
     fixture.detectChanges();
 
@@ -148,12 +196,15 @@ describe("StatsGlobalComponent — résumé de la semaine", () => {
 
   function setup(monthIndex: number) {
     const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+    // Make week != month so weekSameAsMonth() is false
+    statsUseCaseSpy.weekSummary = signal({ totalWeightKg: 500, sessionCount: 1, totalDurationSeconds: 1800 });
+    statsUseCaseSpy.monthSummary = signal({ totalWeightKg: 1000, sessionCount: 3, totalDurationSeconds: 5400 });
     const selectMonthUseCaseSpy = { execute: jasmine.createSpy('execute') };
     const mergeUseCaseSpy = makeMergeExercisesUseCaseSpy();
     const routerSpy = { navigate: jasmine.createSpy('navigate') };
 
     TestBed.configureTestingModule({
-      imports: [StatsGlobalComponent],
+      imports: [StatsGlobalComponent, translateModuleConfig],
       providers: [
         { provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
         { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
@@ -162,6 +213,7 @@ describe("StatsGlobalComponent — résumé de la semaine", () => {
       ],
     });
 
+    setupI18n();
     fixture = TestBed.createComponent(StatsGlobalComponent);
     fixture.detectChanges(); // triggers ngOnInit which sets selectedMonthIndex to 2
     fixture.componentInstance.selectedMonthIndex.set(monthIndex);
@@ -173,7 +225,7 @@ describe("StatsGlobalComponent — résumé de la semaine", () => {
 
     const el: HTMLElement = fixture.nativeElement;
     const titles = Array.from(el.querySelectorAll('.stats-card-title'));
-    const weekSummaryTitle = titles.find(t => t.textContent?.trim() === 'Résumé de la semaine');
+    const weekSummaryTitle = titles.find(t => t.textContent?.trim() === 'Resume de la semaine');
 
     expect(weekSummaryTitle).toBeTruthy();
   });
@@ -183,7 +235,7 @@ describe("StatsGlobalComponent — résumé de la semaine", () => {
 
     const el: HTMLElement = fixture.nativeElement;
     const titles = Array.from(el.querySelectorAll('.stats-card-title'));
-    const weekSummaryTitle = titles.find(t => t.textContent?.trim() === 'Résumé de la semaine');
+    const weekSummaryTitle = titles.find(t => t.textContent?.trim() === 'Resume de la semaine');
 
     expect(weekSummaryTitle).toBeUndefined();
   });
@@ -203,7 +255,7 @@ describe("StatsGlobalComponent — merge d'exercices", () => {
     mergeUseCaseSpy = mu;
 
     TestBed.configureTestingModule({
-      imports: [StatsGlobalComponent],
+      imports: [StatsGlobalComponent, translateModuleConfig],
       providers: [
         { provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
         { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
@@ -212,6 +264,7 @@ describe("StatsGlobalComponent — merge d'exercices", () => {
       ],
     });
 
+    setupI18n();
     fixture = TestBed.createComponent(StatsGlobalComponent);
     fixture.detectChanges();
   });
@@ -228,11 +281,13 @@ describe("StatsGlobalComponent — merge d'exercices", () => {
     mergeBtn.click();
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.isMergeMode()).toBeTrue();
+    const exerciseListCard = fixture.debugElement.query(By.directive(StatsExerciseListCardComponent)).componentInstance;
+    expect(exerciseListCard.isMergeMode()).toBeTrue();
   });
 
   it('devrait afficher des cases à cocher sur chaque exercice en mode merge', () => {
-    fixture.componentInstance.isMergeMode.set(true);
+    const exerciseListCard = fixture.debugElement.query(By.directive(StatsExerciseListCardComponent)).componentInstance;
+    exerciseListCard.isMergeMode.set(true);
     fixture.detectChanges();
 
     const el: HTMLElement = fixture.nativeElement;
@@ -241,9 +296,10 @@ describe("StatsGlobalComponent — merge d'exercices", () => {
   });
 
   it('devrait afficher la popup de confirmation quand on soumet le merge', () => {
-    fixture.componentInstance.isMergeMode.set(true);
-    fixture.componentInstance.mergeSelectedNames.set(new Set(['Développé couché', 'Squat']));
-    fixture.componentInstance.mergeNewName.set('Compound');
+    const exerciseListCard = fixture.debugElement.query(By.directive(StatsExerciseListCardComponent)).componentInstance;
+    exerciseListCard.isMergeMode.set(true);
+    exerciseListCard.mergeSelectedNames.set(new Set(['Développé couché', 'Squat']));
+    exerciseListCard.mergeNewName.set('Compound');
     fixture.detectChanges();
 
     const el: HTMLElement = fixture.nativeElement;
@@ -256,10 +312,11 @@ describe("StatsGlobalComponent — merge d'exercices", () => {
   });
 
   it('devrait appeler MergeExercisesUseCase.execute avec les noms sélectionnés et le nouveau nom', async () => {
-    fixture.componentInstance.isMergeMode.set(true);
-    fixture.componentInstance.mergeSelectedNames.set(new Set(['Développé couché', 'Squat']));
-    fixture.componentInstance.mergeNewName.set('Compound');
-    fixture.componentInstance.showMergeConfirm.set(true);
+    const exerciseListCard = fixture.debugElement.query(By.directive(StatsExerciseListCardComponent)).componentInstance;
+    exerciseListCard.isMergeMode.set(true);
+    exerciseListCard.mergeSelectedNames.set(new Set(['Développé couché', 'Squat']));
+    exerciseListCard.mergeNewName.set('Compound');
+    exerciseListCard.showMergeConfirm.set(true);
     fixture.detectChanges();
 
     const el: HTMLElement = fixture.nativeElement;
@@ -273,5 +330,55 @@ describe("StatsGlobalComponent — merge d'exercices", () => {
       jasmine.arrayContaining(['Développé couché', 'Squat']),
       'Compound'
     );
+  });
+});
+
+describe("StatsGlobalComponent — graphique de durée des séances", () => {
+  it("devrait masquer le bloc chart quand sessionDurationsInMonth est vide", () => {
+    const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+    statsUseCaseSpy.sessionDurationsInMonth = signal([]);
+
+    TestBed.configureTestingModule({
+      imports: [StatsGlobalComponent, translateModuleConfig],
+      providers: [
+        { provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+        { provide: SelectMonthUseCase, useValue: { execute: jasmine.createSpy('execute') } },
+        { provide: MergeExercisesUseCase, useValue: { execute: jasmine.createSpy('execute').and.returnValue(Promise.resolve()) } },
+        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
+      ],
+    });
+    setupI18n();
+
+    const fixture = TestBed.createComponent(StatsGlobalComponent);
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.nativeElement;
+    const chart = el.querySelector('[data-testid="training-time-bar-chart"]');
+    expect(chart).toBeNull();
+  });
+
+  it("devrait afficher le bloc chart quand au moins une séance a une durée > 0", () => {
+    const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+    statsUseCaseSpy.sessionDurationsInMonth = signal([
+      { date: new Date(2026, 2, 10), durationSeconds: 3600 },
+    ]);
+
+    TestBed.configureTestingModule({
+      imports: [StatsGlobalComponent, translateModuleConfig],
+      providers: [
+        { provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+        { provide: SelectMonthUseCase, useValue: { execute: jasmine.createSpy('execute') } },
+        { provide: MergeExercisesUseCase, useValue: { execute: jasmine.createSpy('execute').and.returnValue(Promise.resolve()) } },
+        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
+      ],
+    });
+    setupI18n();
+
+    const fixture = TestBed.createComponent(StatsGlobalComponent);
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.nativeElement;
+    const chart = el.querySelector('[data-testid="training-time-bar-chart"]');
+    expect(chart).toBeTruthy();
   });
 });
