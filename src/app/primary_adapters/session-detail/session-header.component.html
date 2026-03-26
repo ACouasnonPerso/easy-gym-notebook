@@ -1,0 +1,21 @@
+<div class="header">
+  <div class="back-btn" (click)="goBack.emit()"><span class="back-arrow">←</span> Back</div>
+  <div class="session-header-row">
+    <app-session-header-stats
+      [session]="session()"
+      [totalWeightFormatted]="totalWeightFormatted()"
+      (dateChange)="dateChange.emit($event)"
+    />
+    @if (session().status === 'active') {
+      <app-session-header-chrono
+        [durationLabel]="durationLabel()"
+        [chronoStatus]="chronoStatus()"
+        (durationClick)="durationClick.emit()"
+        (endSession)="endSession.emit()"
+        (pause)="pause.emit()"
+        (resume)="resume.emit()"
+      />
+    }
+  </div>
+</div>
+<div class="divider"></div>

@@ -1,0 +1,73 @@
+export enum MuscleGroup {
+  Chest = 'Chest',
+  Back = 'Back',
+  Shoulders = 'Shoulders',
+  Biceps = 'Biceps',
+  Triceps = 'Triceps',
+  Forearms = 'Forearms',
+  Abs = 'Abs',
+  Quads = 'Quads',
+  Hamstrings = 'Hamstrings',
+  Glutes = 'Glutes',
+  Calves = 'Calves',
+  Traps = 'Traps',
+  FullBody = 'FullBody',
+}
+
+export type SessionStatus = 'active' | 'completed';
+export type ExerciseStatus = 'pending' | 'validated' | 'cancelled';
+
+export interface Session {
+  id: string;
+  date: Date;
+  status: SessionStatus;
+  durationSeconds: number;
+  muscleGroup: MuscleGroup | null;
+  exercises: Exercise[];
+}
+
+export interface Exercise {
+  id: string;
+  sessionId: string;
+  name: string;
+  muscleGroup: MuscleGroup | null;
+  muscleGroups: MuscleGroup[];
+  weightKg: number;
+  sets: number;
+  reps: number;
+  breakDurationSeconds: number;
+  status: ExerciseStatus;
+}
+
+export interface ExerciseOccurrence {
+  exerciseId: string;
+  sessionId: string;
+  date: Date;
+  name: string;
+  weightKg: number;
+  sets: number;
+  reps: number;
+  breakDurationSeconds: number;
+  volumeKg: number;
+  status: ExerciseStatus;
+}
+
+export interface RawSession {
+  id: string;
+  date: string;
+  status: SessionStatus;
+  durationSeconds: number;
+  muscleGroup: MuscleGroup | null;
+}
+
+export interface RawExercise {
+  id: string;
+  sessionId: string;
+  name: string;
+  muscleGroup: MuscleGroup | null;
+  weightKg: number;
+  sets: number;
+  reps: number;
+  breakDurationSeconds: number;
+  status: ExerciseStatus;
+}

@@ -1,0 +1,5 @@
+- [S01 Foundation — standalone migration complete](project_s01_foundation.md) — NgModule → standalone done, all layers scaffolded, builds clean
+- [S02 Session List — complete](project_s02_session_list.md) — SessionService, 4 use cases, shared directives, session-card, session-list fully implemented
+- [S03 Session Detail Core — complete](project_s03_session_detail_core.md) — MuscleGroupDetector, ExerciseService, AutocompleteService, 2 use cases, exercise-card, add-exercise-form, session-detail fully implemented
+- [S04 Session Detail Actions — complete](project_s04_session_detail_actions.md) — DrumPicker, ExerciseExpanded, 4 exercise use cases, EndSession use case, wired into session-detail
+- [S08 Stats Exercise — complete](project_s08_stats_exercise.md) — ExerciseStatsService, GetExerciseStatsUseCase, DualLineChartComponent, StatsExerciseComponent fully implemented

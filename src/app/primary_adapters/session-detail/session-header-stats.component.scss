@@ -1,0 +1,52 @@
+.session-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.session-date-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--orange);
+  cursor: pointer;
+}
+
+.date-input {
+  background: var(--card2);
+  border: 1px solid var(--orange);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 4px 8px;
+  outline: none;
+  color-scheme: dark;
+}
+
+.session-quick-stats {
+  display: flex;
+  gap: 20px;
+  margin-top: 6px;
+}
+
+.quick-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.quick-stat-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.quick-stat-label {
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}

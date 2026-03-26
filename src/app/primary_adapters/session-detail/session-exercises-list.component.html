@@ -1,0 +1,38 @@
+<div class="exercise-list">
+  @if (exercises().length === 0) {
+    <div class="exercise-empty" (click)="uiService.openAddExerciseForm()">
+      <span class="exercise-empty-icon">＋</span>
+      <span class="exercise-empty-text">Aucun exercice.</span>
+      <span class="exercise-empty-hint">Ajoutez-en un !</span>
+    </div>
+  }
+  @for (exercise of exercises(); track exercise.id) {
+    <app-exercise-card
+      [exercise]="exercise"
+      [isExpanded]="expandedExerciseId() === exercise.id"
+      (toggleExpand)="toggleExpand(exercise.id)"
+      (exerciseUpdate)="exerciseUpdate.emit({ exercise, changes: $event })"
+      (exerciseValidate)="exerciseValidate.emit(exercise.id); toggleExpand(exercise.id)"
+      (exerciseCancel)="exerciseCancel.emit(exercise.id); toggleExpand(exercise.id)"
+      (exerciseDelete)="onDeleteRequest(exercise.id)"
+      (openChrono)="openChrono.emit(exercise)"
+      (openStats)="openStats.emit(exercise)"
+    />
+  }
+</div>
+
+@if (showAddForm()) {
+  <app-add-exercise-form
+    [sessionId]="sessionId()"
+    (exerciseAdded)="uiService.closeAddExerciseForm()"
+    (cancelled)="uiService.closeAddExerciseForm()"
+  />
+}
+
+@if (showDeleteConfirm()) {
+  <app-confirm-dialog
+    message="Supprimer cet exercice ?"
+    (confirmed)="onDeleteConfirmed()"
+    (cancelled)="showDeleteConfirm.set(false)"
+  />
+}

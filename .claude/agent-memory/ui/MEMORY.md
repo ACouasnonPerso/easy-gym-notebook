@@ -1,0 +1,1 @@
+- [Project design system](project_design_system.md) — no Tailwind config; all tokens are CSS custom properties in styles.scss; fonts from Google Fonts only

@@ -1,0 +1,19 @@
+<div class="session-meta">
+  <span class="session-date-label" (click)="showDateInput.set(true)">{{ session().date | date:'EEE d MMM yyyy' }}</span>
+  @if (showDateInput()) {
+    <input
+      type="date"
+      class="date-input"
+      [value]="currentDateStr()"
+      [min]="minDateStr()"
+      (change)="onDateChange($any($event.target).value)"
+      (blur)="showDateInput.set(false)"
+    />
+  }
+  <div class="session-quick-stats">
+    <div class="quick-stat">
+      <span class="quick-stat-value">{{ totalWeightFormatted() }}</span>
+      <span class="quick-stat-label">Poids</span>
+    </div>
+  </div>
+</div>
