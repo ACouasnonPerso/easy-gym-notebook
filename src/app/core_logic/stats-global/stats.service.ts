@@ -22,11 +22,20 @@ export interface WeeklyAverage {
   avgDurationSeconds: number;
 }
 
+export interface SessionDuration {
+  date: Date;
+  durationSeconds: number;
+}
+
 export interface ExerciseSummary {
   name: string;
   maxWeightKg: number;
   totalVolumeKg: number;
   occurrenceCount: number;
+  isCardio: boolean;
+  totalDurationSeconds: number;
+  totalDistanceKm: number | null;
+  muscleGroups: MuscleGroup[];
 }
 
 function getMondayOfWeek(date: Date): Date {
@@ -179,6 +188,15 @@ export class StatsService {
     return { totalWeightKg, sessionCount, totalDurationSeconds };
   });
 
+  readonly sessionDurationsInMonth = computed((): SessionDuration[] => {
+    const sessions = this._sessionsInMonth();
+    const allZero = sessions.every(s => s.durationSeconds === 0);
+    if (allZero) return [];
+    return sessions
+      .map(s => ({ date: s.date, durationSeconds: s.durationSeconds }))
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
+  });
+
   readonly exerciseSummaries = computed((): ExerciseSummary[] => {
     const exercises = this._exercisesInMonth();
     const byName = new Map<string, Exercise[]>();
@@ -190,9 +208,14 @@ export class StatsService {
 
     const summaries: ExerciseSummary[] = [];
     for (const [name, group] of byName) {
+      const isCardio = group[0].isCardio;
       const maxWeightKg = Math.max(...group.map(e => e.weightKg));
       const totalVolumeKg = group.reduce((sum, e) => sum + e.weightKg * e.sets * e.reps, 0);
-      summaries.push({ name, maxWeightKg, totalVolumeKg, occurrenceCount: group.length });
+      const totalDurationSeconds = group.reduce((sum, e) => sum + e.durationSeconds, 0);
+      const rawDistanceKm = group.reduce((sum, e) => sum + (e.distanceKm ?? 0), 0);
+      const totalDistanceKm = isCardio && rawDistanceKm > 0 ? rawDistanceKm : null;
+      const muscleGroups = [...new Set(group.flatMap(e => e.muscleGroups))];
+      summaries.push({ name, maxWeightKg, totalVolumeKg, occurrenceCount: group.length, isCardio, totalDurationSeconds, totalDistanceKm, muscleGroups });
     }
 
     return summaries.sort((a, b) => b.totalVolumeKg - a.totalVolumeKg);

@@ -38,7 +38,7 @@
 
 .tips-banner {
   position: fixed;
-  bottom: calc(var(--footer-height, 64px) + 12px);
+  bottom: calc(var(--footer-height, 64px) + 32px);
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 32px);

@@ -190,6 +190,49 @@ describe('SessionChronoService — multi-session API', () => {
   });
 
   // ---------------------------------------------------------------------------
+  // Resume after stop (ended → running)
+  // ---------------------------------------------------------------------------
+
+  describe('resumeForSession() after stopForSession()', () => {
+    it('should resume from the stopped elapsed and continue incrementing', () => {
+      service.startForSession('session-1');
+      jasmine.clock().tick(5000);
+      service.stopForSession('session-1');
+
+      service.resumeForSession('session-1');
+
+      expect(service.getStatusForSession('session-1')).toBe('running');
+      jasmine.clock().tick(3000);
+      expect(service.getElapsedForSession('session-1')).toBe(8);
+    });
+
+    it('should resume from the stopped elapsed after a page reload (restored from localStorage)', () => {
+      // Session runs for 7 seconds, then is stopped.
+      service.startForSession('session-1');
+      jasmine.clock().tick(7000);
+      service.stopForSession('session-1');
+
+      // App reloads: service instance is destroyed and recreated.
+      jasmine.clock().uninstall();
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
+      });
+      const reloadedService = TestBed.inject(SessionChronoService);
+      jasmine.clock().install();
+      jasmine.clock().mockDate(new Date(10000)); // some time has passed
+
+      // User navigates back to the session and clicks Reprendre.
+      reloadedService.resumeForSession('session-1');
+
+      expect(reloadedService.getStatusForSession('session-1')).toBe('running');
+      // After 2 more seconds, elapsed should be 7 + 2 = 9, not 0 + 2 = 2.
+      jasmine.clock().tick(2000);
+      expect(reloadedService.getElapsedForSession('session-1')).toBe(9);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
   // Session isolation — the core requirement
   // ---------------------------------------------------------------------------
 

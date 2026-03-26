@@ -34,84 +34,8 @@ interface DonutSegment {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslateModule],
-  template: `
-    @if (segments().length === 0) {
-      <p class="empty">{{ 'statsGlobal.noDataMonth' | translate }}</p>
-    } @else {
-      <div class="pie-container">
-        <svg [attr.width]="svgSize" [attr.height]="svgSize" [attr.viewBox]="'0 0 ' + svgSize + ' ' + svgSize" class="pie-svg">
-          <g [attr.transform]="'rotate(-90, ' + center + ', ' + center + ')'">
-            @for (segment of segments(); track segment.group) {
-              <circle
-                [attr.cx]="center"
-                [attr.cy]="center"
-                [attr.r]="radius"
-                fill="none"
-                [attr.stroke]="segment.color"
-                stroke-width="28"
-                [attr.stroke-dasharray]="segment.dashLen + ' ' + circumference"
-                [attr.stroke-dashoffset]="segment.dashOffset"
-              />
-            }
-          </g>
-        </svg>
-        <div class="pie-legend">
-          @for (segment of segments(); track segment.group) {
-            <div class="legend-item">
-              <div class="legend-dot" [style.background]="segment.color"></div>
-              <span class="legend-text">{{ segment.group }}</span>
-              <span class="legend-pct">{{ segment.percentage }}%</span>
-            </div>
-          }
-        </div>
-      </div>
-    }
-  `,
-  styles: [`
-    .empty {
-      color: var(--muted);
-      text-align: center;
-      font-size: 14px;
-      padding: 16px 0;
-    }
-    .pie-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 12px 0;
-      gap: 20px;
-    }
-    .pie-svg { display: block; }
-    .pie-legend {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .legend-text {
-      font-size: 12px;
-      color: var(--sub);
-      font-weight: 500;
-      flex: 1;
-    }
-    .legend-pct {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text);
-      margin-left: auto;
-    }
-  `],
+  templateUrl: './donut-chart.component.html',
+  styleUrl: './donut-chart.component.scss',
 })
 export class DonutChartComponent {
   distribution = input<Map<MuscleGroup, number>>(new Map());

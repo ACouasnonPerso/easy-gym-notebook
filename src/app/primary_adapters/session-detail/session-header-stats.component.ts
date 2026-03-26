@@ -23,13 +23,6 @@ export class SessionHeaderStatsComponent {
     return d instanceof Date ? d.toISOString().split('T')[0] : new Date(d).toISOString().split('T')[0];
   });
 
-  readonly minDateStr = computed(() => {
-    const d = this.session().date;
-    const next = new Date(d instanceof Date ? d : new Date(d));
-    next.setDate(next.getDate() + 1);
-    return next.toISOString().split('T')[0];
-  });
-
   onDateChange(value: string): void {
     if (!value) return;
     this.dateChange.emit(value);

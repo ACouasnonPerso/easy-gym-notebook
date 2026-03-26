@@ -1,0 +1,77 @@
+
+<div class="stats-card">
+  <div class="exercise-card-header">
+    <div class="stats-card-title" style="margin-bottom:0">{{ 'common.exercises' | translate }}</div>
+    <button
+      data-testid="merge-btn"
+      class="merge-btn"
+      [class.active]="isMergeMode()"
+      (click)="toggleMergeMode()"
+    >{{ 'common.merge' | translate }}</button>
+  </div>
+  <div class="divider"></div>
+
+  @if (isMergeMode()) {
+    <div class="merge-controls">
+      <input
+        data-testid="merge-name-input"
+        class="merge-name-input"
+        type="text"
+        [placeholder]="'statsGlobal.newNamePlaceholder' | translate"
+        [value]="mergeNewName()"
+        (input)="mergeNewName.set($any($event.target).value)"
+      />
+      <button
+        data-testid="merge-submit-btn"
+        class="merge-submit-btn"
+        [disabled]="mergeSelectedNames().size < 2 || !mergeNewName().trim()"
+        (click)="onMergeSubmit()"
+      >{{ 'statsGlobal.mergeCount' | translate:{ count: mergeSelectedNames().size } }}</button>
+    </div>
+  }
+
+  <div class="exercise-list" [style.margin-top]="isMergeMode() ? '12px' : '0'">
+    @for (exercise of exercises(); track exercise.name) {
+      @if (isMergeMode()) {
+        <div
+          class="exercise-merge-row"
+          [class.selected]="mergeSelectedNames().has(exercise.name)"
+          [class.incompatible]="mergeSelectionIsCardio() !== null && mergeSelectionIsCardio() !== exercise.isCardio"
+          (click)="toggleMergeSelection(exercise.name)"
+        >
+          <span data-testid="exercise-merge-checkbox" class="merge-checkbox" [class.checked]="mergeSelectedNames().has(exercise.name)">
+            @if (mergeSelectedNames().has(exercise.name)) { ✓ }
+          </span>
+          <span class="merge-exercise-name">{{ exercise.name }}</span>
+        </div>
+      } @else {
+        <app-exercise-summary-row
+          [exerciseName]="exercise.name"
+          [maxWeightKg]="exercise.maxWeightKg"
+          [totalVolumeKg]="exercise.totalVolumeKg"
+          [occurrenceCount]="exercise.occurrenceCount"
+          [isCardio]="exercise.isCardio"
+          [totalDurationSeconds]="exercise.totalDurationSeconds"
+          [totalDistanceKm]="exercise.totalDistanceKm"
+          [muscleGroups]="exercise.muscleGroups"
+          (selected)="exerciseSelected.emit($event)"
+        />
+      }
+    }
+  </div>
+</div>
+
+@if (showMergeConfirm()) {
+  <div class="popup-backdrop" (click)="showMergeConfirm.set(false)">
+    <div data-testid="merge-confirm-popup" class="popup" (click)="$event.stopPropagation()">
+      <div class="popup-title">{{ 'statsGlobal.confirmMergeTitle' | translate }}</div>
+      <p class="popup-body">
+        {{ 'statsGlobal.confirmMergeBody' | translate:{ count: mergeSelectedNames().size, name: mergeNewName() } }}
+      </p>
+      <div class="popup-actions">
+        <button class="popup-cancel-btn" (click)="showMergeConfirm.set(false)">{{ 'common.cancel' | translate }}</button>
+        <button data-testid="merge-confirm-ok-btn" class="popup-ok-btn" (click)="onMergeConfirm()">{{ 'common.confirm' | translate }}</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,31 +1,32 @@
-@if (segments().length === 0) {
-  <p class="empty">{{ 'statsGlobal.noDataMonth' | translate }}</p>
-} @else {
-  <div class="pie-container">
-    <svg [attr.width]="svgSize" [attr.height]="svgSize" [attr.viewBox]="'0 0 ' + svgSize + ' ' + svgSize" class="pie-svg">
-      <g [attr.transform]="'rotate(-90, ' + center + ', ' + center + ')'">
-        @for (segment of segments(); track segment.group) {
-          <circle
-            [attr.cx]="center"
-            [attr.cy]="center"
-            [attr.r]="radius"
-            fill="none"
-            [attr.stroke]="segment.color"
-            stroke-width="28"
-            [attr.stroke-dasharray]="segment.dashLen + ' ' + circumference"
-            [attr.stroke-dashoffset]="segment.dashOffset"
-          />
-        }
-      </g>
-    </svg>
-    <div class="pie-legend">
-      @for (segment of segments(); track segment.group) {
-        <div class="legend-item">
-          <div class="legend-dot" [style.background]="segment.color"></div>
-          <span class="legend-text">{{ segment.group }}</span>
-          <span class="legend-pct">{{ segment.percentage }}%</span>
+
+    @if (segments().length === 0) {
+      <p class="empty">{{ 'statsGlobal.noDataMonth' | translate }}</p>
+    } @else {
+      <div class="pie-container">
+        <svg [attr.width]="svgSize" [attr.height]="svgSize" [attr.viewBox]="'0 0 ' + svgSize + ' ' + svgSize" class="pie-svg">
+          <g [attr.transform]="'rotate(-90, ' + center + ', ' + center + ')'">
+            @for (segment of segments(); track segment.group) {
+              <circle
+                [attr.cx]="center"
+                [attr.cy]="center"
+                [attr.r]="radius"
+                fill="none"
+                [attr.stroke]="segment.color"
+                stroke-width="28"
+                [attr.stroke-dasharray]="segment.dashLen + ' ' + circumference"
+                [attr.stroke-dashoffset]="segment.dashOffset"
+              />
+            }
+          </g>
+        </svg>
+        <div class="pie-legend">
+          @for (segment of segments(); track segment.group) {
+            <div class="legend-item">
+              <div class="legend-dot" [style.background]="segment.color"></div>
+              <span class="legend-text">{{ segment.group }}</span>
+              <span class="legend-pct">{{ segment.percentage }}%</span>
+            </div>
+          }
         </div>
-      }
-    </div>
-  </div>
-}
+      </div>
+    }

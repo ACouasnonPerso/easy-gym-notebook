@@ -150,7 +150,6 @@ export class SessionChronoService {
   }
 
   resumeForSession(sessionId: string): void {
-	  debugger;
     const state = this._getOrCreateSession(sessionId);
     if (state.intervalId !== null) {
       clearInterval(state.intervalId);
@@ -160,6 +159,7 @@ export class SessionChronoService {
     state.status.set('running');
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem(`egn_chrono_paused_${sessionId}`);
+      localStorage.removeItem(`egn_chrono_ended_${sessionId}`);
       localStorage.setItem(`egn_chrono_start_${sessionId}`, String(state.startTime));
     }
     state.intervalId = setInterval(() => {
@@ -174,14 +174,15 @@ export class SessionChronoService {
       clearInterval(state.intervalId);
       state.intervalId = null;
     }
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem(`egn_chrono_start_${sessionId}`);
-      localStorage.removeItem(`egn_chrono_paused_${sessionId}`);
-    }
     const elapsed = state.elapsed();
     state.pausedElapsed = elapsed;
     state.status.set('ended');
     state.startTime = null;
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(`egn_chrono_start_${sessionId}`);
+      localStorage.removeItem(`egn_chrono_paused_${sessionId}`);
+      localStorage.setItem(`egn_chrono_ended_${sessionId}`, String(elapsed));
+    }
     return elapsed;
   }
 
@@ -244,6 +245,16 @@ export class SessionChronoService {
       state.intervalId = setInterval(() => {
         state.elapsed.set(Math.floor((Date.now() - state.startTime!) / 1000));
       }, 1000);
+      return true;
+    }
+    const storedEnded = localStorage.getItem(`egn_chrono_ended_${sessionId}`);
+    if (storedEnded) {
+      state.pausedElapsed = parseInt(storedEnded);
+      state.startTime = null;
+      untracked(() => {
+        state.elapsed.set(state.pausedElapsed);
+        state.status.set('ended');
+      });
       return true;
     }
     return false;

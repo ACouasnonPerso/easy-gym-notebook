@@ -3,6 +3,7 @@ import { StatsService, MonthSummary } from './stats.service';
 import { SESSION_REPOSITORY } from '../../secondary_ports/session/session.repository.interface';
 import { EXERCISE_REPOSITORY } from '../../secondary_ports/exercise/exercise.repository.interface';
 import { Session, Exercise } from '../shared/models';
+import { SessionDuration } from './stats.service';
 
 function makeSession(overrides: Partial<Session> = {}): Session {
   return {
@@ -63,6 +64,58 @@ describe('StatsService', () => {
     });
 
     service = TestBed.inject(StatsService);
+  });
+
+  describe('sessionDurationsInMonth', () => {
+    it('should return [] when all durationSeconds are 0', () => {
+      const march10 = new Date(2026, 2, 10);
+      const march15 = new Date(2026, 2, 15);
+      service._allSessions.set([
+        makeSession({ id: 's1', date: march10, durationSeconds: 0 }),
+        makeSession({ id: 's2', date: march15, durationSeconds: 0 }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result: SessionDuration[] = service.sessionDurationsInMonth();
+
+      expect(result).toEqual([]);
+    });
+
+    it('should exclude sessions outside the selected month', () => {
+      const march10 = new Date(2026, 2, 10);
+      const feb15 = new Date(2026, 1, 15);
+      const april5 = new Date(2026, 3, 5);
+      service._allSessions.set([
+        makeSession({ id: 's1', date: march10, durationSeconds: 3600 }),
+        makeSession({ id: 's2', date: feb15, durationSeconds: 1800 }),
+        makeSession({ id: 's3', date: april5, durationSeconds: 2700 }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result: SessionDuration[] = service.sessionDurationsInMonth();
+
+      expect(result.length).toBe(1);
+      expect(result[0].durationSeconds).toBe(3600);
+    });
+
+    it('should return sessions of the selected month sorted by date with correct durationSeconds', () => {
+      const march10 = new Date(2026, 2, 10);
+      const march5 = new Date(2026, 2, 5);
+      const march20 = new Date(2026, 2, 20);
+      service._allSessions.set([
+        makeSession({ id: 's1', date: march10, durationSeconds: 3600 }),
+        makeSession({ id: 's2', date: march5, durationSeconds: 1800 }),
+        makeSession({ id: 's3', date: march20, durationSeconds: 2700 }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result: SessionDuration[] = service.sessionDurationsInMonth();
+
+      expect(result.length).toBe(3);
+      expect(result[0]).toEqual({ date: march5, durationSeconds: 1800 });
+      expect(result[1]).toEqual({ date: march10, durationSeconds: 3600 });
+      expect(result[2]).toEqual({ date: march20, durationSeconds: 2700 });
+    });
   });
 
   describe('weekSummary', () => {

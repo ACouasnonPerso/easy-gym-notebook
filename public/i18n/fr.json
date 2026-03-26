@@ -22,6 +22,8 @@
     "add": "Ajouter",
     "delete": "Supprimer",
     "duration": "Duree",
+    "distance": "Distance",
+    "distanceKm": "Distance (km)",
     "hours": "Heures",
     "minutes": "Minutes",
     "seconds": "Secondes",
@@ -37,7 +39,12 @@
     "noData": "Aucune donnee",
     "sessions": "Sessions",
     "max": "Max",
-    "merge": "Merge"
+    "merge": "Merge",
+    "cardio": "Cardio",
+    "weekShort": "S",
+    "unitMin": "min",
+    "unitKg": "kg",
+    "unitSec": "s"
   },
   "sessionList": {
     "title": "Sessions",
@@ -54,7 +61,9 @@
     "page": "Page exercice",
     "empty": "Aucun exercice.",
     "addHint": "Ajoutez-en un !",
-    "deleteConfirm": "Supprimer cet exercice ?"
+    "deleteConfirm": "Supprimer cet exercice ?",
+    "validateAria": "Valider exercice",
+    "cancelAria": "Annuler exercice"
   },
   "session": {
     "endConfirm": "Terminer la seance ?"
@@ -75,7 +84,8 @@
     "confirmMergeBody": "Renommer {{count}} exercice(s) en \"{{name}}\" ? Cette action est irreversible.",
     "currentYear": "Annee en cours",
     "total": "Total",
-    "noDataMonth": "Aucune donnee ce mois-ci"
+    "noDataMonth": "Aucune donnee ce mois-ci",
+    "trainingTime": "Temps d'entrainement"
   },
   "chrono": {
     "startTraining": "START TRAINING",

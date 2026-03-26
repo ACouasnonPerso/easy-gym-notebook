@@ -290,6 +290,7 @@ UI (re-render automatique via Signals)
 - `ChangeDetectionStrategy.OnPush` systématiquement.
 - `input()` / `output()` à la place de `@Input` / `@Output`.
 - Composants **dumb** : reçoivent des données, émettent des événements.
+- **Toujours séparer** le template, les styles et la classe en trois fichiers distincts (`.html`, `.scss`, `.ts`). Ne jamais utiliser `template` ou `styles` inline dans le décorateur `@Component`.
 
 ### Injection de dépendances
 - Utiliser `inject()` dans le constructeur ou en propriété de classe.
