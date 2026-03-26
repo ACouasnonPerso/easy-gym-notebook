@@ -44,7 +44,8 @@
     "empty": "No session yet. Tap + to start.",
     "deleteConfirm": "Delete this session?",
     "duplicate": "Duplicate",
-    "delete": "Delete"
+    "delete": "Delete",
+    "tip": "Long press a session to duplicate it"
   },
   "exercise": {
     "new": "New exercise",
@@ -60,7 +61,8 @@
   },
   "statsExercise": {
     "empty": "No data for this exercise",
-    "volumeFormula": "= Weight x Reps x Sets"
+    "volumeFormula": "= Weight x Reps x Sets",
+    "distanceKm": "km"
   },
   "statsGlobal": {
     "trainingRecurrences": "Training recurrences",

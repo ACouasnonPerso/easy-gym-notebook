@@ -73,7 +73,7 @@ const PAGE_SIZE = 20;
     @if (sessions().length > 0 && sessions().length < 4) {
       <div class="tips-banner">
         <span class="tips-icon">💡</span>
-        <span class="tips-text">Reste appuyé sur une session pour la dupliquer 😉</span>
+        <span class="tips-text">{{ 'sessionList.tip' | translate }}</span>
       </div>
     }
   `,

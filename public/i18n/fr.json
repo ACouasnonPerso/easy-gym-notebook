@@ -44,7 +44,8 @@
     "empty": "Aucune seance. Appuyez sur + pour commencer.",
     "deleteConfirm": "Supprimer cette seance ?",
     "duplicate": "Dupliquer",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "tip": "Restez appuye sur une seance pour la dupliquer"
   },
   "exercise": {
     "new": "Nouvel exercice",
@@ -60,7 +61,8 @@
   },
   "statsExercise": {
     "empty": "Aucune donnee pour cet exercice",
-    "volumeFormula": "= Poids x Rep x Series"
+    "volumeFormula": "= Poids x Rep x Series",
+    "distanceKm": "km"
   },
   "statsGlobal": {
     "trainingRecurrences": "Training recurrences",

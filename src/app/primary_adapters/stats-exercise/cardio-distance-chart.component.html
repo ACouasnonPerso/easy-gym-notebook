@@ -1,0 +1,11 @@
+@if (chartData(); as cd) {
+  <div>
+    <svg viewBox="0 0 320 150" width="100%" class="chart-svg">
+      @for (p of cd.distancePoints; track $index) {
+        <circle [attr.cx]="p.x" [attr.cy]="p.y" r="3" fill="#06b6d4"/>
+      }
+    </svg>
+  </div>
+} @else {
+  <div class="empty-chart">{{ 'common.noData' | translate }}</div>
+}

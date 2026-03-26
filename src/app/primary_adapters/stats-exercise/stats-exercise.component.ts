@@ -31,7 +31,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
               class="tab-btn"
               [class.active]="chartSelection.selectedChart() === 'weight'"
               (click)="chartSelection.select('weight')"
-            >km</button>
+            >{{ 'statsExercise.distanceKm' | translate }}</button>
           </div>
           @if (chartSelection.selectedChart() === 'volume') {
             <app-cardio-time-chart [occurrences]="useCase.cardioOccurrences()" />

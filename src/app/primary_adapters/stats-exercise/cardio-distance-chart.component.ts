@@ -8,24 +8,8 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslateModule],
-  template: `
-    @if (chartData(); as cd) {
-      <div>
-        <svg viewBox="0 0 320 150" width="100%" class="chart-svg">
-          @for (p of cd.distancePoints; track $index) {
-            <circle [attr.cx]="p.x" [attr.cy]="p.y" r="3" fill="#06b6d4"/>
-          }
-        </svg>
-      </div>
-    } @else {
-      <div class="empty-chart">{{ 'common.noData' | translate }}</div>
-    }
-  `,
-  styles: [`
-    :host { display: block; }
-    .empty-chart { text-align: center; color: var(--muted); padding: 32px 0; }
-    .chart-svg { overflow: visible; }
-  `],
+  templateUrl: './cardio-distance-chart.component.html',
+  styleUrl: './cardio-distance-chart.component.scss',
 })
 export class CardioDistanceChartComponent {
   readonly occurrences = input<CardioOccurrence[]>([]);
