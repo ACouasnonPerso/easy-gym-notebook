@@ -11,7 +11,7 @@ L'application **Easy Gym Notebook** est développée en **Angular 21** en suivan
 
 **Règle d'or** : les dépendances vont toujours vers le centre. L'UI ne connaît que les use cases. Les services métier ne connaissent pas l'UI. Les repositories ne connaissent pas les services.
 
-Aucun backend n'est utilisé. Toutes les données sont persistées dans le **localStorage** du navigateur.
+Aucun backend n'est utilisé. Toutes les données sont persistées dans le **localStorage** de la WebView Capacitor (équivalent au localStorage navigateur, accessible nativement sur iOS et Android).
 
 ---
 
@@ -55,13 +55,14 @@ Aucun backend n'est utilisé. Toutes les données sont persistées dans le **loc
 | Contrainte | Valeur |
 |---|---|
 | Framework | Angular 21 |
+| Distribution | **Capacitor** (app native iOS / Android, pas de PWA) |
 | Modules | Aucun NgModule — composants standalone uniquement |
 | Détection de changements | `ChangeDetectionStrategy.OnPush` sur tous les composants |
 | État réactif | Signals Angular (`signal`, `computed`, `effect`) |
 | Flux asynchrones | RxJS uniquement pour les événements DOM complexes (long press) |
-| Persistance | `localStorage` (aucun backend) |
+| Persistance | `localStorage` via WebView Capacitor (aucun backend) |
 | Routing | Angular Router avec lazy loading par feature |
-| UUID | `crypto.randomUUID()` (API navigateur native) |
+| UUID | `crypto.randomUUID()` (disponible dans la WebView Capacitor) |
 | Styles | SCSS |
 
 ---

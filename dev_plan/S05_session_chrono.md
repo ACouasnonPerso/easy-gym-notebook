@@ -17,7 +17,7 @@ Out of scope: exercise chrono (S06).
 - Angular 21 — standalone, `OnPush`, `input()` / `output()`, `inject()`
 - Requires S01, S02 (SessionService used to persist `durationSeconds`)
 - `SessionChronoService` is `providedIn: 'root'` — singleton, persists across route changes (seul service autorisé à utiliser `providedIn: 'root'` directement car pas fourni via InjectionToken)
-- Timer persisted in localStorage under `egn_chrono_start` (epoch timestamp) — allows recovery after page reload
+- Timer persisted in localStorage under `egn_chrono_start` (epoch timestamp) — allows recovery if the app is killed and relaunched
 - SVG progress ring: `r=90`, `circumference = 2π×90 ≈ 565.5`; ring cycles every 60 seconds
 - `ringOffset = circumference × (1 - (elapsedSeconds % 60) / 60)` — decreases to 0 at end of each minute
 
@@ -45,7 +45,7 @@ Out of scope: exercise chrono (S06).
 
 ## Acceptance criteria
 - Creating a session (S02) starts the chrono immediately; navigating away and back keeps the timer running
-- Reloading the page (F5) resumes the timer from the correct elapsed time using `egn_chrono_start`
+- Killing and relaunching the app resumes the timer from the correct elapsed time using `egn_chrono_start`
 - SVG ring resets visually every 60 seconds (one full cycle per minute)
 - "STOP" with elapsed > 0 saves `durationSeconds` to the session and navigates to session list
 - "STOP" with elapsed = 0 shows the manual input field

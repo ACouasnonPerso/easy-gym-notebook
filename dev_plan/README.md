@@ -1,6 +1,6 @@
 # Easy Gym Notebook — Development Plan
 
-Easy Gym Notebook is a mobile-first Angular 21 PWA for tracking gym sessions and recording personal bests. All data is stored in the browser's `localStorage` (no backend). The app follows Clean Architecture with strict layer separation: standalone `OnPush` components call use cases, use cases orchestrate core logic services backed by repository interfaces, and concrete localStorage implementations are injected via `InjectionToken`.
+Easy Gym Notebook is a mobile-first Angular 21 **Capacitor app** for tracking gym sessions and recording personal bests. All data is stored in `localStorage` via the native WebView (no backend). The app follows Clean Architecture with strict layer separation: standalone `OnPush` components call use cases, use cases orchestrate core logic services backed by repository interfaces, and concrete localStorage implementations are injected via `InjectionToken`.
 
 **Pages de référence UI** : `design/fitness-app-page-1-2.html` et `design/fitness-app-page-3-5.html` servent de référence pour la **structure HTML**, le **contenu affiché** et le **style graphique** (couleurs, typographie, disposition). Ces pages sont statiques et sans logique — elles ne doivent pas être recopiées. Chaque story reconstruit sa page en Angular avec la logique métier complète (signals, use cases, services), en s'inspirant uniquement du rendu visuel de la référence.
 
