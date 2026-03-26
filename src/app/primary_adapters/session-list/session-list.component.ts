@@ -16,6 +16,7 @@ import { SessionCardComponent } from './session-card.component';
 import { ScrollSentinelDirective } from '../shared/scroll-sentinel.directive';
 import { ContextMenuComponent } from '../shared/context-menu.component';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 const PAGE_SIZE = 20;
 
@@ -28,13 +29,14 @@ const PAGE_SIZE = 20;
     ScrollSentinelDirective,
     ContextMenuComponent,
     ConfirmDialogComponent,
+    TranslateModule,
   ],
   template: `
     <div class="page">
-      <div class="page-title">Sessions</div>
+      <div class="page-title">{{ 'sessionList.title' | translate }}</div>
 
       @if (sessions().length === 0) {
-        <p class="empty">Aucune séance. Appuyez sur + pour commencer.</p>
+        <p class="empty">{{ 'sessionList.empty' | translate }}</p>
       }
 
       <div class="session-list">
@@ -61,7 +63,7 @@ const PAGE_SIZE = 20;
 
       @if (showConfirm()) {
         <app-confirm-dialog
-          message="Supprimer cette séance ?"
+          [message]="'sessionList.deleteConfirm' | translate"
           (confirmed)="confirmDelete()"
           (cancelled)="showConfirm.set(false)"
         />
@@ -124,7 +126,7 @@ export class SessionListComponent implements OnInit {
   readonly contextMenuSession = signal<Session | null>(null);
   readonly showConfirm = signal(false);
 
-  readonly contextMenuOptions = ['Dupliquer', 'Supprimer'];
+  readonly contextMenuOptions = ['sessionList.duplicate', 'sessionList.delete'];
 
   ngOnInit(): void {
     this.getSessionsUseCase.execute();
@@ -146,8 +148,8 @@ export class SessionListComponent implements OnInit {
   onContextMenuSelected(option: string): void {
     const session = this.contextMenuSession();
     if (!session) return;
-    if (option === 'Dupliquer') this.duplicateSessionUseCase.execute(session.id);
-    if (option === 'Supprimer') this.showConfirm.set(true);
+    if (option === 'sessionList.duplicate') this.duplicateSessionUseCase.execute(session.id);
+    if (option === 'sessionList.delete') this.showConfirm.set(true);
   }
 
   confirmDelete(): void {

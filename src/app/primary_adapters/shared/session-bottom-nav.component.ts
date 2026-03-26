@@ -1,13 +1,14 @@
 import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SessionDetailUiService } from '../session-detail/session-detail-ui.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-session-bottom-nav',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, TranslateModule],
   template: `
-    <nav aria-label="Navigation session">
+    <nav [attr.aria-label]="'nav.sessionNavigation' | translate">
       <div class="nav-bar">
         <div class="nav-inner">
           <a [routerLink]="sessionLink()" routerLinkActive="active" class="nav-link">
@@ -15,10 +16,10 @@ import { SessionDetailUiService } from '../session-detail/session-detail-ui.serv
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
               <polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
-            <span class="nav-label">Session</span>
+            <span class="nav-label">{{ 'nav.session' | translate }}</span>
           </a>
           <div class="center-slot">
-            <button class="center-btn" (click)="openAddExercise()" aria-label="Ajouter un exercice">
+            <button class="center-btn" (click)="openAddExercise()" [attr.aria-label]="'nav.addExercise' | translate">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <line x1="12" y1="5" x2="12" y2="19"/>
                 <line x1="5" y1="12" x2="19" y2="12"/>
@@ -31,7 +32,7 @@ import { SessionDetailUiService } from '../session-detail/session-detail-ui.serv
               <polyline points="12 7 12 12 15 15"/>
               <line x1="9" y1="1" x2="15" y2="1"/>
             </svg>
-            <span class="nav-label">Chrono</span>
+            <span class="nav-label">{{ 'nav.chrono' | translate }}</span>
           </a>
         </div>
       </div>

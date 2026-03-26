@@ -6,6 +6,7 @@ import { AutocompleteService } from '../../core_logic/session-detail/autocomplet
 import { MuscleGroupDetectorService } from '../../core_logic/shared/muscle-group-detector.service';
 import { DrumPickerComponent } from '../shared/drum-picker.component';
 import { generateRange } from '../../core_logic/shared/utils';
+import { TranslateModule } from '@ngx-translate/core';
 
 function secondsToMmss(s: number): string {
   const m = Math.floor(s / 60);
@@ -27,19 +28,19 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
   selector: 'app-add-exercise-form',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, DrumPickerComponent],
+  imports: [FormsModule, DrumPickerComponent, TranslateModule],
   template: `
     <div class="overlay" (click)="cancelled.emit()">
       <div class="form-card" (click)="$event.stopPropagation()">
-        <h2 class="form-title">Nouvel exercice</h2>
+        <h2 class="form-title">{{ 'exercise.new' | translate }}</h2>
 
         <div class="name-field">
-          <label class="field-label">Nom</label>
+          <label class="field-label">{{ 'common.name' | translate }}</label>
           <input
             type="text"
             [value]="name()"
             (input)="onNameInput($event)"
-            placeholder="ex: Développé couché"
+            [placeholder]="'exercise.namePlaceholder' | translate"
             class="input"
           />
           @if (suggestions().length > 0) {
@@ -58,7 +59,7 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
 
         <div class="pickers-row">
           <div class="picker-col">
-            <span class="picker-label">Poids</span>
+            <span class="picker-label">{{ 'common.weight' | translate }}</span>
             <app-drum-picker
               [values]="weightValues"
               [selectedValue]="weightKg()"
@@ -67,7 +68,7 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
             />
           </div>
           <div class="picker-col">
-            <span class="picker-label">Séries</span>
+            <span class="picker-label">{{ 'common.sets' | translate }}</span>
             <app-drum-picker
               [values]="setsValues"
               [selectedValue]="sets()"
@@ -75,7 +76,7 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
             />
           </div>
           <div class="picker-col">
-            <span class="picker-label">Répétitions</span>
+            <span class="picker-label">{{ 'common.reps' | translate }}</span>
             <app-drum-picker
               [values]="repsValues"
               [selectedValue]="reps()"
@@ -83,7 +84,7 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
             />
           </div>
           <div class="picker-col">
-            <span class="picker-label">Repos</span>
+            <span class="picker-label">{{ 'common.rest' | translate }}</span>
             <app-drum-picker  style="min-width: 90px !important"
               [values]="breakValues"
               [selectedValue]="breakSelectedValue()"
@@ -93,8 +94,8 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
         </div>
 
         <div class="actions">
-          <button class="btn-cancel" (click)="cancelled.emit()">Annuler</button>
-          <button class="btn-submit" (click)="onSubmit()">Ajouter</button>
+          <button class="btn-cancel" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
+          <button class="btn-submit" (click)="onSubmit()">{{ 'common.add' | translate }}</button>
         </div>
       </div>
     </div>

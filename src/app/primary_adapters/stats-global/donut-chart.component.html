@@ -1,5 +1,5 @@
 @if (segments().length === 0) {
-  <p class="empty">Aucune donnée ce mois-ci</p>
+  <p class="empty">{{ 'statsGlobal.noDataMonth' | translate }}</p>
 } @else {
   <div class="pie-container">
     <svg [attr.width]="svgSize" [attr.height]="svgSize" [attr.viewBox]="'0 0 ' + svgSize + ' ' + svgSize" class="pie-svg">

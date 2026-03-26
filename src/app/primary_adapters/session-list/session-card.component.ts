@@ -3,12 +3,13 @@ import { DatePipe, NgStyle } from '@angular/common';
 import { Session, MuscleGroup } from '../../core_logic/shared/models';
 import { formatDuration } from '../../core_logic/shared/utils';
 import { LongPressDirective } from '../shared/long-press.directive';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-session-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe, LongPressDirective, NgStyle],
+  imports: [DatePipe, LongPressDirective, NgStyle, TranslateModule],
   template: `
     <div class="session-card" appLongPress (longPress)="longPress.emit()">
       <div class="session-header">
@@ -25,15 +26,15 @@ import { LongPressDirective } from '../shared/long-press.directive';
       <div class="session-stats">
         <div class="stat-item">
           <span class="stat-value orange">{{ totalWeightFormatted() }}</span>
-          <span class="stat-label">Poids</span>
+          <span class="stat-label">{{ 'common.weight' | translate }}</span>
         </div>
         <div class="stat-item">
           <span class="stat-value blue">{{ exerciseCount() }}</span>
-          <span class="stat-label">Exercices</span>
+          <span class="stat-label">{{ 'common.exercises' | translate }}</span>
         </div>
         <div class="stat-item right">
           <span class="stat-value">{{ duration() }}</span>
-          <span class="stat-label">Temps</span>
+          <span class="stat-label">{{ 'common.time' | translate }}</span>
         </div>
       </div>
     </div>

@@ -1,12 +1,13 @@
 import { Component, ChangeDetectionStrategy, input, output, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Session } from '../../core_logic/shared/models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-session-header-stats',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe],
+  imports: [DatePipe, TranslateModule],
   templateUrl: './session-header-stats.component.html',
   styleUrl: './session-header-stats.component.scss',
 })

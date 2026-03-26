@@ -3,8 +3,8 @@
     <div class="chart-legend">
       <div class="legend-item">
         <div class="legend-dot" style="background:#22c55e"></div>
-        <span class="green">Volume</span>
-        <span class="small">= Poids × Rép × Séries</span>
+        <span class="green">{{ 'common.volume' | translate }}</span>
+        <span class="small">{{ 'statsExercise.volumeFormula' | translate }}</span>
       </div>
     </div>
     <svg viewBox="0 0 320 150" width="100%" class="chart-svg">
@@ -48,5 +48,5 @@
     </svg>
   </div>
 } @else {
-  <div class="empty-chart">Aucune donnée</div>
+  <div class="empty-chart">{{ 'common.noData' | translate }}</div>
 }

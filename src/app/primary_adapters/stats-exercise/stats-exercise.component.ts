@@ -5,15 +5,16 @@ import { GetExerciseStatsUseCase } from '../../primary_ports/stats-exercise/get-
 import { VolumeLineChartComponent } from './volume-line-chart.component';
 import { WeightLineChartComponent } from './weight-line-chart.component';
 import { ChartSelectionService } from './chart-selection.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-stats-exercise',
   standalone: true,
-  imports: [VolumeLineChartComponent, WeightLineChartComponent],
+  imports: [VolumeLineChartComponent, WeightLineChartComponent, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="page">
-      <div class="back-btn" (click)="location.back()"><span class="back-arrow">←</span> Back</div>
+      <div class="back-btn" (click)="location.back()"><span class="back-arrow">←</span> {{ 'common.back' | translate }}</div>
       <div class="page-title">{{ exerciseName }}</div>
 
       <div class="chart-card">
@@ -22,12 +23,12 @@ import { ChartSelectionService } from './chart-selection.service';
             class="tab-btn"
             [class.active]="chartSelection.selectedChart() === 'volume'"
             (click)="chartSelection.select('volume')"
-          >Volume</button>
+          >{{ 'common.volume' | translate }}</button>
           <button
             class="tab-btn"
             [class.active]="chartSelection.selectedChart() === 'weight'"
             (click)="chartSelection.select('weight')"
-          >Poids</button>
+          >{{ 'common.weight' | translate }}</button>
         </div>
 
         @if (chartSelection.selectedChart() === 'volume') {
@@ -38,7 +39,7 @@ import { ChartSelectionService } from './chart-selection.service';
       </div>
 
       @if (useCase.occurrences().length === 0) {
-        <p class="empty">Aucune donnée pour cet exercice</p>
+        <p class="empty">{{ 'statsExercise.empty' | translate }}</p>
       } @else {
         @for (o of useCase.occurrences(); track o.exerciseId) {
           <div class="history-card">
@@ -48,19 +49,19 @@ import { ChartSelectionService } from './chart-selection.service';
             <div class="history-stats">
               <div class="h-stat">
                 <span class="h-stat-value orange">{{ o.weightKg }} kg</span>
-                <span class="h-stat-label">Poids</span>
+                <span class="h-stat-label">{{ 'common.weight' | translate }}</span>
               </div>
               <div class="h-stat">
                 <span class="h-stat-value">{{ o.sets }}</span>
-                <span class="h-stat-label">Séries</span>
+                <span class="h-stat-label">{{ 'common.sets' | translate }}</span>
               </div>
               <div class="h-stat">
                 <span class="h-stat-value">{{ o.reps }}</span>
-                <span class="h-stat-label">Répétitions</span>
+                <span class="h-stat-label">{{ 'common.reps' | translate }}</span>
               </div>
               <div class="h-stat right">
                 <span class="h-stat-value">{{ o.breakDurationSeconds }}s</span>
-                <span class="h-stat-label">Break</span>
+                <span class="h-stat-label">{{ 'common.break' | translate }}</span>
               </div>
             </div>
           </div>
@@ -192,6 +193,7 @@ export class StatsExerciseComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   protected readonly useCase = inject(GetExerciseStatsUseCase);
   protected readonly chartSelection = inject(ChartSelectionService);
+  private readonly translate = inject(TranslateService);
 
   exerciseName = '';
 
@@ -201,6 +203,7 @@ export class StatsExerciseComponent implements OnInit {
   }
 
   formatDate(d: Date): string {
-    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+    const locale = this.translate.currentLang === 'en' ? 'en-US' : 'fr-FR';
+    return d.toLocaleDateString(locale, { day: '2-digit', month: 'long', year: 'numeric' });
   }
 }

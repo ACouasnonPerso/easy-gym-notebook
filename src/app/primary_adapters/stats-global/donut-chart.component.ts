@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
 import { MuscleGroup } from '../../core_logic/shared/models';
+import { TranslateModule } from '@ngx-translate/core';
 
 const MUSCLE_COLORS: Record<MuscleGroup, string> = {
   [MuscleGroup.Chest]: '#e74c3c',
@@ -32,9 +33,10 @@ interface DonutSegment {
   selector: 'app-donut-chart',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TranslateModule],
   template: `
     @if (segments().length === 0) {
-      <p class="empty">Aucune donnée ce mois-ci</p>
+      <p class="empty">{{ 'statsGlobal.noDataMonth' | translate }}</p>
     } @else {
       <div class="pie-container">
         <svg [attr.width]="svgSize" [attr.height]="svgSize" [attr.viewBox]="'0 0 ' + svgSize + ' ' + svgSize" class="pie-svg">

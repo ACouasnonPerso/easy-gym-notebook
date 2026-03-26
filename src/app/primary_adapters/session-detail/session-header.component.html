@@ -1,5 +1,5 @@
 <div class="header">
-  <div class="back-btn" (click)="goBack.emit()"><span class="back-arrow">←</span> Back</div>
+  <div class="back-btn" (click)="goBack.emit()"><span class="back-arrow">←</span> {{ 'common.back' | translate }}</div>
   <div class="session-header-row">
     <app-session-header-stats
       [session]="session()"

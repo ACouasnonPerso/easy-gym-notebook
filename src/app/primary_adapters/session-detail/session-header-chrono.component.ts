@@ -1,10 +1,12 @@
 import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
 import { ChronoStatus } from '../../core_logic/chrono/session-chrono.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-session-header-chrono',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TranslateModule],
   templateUrl: './session-header-chrono.component.html',
   styleUrl: './session-header-chrono.component.scss',
 })

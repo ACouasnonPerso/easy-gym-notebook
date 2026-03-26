@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "main": "Main navigation",
+    "sessions": "Sessions",
+    "addSession": "Add a session",
+    "stats": "Stats",
+    "sessionNavigation": "Session navigation",
+    "session": "Session",
+    "addExercise": "Add an exercise",
+    "chrono": "Timer"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "weight": "Weight",
+    "exercises": "Exercises",
+    "time": "Time",
+    "name": "Name",
+    "sets": "Sets",
+    "reps": "Reps",
+    "rest": "Rest",
+    "add": "Add",
+    "delete": "Delete",
+    "duration": "Duration",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "validate": "Validate",
+    "back": "Back",
+    "end": "End",
+    "break": "Break",
+    "resume": "Resume",
+    "edit": "Edit",
+    "pause": "Pause",
+    "reset": "Reset",
+    "volume": "Volume",
+    "noData": "No data",
+    "sessions": "Sessions",
+    "max": "Max",
+    "merge": "Merge"
+  },
+  "sessionList": {
+    "title": "Sessions",
+    "empty": "No session yet. Tap + to start.",
+    "deleteConfirm": "Delete this session?",
+    "duplicate": "Duplicate",
+    "delete": "Delete"
+  },
+  "exercise": {
+    "new": "New exercise",
+    "name": "Exercise name",
+    "namePlaceholder": "e.g. Bench press",
+    "page": "Exercise page",
+    "empty": "No exercise.",
+    "addHint": "Add one!",
+    "deleteConfirm": "Delete this exercise?"
+  },
+  "session": {
+    "durationSeconds": "Session duration (seconds)"
+  },
+  "statsExercise": {
+    "empty": "No data for this exercise",
+    "volumeFormula": "= Weight x Reps x Sets"
+  },
+  "statsGlobal": {
+    "trainingRecurrences": "Training recurrences",
+    "workedMuscles": "Worked muscles",
+    "weekSummary": "Weekly summary",
+    "monthSummary": "Monthly summary",
+    "newNamePlaceholder": "New name...",
+    "mergeCount": "Merge {{count}} exercise(s)",
+    "confirmMergeTitle": "Confirm merge",
+    "confirmMergeBody": "Rename {{count}} exercise(s) to \"{{name}}\"? This action is irreversible.",
+    "currentYear": "Current year",
+    "total": "Total",
+    "noDataMonth": "No data this month"
+  },
+  "chrono": {
+    "startTraining": "START TRAINING",
+    "goBreak": "GO BREAK",
+    "goTraining": "GO TRAINING",
+    "ready": "Ready",
+    "training": "Training"
+  },
+  "days": {
+    "mon": "M",
+    "tue": "T",
+    "wed": "W",
+    "thu": "T",
+    "fri": "F",
+    "sat": "S",
+    "sun": "S"
+  }
+}

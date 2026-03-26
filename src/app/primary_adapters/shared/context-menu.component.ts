@@ -1,15 +1,17 @@
 import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-context-menu',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TranslateModule],
   template: `
     <div class="backdrop" (click)="closed.emit()"></div>
     <div class="menu">
       @for (option of options(); track option) {
         <button class="menu-item" (click)="selected.emit(option); closed.emit()">
-          {{ option }}
+          {{ option | translate }}
         </button>
       }
     </div>

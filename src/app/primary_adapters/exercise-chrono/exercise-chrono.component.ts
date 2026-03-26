@@ -3,21 +3,22 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ExerciseChronoUseCase } from '../../primary_ports/exercise-chrono/exercise-chrono.usecase';
 import { EditDurationPopupComponent } from '../session-detail/edit-duration-popup.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-exercise-chrono',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [EditDurationPopupComponent],
+  imports: [EditDurationPopupComponent, TranslateModule],
   templateUrl: './exercise-chrono.component.html',
   styleUrl: './exercise-chrono.component.scss',
   template: `
     <div class="page" [class.blinking]="isBlinking()">
       <div class="header-pad">
-        <div class="back-btn" (click)="location.back()"><span class="back-arrow">←</span> Back</div>
+        <div class="back-btn" (click)="location.back()"><span class="back-arrow">←</span> {{ 'common.back' | translate }}</div>
         @if (!hasExercise()) {
           <span class="break-duration-label" (click)="showBreakDurationPopup.set(true)">
-            {{ formattedBreakDuration() }} repos
+            {{ formattedBreakDuration() }} {{ 'common.rest' | translate }}
           </span>
         }
       </div>
@@ -45,7 +46,7 @@ import { EditDurationPopupComponent } from '../session-detail/edit-duration-popu
                   <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
                 </svg>
               </div>
-              <span class="chrono-btn-label">START TRAINING</span>
+              <span class="chrono-btn-label">{{ 'chrono.startTraining' | translate }}</span>
             </div>
           }
 
@@ -58,7 +59,7 @@ import { EditDurationPopupComponent } from '../session-detail/edit-duration-popu
                   <rect x="20" y="8" width="5" height="16" rx="2" fill="#4caf50"/>
                 </svg>
               </div>
-              <span class="chrono-btn-label">PAUSE</span>
+              <span class="chrono-btn-label">{{ 'common.pause' | translate }}</span>
             </div>
           }
 
@@ -70,7 +71,7 @@ import { EditDurationPopupComponent } from '../session-detail/edit-duration-popu
                   <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
                 </svg>
               </div>
-              <span class="chrono-btn-label">REPRENDRE</span>
+              <span class="chrono-btn-label">{{ 'common.resume' | translate }}</span>
             </div>
             <div class="chrono-btn danger" (click)="exerciseChronoUseCase.reset()">
               <div class="chrono-btn-icon">
@@ -79,7 +80,7 @@ import { EditDurationPopupComponent } from '../session-detail/edit-duration-popu
                   <polygon points="22,8 28,14 28,7" fill="#ef4444"/>
                 </svg>
               </div>
-              <span class="chrono-btn-label">RESET</span>
+              <span class="chrono-btn-label">{{ 'common.reset' | translate }}</span>
             </div>
             <div class="chrono-btn" (click)="exerciseChronoUseCase.goBreak()">
               <div class="chrono-btn-icon">
@@ -88,7 +89,7 @@ import { EditDurationPopupComponent } from '../session-detail/edit-duration-popu
                   <rect x="20" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
                 </svg>
               </div>
-              <span class="chrono-btn-label">GO BREAK</span>
+              <span class="chrono-btn-label">{{ 'chrono.goBreak' | translate }}</span>
             </div>
           }
 
@@ -100,7 +101,7 @@ import { EditDurationPopupComponent } from '../session-detail/edit-duration-popu
                   <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
                 </svg>
               </div>
-              <span class="chrono-btn-label">GO TRAINING</span>
+              <span class="chrono-btn-label">{{ 'chrono.goTraining' | translate }}</span>
             </div>
             <div class="chrono-btn" (click)="exerciseChronoUseCase.pause()">
               <div class="chrono-btn-icon">
@@ -109,7 +110,7 @@ import { EditDurationPopupComponent } from '../session-detail/edit-duration-popu
                   <rect x="20" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
                 </svg>
               </div>
-              <span class="chrono-btn-label">PAUSE</span>
+              <span class="chrono-btn-label">{{ 'common.pause' | translate }}</span>
             </div>
           }
 
@@ -121,7 +122,7 @@ import { EditDurationPopupComponent } from '../session-detail/edit-duration-popu
                   <polygon points="10,7 26,16 10,25" fill="#f5a623"/>
                 </svg>
               </div>
-              <span class="chrono-btn-label">REPRENDRE</span>
+              <span class="chrono-btn-label">{{ 'common.resume' | translate }}</span>
             </div>
             <div class="chrono-btn danger" (click)="exerciseChronoUseCase.reset()">
               <div class="chrono-btn-icon">
@@ -130,7 +131,7 @@ import { EditDurationPopupComponent } from '../session-detail/edit-duration-popu
                   <polygon points="22,8 28,14 28,7" fill="#ef4444"/>
                 </svg>
               </div>
-              <span class="chrono-btn-label">RESET</span>
+              <span class="chrono-btn-label">{{ 'common.reset' | translate }}</span>
             </div>
             <div class="chrono-btn" (click)="exerciseChronoUseCase.goTraining()">
               <div class="chrono-btn-icon">
@@ -138,7 +139,7 @@ import { EditDurationPopupComponent } from '../session-detail/edit-duration-popu
                   <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
                 </svg>
               </div>
-              <span class="chrono-btn-label">GO TRAINING</span>
+              <span class="chrono-btn-label">{{ 'chrono.goTraining' | translate }}</span>
             </div>
           }
 
@@ -159,6 +160,7 @@ export class ExerciseChronoComponent implements OnInit {
   protected readonly exerciseChronoUseCase = inject(ExerciseChronoUseCase);
   private readonly route = inject(ActivatedRoute);
   protected readonly location = inject(Location);
+  private readonly translate = inject(TranslateService);
 
   readonly _breakDuration = signal(120);
   readonly hasExercise = signal(false);
@@ -197,9 +199,9 @@ export class ExerciseChronoComponent implements OnInit {
 
   readonly statusLabel = computed(() => {
     const state = this.exerciseChronoUseCase.chronoState();
-    if (state === 'break' || state === 'break_paused') return 'Break';
-    if (state === 'initial') return 'Ready';
-    return 'Training';
+    if (state === 'break' || state === 'break_paused') return this.translate.instant('common.break');
+    if (state === 'initial') return this.translate.instant('chrono.ready');
+    return this.translate.instant('chrono.training');
   });
 
   readonly ringColor = computed(() => {

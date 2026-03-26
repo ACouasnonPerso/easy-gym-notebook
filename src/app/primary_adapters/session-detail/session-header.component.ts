@@ -3,12 +3,13 @@ import { Session } from '../../core_logic/shared/models';
 import { ChronoStatus } from '../../core_logic/chrono/session-chrono.service';
 import { SessionHeaderStatsComponent } from './session-header-stats.component';
 import { SessionHeaderChronoComponent } from './session-header-chrono.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-session-header',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SessionHeaderStatsComponent, SessionHeaderChronoComponent],
+  imports: [SessionHeaderStatsComponent, SessionHeaderChronoComponent, TranslateModule],
   templateUrl: './session-header.component.html',
   styleUrl: './session-header.component.scss',
 })

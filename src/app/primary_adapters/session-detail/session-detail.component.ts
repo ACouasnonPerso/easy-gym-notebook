@@ -17,12 +17,13 @@ import { EditDurationPopupComponent } from './edit-duration-popup.component';
 import { SessionHeaderComponent } from './session-header.component';
 import { SessionExercisesListComponent } from './session-exercises-list.component';
 import { SessionDetailUiService } from './session-detail-ui.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-session-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SessionHeaderComponent, SessionExercisesListComponent, EditDurationPopupComponent],
+  imports: [SessionHeaderComponent, SessionExercisesListComponent, EditDurationPopupComponent, TranslateModule],
   templateUrl: './session-detail.component.html',
   styleUrl: './session-detail.component.scss',
 })

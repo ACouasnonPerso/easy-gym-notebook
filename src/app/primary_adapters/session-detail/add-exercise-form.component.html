@@ -1,14 +1,14 @@
 <div class="overlay" (click)="cancelled.emit()">
   <div class="form-card" (click)="$event.stopPropagation()">
-    <h2 class="form-title">Nouvel exercice</h2>
+    <h2 class="form-title">{{ 'exercise.new' | translate }}</h2>
 
     <div class="name-field">
-      <label class="field-label">Nom</label>
+      <label class="field-label">{{ 'common.name' | translate }}</label>
       <input
         type="text"
         [value]="name()"
         (input)="onNameInput($event)"
-        placeholder="ex: Développé couché"
+        [placeholder]="'exercise.namePlaceholder' | translate"
         class="input"
       />
       @if (suggestions().length > 0) {
@@ -27,7 +27,7 @@
 
     <div class="pickers-row">
       <div class="picker-col">
-        <span class="picker-label">Poids</span>
+        <span class="picker-label">{{ 'common.weight' | translate }}</span>
         <app-drum-picker
           [values]="weightValues"
           [selectedValue]="weightKg()"
@@ -36,7 +36,7 @@
         />
       </div>
       <div class="picker-col">
-        <span class="picker-label">Séries</span>
+        <span class="picker-label">{{ 'common.sets' | translate }}</span>
         <app-drum-picker
           [values]="setsValues"
           [selectedValue]="sets()"
@@ -44,7 +44,7 @@
         />
       </div>
       <div class="picker-col">
-        <span class="picker-label">Répétitions</span>
+        <span class="picker-label">{{ 'common.reps' | translate }}</span>
         <app-drum-picker
           [values]="repsValues"
           [selectedValue]="reps()"
@@ -52,7 +52,7 @@
         />
       </div>
       <div class="picker-col">
-        <span class="picker-label">Repos</span>
+        <span class="picker-label">{{ 'common.rest' | translate }}</span>
         <app-drum-picker  style="min-width: 90px !important"
           [values]="breakValues"
           [selectedValue]="breakSelectedValue()"
@@ -62,8 +62,8 @@
     </div>
 
     <div class="actions">
-      <button class="btn-cancel" (click)="cancelled.emit()">Annuler</button>
-      <button class="btn-submit" (click)="onSubmit()">Ajouter</button>
+      <button class="btn-cancel" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
+      <button class="btn-submit" (click)="onSubmit()">{{ 'common.add' | translate }}</button>
     </div>
   </div>
 </div>

@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "main": "Navigation principale",
+    "sessions": "Sessions",
+    "addSession": "Ajouter une seance",
+    "stats": "Stats",
+    "sessionNavigation": "Navigation session",
+    "session": "Session",
+    "addExercise": "Ajouter un exercice",
+    "chrono": "Chrono"
+  },
+  "common": {
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "weight": "Poids",
+    "exercises": "Exercices",
+    "time": "Temps",
+    "name": "Nom",
+    "sets": "Series",
+    "reps": "Repetitions",
+    "rest": "Repos",
+    "add": "Ajouter",
+    "delete": "Supprimer",
+    "duration": "Duree",
+    "hours": "Heures",
+    "minutes": "Minutes",
+    "seconds": "Secondes",
+    "validate": "Valider",
+    "back": "Retour",
+    "end": "Terminer",
+    "break": "Break",
+    "resume": "Reprendre",
+    "edit": "Modifier",
+    "pause": "Pause",
+    "reset": "Reset",
+    "volume": "Volume",
+    "noData": "Aucune donnee",
+    "sessions": "Sessions",
+    "max": "Max",
+    "merge": "Merge"
+  },
+  "sessionList": {
+    "title": "Sessions",
+    "empty": "Aucune seance. Appuyez sur + pour commencer.",
+    "deleteConfirm": "Supprimer cette seance ?",
+    "duplicate": "Dupliquer",
+    "delete": "Supprimer"
+  },
+  "exercise": {
+    "new": "Nouvel exercice",
+    "name": "Nom de l'exercice",
+    "namePlaceholder": "ex: Developpe couche",
+    "page": "Page exercice",
+    "empty": "Aucun exercice.",
+    "addHint": "Ajoutez-en un !",
+    "deleteConfirm": "Supprimer cet exercice ?"
+  },
+  "session": {
+    "durationSeconds": "Duree de seance (secondes)"
+  },
+  "statsExercise": {
+    "empty": "Aucune donnee pour cet exercice",
+    "volumeFormula": "= Poids x Rep x Series"
+  },
+  "statsGlobal": {
+    "trainingRecurrences": "Training recurrences",
+    "workedMuscles": "Worked muscles",
+    "weekSummary": "Resume de la semaine",
+    "monthSummary": "Resume du mois",
+    "newNamePlaceholder": "Nouveau nom...",
+    "mergeCount": "Fusionner {{count}} exercice(s)",
+    "confirmMergeTitle": "Confirmer le merge",
+    "confirmMergeBody": "Renommer {{count}} exercice(s) en \"{{name}}\" ? Cette action est irreversible.",
+    "currentYear": "Annee en cours",
+    "total": "Total",
+    "noDataMonth": "Aucune donnee ce mois-ci"
+  },
+  "chrono": {
+    "startTraining": "START TRAINING",
+    "goBreak": "GO BREAK",
+    "goTraining": "GO TRAINING",
+    "ready": "Ready",
+    "training": "Training"
+  },
+  "days": {
+    "mon": "L",
+    "tue": "M",
+    "wed": "M",
+    "thu": "J",
+    "fri": "V",
+    "sat": "S",
+    "sun": "D"
+  }
+}

@@ -1,10 +1,11 @@
 import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-exercise-summary-row',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [],
+  imports: [TranslateModule],
   template: `
     <div class="history-card" (click)="selected.emit(exerciseName())">
       <div class="history-header">
@@ -13,15 +14,15 @@ import { Component, ChangeDetectionStrategy, input, output } from '@angular/core
       <div class="history-stats">
         <div class="h-stat">
           <span class="h-stat-value orange">{{ maxWeightKg() }} kg</span>
-          <span class="h-stat-label">Max</span>
+          <span class="h-stat-label">{{ 'common.max' | translate }}</span>
         </div>
         <div class="h-stat">
           <span class="h-stat-value">{{ formatVolume(totalVolumeKg()) }}</span>
-          <span class="h-stat-label">Volume</span>
+          <span class="h-stat-label">{{ 'common.volume' | translate }}</span>
         </div>
         <div class="h-stat right">
           <span class="h-stat-value">{{ occurrenceCount() }}x</span>
-          <span class="h-stat-label">Séances</span>
+          <span class="h-stat-label">{{ 'common.sessions' | translate }}</span>
         </div>
       </div>
     </div>

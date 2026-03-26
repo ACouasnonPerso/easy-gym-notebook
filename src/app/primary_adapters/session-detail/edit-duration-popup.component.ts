@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, input, output, signal, computed } from '@angular/core';
 import { DrumPickerComponent } from '../shared/drum-picker.component';
 import { generateRange } from '../../core_logic/shared/utils';
+import { TranslateModule } from '@ngx-translate/core';
 
 const HOURS_VALUES = generateRange(0, 23, 1);
 const MINUTES_VALUES = generateRange(0, 59, 1);
@@ -10,28 +11,28 @@ const SECONDS_VALUES = generateRange(0, 59, 1);
   selector: 'app-edit-duration-popup',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DrumPickerComponent],
+  imports: [DrumPickerComponent, TranslateModule],
   template: `
     <div class="overlay" (click)="cancelled.emit()">
       <div class="form-card" (click)="$event.stopPropagation()">
-        <h2 class="form-title">Durée</h2>
+        <h2 class="form-title">{{ 'common.duration' | translate }}</h2>
         <div class="pickers-row">
           <div class="picker-col">
-            <span class="picker-label">Heures</span>
+            <span class="picker-label">{{ 'common.hours' | translate }}</span>
             <app-drum-picker [values]="hoursValues" [selectedValue]="selectedHours()" (valueChange)="onHoursChange($event)" />
           </div>
           <div class="picker-col">
-            <span class="picker-label">Minutes</span>
+            <span class="picker-label">{{ 'common.minutes' | translate }}</span>
             <app-drum-picker [values]="minutesValues" [selectedValue]="selectedMinutes()" (valueChange)="onMinutesChange($event)" />
           </div>
           <div class="picker-col">
-            <span class="picker-label">Secondes</span>
+            <span class="picker-label">{{ 'common.seconds' | translate }}</span>
             <app-drum-picker [values]="secondsValues" [selectedValue]="selectedSecs()" (valueChange)="onSecondsChange($event)" />
           </div>
         </div>
         <div class="actions">
-          <button class="btn-cancel" (click)="cancelled.emit()">Annuler</button>
-          <button class="btn-primary" (click)="onConfirm()">Confirmer</button>
+          <button class="btn-cancel" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
+          <button class="btn-primary" (click)="onConfirm()">{{ 'common.confirm' | translate }}</button>
         </div>
       </div>
     </div>

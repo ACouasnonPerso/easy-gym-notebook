@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs/operators';
 import { BottomNavComponent } from './primary_adapters/shared/bottom-nav.component';
 import { SessionBottomNavComponent } from './primary_adapters/shared/session-bottom-nav.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,15 @@ import { SessionBottomNavComponent } from './primary_adapters/shared/session-bot
 })
 export class AppComponent {
   private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
+
+  constructor() {
+    this.translate.addLangs(['fr', 'en']);
+    this.translate.setDefaultLang('fr');
+    const browserLang = this.translate.getBrowserLang();
+    const lang = browserLang === 'en' ? 'en' : 'fr';
+    this.translate.use(lang);
+  }
 
   private readonly currentUrl = toSignal(
     this.router.events.pipe(

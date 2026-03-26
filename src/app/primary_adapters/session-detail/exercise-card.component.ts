@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, input, output, computed } from '@an
 import { NgStyle } from '@angular/common';
 import { Exercise, MuscleGroup } from '../../core_logic/shared/models';
 import { ExerciseExpandedComponent } from './exercise-expanded.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 function formatBreakDuration(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -13,7 +14,7 @@ function formatBreakDuration(seconds: number): string {
   selector: 'app-exercise-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ExerciseExpandedComponent, NgStyle],
+  imports: [ExerciseExpandedComponent, NgStyle, TranslateModule],
   template: `
     <div class="exercise-card" [class.validated]="isValidated()" (click)="toggleExpand.emit()">
       <div class="exercise-header">
@@ -25,19 +26,19 @@ function formatBreakDuration(seconds: number): string {
       <div class="exercise-stats">
         <div class="ex-stat">
           <span class="ex-stat-value orange">{{ exercise().weightKg }} kg</span>
-          <span class="ex-stat-label">Poids</span>
+          <span class="ex-stat-label">{{ 'common.weight' | translate }}</span>
         </div>
         <div class="ex-stat">
           <span class="ex-stat-value">{{ exercise().sets }}</span>
-          <span class="ex-stat-label">Séries</span>
+          <span class="ex-stat-label">{{ 'common.sets' | translate }}</span>
         </div>
         <div class="ex-stat">
           <span class="ex-stat-value blue">{{ breakLabel() }}</span>
-          <span class="ex-stat-label">Break</span>
+          <span class="ex-stat-label">{{ 'common.break' | translate }}</span>
         </div>
         <div class="ex-stat right">
           <span class="ex-stat-value">{{ exercise().reps }}</span>
-          <span class="ex-stat-label">Répétitions</span>
+          <span class="ex-stat-label">{{ 'common.reps' | translate }}</span>
         </div>
       </div>
     </div>

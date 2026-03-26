@@ -1,19 +1,21 @@
 import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
 import { ExerciseOccurrence } from '../../core_logic/shared/models';
 import { getLabelStep } from './label-step';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-volume-line-chart',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TranslateModule],
   template: `
     @if (chartData(); as cd) {
       <div>
         <div class="chart-legend">
           <div class="legend-item">
             <div class="legend-dot" style="background:#22c55e"></div>
-            <span class="green">Volume</span>
-            <span class="small">= Poids × Rép × Séries</span>
+            <span class="green">{{ 'common.volume' | translate }}</span>
+            <span class="small">{{ 'statsExercise.volumeFormula' | translate }}</span>
           </div>
         </div>
         <svg viewBox="0 0 320 150" width="100%" class="chart-svg">
@@ -57,7 +59,7 @@ import { getLabelStep } from './label-step';
         </svg>
       </div>
     } @else {
-      <div class="empty-chart">Aucune donnée</div>
+      <div class="empty-chart">{{ 'common.noData' | translate }}</div>
     }
   `,
   styles: [`

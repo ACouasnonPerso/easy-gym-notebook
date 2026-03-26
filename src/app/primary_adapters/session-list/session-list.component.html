@@ -1,8 +1,8 @@
 <div class="page">
-  <div class="page-title">Sessions</div>
+  <div class="page-title">{{ 'sessionList.title' | translate }}</div>
 
   @if (sessions().length === 0) {
-    <p class="empty">Aucune séance. Appuyez sur + pour commencer.</p>
+    <p class="empty">{{ 'sessionList.empty' | translate }}</p>
   }
 
   <div class="session-list">
@@ -29,7 +29,7 @@
 
   @if (showConfirm()) {
     <app-confirm-dialog
-      message="Supprimer cette séance ?"
+      [message]="'sessionList.deleteConfirm' | translate"
       (confirmed)="confirmDelete()"
       (cancelled)="showConfirm.set(false)"
     />

@@ -3,7 +3,7 @@
     <div class="chart-legend">
       <div class="legend-item">
         <div class="legend-dot" style="background:#f97316"></div>
-        <span class="orange">Poids</span>
+        <span class="orange">{{ 'common.weight' | translate }}</span>
       </div>
     </div>
     <svg viewBox="0 0 320 150" width="100%" class="chart-svg">
@@ -47,5 +47,5 @@
     </svg>
   </div>
 } @else {
-  <div class="empty-chart">Aucune donnée</div>
+  <div class="empty-chart">{{ 'common.noData' | translate }}</div>
 }

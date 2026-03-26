@@ -1,18 +1,20 @@
 import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
 import { ExerciseOccurrence } from '../../core_logic/shared/models';
 import { getLabelStep } from './label-step';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-weight-line-chart',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TranslateModule],
   template: `
     @if (chartData(); as cd) {
       <div>
         <div class="chart-legend">
           <div class="legend-item">
             <div class="legend-dot" style="background:#f97316"></div>
-            <span class="orange">Poids</span>
+            <span class="orange">{{ 'common.weight' | translate }}</span>
           </div>
         </div>
         <svg viewBox="0 0 320 150" width="100%" class="chart-svg">
@@ -56,7 +58,7 @@ import { getLabelStep } from './label-step';
         </svg>
       </div>
     } @else {
-      <div class="empty-chart">Aucune donnée</div>
+      <div class="empty-chart">{{ 'common.noData' | translate }}</div>
     }
   `,
   styles: [`

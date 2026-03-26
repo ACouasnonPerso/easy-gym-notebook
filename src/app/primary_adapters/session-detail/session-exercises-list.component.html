@@ -2,8 +2,8 @@
   @if (exercises().length === 0) {
     <div class="exercise-empty" (click)="uiService.openAddExerciseForm()">
       <span class="exercise-empty-icon">＋</span>
-      <span class="exercise-empty-text">Aucun exercice.</span>
-      <span class="exercise-empty-hint">Ajoutez-en un !</span>
+      <span class="exercise-empty-text">{{ 'exercise.empty' | translate }}</span>
+      <span class="exercise-empty-hint">{{ 'exercise.addHint' | translate }}</span>
     </div>
   }
   @for (exercise of exercises(); track exercise.id) {
@@ -31,7 +31,7 @@
 
 @if (showDeleteConfirm()) {
   <app-confirm-dialog
-    message="Supprimer cet exercice ?"
+    [message]="'exercise.deleteConfirm' | translate"
     (confirmed)="onDeleteConfirmed()"
     (cancelled)="showDeleteConfirm.set(false)"
   />

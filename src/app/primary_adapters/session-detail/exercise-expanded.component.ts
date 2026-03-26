@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Exercise } from '../../core_logic/shared/models';
 import { DrumPickerComponent } from '../shared/drum-picker.component';
 import { generateRange } from '../../core_logic/shared/utils';
+import { TranslateModule } from '@ngx-translate/core';
 
 function secondsToMmss(s: number): string {
   const m = Math.floor(s / 60);
@@ -24,7 +25,7 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
   selector: 'app-exercise-expanded',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DrumPickerComponent, FormsModule],
+  imports: [DrumPickerComponent, FormsModule, TranslateModule],
   template: `
     <div class="expanded-panel" (click)="$event.stopPropagation()">
       <div class="name-row">
@@ -33,12 +34,12 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
           type="text"
           [ngModel]="exercise().name"
           (ngModelChange)="update.emit({ name: $event })"
-          placeholder="Nom de l'exercice"
+          [placeholder]="'exercise.name' | translate"
         />
       </div>
       <div class="pickers-row">
         <div class="picker-col">
-          <span class="picker-label">Poids</span>
+          <span class="picker-label">{{ 'common.weight' | translate }}</span>
           <app-drum-picker
             [values]="weightValues"
             [selectedValue]="exercise().weightKg"
@@ -47,7 +48,7 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
           />
         </div>
         <div class="picker-col">
-          <span class="picker-label">Séries</span>
+          <span class="picker-label">{{ 'common.sets' | translate }}</span>
           <app-drum-picker
             [values]="setsValues"
             [selectedValue]="exercise().sets"
@@ -55,7 +56,7 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
           />
         </div>
         <div class="picker-col">
-          <span class="picker-label">Répétitions</span>
+          <span class="picker-label">{{ 'common.reps' | translate }}</span>
           <app-drum-picker
             [values]="repsValues"
             [selectedValue]="exercise().reps"
@@ -63,7 +64,7 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
           />
         </div>
         <div class="picker-col">
-          <span class="picker-label">Repos</span>
+          <span class="picker-label">{{ 'common.rest' | translate }}</span>
           <app-drum-picker
             [values]="breakValues"
             [selectedValue]="breakSelectedValue()"
@@ -73,15 +74,15 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
       </div>
 
       <div class="actions-row">
-        <button class="btn btn-secondary" (click)="openChrono.emit()">Chronomètre</button>
+        <button class="btn btn-secondary" (click)="openChrono.emit()">{{ 'nav.chrono' | translate }}</button>
         @if (exercise().status !== 'validated') {
-          <button class="btn btn-validate" (click)="validate.emit()">Valider</button>
+          <button class="btn btn-validate" (click)="validate.emit()">{{ 'common.validate' | translate }}</button>
         }
         @if (exercise().status === 'validated') {
-          <button class="btn btn-cancel" (click)="cancel.emit()">Annuler</button>
+          <button class="btn btn-cancel" (click)="cancel.emit()">{{ 'common.cancel' | translate }}</button>
         }
-        <button class="btn btn-secondary" (click)="openStats.emit()">Page exercice</button>
-        <button class="btn btn-delete" (click)="delete.emit()">Supprimer</button>
+        <button class="btn btn-secondary" (click)="openStats.emit()">{{ 'exercise.page' | translate }}</button>
+        <button class="btn btn-delete" (click)="delete.emit()">{{ 'common.delete' | translate }}</button>
       </div>
     </div>
   `,

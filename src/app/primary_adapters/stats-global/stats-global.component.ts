@@ -14,12 +14,13 @@ import { MergeExercisesUseCase } from '../../primary_ports/stats-global/merge-ex
 import { HeatmapComponent } from './heatmap.component';
 import { DonutChartComponent } from './donut-chart.component';
 import { ExerciseSummaryRowComponent } from './exercise-summary-row.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-stats-global',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [HeatmapComponent, DonutChartComponent, ExerciseSummaryRowComponent, FormsModule],
+  imports: [HeatmapComponent, DonutChartComponent, ExerciseSummaryRowComponent, FormsModule, TranslateModule],
   template: `
     <div class="page">
 
@@ -46,35 +47,35 @@ import { ExerciseSummaryRowComponent } from './exercise-summary-row.component';
       <!-- Heatmap -->
       @if (showHeatmap()) {
         <div class="stats-card">
-          <div class="stats-card-title">Training recurrences</div>
+          <div class="stats-card-title">{{ 'statsGlobal.trainingRecurrences' | translate }}</div>
           <app-heatmap [data]="getGlobalStatsUseCase.heatmapData()" />
         </div>
       }
 
       <!-- Worked muscles -->
       <div class="stats-card">
-        <div class="stats-card-title">Worked muscles</div>
+        <div class="stats-card-title">{{ 'statsGlobal.workedMuscles' | translate }}</div>
         <app-donut-chart [distribution]="getGlobalStatsUseCase.muscleGroupDistribution()" />
       </div>
 
       <!-- Résumé de la semaine -->
       @if (isCurrentMonth()) {
         <div class="stats-card">
-          <div class="stats-card-title">Résumé de la semaine</div>
+          <div class="stats-card-title">{{ 'statsGlobal.weekSummary' | translate }}</div>
           <div class="divider"></div>
           <div style="height:12px"></div>
           <div class="summary-grid">
             <div class="summary-stat">
               <span class="summary-value" style="color:var(--orange)">{{ formatWeight(getGlobalStatsUseCase.weekSummary().totalWeightKg) }}</span>
-              <span class="summary-label">Poids</span>
+              <span class="summary-label">{{ 'common.weight' | translate }}</span>
             </div>
             <div class="summary-stat" style="text-align:center">
               <span class="summary-value" style="color:var(--green)">{{ getGlobalStatsUseCase.weekSummary().sessionCount }}</span>
-              <span class="summary-label">Sessions</span>
+              <span class="summary-label">{{ 'common.sessions' | translate }}</span>
             </div>
             <div class="summary-stat" style="text-align:right">
               <span class="summary-value">{{ formatDuration(getGlobalStatsUseCase.weekSummary().totalDurationSeconds) }}</span>
-              <span class="summary-label">Temps</span>
+              <span class="summary-label">{{ 'common.time' | translate }}</span>
             </div>
           </div>
         </div>
@@ -82,21 +83,21 @@ import { ExerciseSummaryRowComponent } from './exercise-summary-row.component';
 
       <!-- Résumé du mois -->
       <div class="stats-card">
-        <div class="stats-card-title">Résumé du mois</div>
+        <div class="stats-card-title">{{ 'statsGlobal.monthSummary' | translate }}</div>
         <div class="divider"></div>
         <div style="height:12px"></div>
         <div class="summary-grid">
           <div class="summary-stat">
             <span class="summary-value" style="color:var(--orange)">{{ formatWeight(getGlobalStatsUseCase.monthSummary().totalWeightKg) }}</span>
-            <span class="summary-label">Poids</span>
+            <span class="summary-label">{{ 'common.weight' | translate }}</span>
           </div>
           <div class="summary-stat" style="text-align:center">
             <span class="summary-value" style="color:var(--green)">{{ getGlobalStatsUseCase.monthSummary().sessionCount }}</span>
-            <span class="summary-label">Sessions</span>
+            <span class="summary-label">{{ 'common.sessions' | translate }}</span>
           </div>
           <div class="summary-stat" style="text-align:right">
             <span class="summary-value">{{ formatDuration(getGlobalStatsUseCase.monthSummary().totalDurationSeconds) }}</span>
-            <span class="summary-label">Temps</span>
+            <span class="summary-label">{{ 'common.time' | translate }}</span>
           </div>
         </div>
       </div>
@@ -105,13 +106,13 @@ import { ExerciseSummaryRowComponent } from './exercise-summary-row.component';
       @if (getGlobalStatsUseCase.exerciseSummaries().length > 0) {
         <div class="stats-card">
           <div class="exercise-card-header">
-            <div class="stats-card-title" style="margin-bottom:0">Exercices</div>
+            <div class="stats-card-title" style="margin-bottom:0">{{ 'common.exercises' | translate }}</div>
             <button
               data-testid="merge-btn"
               class="merge-btn"
               [class.active]="isMergeMode()"
               (click)="toggleMergeMode()"
-            >Merge</button>
+            >{{ 'common.merge' | translate }}</button>
           </div>
 
           @if (isMergeMode()) {
@@ -120,7 +121,7 @@ import { ExerciseSummaryRowComponent } from './exercise-summary-row.component';
                 data-testid="merge-name-input"
                 class="merge-name-input"
                 type="text"
-                placeholder="Nouveau nom..."
+                [placeholder]="'statsGlobal.newNamePlaceholder' | translate"
                 [value]="mergeNewName()"
                 (input)="mergeNewName.set($any($event.target).value)"
               />
@@ -129,7 +130,7 @@ import { ExerciseSummaryRowComponent } from './exercise-summary-row.component';
                 class="merge-submit-btn"
                 [disabled]="mergeSelectedNames().size < 2 || !mergeNewName().trim()"
                 (click)="onMergeSubmit()"
-              >Fusionner {{ mergeSelectedNames().size }} exercice(s)</button>
+              >{{ 'statsGlobal.mergeCount' | translate:{ count: mergeSelectedNames().size } }}</button>
             </div>
           }
 
@@ -164,15 +165,13 @@ import { ExerciseSummaryRowComponent } from './exercise-summary-row.component';
       @if (showMergeConfirm()) {
         <div class="popup-backdrop" (click)="showMergeConfirm.set(false)">
           <div data-testid="merge-confirm-popup" class="popup" (click)="$event.stopPropagation()">
-            <div class="popup-title">Confirmer le merge</div>
+            <div class="popup-title">{{ 'statsGlobal.confirmMergeTitle' | translate }}</div>
             <p class="popup-body">
-              Renommer <strong>{{ mergeSelectedNames().size }}</strong> exercice(s) en
-              <strong>« {{ mergeNewName() }} »</strong> ?<br>
-              Cette action est irréversible.
+              {{ 'statsGlobal.confirmMergeBody' | translate:{ count: mergeSelectedNames().size, name: mergeNewName() } }}
             </p>
             <div class="popup-actions">
-              <button class="popup-cancel-btn" (click)="showMergeConfirm.set(false)">Annuler</button>
-              <button data-testid="merge-confirm-ok-btn" class="popup-ok-btn" (click)="onMergeConfirm()">Confirmer</button>
+              <button class="popup-cancel-btn" (click)="showMergeConfirm.set(false)">{{ 'common.cancel' | translate }}</button>
+              <button data-testid="merge-confirm-ok-btn" class="popup-ok-btn" (click)="onMergeConfirm()">{{ 'common.confirm' | translate }}</button>
             </div>
           </div>
         </div>
@@ -490,6 +489,7 @@ export class StatsGlobalComponent implements OnInit {
   private readonly selectMonthUseCase = inject(SelectMonthUseCase);
   private readonly mergeExercisesUseCase = inject(MergeExercisesUseCase);
   private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
 
   readonly months = signal<{ label: string; value: Date | null; type: 'month' | 'current-year' | 'total' }[]>([]);
   readonly selectedMonthIndex = signal<number>(0);
@@ -583,12 +583,13 @@ export class StatsGlobalComponent implements OnInit {
 
   private generateMonths(): { label: string; value: Date | null; type: 'month' | 'current-year' | 'total' }[] {
     const months: { label: string; value: Date | null; type: 'month' | 'current-year' | 'total' }[] = [];
-    months.push({ label: 'Année en cours', value: null, type: 'current-year' });
-    months.push({ label: 'Total', value: null, type: 'total' });
+    months.push({ label: this.translate.instant('statsGlobal.currentYear'), value: null, type: 'current-year' });
+    months.push({ label: this.translate.instant('statsGlobal.total'), value: null, type: 'total' });
     const now = new Date();
+    const locale = this.translate.currentLang === 'en' ? 'en-US' : 'fr-FR';
     for (let i = 0; i < 13; i++) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const label = d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+      const label = d.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
       months.push({ label, value: d, type: 'month' });
     }
     return months;

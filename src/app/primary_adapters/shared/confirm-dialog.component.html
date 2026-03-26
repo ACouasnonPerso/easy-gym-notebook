@@ -2,8 +2,8 @@
   <div class="card" (click)="$event.stopPropagation()">
     <p class="message">{{ message() }}</p>
     <div class="actions">
-      <button class="btn btn-cancel" (click)="cancelled.emit()">Annuler</button>
-      <button class="btn btn-confirm" (click)="confirmed.emit()">Confirmer</button>
+      <button class="btn btn-cancel" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
+      <button class="btn btn-confirm" (click)="confirmed.emit()">{{ 'common.confirm' | translate }}</button>
     </div>
   </div>
 </div>

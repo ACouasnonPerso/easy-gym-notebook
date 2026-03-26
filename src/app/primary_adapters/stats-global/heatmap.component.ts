@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface HeatmapCell {
   date: Date;
@@ -10,17 +11,18 @@ export interface HeatmapCell {
   selector: 'app-heatmap',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TranslateModule],
   template: `
     <div class="heatmap">
       <!-- Header row -->
       <div></div>
-      <div class="hm-day-label">L</div>
-      <div class="hm-day-label">M</div>
-      <div class="hm-day-label">M</div>
-      <div class="hm-day-label">J</div>
-      <div class="hm-day-label">V</div>
-      <div class="hm-day-label">S</div>
-      <div class="hm-day-label">D</div>
+      <div class="hm-day-label">{{ 'days.mon' | translate }}</div>
+      <div class="hm-day-label">{{ 'days.tue' | translate }}</div>
+      <div class="hm-day-label">{{ 'days.wed' | translate }}</div>
+      <div class="hm-day-label">{{ 'days.thu' | translate }}</div>
+      <div class="hm-day-label">{{ 'days.fri' | translate }}</div>
+      <div class="hm-day-label">{{ 'days.sat' | translate }}</div>
+      <div class="hm-day-label">{{ 'days.sun' | translate }}</div>
 
       @for (week of weeks(); track $index) {
         <div class="hm-week-label">S{{ $index + 1 }}</div>

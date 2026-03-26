@@ -1,9 +1,9 @@
 <div class="page" [class.blinking]="isBlinking()">
   <div class="header-pad">
-    <div class="back-btn" (click)="location.back()"><span class="back-arrow">←</span> Back</div>
+    <div class="back-btn" (click)="location.back()"><span class="back-arrow">←</span> {{ 'common.back' | translate }}</div>
     @if (!hasExercise()) {
       <span class="break-duration-label" (click)="showBreakDurationPopup.set(true)">
-        {{ formattedBreakDuration() }} repos
+        {{ formattedBreakDuration() }} {{ 'common.rest' | translate }}
       </span>
     }
   </div>
@@ -31,7 +31,7 @@
               <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
             </svg>
           </div>
-          <span class="chrono-btn-label">START TRAINING</span>
+          <span class="chrono-btn-label">{{ 'chrono.startTraining' | translate }}</span>
         </div>
       }
 
@@ -44,7 +44,7 @@
               <rect x="20" y="8" width="5" height="16" rx="2" fill="#4caf50"/>
             </svg>
           </div>
-          <span class="chrono-btn-label">PAUSE</span>
+          <span class="chrono-btn-label">{{ 'common.pause' | translate }}</span>
         </div>
       }
 
@@ -56,7 +56,7 @@
               <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
             </svg>
           </div>
-          <span class="chrono-btn-label">REPRENDRE</span>
+          <span class="chrono-btn-label">{{ 'common.resume' | translate }}</span>
         </div>
         <div class="chrono-btn danger" (click)="exerciseChronoUseCase.reset()">
           <div class="chrono-btn-icon">
@@ -65,7 +65,7 @@
               <polygon points="22,8 28,14 28,7" fill="#ef4444"/>
             </svg>
           </div>
-          <span class="chrono-btn-label">RESET</span>
+          <span class="chrono-btn-label">{{ 'common.reset' | translate }}</span>
         </div>
         <div class="chrono-btn" (click)="exerciseChronoUseCase.goBreak()">
           <div class="chrono-btn-icon">
@@ -74,7 +74,7 @@
               <rect x="20" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
             </svg>
           </div>
-          <span class="chrono-btn-label">GO BREAK</span>
+          <span class="chrono-btn-label">{{ 'chrono.goBreak' | translate }}</span>
         </div>
       }
 
@@ -86,7 +86,7 @@
               <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
             </svg>
           </div>
-          <span class="chrono-btn-label">GO TRAINING</span>
+          <span class="chrono-btn-label">{{ 'chrono.goTraining' | translate }}</span>
         </div>
         <div class="chrono-btn" (click)="exerciseChronoUseCase.pause()">
           <div class="chrono-btn-icon">
@@ -95,7 +95,7 @@
               <rect x="20" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
             </svg>
           </div>
-          <span class="chrono-btn-label">PAUSE</span>
+          <span class="chrono-btn-label">{{ 'common.pause' | translate }}</span>
         </div>
       }
 
@@ -107,7 +107,7 @@
               <polygon points="10,7 26,16 10,25" fill="#f5a623"/>
             </svg>
           </div>
-          <span class="chrono-btn-label">REPRENDRE</span>
+          <span class="chrono-btn-label">{{ 'common.resume' | translate }}</span>
         </div>
         <div class="chrono-btn danger" (click)="exerciseChronoUseCase.reset()">
           <div class="chrono-btn-icon">
@@ -116,7 +116,7 @@
               <polygon points="22,8 28,14 28,7" fill="#ef4444"/>
             </svg>
           </div>
-          <span class="chrono-btn-label">RESET</span>
+          <span class="chrono-btn-label">{{ 'common.reset' | translate }}</span>
         </div>
         <div class="chrono-btn" (click)="exerciseChronoUseCase.goTraining()">
           <div class="chrono-btn-icon">
@@ -124,7 +124,7 @@
               <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
             </svg>
           </div>
-          <span class="chrono-btn-label">GO TRAINING</span>
+          <span class="chrono-btn-label">{{ 'chrono.goTraining' | translate }}</span>
         </div>
       }
 
