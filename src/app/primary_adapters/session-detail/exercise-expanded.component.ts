@@ -20,6 +20,14 @@ const WEIGHT_VALUES = [...generateRange(0, 30, 0.5), ...generateRange(31, 300, 1
 const SETS_VALUES = generateRange(1, 20, 1);
 const REPS_VALUES = generateRange(1, 50, 1);
 const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
+const HOURS_VALUES = generateRange(0, 12, 1);
+const MINUTES_VALUES = generateRange(0, 59, 1);
+const KM_VALUES: (number | null)[] = [
+  null,
+  ...generateRange(0.1, 2, 0.1).map(v => Math.round(v * 10) / 10),
+  ...generateRange(2.5, 50, 0.5).map(v => Math.round(v * 10) / 10),
+  ...generateRange(51, 200, 1),
+];
 
 @Component({
   selector: 'app-exercise-expanded',
@@ -37,51 +45,74 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
           [placeholder]="'exercise.name' | translate"
         />
       </div>
-      <div class="pickers-row">
-        <div class="picker-col">
-          <span class="picker-label">{{ 'common.weight' | translate }}</span>
-          <app-drum-picker
-            [values]="weightValues"
-            [selectedValue]="exercise().weightKg"
-            unit="kg"
-            (valueChange)="update.emit({ weightKg: +$event })"
-          />
+      @if (exercise().isCardio) {
+        <div class="pickers-row">
+          <div class="picker-col">
+            <span class="picker-label">{{ 'common.hours' | translate }}</span>
+            <app-drum-picker
+              [values]="hoursValues"
+              [selectedValue]="durationHours()"
+              (valueChange)="emitDurationUpdate('hours', +$event)"
+            />
+          </div>
+          <div class="picker-col">
+            <span class="picker-label">{{ 'common.minutes' | translate }}</span>
+            <app-drum-picker
+              [values]="minutesValues"
+              [selectedValue]="durationMinutes()"
+              (valueChange)="emitDurationUpdate('minutes', +$event)"
+            />
+          </div>
+          <div class="picker-col">
+            <span class="picker-label">km</span>
+            <app-drum-picker
+              [values]="kmValues"
+              [selectedValue]="exercise().distanceKm ?? null"
+              (valueChange)="update.emit({ distanceKm: $event === null ? null : +$event })"
+            />
+          </div>
         </div>
-        <div class="picker-col">
-          <span class="picker-label">{{ 'common.sets' | translate }}</span>
-          <app-drum-picker
-            [values]="setsValues"
-            [selectedValue]="exercise().sets"
-            (valueChange)="update.emit({ sets: +$event })"
-          />
+      } @else {
+        <div class="pickers-row">
+          <div class="picker-col">
+            <span class="picker-label">{{ 'common.weight' | translate }}</span>
+            <app-drum-picker
+              [values]="weightValues"
+              [selectedValue]="exercise().weightKg"
+              unit="kg"
+              (valueChange)="update.emit({ weightKg: +$event })"
+            />
+          </div>
+          <div class="picker-col">
+            <span class="picker-label">{{ 'common.sets' | translate }}</span>
+            <app-drum-picker
+              [values]="setsValues"
+              [selectedValue]="exercise().sets"
+              (valueChange)="update.emit({ sets: +$event })"
+            />
+          </div>
+          <div class="picker-col">
+            <span class="picker-label">{{ 'common.reps' | translate }}</span>
+            <app-drum-picker
+              [values]="repsValues"
+              [selectedValue]="exercise().reps"
+              (valueChange)="update.emit({ reps: +$event })"
+            />
+          </div>
+          <div class="picker-col" style="min-width: 100px">
+            <span class="picker-label">{{ 'common.rest' | translate }}</span>
+            <app-drum-picker style="min-width: 100px"
+              [values]="breakValues"
+              [selectedValue]="breakSelectedValue()"
+              (valueChange)="emitBreakUpdate($event)"
+            />
+          </div>
         </div>
-        <div class="picker-col">
-          <span class="picker-label">{{ 'common.reps' | translate }}</span>
-          <app-drum-picker
-            [values]="repsValues"
-            [selectedValue]="exercise().reps"
-            (valueChange)="update.emit({ reps: +$event })"
-          />
-        </div>
-        <div class="picker-col" style="min-width: 100px">
-          <span class="picker-label">{{ 'common.rest' | translate }}</span>
-          <app-drum-picker style="min-width: 100px"
-            [values]="breakValues"
-            [selectedValue]="breakSelectedValue()"
-            (valueChange)="emitBreakUpdate($event)"
-          />
-        </div>
-      </div>
+      }
 
       <div class="actions-row">
         <button class="btn btn-secondary" (click)="openChrono.emit()">{{ 'nav.chrono' | translate }}</button>
-        @if (exercise().status !== 'validated') {
-          <button class="btn btn-validate" (click)="validate.emit()">{{ 'common.validate' | translate }}</button>
-        }
-        @if (exercise().status === 'validated') {
-          <button class="btn btn-cancel" (click)="cancel.emit()">{{ 'common.cancel' | translate }}</button>
-        }
-        <button class="btn btn-secondary" (click)="openStats.emit()">{{ 'exercise.page' | translate }}</button>
+<button class="btn btn-secondary" (click)="openStats.emit()">{{ 'exercise.page' | translate }}</button>
         <button class="btn btn-delete" (click)="delete.emit()">{{ 'common.delete' | translate }}</button>
       </div>
     </div>
@@ -175,9 +206,24 @@ export class ExerciseExpandedComponent {
   readonly setsValues = SETS_VALUES;
   readonly repsValues = REPS_VALUES;
   readonly breakValues = BREAK_VALUES;
+  readonly hoursValues = HOURS_VALUES;
+  readonly minutesValues = MINUTES_VALUES;
+  readonly kmValues = KM_VALUES;
   readonly breakSelectedValue = computed(() => secondsToMmss(this.exercise().breakDurationSeconds));
+  readonly durationHours = computed(() => Math.floor(this.exercise().durationSeconds / 3600));
+  readonly durationMinutes = computed(() => Math.floor((this.exercise().durationSeconds % 3600) / 60));
 
   emitBreakUpdate(v: string | number): void {
     this.update.emit({ breakDurationSeconds: mmssToSeconds(String(v)) });
+  }
+
+  emitDurationUpdate(part: 'hours' | 'minutes', value: number): void {
+    const current = this.exercise().durationSeconds;
+    const h = Math.floor(current / 3600);
+    const m = Math.floor((current % 3600) / 60);
+    const newSeconds = part === 'hours'
+      ? value * 3600 + m * 60
+      : h * 3600 + value * 60;
+    this.update.emit({ durationSeconds: newSeconds });
   }
 }

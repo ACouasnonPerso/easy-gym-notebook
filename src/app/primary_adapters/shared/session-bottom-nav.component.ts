@@ -58,7 +58,7 @@ import { TranslateModule } from '@ngx-translate/core';
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 32px calc(16px + env(safe-area-inset-bottom));
+      padding: 12px 32px 16px;
       max-width: 720px;
       margin: 0 auto;
       width: 100%;

@@ -28,6 +28,9 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     reps: 1,
     breakDurationSeconds: 60,
     status: 'validated',
+    isCardio: false,
+    durationSeconds: 0,
+    distanceKm: null,
     ...overrides,
   };
 }

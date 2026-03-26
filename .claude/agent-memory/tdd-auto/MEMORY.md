@@ -10,3 +10,4 @@
 | [user_profile.md](user_profile.md) | user | User preferences and project tech stack |
 | [project_exercise_series_counter.md](project_exercise_series_counter.md) | project | Series counter on ExerciseChronoService — increments on start/goTraining/auto-break, resets on init |
 | [project_session_chrono_persistence.md](project_session_chrono_persistence.md) | project | Session-scoped chrono persists to localStorage (egn_chrono_start_{id} / egn_chrono_paused_{id}); restored in _getOrCreateSession |
+| [project_cardio_ui_components.md](project_cardio_ui_components.md) | project | Cardio UI components (Steps 8-9): ExerciseCard/Expanded/AddForm cardio pickers, CardioTimeChart, CardioDistanceChart |

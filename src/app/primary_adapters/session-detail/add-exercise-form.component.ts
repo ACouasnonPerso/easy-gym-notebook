@@ -4,6 +4,7 @@ import { MuscleGroup } from '../../core_logic/shared/models';
 import { AddExerciseUseCase } from '../../primary_ports/session-detail/add-exercise.usecase';
 import { AutocompleteService } from '../../core_logic/session-detail/autocomplete.service';
 import { MuscleGroupDetectorService } from '../../core_logic/shared/muscle-group-detector.service';
+import { HapticService } from '../../core_logic/shared/haptic.service';
 import { DrumPickerComponent } from '../shared/drum-picker.component';
 import { generateRange } from '../../core_logic/shared/utils';
 import { TranslateModule } from '@ngx-translate/core';
@@ -23,6 +24,14 @@ const WEIGHT_VALUES = [...generateRange(0, 30, 0.5), ...generateRange(31, 300, 1
 const SETS_VALUES = generateRange(1, 20, 1);
 const REPS_VALUES = generateRange(1, 50, 1);
 const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
+const HOURS_VALUES = generateRange(0, 12, 1);
+const MINUTES_VALUES = generateRange(0, 59, 1);
+const KM_VALUES: (number | null | string)[] = [
+  null,
+  ...generateRange(0.1, 2, 0.1).map(v => Math.round(v * 10) / 10),
+  ...generateRange(2.5, 50, 0.5).map(v => Math.round(v * 10) / 10),
+  ...generateRange(51, 200, 1),
+];
 
 @Component({
   selector: 'app-add-exercise-form',
@@ -55,47 +64,79 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
           @if (detectedGroup()) {
             <span class="detected-group">{{ detectedGroup() }}</span>
           }
+          @if (isCardio()) {
+            <span class="detected-cardio">Cardio</span>
+          }
         </div>
 
-        <div class="pickers-row">
-          <div class="picker-col">
-            <span class="picker-label">{{ 'common.weight' | translate }}</span>
-            <app-drum-picker
-              [values]="weightValues"
-              [selectedValue]="weightKg()"
-              unit="kg"
-              (valueChange)="weightKg.set(+$event)"
-            />
+        @if (isCardio()) {
+          <div class="pickers-row">
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.hours' | translate }}</span>
+              <app-drum-picker
+                [values]="hoursValues"
+                [selectedValue]="durationHours()"
+                (valueChange)="durationHours.set(+$event)"
+              />
+            </div>
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.minutes' | translate }}</span>
+              <app-drum-picker
+                [values]="minutesValues"
+                [selectedValue]="durationMinutes()"
+                (valueChange)="durationMinutes.set(+$event)"
+              />
+            </div>
+            <div class="picker-col">
+              <span class="picker-label">km</span>
+              <app-drum-picker
+                [values]="kmValues"
+                [selectedValue]="distanceKm() ?? null"
+                (valueChange)="setDistanceKm($event)"
+              />
+            </div>
           </div>
-          <div class="picker-col">
-            <span class="picker-label">{{ 'common.sets' | translate }}</span>
-            <app-drum-picker
-              [values]="setsValues"
-              [selectedValue]="sets()"
-              (valueChange)="sets.set(+$event)"
-            />
+        } @else {
+          <div class="pickers-row">
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.weight' | translate }}</span>
+              <app-drum-picker
+                [values]="weightValues"
+                [selectedValue]="weightKg()"
+                unit="kg"
+                (valueChange)="weightKg.set(+$event)"
+              />
+            </div>
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.sets' | translate }}</span>
+              <app-drum-picker
+                [values]="setsValues"
+                [selectedValue]="sets()"
+                (valueChange)="sets.set(+$event)"
+              />
+            </div>
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.reps' | translate }}</span>
+              <app-drum-picker
+                [values]="repsValues"
+                [selectedValue]="reps()"
+                (valueChange)="reps.set(+$event)"
+              />
+            </div>
+            <div class="picker-col">
+              <span class="picker-label">{{ 'common.rest' | translate }}</span>
+              <app-drum-picker  style="min-width: 90px !important"
+                [values]="breakValues"
+                [selectedValue]="breakSelectedValue()"
+                (valueChange)="setBreakFromMmss($event)"
+              />
+            </div>
           </div>
-          <div class="picker-col">
-            <span class="picker-label">{{ 'common.reps' | translate }}</span>
-            <app-drum-picker
-              [values]="repsValues"
-              [selectedValue]="reps()"
-              (valueChange)="reps.set(+$event)"
-            />
-          </div>
-          <div class="picker-col">
-            <span class="picker-label">{{ 'common.rest' | translate }}</span>
-            <app-drum-picker  style="min-width: 90px !important"
-              [values]="breakValues"
-              [selectedValue]="breakSelectedValue()"
-              (valueChange)="setBreakFromMmss($event)"
-            />
-          </div>
-        </div>
+        }
 
         <div class="actions">
           <button class="btn-cancel" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
-          <button class="btn-submit" (click)="onSubmit()">{{ 'common.add' | translate }}</button>
+          <button class="btn-submit" [disabled]="isSubmitDisabled()" (click)="onSubmit()">{{ 'common.add' | translate }}</button>
         </div>
       </div>
     </div>
@@ -112,7 +153,7 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
     .form-card {
       background: var(--card);
       border-radius: 20px 20px 0 0;
-      padding: 24px 20px calc(36px + env(safe-area-inset-bottom));
+      padding: 24px 20px 36px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
@@ -189,6 +230,21 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
       border: 1px solid rgba(245,166,35,0.3);
       align-self: flex-start;
     }
+    .detected-cardio {
+      margin-top: 6px;
+      display: inline-block;
+      background: rgba(6,182,212,0.15);
+      color: #06b6d4;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(6,182,212,0.3);
+      align-self: flex-start;
+    }
     .pickers-row {
       display: flex;
       overflow-x: auto;
@@ -249,6 +305,7 @@ export class AddExerciseFormComponent {
   private readonly addExerciseUseCase = inject(AddExerciseUseCase);
   private readonly autocompleteService = inject(AutocompleteService);
   private readonly muscleDetector = inject(MuscleGroupDetectorService);
+  private readonly haptic = inject(HapticService);
 
   readonly sessionId = input.required<string>();
   readonly exerciseAdded = output<void>();
@@ -261,15 +318,30 @@ export class AddExerciseFormComponent {
   readonly breakDurationSeconds = signal(60);
   readonly suggestions = signal<string[]>([]);
   readonly detectedGroup = signal<MuscleGroup | null>(null);
+  readonly isCardio = signal(false);
+
+  readonly durationHours = signal(0);
+  readonly durationMinutes = signal(0);
+  readonly distanceKm = signal<number | null>(null);
+  readonly durationSeconds = computed(() => this.durationHours() * 3600 + this.durationMinutes() * 60);
+
+  readonly isSubmitDisabled = computed(() => this.isCardio() && this.durationSeconds() === 0);
 
   readonly weightValues = WEIGHT_VALUES;
   readonly setsValues = SETS_VALUES;
   readonly repsValues = REPS_VALUES;
   readonly breakValues = BREAK_VALUES;
+  readonly hoursValues = HOURS_VALUES;
+  readonly minutesValues = MINUTES_VALUES;
+  readonly kmValues = KM_VALUES;
   readonly breakSelectedValue = computed(() => secondsToMmss(this.breakDurationSeconds()));
 
   setBreakFromMmss(v: string | number): void {
     this.breakDurationSeconds.set(mmssToSeconds(String(v)));
+  }
+
+  setDistanceKm(v: string | number | null): void {
+    this.distanceKm.set(v === null ? null : +v);
   }
 
   async onNameInput(event: Event): Promise<void> {
@@ -281,8 +353,9 @@ export class AddExerciseFormComponent {
       this.autocompleteService.getDefaultsByExactName(value),
     ]);
     this.suggestions.set(fetchedSuggestions);
-    this.detectedGroup.set(detection.muscleGroups[0] ?? null);
-    if (defaults) {
+    this.isCardio.set(detection.isCardio);
+    this.detectedGroup.set(detection.isCardio ? null : (detection.muscleGroups[0] ?? null));
+    if (!detection.isCardio && defaults) {
       if (defaults.weightKg !== undefined) this.weightKg.set(defaults.weightKg);
       if (defaults.sets !== undefined) this.sets.set(defaults.sets);
       if (defaults.reps !== undefined) this.reps.set(defaults.reps);
@@ -300,12 +373,15 @@ export class AddExerciseFormComponent {
       if (lastParams.reps !== undefined) this.reps.set(lastParams.reps);
       if (lastParams.breakDurationSeconds !== undefined) this.breakDurationSeconds.set(lastParams.breakDurationSeconds);
     }
-    const { muscleGroups } = this.muscleDetector.detect(suggestion);
-    this.detectedGroup.set(muscleGroups[0] ?? null);
+    const { muscleGroups, isCardio } = this.muscleDetector.detect(suggestion);
+    this.isCardio.set(isCardio);
+    this.detectedGroup.set(isCardio ? null : (muscleGroups[0] ?? null));
   }
 
   async onSubmit(): Promise<void> {
     if (!this.name().trim()) return;
+    if (this.isSubmitDisabled()) return;
+    this.haptic.vibrate();
     await this.addExerciseUseCase.execute({
       name: this.name(),
       weightKg: this.weightKg(),

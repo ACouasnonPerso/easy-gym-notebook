@@ -1,8 +1,13 @@
-import { Component, ChangeDetectionStrategy, input, output, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, computed, inject } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { Exercise, MuscleGroup } from '../../core_logic/shared/models';
 import { ExerciseExpandedComponent } from './exercise-expanded.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { HapticService } from '../../core_logic/shared/haptic.service';
+
+function formatDurationMinutes(seconds: number): string {
+  return Math.floor(seconds / 60).toString();
+}
 
 function formatBreakDuration(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -36,22 +41,37 @@ function formatBreakDuration(seconds: number): string {
         }
       </div>
       <div class="exercise-stats">
-        <div class="ex-stat">
-          <span class="ex-stat-value orange">{{ exercise().weightKg }} kg</span>
-          <span class="ex-stat-label">{{ 'common.weight' | translate }}</span>
-        </div>
-        <div class="ex-stat">
-          <span class="ex-stat-value">{{ exercise().sets }}</span>
-          <span class="ex-stat-label">{{ 'common.sets' | translate }}</span>
-        </div>
-        <div class="ex-stat">
-          <span class="ex-stat-value blue">{{ breakLabel() }}</span>
-          <span class="ex-stat-label">{{ 'common.break' | translate }}</span>
-        </div>
-        <div class="ex-stat right">
-          <span class="ex-stat-value">{{ exercise().reps }}</span>
-          <span class="ex-stat-label">{{ 'common.reps' | translate }}</span>
-        </div>
+        @if (isCardio()) {
+          <div class="ex-stat">
+            <span class="ex-stat-value orange">{{ durationMinutes() }} min</span>
+            <span class="ex-stat-label">{{ 'common.duration' | translate }}</span>
+          </div>
+          <div class="ex-stat right">
+            @if (exercise().distanceKm !== null) {
+              <span class="ex-stat-value blue">{{ exercise().distanceKm }} km</span>
+            } @else {
+              <span class="ex-stat-value blue">—</span>
+            }
+            <span class="ex-stat-label">km</span>
+          </div>
+        } @else {
+          <div class="ex-stat">
+            <span class="ex-stat-value orange">{{ exercise().weightKg }} kg</span>
+            <span class="ex-stat-label">{{ 'common.weight' | translate }}</span>
+          </div>
+          <div class="ex-stat">
+            <span class="ex-stat-value">{{ exercise().sets }}</span>
+            <span class="ex-stat-label">{{ 'common.sets' | translate }}</span>
+          </div>
+          <div class="ex-stat">
+            <span class="ex-stat-value blue">{{ breakLabel() }}</span>
+            <span class="ex-stat-label">{{ 'common.break' | translate }}</span>
+          </div>
+          <div class="ex-stat right">
+            <span class="ex-stat-value">{{ exercise().reps }}</span>
+            <span class="ex-stat-label">{{ 'common.reps' | translate }}</span>
+          </div>
+        }
       </div>
     </div>
     @if (isExpanded()) {
@@ -166,6 +186,7 @@ function formatBreakDuration(seconds: number): string {
   `],
 })
 export class ExerciseCardComponent {
+  private readonly haptic = inject(HapticService);
   readonly exercise = input.required<Exercise>();
   readonly isExpanded = input<boolean>(false);
   readonly toggleExpand = output<void>();
@@ -180,8 +201,10 @@ export class ExerciseCardComponent {
   readonly isValidated = computed(() => this.exercise().status === 'validated');
   readonly isActiveStatus = computed(() => this.exercise().status === 'pending' || this.exercise().status === 'cancelled');
   readonly breakLabel = computed(() => formatBreakDuration(this.exercise().breakDurationSeconds));
+  readonly isCardio = computed(() => this.exercise().isCardio);
+  readonly durationMinutes = computed(() => formatDurationMinutes(this.exercise().durationSeconds));
 
-  private readonly muscleColorMap: Record<MuscleGroup, { color: string; bg: string; border: string }> = {
+  private readonly muscleColorMap: Record<string, { color: string; bg: string; border: string }> = {
     [MuscleGroup.Chest]:      { color: '#e74c3c', bg: 'rgba(231,76,60,0.15)',    border: 'rgba(231,76,60,0.3)' },
     [MuscleGroup.Back]:       { color: '#3498db', bg: 'rgba(52,152,219,0.15)',   border: 'rgba(52,152,219,0.3)' },
     [MuscleGroup.Shoulders]:  { color: '#9b59b6', bg: 'rgba(155,89,182,0.15)',   border: 'rgba(155,89,182,0.3)' },
@@ -195,6 +218,7 @@ export class ExerciseCardComponent {
     [MuscleGroup.Calves]:     { color: '#f1c40f', bg: 'rgba(241,196,15,0.15)',   border: 'rgba(241,196,15,0.3)' },
     [MuscleGroup.Traps]:      { color: '#ff9800', bg: 'rgba(255,152,0,0.15)',    border: 'rgba(255,152,0,0.3)' },
     [MuscleGroup.FullBody]:   { color: '#ecf0f1', bg: 'rgba(236,240,241,0.1)',   border: 'rgba(236,240,241,0.2)' },
+    Cardio:                   { color: '#06b6d4', bg: 'rgba(6,182,212,0.15)',    border: 'rgba(6,182,212,0.3)' },
   };
 
   tagStyle(muscle: MuscleGroup | null): Record<string, string> {
@@ -205,6 +229,7 @@ export class ExerciseCardComponent {
   }
 
   onCheckboxClick(): void {
+    this.haptic.vibrate();
     if (this.isValidated()) this.exerciseCancel.emit();
     else this.exerciseValidate.emit();
   }

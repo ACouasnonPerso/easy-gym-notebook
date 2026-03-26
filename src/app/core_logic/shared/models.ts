@@ -37,6 +37,9 @@ export interface Exercise {
   reps: number;
   breakDurationSeconds: number;
   status: ExerciseStatus;
+  isCardio: boolean;
+  durationSeconds: number;
+  distanceKm: number | null;
 }
 
 export interface ExerciseOccurrence {
@@ -70,4 +73,13 @@ export interface RawExercise {
   reps: number;
   breakDurationSeconds: number;
   status: ExerciseStatus;
+  isCardio: boolean;
+  durationSeconds: number;
+  distanceKm: number | null;
+}
+
+export interface CardioOccurrence {
+  date: Date;
+  durationSeconds: number;
+  distanceKm: number | null;
 }

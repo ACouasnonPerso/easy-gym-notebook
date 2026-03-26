@@ -19,6 +19,9 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     reps: 10,
     breakDurationSeconds: 60,
     status: 'pending',
+    isCardio: false,
+    durationSeconds: 0,
+    distanceKm: null,
     ...overrides,
   };
 }
@@ -197,6 +200,48 @@ describe('AddExerciseUseCase', () => {
       });
 
       expect(sessionService.currentSession()?.muscleGroup).toBe(MuscleGroup.Back);
+    });
+  });
+
+  describe('cardio exercise', () => {
+    it('should save cardio exercise with durationSeconds > 0 and weightKg === 0', async () => {
+      sessionService.currentSession.set(makeSession());
+
+      await useCase.execute({
+        name: 'Course à pied',
+        weightKg: 0,
+        sets: 0,
+        reps: 0,
+        breakDurationSeconds: 0,
+        sessionId: 'session-1',
+        isCardio: true,
+        durationSeconds: 1800,
+        distanceKm: 5,
+      });
+
+      const savedExercise: Exercise = exerciseRepoSpy.save.calls.mostRecent().args[0];
+      expect(savedExercise.isCardio).toBeTrue();
+      expect(savedExercise.durationSeconds).toBe(1800);
+      expect(savedExercise.weightKg).toBe(0);
+    });
+
+    it('should NOT update session muscleGroup when adding a cardio exercise', async () => {
+      sessionService.currentSession.set(makeSession({ muscleGroup: null }));
+
+      await useCase.execute({
+        name: 'Course à pied',
+        weightKg: 0,
+        sets: 0,
+        reps: 0,
+        breakDurationSeconds: 0,
+        sessionId: 'session-1',
+        isCardio: true,
+        durationSeconds: 1800,
+        distanceKm: null,
+      });
+
+      expect(sessionService.currentSession()?.muscleGroup).toBeNull();
+      expect(sessionRepoSpy.save).not.toHaveBeenCalled();
     });
   });
 });

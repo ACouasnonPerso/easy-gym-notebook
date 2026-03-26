@@ -1,10 +1,12 @@
-import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostListener, inject, computed } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs/operators';
 import { BottomNavComponent } from './primary_adapters/shared/bottom-nav.component';
 import { SessionBottomNavComponent } from './primary_adapters/shared/session-bottom-nav.component';
 import { TranslateService } from '@ngx-translate/core';
+import { SessionChronoService } from './core_logic/chrono/session-chrono.service';
+import { SessionService } from './core_logic/session/session.service';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +19,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent {
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
+  private readonly sessionService = inject(SessionService);
+  private readonly sessionChronoService = inject(SessionChronoService);
 
   constructor() {
     this.translate.addLangs(['fr', 'en']);
@@ -39,4 +43,24 @@ export class AppComponent {
     const url = this.currentUrl();
     return url.startsWith('/sessions/') || url.startsWith('/chrono/');
   });
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload(): void {
+    this.saveCurrentSessionDuration();
+  }
+
+  @HostListener('document:visibilitychange')
+  onVisibilityChange(): void {
+    if (document.hidden) {
+      this.saveCurrentSessionDuration();
+    }
+  }
+
+  private saveCurrentSessionDuration(): void {
+    const session = this.sessionService.currentSession();
+    if (!session || session.status !== 'active') return;
+    const elapsed = this.sessionChronoService.getElapsedForSession(session.id);
+    if (elapsed <= 0) return;
+    this.sessionService.updateCurrentSession({ durationSeconds: elapsed });
+  }
 }

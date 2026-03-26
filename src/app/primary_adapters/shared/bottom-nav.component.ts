@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CreateSessionUseCase } from '../../primary_ports/session-list/create-session.usecase';
 import { TranslateModule } from '@ngx-translate/core';
+import { HapticService } from '../../core_logic/shared/haptic.service';
 
 @Component({
   selector: 'app-bottom-nav',
@@ -62,7 +63,7 @@ import { TranslateModule } from '@ngx-translate/core';
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 32px calc(16px + env(safe-area-inset-bottom));
+      padding: 12px 32px 16px;
       max-width: 720px;
       margin: 0 auto;
       width: 100%;
@@ -135,8 +136,10 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class BottomNavComponent {
   private readonly createSessionUseCase = inject(CreateSessionUseCase);
+  private readonly haptic = inject(HapticService);
 
   createSession(): void {
+    this.haptic.vibrate();
     this.createSessionUseCase.execute();
   }
 }

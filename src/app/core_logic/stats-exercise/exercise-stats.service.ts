@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { ExerciseOccurrence } from '../shared/models';
+import { CardioOccurrence, ExerciseOccurrence } from '../shared/models';
 import { SESSION_REPOSITORY } from '../../secondary_ports/session/session.repository.interface';
 import { EXERCISE_REPOSITORY } from '../../secondary_ports/exercise/exercise.repository.interface';
 
@@ -11,6 +11,9 @@ export class ExerciseStatsService {
   private readonly _occurrences = signal<ExerciseOccurrence[]>([]);
   readonly occurrences = this._occurrences.asReadonly();
 
+  private readonly _cardioOccurrences = signal<CardioOccurrence[]>([]);
+  readonly cardioOccurrences = this._cardioOccurrences.asReadonly();
+
   async loadForExercise(exerciseName: string): Promise<void> {
     const [sessions, exercises] = await Promise.all([
       this.sessionRepository.getAll(),
@@ -19,8 +22,25 @@ export class ExerciseStatsService {
 
     const sessionDateMap = new Map<string, Date>(sessions.map(s => [s.id, s.date]));
 
-    const occurrences: ExerciseOccurrence[] = exercises
-      .filter(e => e.name === exerciseName && e.status === 'validated')
+    const matchingExercises = exercises.filter(e => e.name === exerciseName && e.status === 'validated');
+
+    const isCardioExercise = matchingExercises.some(e => e.isCardio);
+
+    if (isCardioExercise) {
+      const cardioOccurrences: CardioOccurrence[] = matchingExercises
+        .map(e => ({
+          date: sessionDateMap.get(e.sessionId) ?? new Date(0),
+          durationSeconds: e.durationSeconds,
+          distanceKm: e.distanceKm ?? null,
+        }))
+        .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+      this._cardioOccurrences.set(cardioOccurrences);
+      this._occurrences.set([]);
+      return;
+    }
+
+    const occurrences: ExerciseOccurrence[] = matchingExercises
       .map(e => ({
         exerciseId: e.id,
         sessionId: e.sessionId,
@@ -36,5 +56,6 @@ export class ExerciseStatsService {
       .sort((a, b) => a.date.getTime() - b.date.getTime());
 
     this._occurrences.set(occurrences);
+    this._cardioOccurrences.set([]);
   }
 }

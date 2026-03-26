@@ -10,6 +10,9 @@ interface AddExerciseParams {
   reps: number;
   breakDurationSeconds: number;
   sessionId: string;
+  isCardio?: boolean;
+  durationSeconds?: number;
+  distanceKm?: number | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -19,8 +22,10 @@ export class AddExerciseUseCase {
   private readonly sessionService = inject(SessionService);
 
   async execute(params: AddExerciseParams): Promise<void> {
+    const isCardio = params.isCardio ?? false;
     const { muscleGroups } = this.muscleDetector.detect(params.name);
-    const muscleGroup = muscleGroups[0] ?? null;
+    const muscleGroup = isCardio ? null : (muscleGroups[0] ?? null);
+    const resolvedMuscleGroups = isCardio ? [] : muscleGroups;
 
     const rawName = params.name.slice(0, 60);
     const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
@@ -30,18 +35,21 @@ export class AddExerciseUseCase {
       sessionId: params.sessionId,
       name: formattedName,
       muscleGroup,
-      muscleGroups,
-      weightKg: params.weightKg,
-      sets: params.sets,
-      reps: params.reps,
-      breakDurationSeconds: params.breakDurationSeconds,
+      muscleGroups: resolvedMuscleGroups,
+      weightKg: isCardio ? 0 : params.weightKg,
+      sets: isCardio ? 0 : params.sets,
+      reps: isCardio ? 0 : params.reps,
+      breakDurationSeconds: isCardio ? 0 : params.breakDurationSeconds,
       status: 'pending' as const,
+      isCardio,
+      durationSeconds: params.durationSeconds ?? 0,
+      distanceKm: params.distanceKm ?? null,
     };
 
     await this.exerciseService.add(exercise);
 
     const session = this.sessionService.currentSession();
-    if (muscleGroup !== null && session && !session.muscleGroup)
+    if (!isCardio && muscleGroup !== null && session && !session.muscleGroup)
       await this.sessionService.updateCurrentSession({ muscleGroup });
   }
 }

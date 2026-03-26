@@ -8,3 +8,4 @@
 | [project_submit_form_visitor.md](project_submit_form_visitor.md) | project | SubmitFormAccountVisitor feature fully implemented and all 35 tests green as of 2026-03-24 |
 | [user_profile.md](user_profile.md) | user | User preferences and project tech stack |
 | [project_muscle_group_exercise.md](project_muscle_group_exercise.md) | project | muscleGroup is intentionally kept on Exercise — decision confirmed 2026-03-26, tests added to AddExerciseUseCase |
+| [project_cardio_exercise.md](project_cardio_exercise.md) | project | Cardio exercise feature steps 1-7 implemented — models, detector, mapper, use cases, stats service all green |

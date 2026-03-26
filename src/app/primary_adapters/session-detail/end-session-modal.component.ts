@@ -29,7 +29,7 @@ import { TranslateModule } from '@ngx-translate/core';
     .form-card {
       background: var(--card);
       border-radius: 20px 20px 0 0;
-      padding: 24px 20px calc(36px + env(safe-area-inset-bottom));
+      padding: 24px 20px 36px;
       width: 100%;
     }
     .form-title {

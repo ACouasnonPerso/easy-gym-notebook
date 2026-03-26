@@ -4,13 +4,15 @@ import { ActivatedRoute } from '@angular/router';
 import { GetExerciseStatsUseCase } from '../../primary_ports/stats-exercise/get-exercise-stats.usecase';
 import { VolumeLineChartComponent } from './volume-line-chart.component';
 import { WeightLineChartComponent } from './weight-line-chart.component';
+import { CardioTimeChartComponent } from './cardio-time-chart.component';
+import { CardioDistanceChartComponent } from './cardio-distance-chart.component';
 import { ChartSelectionService } from './chart-selection.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-stats-exercise',
   standalone: true,
-  imports: [VolumeLineChartComponent, WeightLineChartComponent, TranslateModule],
+  imports: [VolumeLineChartComponent, WeightLineChartComponent, CardioTimeChartComponent, CardioDistanceChartComponent, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="page">
@@ -18,23 +20,42 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       <div class="page-title">{{ exerciseName }}</div>
 
       <div class="chart-card">
-        <div class="chart-tabs">
-          <button
-            class="tab-btn"
-            [class.active]="chartSelection.selectedChart() === 'volume'"
-            (click)="chartSelection.select('volume')"
-          >{{ 'common.volume' | translate }}</button>
-          <button
-            class="tab-btn"
-            [class.active]="chartSelection.selectedChart() === 'weight'"
-            (click)="chartSelection.select('weight')"
-          >{{ 'common.weight' | translate }}</button>
-        </div>
-
-        @if (chartSelection.selectedChart() === 'volume') {
-          <app-volume-line-chart [occurrences]="useCase.occurrences()" />
+        @if (useCase.isCardio()) {
+          <div class="chart-tabs">
+            <button
+              class="tab-btn"
+              [class.active]="chartSelection.selectedChart() === 'volume'"
+              (click)="chartSelection.select('volume')"
+            >{{ 'common.duration' | translate }}</button>
+            <button
+              class="tab-btn"
+              [class.active]="chartSelection.selectedChart() === 'weight'"
+              (click)="chartSelection.select('weight')"
+            >km</button>
+          </div>
+          @if (chartSelection.selectedChart() === 'volume') {
+            <app-cardio-time-chart [occurrences]="useCase.cardioOccurrences()" />
+          } @else {
+            <app-cardio-distance-chart [occurrences]="useCase.cardioOccurrences()" />
+          }
         } @else {
-          <app-weight-line-chart [occurrences]="useCase.occurrences()" />
+          <div class="chart-tabs">
+            <button
+              class="tab-btn"
+              [class.active]="chartSelection.selectedChart() === 'volume'"
+              (click)="chartSelection.select('volume')"
+            >{{ 'common.volume' | translate }}</button>
+            <button
+              class="tab-btn"
+              [class.active]="chartSelection.selectedChart() === 'weight'"
+              (click)="chartSelection.select('weight')"
+            >{{ 'common.weight' | translate }}</button>
+          </div>
+          @if (chartSelection.selectedChart() === 'volume') {
+            <app-volume-line-chart [occurrences]="useCase.occurrences()" />
+          } @else {
+            <app-weight-line-chart [occurrences]="useCase.occurrences()" />
+          }
         }
       </div>
 
