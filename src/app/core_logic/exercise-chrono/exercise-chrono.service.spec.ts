@@ -116,6 +116,53 @@ describe('ExerciseChronoService', () => {
     });
   });
 
+  describe('seriesCount', () => {
+    it('should start at 0 after init()', () => {
+      service.init(60);
+
+      expect(service.seriesCount()).toBe(0);
+    });
+
+    it('should be 1 after start()', () => {
+      service.init(60);
+
+      service.start();
+
+      expect(service.seriesCount()).toBe(1);
+    });
+
+    it('should increment when goTraining() is called from break', () => {
+      service.init(60);
+      service.start();
+      service.goBreak();
+
+      service.goTraining();
+
+      expect(service.seriesCount()).toBe(2);
+    });
+
+    it('should reset to 0 when init() is called again (exercise change)', () => {
+      service.init(60);
+      service.start();
+      service.goBreak();
+      service.goTraining();
+
+      service.init(90);
+
+      expect(service.seriesCount()).toBe(0);
+    });
+
+    it('should increment when the break timer completes automatically', () => {
+      service.init(5);
+      service.start();
+      service.goBreak();
+
+      jasmine.clock().tick(6000);
+
+      expect(service.seriesCount()).toBe(2);
+    });
+  });
+
   describe('updateBreakDuration()', () => {
     it('ne modifie pas l\'état du chrono quand appelé pendant training', () => {
       service.init(60);

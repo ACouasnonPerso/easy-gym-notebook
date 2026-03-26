@@ -24,6 +24,18 @@
 }
 .back-btn:hover { color: var(--text); }
 .back-arrow { font-size: 18px; line-height: 1; }
+.series-badge {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.12);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 8px;
+  padding: 4px 10px;
+  letter-spacing: 0.5px;
+}
+
 .break-duration-label {
   font-family: 'Syne', sans-serif;
   font-size: 12px;

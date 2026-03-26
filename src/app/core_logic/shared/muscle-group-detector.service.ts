@@ -24,11 +24,11 @@ const SYNONYMS_BY_GROUP: { groups: MuscleGroup[]; terms: string[] }[] = [
   },
   {
     groups: [MuscleGroup.Biceps],
-    terms: ['biceps', 'bibi'],
+    terms: ['biceps', 'bibi', 'bi'],
   },
 	{
 		groups: [MuscleGroup.Triceps],
-		terms: ['triceps', 'pushdown'],
+		terms: ['triceps', 'pushdown', 'tritri', 'tri'],
 	},
 	{
 		groups: [MuscleGroup.Triceps, MuscleGroup.Chest],

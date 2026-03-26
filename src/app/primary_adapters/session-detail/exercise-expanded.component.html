@@ -6,6 +6,7 @@
       [ngModel]="exercise().name"
       (ngModelChange)="update.emit({ name: $event })"
       [placeholder]="'exercise.name' | translate"
+      maxlength="60"
     />
   </div>
   <div class="pickers-row">
@@ -46,13 +47,7 @@
 
   <div class="actions-row">
     <button class="btn btn-secondary" (click)="openChrono.emit()">{{ 'nav.chrono' | translate }}</button>
-    @if (exercise().status !== 'validated') {
-      <button class="btn btn-validate" (click)="validate.emit()">{{ 'common.validate' | translate }}</button>
-    }
-    @if (exercise().status === 'validated') {
-      <button class="btn btn-cancel" (click)="cancel.emit()">{{ 'common.cancel' | translate }}</button>
-    }
-    <button class="btn btn-secondary" (click)="openStats.emit()">{{ 'exercise.page' | translate }}</button>
+<button class="btn btn-secondary" (click)="openStats.emit()">{{ 'exercise.page' | translate }}</button>
     <button class="btn btn-delete" (click)="delete.emit()">{{ 'common.delete' | translate }}</button>
   </div>
 </div>

@@ -12,7 +12,10 @@ export class EndSessionUseCase {
   readonly showManualOverride = signal<boolean>(false);
 
   execute(): void {
-    const elapsed = this.sessionChronoService.stop();
+    const sessionId = this.sessionService.currentSession()?.id;
+    const elapsed = sessionId
+      ? this.sessionChronoService.stopForSession(sessionId)
+      : this.sessionChronoService.stop();
     if (elapsed > 0) {
       this.sessionService.updateCurrentSession({ durationSeconds: elapsed, status: 'completed' });
       this.router.navigate(['/sessions']);
@@ -21,9 +24,10 @@ export class EndSessionUseCase {
     }
   }
 
-  executeWithManualDuration(seconds: number): void {
-    this.sessionChronoService.stop();
-    this.sessionService.updateCurrentSession({ durationSeconds: seconds, status: 'completed' });
+  confirmEnd(): void {
+    const sessionId = this.sessionService.currentSession()?.id;
+    if (sessionId) this.sessionChronoService.stopForSession(sessionId);
+    this.sessionService.updateCurrentSession({ durationSeconds: 0, status: 'completed' });
     this.router.navigate(['/sessions']);
   }
 }

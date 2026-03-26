@@ -26,22 +26,10 @@
   />
 
   @if (endSessionUseCase.showManualOverride()) {
-    <div class="overlay" (click)="endSessionUseCase.showManualOverride.set(false)">
-      <div class="manual-duration-card" (click)="$event.stopPropagation()">
-        <p class="manual-duration-label">{{ 'session.durationSeconds' | translate }}</p>
-        <input
-          type="number"
-          class="manual-duration-input"
-          [value]="manualDurationSeconds()"
-          (input)="manualDurationSeconds.set(+$any($event.target).value)"
-          min="0"
-        />
-        <div class="manual-duration-actions">
-          <button class="btn-cancel" (click)="endSessionUseCase.showManualOverride.set(false)">{{ 'common.cancel' | translate }}</button>
-          <button class="btn-primary" (click)="endSessionUseCase.executeWithManualDuration(manualDurationSeconds())">{{ 'common.end' | translate }}</button>
-        </div>
-      </div>
-    </div>
+    <app-end-session-modal
+      (confirmed)="onEndSessionConfirmed()"
+      (cancelled)="endSessionUseCase.showManualOverride.set(false)"
+    />
   }
 
   @if (showDurationPicker()) {

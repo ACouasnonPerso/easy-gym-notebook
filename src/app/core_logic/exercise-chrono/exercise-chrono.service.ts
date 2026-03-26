@@ -10,9 +10,11 @@ export class ExerciseChronoService {
   private readonly _chronoState = signal<ChronoState>('initial');
   private readonly _timeSeconds = signal<number>(0);
   private readonly _breakDuration = signal<number>(60);
+  private readonly _seriesCount = signal<number>(0);
 
   readonly chronoState = this._chronoState.asReadonly();
   readonly timeSeconds = this._timeSeconds.asReadonly();
+  readonly seriesCount = this._seriesCount.asReadonly();
 
   /** Backward-compat: 'exercise' when training, 'pause' when on break */
   readonly mode = computed<'pause' | 'exercise'>(() => {
@@ -37,6 +39,7 @@ export class ExerciseChronoService {
     this._breakDuration.set(breakDuration);
     this._chronoState.set('initial');
     this._timeSeconds.set(0);
+    this._seriesCount.set(0);
   }
 
   /** Start training from initial state. */
@@ -44,6 +47,7 @@ export class ExerciseChronoService {
     if (this._chronoState() !== 'initial') return;
     this._chronoState.set('training');
     this._timeSeconds.set(0);
+    this._seriesCount.update(n => n + 1);
     this.startCountup();
     this.persist();
   }
@@ -107,6 +111,7 @@ export class ExerciseChronoService {
     this.clearTimer();
     this._chronoState.set('training');
     this._timeSeconds.set(0);
+    this._seriesCount.update(n => n + 1);
     this.startCountup();
     this.persist();
   }
@@ -114,14 +119,27 @@ export class ExerciseChronoService {
   startCountdown(): void {
     this._intervalId = setInterval(() => {
       this._timeSeconds.update(t => t - 1);
-      if (this._timeSeconds() <= 0) {
+      const remaining = this._timeSeconds();
+      if (remaining <= 0) {
         this.clearTimer();
         this.playBeep();
         this._chronoState.set('training');
         this._timeSeconds.set(0);
+        this._seriesCount.update(n => n + 1);
         this.startCountup();
-      }
+      } else if (remaining === 10) this.playCountdownSound('ten');
+      else if (remaining === 3) this.playCountdownSound('three');
+      else if (remaining === 2) this.playCountdownSound('two');
+      else if (remaining === 1) this.playCountdownSound('one');
     }, 1000);
+  }
+
+  playCountdownSound(name: 'ten' | 'three' | 'two' | 'one'): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    try {
+      const audio = new Audio(`assets/sounds/${name}.mp3`);
+      audio.play().catch(() => { /* ignore autoplay policy errors */ });
+    } catch (e) { /* ignore */ }
   }
 
   startCountup(): void {

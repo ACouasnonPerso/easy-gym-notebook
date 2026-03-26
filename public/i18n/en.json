@@ -56,7 +56,7 @@
     "deleteConfirm": "Delete this exercise?"
   },
   "session": {
-    "durationSeconds": "Session duration (seconds)"
+    "endConfirm": "End the session?"
   },
   "statsExercise": {
     "empty": "No data for this exercise",
@@ -80,7 +80,8 @@
     "goBreak": "GO BREAK",
     "goTraining": "GO TRAINING",
     "ready": "Ready",
-    "training": "Training"
+    "training": "Training",
+    "series": "Set"
   },
   "days": {
     "mon": "M",

@@ -1,0 +1,2 @@
+- [stats-service analytics brainstorm](project_stats_service.md) — télémétrie Firestore anonyme, décisions de conception finalisées 2026-03-26
+- [cardio-exercise brainstorm](project_cardio_exercise.md) — tag Cardio exclusif, duration+distance, stats adaptées, pas de migration prod, finalisé 2026-03-26

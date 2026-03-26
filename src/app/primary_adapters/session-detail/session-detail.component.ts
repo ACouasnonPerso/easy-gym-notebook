@@ -14,16 +14,16 @@ import { SetSessionChronoUseCase } from '../../primary_ports/session-chrono/set-
 import { formatDuration } from '../../core_logic/shared/utils';
 import { Exercise } from '../../core_logic/shared/models';
 import { EditDurationPopupComponent } from './edit-duration-popup.component';
+import { EndSessionModalComponent } from './end-session-modal.component';
 import { SessionHeaderComponent } from './session-header.component';
 import { SessionExercisesListComponent } from './session-exercises-list.component';
 import { SessionDetailUiService } from './session-detail-ui.service';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-session-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SessionHeaderComponent, SessionExercisesListComponent, EditDurationPopupComponent, TranslateModule],
+  imports: [SessionHeaderComponent, SessionExercisesListComponent, EditDurationPopupComponent, EndSessionModalComponent],
   templateUrl: './session-detail.component.html',
   styleUrl: './session-detail.component.scss',
 })
@@ -47,7 +47,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   readonly exercises = this.getSessionDetailUseCase.exercises;
 
   readonly showDurationPicker = signal(false);
-  readonly manualDurationSeconds = signal(0);
 
   readonly sessionId = signal('');
 
@@ -76,7 +75,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   );
 
   readonly durationLabel = computed(() => {
-    if (this.session()?.status === 'active')
+    if (this.session()?.status === 'active' || this.chronoStatus() === 'running')
       return formatDuration(this.currentElapsedSeconds());
     return formatDuration(this.session()?.durationSeconds ?? 0);
   });
@@ -129,6 +128,10 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   onEndSession(): void {
     this.endSessionUseCase.execute();
+  }
+
+  onEndSessionConfirmed(): void {
+    this.endSessionUseCase.confirmEnd();
   }
 
   goBack(): void {

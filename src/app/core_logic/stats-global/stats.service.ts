@@ -7,6 +7,7 @@ export interface HeatmapCell {
   date: Date;
   hasSession: boolean;
   isCurrentMonth: boolean;
+  tags: string[];
 }
 
 export interface MonthSummary {
@@ -89,9 +90,14 @@ export class StatsService {
     const gridStart = getMondayOfWeek(firstDay);
     const gridEnd = getSundayOfWeek(lastDay);
 
-    const sessionDates = new Set(
-      this._allSessions().map(s => `${s.date.getFullYear()}-${s.date.getMonth()}-${s.date.getDate()}`)
-    );
+    const sessionTagsByDate = new Map<string, string[]>();
+    for (const s of this._allSessions()) {
+      const key = `${s.date.getFullYear()}-${s.date.getMonth()}-${s.date.getDate()}`;
+      if (!sessionTagsByDate.has(key)) sessionTagsByDate.set(key, []);
+      if (s.muscleGroup !== null && !sessionTagsByDate.get(key)!.includes(s.muscleGroup)) {
+        sessionTagsByDate.get(key)!.push(s.muscleGroup);
+      }
+    }
 
     const cells: HeatmapCell[] = [];
     const cursor = new Date(gridStart);
@@ -99,8 +105,9 @@ export class StatsService {
       const key = `${cursor.getFullYear()}-${cursor.getMonth()}-${cursor.getDate()}`;
       cells.push({
         date: new Date(cursor),
-        hasSession: sessionDates.has(key),
+        hasSession: sessionTagsByDate.has(key),
         isCurrentMonth: cursor.getMonth() === month && cursor.getFullYear() === year,
+        tags: sessionTagsByDate.get(key) ?? [],
       });
       cursor.setDate(cursor.getDate() + 1);
     }

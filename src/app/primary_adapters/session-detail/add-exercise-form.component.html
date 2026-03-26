@@ -10,6 +10,7 @@
         (input)="onNameInput($event)"
         [placeholder]="'exercise.namePlaceholder' | translate"
         class="input"
+        maxlength="60"
       />
       @if (suggestions().length > 0) {
         <div class="suggestions">

@@ -126,6 +126,70 @@ describe('SessionChronoService — multi-session API', () => {
   });
 
   // ---------------------------------------------------------------------------
+  // Reopen scenario — app close + reopen + resume
+  // ---------------------------------------------------------------------------
+
+  describe('reopen scenario', () => {
+    it('should restore a running session from localStorage and keep ticking after app reopen', () => {
+      // Before close: session was running for 10 seconds.
+      service.startForSession('session-1');
+      jasmine.clock().tick(10000);
+
+      // App closes: service is destroyed and recreated (new TestBed instance).
+      jasmine.clock().uninstall();
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
+      });
+      const reopenedService = TestBed.inject(SessionChronoService);
+      jasmine.clock().install();
+      jasmine.clock().mockDate(new Date(10000)); // clock at 10s (same real time as when app closed)
+
+      // On reopen, statusSignalForSession is read by the component's computed.
+      const statusSignal = reopenedService.statusSignalForSession('session-1');
+
+      // The session should be restored as 'running' from localStorage.
+      expect(statusSignal()).toBe('running');
+      expect(reopenedService.getElapsedForSession('session-1')).toBe(10);
+
+      // Timer should keep ticking without any extra action.
+      jasmine.clock().tick(2000);
+      expect(reopenedService.getElapsedForSession('session-1')).toBe(12);
+    });
+
+    it('should restore a paused session from localStorage after app reopen, then tick correctly when resumed', () => {
+      // Before close: session was running for 10s, then paused at 10s.
+      service.startForSession('session-1');
+      jasmine.clock().tick(10000);
+      service.pauseForSession('session-1');
+
+      // App closes and reopens.
+      jasmine.clock().uninstall();
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
+      });
+      const reopenedService = TestBed.inject(SessionChronoService);
+      jasmine.clock().install();
+      jasmine.clock().mockDate(new Date(15000)); // 5 extra seconds passed while app was closed
+
+      // Component's computed reads the status signal (simulates UI binding).
+      const statusSignal = reopenedService.statusSignalForSession('session-1');
+
+      // Session should be restored as 'paused' at elapsed=10 (paused time doesn't count).
+      expect(statusSignal()).toBe('paused');
+      expect(reopenedService.getElapsedForSession('session-1')).toBe(10);
+
+      // User clicks resume: timer should continue ticking from 10.
+      reopenedService.resumeForSession('session-1');
+
+      expect(statusSignal()).toBe('running');
+      jasmine.clock().tick(3000);
+      expect(reopenedService.getElapsedForSession('session-1')).toBe(13);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
   // Session isolation — the core requirement
   // ---------------------------------------------------------------------------
 

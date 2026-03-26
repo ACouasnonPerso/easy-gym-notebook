@@ -18,9 +18,21 @@ function formatBreakDuration(seconds: number): string {
   template: `
     <div class="exercise-card" [class.validated]="isValidated()" (click)="toggleExpand.emit()">
       <div class="exercise-header">
+        <button
+          class="status-checkbox"
+          [class.status-checkbox--validated]="isValidated()"
+          [attr.aria-label]="isValidated() ? 'Annuler exercice' : 'Valider exercice'"
+          (click)="$event.stopPropagation(); onCheckboxClick()"
+        >
+          @if (isValidated()) {
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <polyline points="1.5,5 4,7.5 8.5,2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          }
+        </button>
         <span class="exercise-name">{{ exercise().name }}</span>
-        @if (exercise().muscleGroup) {
-          <span class="tag" [ngStyle]="tagStyle(exercise().muscleGroup)">{{ exercise().muscleGroup }}</span>
+        @for (group of exercise().muscleGroups; track group) {
+          <span class="tag" [ngStyle]="tagStyle(group)">{{ group }}</span>
         }
       </div>
       <div class="exercise-stats">
@@ -80,9 +92,40 @@ function formatBreakDuration(seconds: number): string {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
       margin-bottom: 10px;
     }
+    .status-checkbox {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid var(--orange);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--card);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+      padding: 0;
+    }
+    .status-checkbox:hover {
+      background: var(--orange-dim);
+      box-shadow: 0 0 0 3px rgba(245,166,35,0.12);
+    }
+    .status-checkbox--validated {
+      background: var(--green);
+      border-color: var(--green);
+      color: #0c0c14;
+    }
+    .status-checkbox--validated:hover {
+      background: rgba(34,197,94,0.8);
+      border-color: rgba(34,197,94,0.8);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.12);
+    }
     .exercise-name {
+      flex: 1;
       font-family: 'Syne', sans-serif;
       font-size: 13px;
       font-weight: 700;
@@ -159,5 +202,10 @@ export class ExerciseCardComponent {
     const entry = this.muscleColorMap[muscle];
     if (!entry) return {};
     return { color: entry.color, background: entry.bg, border: `1px solid ${entry.border}` };
+  }
+
+  onCheckboxClick(): void {
+    if (this.isValidated()) this.exerciseCancel.emit();
+    else this.exerciseValidate.emit();
   }
 }

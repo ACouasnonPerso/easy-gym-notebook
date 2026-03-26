@@ -1,4 +1,4 @@
-import { Injectable, PLATFORM_ID, inject, signal, Signal } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject, signal, Signal, untracked } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 export type ChronoStatus = 'running' | 'paused' | 'ended';
@@ -100,20 +100,25 @@ export class SessionChronoService {
 
   private _getOrCreateSession(sessionId: string): SessionChronoState {
     if (!this._sessions.has(sessionId)) {
-      this._sessions.set(sessionId, {
+      const state: SessionChronoState = {
         elapsed: signal<number>(0),
         status: signal<ChronoStatus>('paused'),
         intervalId: null,
         startTime: null,
         pausedElapsed: 0,
-      });
+      };
+      this._sessions.set(sessionId, state);
+      this.restoreSessionFromStorage(sessionId, state);
     }
     return this._sessions.get(sessionId)!;
   }
 
   startForSession(sessionId: string): void {
     const state = this._getOrCreateSession(sessionId);
+    // No-op if already running (normal start or restored from storage).
+    // No-op if paused with saved elapsed (restored from storage — wait for explicit resumeForSession).
     if (state.status() === 'running') return;
+    if (state.pausedElapsed > 0) return;
     if (state.intervalId !== null) {
       clearInterval(state.intervalId);
       state.intervalId = null;
@@ -122,6 +127,8 @@ export class SessionChronoService {
     state.elapsed.set(0);
     state.startTime = Date.now();
     state.status.set('running');
+    if (isPlatformBrowser(this.platformId))
+      localStorage.setItem(`egn_chrono_start_${sessionId}`, String(state.startTime));
     state.intervalId = setInterval(() => {
       state.elapsed.set(Math.floor((Date.now() - state.startTime!) / 1000));
     }, 1000);
@@ -136,13 +143,25 @@ export class SessionChronoService {
     }
     state.pausedElapsed = state.elapsed();
     state.status.set('paused');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(`egn_chrono_start_${sessionId}`);
+      localStorage.setItem(`egn_chrono_paused_${sessionId}`, String(state.pausedElapsed));
+    }
   }
 
   resumeForSession(sessionId: string): void {
-    const state = this._sessions.get(sessionId);
-    if (!state) return;
+	  debugger;
+    const state = this._getOrCreateSession(sessionId);
+    if (state.intervalId !== null) {
+      clearInterval(state.intervalId);
+      state.intervalId = null;
+    }
     state.startTime = Date.now() - state.pausedElapsed * 1000;
     state.status.set('running');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(`egn_chrono_paused_${sessionId}`);
+      localStorage.setItem(`egn_chrono_start_${sessionId}`, String(state.startTime));
+    }
     state.intervalId = setInterval(() => {
       state.elapsed.set(Math.floor((Date.now() - state.startTime!) / 1000));
     }, 1000);
@@ -155,7 +174,12 @@ export class SessionChronoService {
       clearInterval(state.intervalId);
       state.intervalId = null;
     }
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(`egn_chrono_start_${sessionId}`);
+      localStorage.removeItem(`egn_chrono_paused_${sessionId}`);
+    }
     const elapsed = state.elapsed();
+    state.pausedElapsed = elapsed;
     state.status.set('ended');
     state.startTime = null;
     return elapsed;
@@ -189,9 +213,40 @@ export class SessionChronoService {
     state.elapsed.set(seconds);
     state.startTime = Date.now() - seconds * 1000;
     state.status.set('running');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(`egn_chrono_paused_${sessionId}`);
+      localStorage.setItem(`egn_chrono_start_${sessionId}`, String(state.startTime));
+    }
     state.intervalId = setInterval(() => {
       state.elapsed.set(Math.floor((Date.now() - state.startTime!) / 1000));
     }, 1000);
+  }
+
+  private restoreSessionFromStorage(sessionId: string, state: SessionChronoState): boolean {
+    if (!isPlatformBrowser(this.platformId)) return false;
+    const storedPaused = localStorage.getItem(`egn_chrono_paused_${sessionId}`);
+    if (storedPaused) {
+      state.pausedElapsed = parseInt(storedPaused);
+      state.startTime = null;
+      untracked(() => {
+        state.elapsed.set(state.pausedElapsed);
+        state.status.set('paused');
+      });
+      return true;
+    }
+    const storedStart = localStorage.getItem(`egn_chrono_start_${sessionId}`);
+    if (storedStart) {
+      state.startTime = parseInt(storedStart);
+      untracked(() => {
+        state.elapsed.set(Math.floor((Date.now() - state.startTime!) / 1000));
+        state.status.set('running');
+      });
+      state.intervalId = setInterval(() => {
+        state.elapsed.set(Math.floor((Date.now() - state.startTime!) / 1000));
+      }, 1000);
+      return true;
+    }
+    return false;
   }
 
   private restoreFromStorage(): void {

@@ -8,6 +8,7 @@ export class ExerciseChronoUseCase {
   readonly chronoState = this.service.chronoState;
   readonly mode = this.service.mode;
   readonly timeSeconds = this.service.timeSeconds;
+  readonly seriesCount = this.service.seriesCount;
 
   initWithBreakDuration(n: number): void {
     this.service.init(n);

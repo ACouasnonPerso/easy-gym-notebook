@@ -6,6 +6,11 @@
         {{ formattedBreakDuration() }} {{ 'common.rest' | translate }}
       </span>
     }
+    @if (hasExercise() && seriesCount() > 0) {
+      <span class="series-badge">
+        {{ 'chrono.series' | translate }} {{ seriesCount() }}
+      </span>
+    }
   </div>
   <div class="chrono-body">
     <div class="chrono-ring-wrap">

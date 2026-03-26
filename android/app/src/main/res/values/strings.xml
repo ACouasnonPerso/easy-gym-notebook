@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">EasyGymNotebook</string>
+    <string name="title_activity_main">EasyGymNotebook</string>
+    <string name="package_name">com.easygym.notebook</string>
+    <string name="custom_url_scheme">com.easygym.notebook</string>
+</resources>

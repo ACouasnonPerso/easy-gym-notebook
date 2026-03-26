@@ -22,7 +22,7 @@ export class AddExerciseUseCase {
     const { muscleGroups } = this.muscleDetector.detect(params.name);
     const muscleGroup = muscleGroups[0] ?? null;
 
-    const rawName = params.name;
+    const rawName = params.name.slice(0, 60);
     const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
 
     const exercise = {

@@ -1,6 +1,20 @@
 import { TestBed } from '@angular/core/testing';
+import { Component, input, output } from '@angular/core';
+import { NgStyle } from '@angular/common';
+import { provideTranslateService, TranslateModule } from '@ngx-translate/core';
 import { ExerciseCardComponent } from './exercise-card.component';
 import { MuscleGroup, Exercise } from '../../core_logic/shared/models';
+
+@Component({ selector: 'app-exercise-expanded', standalone: true, template: '' })
+class FakeExerciseExpandedComponent {
+  readonly exercise = input.required<Exercise>();
+  readonly update = output<Partial<Exercise>>();
+  readonly validate = output<void>();
+  readonly cancel = output<void>();
+  readonly delete = output<void>();
+  readonly openChrono = output<void>();
+  readonly openStats = output<void>();
+}
 
 function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
   return {
@@ -21,7 +35,12 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 async function setup(exercise: Exercise) {
   await TestBed.configureTestingModule({
     imports: [ExerciseCardComponent],
-  }).compileComponents();
+    providers: [provideTranslateService({ defaultLanguage: 'fr' })],
+  })
+    .overrideComponent(ExerciseCardComponent, {
+      set: { imports: [FakeExerciseExpandedComponent, NgStyle, TranslateModule] },
+    })
+    .compileComponents();
 
   const fixture = TestBed.createComponent(ExerciseCardComponent);
   fixture.componentRef.setInput('exercise', exercise);
@@ -31,6 +50,44 @@ async function setup(exercise: Exercise) {
 }
 
 describe('ExerciseCardComponent', () => {
+  describe('affichage des tags muscleGroups', () => {
+    it('naffiche aucun tag quand muscleGroups est vide', async () => {
+      const { fixture } = await setup(makeExercise({ muscleGroup: null, muscleGroups: [] }));
+
+      const tags = fixture.nativeElement.querySelectorAll('.tag');
+
+      expect(tags.length).toBe(0);
+    });
+
+    it('affiche un tag quand muscleGroups contient un seul groupe', async () => {
+      const { fixture } = await setup(makeExercise({ muscleGroup: null, muscleGroups: [MuscleGroup.Back] }));
+
+      const tags = fixture.nativeElement.querySelectorAll('.tag');
+
+      expect(tags.length).toBe(1);
+      expect(tags[0].textContent.trim()).toBe(MuscleGroup.Back);
+    });
+
+    it('affiche deux tags quand muscleGroups contient deux groupes', async () => {
+      const { fixture } = await setup(makeExercise({ muscleGroup: null, muscleGroups: [MuscleGroup.Chest, MuscleGroup.Triceps] }));
+
+      const tags = fixture.nativeElement.querySelectorAll('.tag');
+
+      expect(tags.length).toBe(2);
+      expect(tags[0].textContent.trim()).toBe(MuscleGroup.Chest);
+      expect(tags[1].textContent.trim()).toBe(MuscleGroup.Triceps);
+    });
+
+    it('applique le bon style de couleur à chaque tag selon son groupe musculaire', async () => {
+      const { fixture } = await setup(makeExercise({ muscleGroup: null, muscleGroups: [MuscleGroup.Back, MuscleGroup.Biceps] }));
+
+      const tags = fixture.nativeElement.querySelectorAll('.tag');
+
+      expect(tags[0].style.color).toBe('rgb(52, 152, 219)');
+      expect(tags[1].style.color).toBe('rgb(46, 204, 113)');
+    });
+  });
+
   describe('tagStyle', () => {
     it('retourne un objet vide quand le muscleGroup est null', async () => {
       const { component } = await setup(makeExercise({ muscleGroup: null }));

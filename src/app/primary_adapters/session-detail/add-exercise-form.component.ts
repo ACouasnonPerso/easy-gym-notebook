@@ -19,7 +19,7 @@ function mmssToSeconds(mmss: string): number {
   return m * 60 + s;
 }
 
-const WEIGHT_VALUES = generateRange(0, 300, 0.5);
+const WEIGHT_VALUES = [...generateRange(0, 30, 0.5), ...generateRange(31, 300, 1)];
 const SETS_VALUES = generateRange(1, 20, 1);
 const REPS_VALUES = generateRange(1, 50, 1);
 const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
@@ -273,7 +273,7 @@ export class AddExerciseFormComponent {
   }
 
   async onNameInput(event: Event): Promise<void> {
-    const value = (event.target as HTMLInputElement).value;
+    const value = (event.target as HTMLInputElement).value.slice(0, 60);
     this.name.set(value);
     const [fetchedSuggestions, detection, defaults] = await Promise.all([
       this.autocompleteService.getSuggestions(value),

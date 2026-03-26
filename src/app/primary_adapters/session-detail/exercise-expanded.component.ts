@@ -16,7 +16,7 @@ function mmssToSeconds(mmss: string): number {
   return m * 60 + s;
 }
 
-const WEIGHT_VALUES = generateRange(0, 300, 0.5);
+const WEIGHT_VALUES = [...generateRange(0, 30, 0.5), ...generateRange(31, 300, 1)];
 const SETS_VALUES = generateRange(1, 20, 1);
 const REPS_VALUES = generateRange(1, 50, 1);
 const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
@@ -63,9 +63,9 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
             (valueChange)="update.emit({ reps: +$event })"
           />
         </div>
-        <div class="picker-col">
+        <div class="picker-col" style="min-width: 100px">
           <span class="picker-label">{{ 'common.rest' | translate }}</span>
-          <app-drum-picker
+          <app-drum-picker style="min-width: 100px"
             [values]="breakValues"
             [selectedValue]="breakSelectedValue()"
             (valueChange)="emitBreakUpdate($event)"
@@ -125,11 +125,7 @@ const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 80px;
       flex: 1;
-    }
-    .picker-col:last-child {
-      min-width: 96px;
     }
     .picker-label {
       font-size: 8px;

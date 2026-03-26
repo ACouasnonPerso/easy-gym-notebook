@@ -69,6 +69,13 @@ const PAGE_SIZE = 20;
         />
       }
     </div>
+
+    @if (sessions().length > 0 && sessions().length < 4) {
+      <div class="tips-banner">
+        <span class="tips-icon">💡</span>
+        <span class="tips-text">Reste appuyé sur une session pour la dupliquer 😉</span>
+      </div>
+    }
   `,
   styles: [`
     .page {
@@ -107,6 +114,35 @@ const PAGE_SIZE = 20;
       display: flex;
       flex-direction: column;
       gap: 12px;
+    }
+    .tips-banner {
+      position: fixed;
+      bottom: calc(var(--footer-height, 64px) + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 688px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card2);
+      border: 1px solid rgba(245, 166, 35, 0.2);
+      border-radius: 14px;
+      padding: 12px 14px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .tips-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .tips-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--sub);
+      line-height: 1.4;
     }
   `],
 })

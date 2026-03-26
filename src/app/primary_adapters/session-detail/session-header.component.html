@@ -6,16 +6,14 @@
       [totalWeightFormatted]="totalWeightFormatted()"
       (dateChange)="dateChange.emit($event)"
     />
-    @if (session().status === 'active') {
-      <app-session-header-chrono
-        [durationLabel]="durationLabel()"
-        [chronoStatus]="chronoStatus()"
-        (durationClick)="durationClick.emit()"
-        (endSession)="endSession.emit()"
-        (pause)="pause.emit()"
-        (resume)="resume.emit()"
-      />
-    }
+    <app-session-header-chrono
+      [durationLabel]="durationLabel()"
+      [chronoStatus]="chronoStatus()"
+      (durationClick)="durationClick.emit()"
+      (endSession)="endSession.emit()"
+      (pause)="pause.emit()"
+      (resume)="resume.emit()"
+    />
   </div>
 </div>
 <div class="divider"></div>
