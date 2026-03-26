@@ -1,0 +1,8 @@
+<div class="backdrop" (click)="closed.emit()"></div>
+<div class="menu">
+  @for (option of options(); track option) {
+    <button class="menu-item" (click)="selected.emit(option); closed.emit()">
+      {{ option }}
+    </button>
+  }
+</div>

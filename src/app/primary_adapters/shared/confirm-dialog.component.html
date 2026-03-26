@@ -1,0 +1,9 @@
+<div class="overlay" (click)="cancelled.emit()">
+  <div class="card" (click)="$event.stopPropagation()">
+    <p class="message">{{ message() }}</p>
+    <div class="actions">
+      <button class="btn btn-cancel" (click)="cancelled.emit()">Annuler</button>
+      <button class="btn btn-confirm" (click)="confirmed.emit()">Confirmer</button>
+    </div>
+  </div>
+</div>

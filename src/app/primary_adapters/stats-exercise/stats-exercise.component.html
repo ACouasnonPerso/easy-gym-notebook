@@ -1,0 +1,55 @@
+<div class="page">
+  <div class="back-btn" (click)="location.back()"><span class="back-arrow">←</span> Back</div>
+  <div class="page-title">{{ exerciseName }}</div>
+
+  <div class="chart-card">
+    <div class="chart-tabs">
+      <button
+        class="tab-btn"
+        [class.active]="chartSelection.selectedChart() === 'volume'"
+        (click)="chartSelection.select('volume')"
+      >Volume</button>
+      <button
+        class="tab-btn"
+        [class.active]="chartSelection.selectedChart() === 'weight'"
+        (click)="chartSelection.select('weight')"
+      >Poids</button>
+    </div>
+
+    @if (chartSelection.selectedChart() === 'volume') {
+      <app-volume-line-chart [occurrences]="useCase.occurrences()" />
+    } @else {
+      <app-weight-line-chart [occurrences]="useCase.occurrences()" />
+    }
+  </div>
+
+  @if (useCase.occurrences().length === 0) {
+    <p class="empty">Aucune donnée pour cet exercice</p>
+  } @else {
+    @for (o of useCase.occurrences(); track o.exerciseId) {
+      <div class="history-card">
+        <div class="history-header">
+          <span class="history-date">{{ formatDate(o.date) }}</span>
+        </div>
+        <div class="history-stats">
+          <div class="h-stat">
+            <span class="h-stat-value orange">{{ o.weightKg }} kg</span>
+            <span class="h-stat-label">Poids</span>
+          </div>
+          <div class="h-stat">
+            <span class="h-stat-value">{{ o.sets }}</span>
+            <span class="h-stat-label">Séries</span>
+          </div>
+          <div class="h-stat">
+            <span class="h-stat-value">{{ o.reps }}</span>
+            <span class="h-stat-label">Répétitions</span>
+          </div>
+          <div class="h-stat right">
+            <span class="h-stat-value">{{ o.breakDurationSeconds }}s</span>
+            <span class="h-stat-label">Break</span>
+          </div>
+        </div>
+      </div>
+    }
+  }
+</div>

@@ -1,0 +1,27 @@
+<div class="session-card" appLongPress (longPress)="longPress.emit()">
+  <div class="session-header">
+    <span class="session-date">{{ session().date | date:'EEE d MMM yyyy' }}</span>
+    <div class="tag-list">
+      @for (muscle of visibleTags(); track muscle) {
+        <span class="muscle-tag" [ngStyle]="tagStyle(muscle)">{{ muscle }}</span>
+      }
+      @if (extraTagCount() > 0) {
+        <span class="muscle-tag extra-tag">+{{ extraTagCount() }}</span>
+      }
+    </div>
+  </div>
+  <div class="session-stats">
+    <div class="stat-item">
+      <span class="stat-value orange">{{ totalWeightFormatted() }}</span>
+      <span class="stat-label">Poids</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value blue">{{ exerciseCount() }}</span>
+      <span class="stat-label">Exercices</span>
+    </div>
+    <div class="stat-item right">
+      <span class="stat-value">{{ duration() }}</span>
+      <span class="stat-label">Temps</span>
+    </div>
+  </div>
+</div>

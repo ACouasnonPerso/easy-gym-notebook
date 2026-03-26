@@ -1,0 +1,6 @@
+<router-outlet />
+@if (isSessionRoute()) {
+  <app-session-bottom-nav />
+} @else {
+  <app-bottom-nav />
+}

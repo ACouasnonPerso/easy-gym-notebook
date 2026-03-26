@@ -9,18 +9,8 @@ import { SessionBottomNavComponent } from './primary_adapters/shared/session-bot
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, BottomNavComponent, SessionBottomNavComponent],
-  template: `
-    <router-outlet />
-    @if (isSessionRoute()) {
-      <app-session-bottom-nav />
-    } @else {
-      <app-bottom-nav />
-    }
-  `,
-  styles: [`
-    :host { display: flex; flex-direction: column; height: 100dvh; background: var(--bg); }
-    router-outlet + * { flex: 1; overflow-y: auto; }
-  `],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {

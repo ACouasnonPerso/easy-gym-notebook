@@ -1,0 +1,19 @@
+<div class="history-card" (click)="selected.emit(exerciseName())">
+  <div class="history-header">
+    <span class="exercise-name">{{ exerciseName() }}</span>
+  </div>
+  <div class="history-stats">
+    <div class="h-stat">
+      <span class="h-stat-value orange">{{ maxWeightKg() }} kg</span>
+      <span class="h-stat-label">Max</span>
+    </div>
+    <div class="h-stat">
+      <span class="h-stat-value">{{ formatVolume(totalVolumeKg()) }}</span>
+      <span class="h-stat-label">Volume</span>
+    </div>
+    <div class="h-stat right">
+      <span class="h-stat-value">{{ occurrenceCount() }}x</span>
+      <span class="h-stat-label">Séances</span>
+    </div>
+  </div>
+</div>

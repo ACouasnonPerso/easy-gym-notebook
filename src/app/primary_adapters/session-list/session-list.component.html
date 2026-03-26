@@ -1,0 +1,37 @@
+<div class="page">
+  <div class="page-title">Sessions</div>
+
+  @if (sessions().length === 0) {
+    <p class="empty">Aucune séance. Appuyez sur + pour commencer.</p>
+  }
+
+  <div class="session-list">
+    @for (session of visibleSessions(); track session.id) {
+      <app-session-card
+        [session]="session"
+        (longPress)="onLongPress(session)"
+        (click)="navigateToSession(session.id)"
+      />
+    }
+  </div>
+
+  @if (hasMore()) {
+    <div appScrollSentinel (visible)="loadMore()"></div>
+  }
+
+  @if (showContextMenu()) {
+    <app-context-menu
+      [options]="contextMenuOptions"
+      (selected)="onContextMenuSelected($event)"
+      (closed)="showContextMenu.set(false)"
+    />
+  }
+
+  @if (showConfirm()) {
+    <app-confirm-dialog
+      message="Supprimer cette séance ?"
+      (confirmed)="confirmDelete()"
+      (cancelled)="showConfirm.set(false)"
+    />
+  }
+</div>

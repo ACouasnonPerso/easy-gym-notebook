@@ -1,0 +1,69 @@
+<div class="overlay" (click)="cancelled.emit()">
+  <div class="form-card" (click)="$event.stopPropagation()">
+    <h2 class="form-title">Nouvel exercice</h2>
+
+    <div class="name-field">
+      <label class="field-label">Nom</label>
+      <input
+        type="text"
+        [value]="name()"
+        (input)="onNameInput($event)"
+        placeholder="ex: Développé couché"
+        class="input"
+      />
+      @if (suggestions().length > 0) {
+        <div class="suggestions">
+          @for (suggestion of suggestions(); track suggestion) {
+            <button type="button" class="suggestion-item" (click)="onSuggestionSelect(suggestion)">
+              {{ suggestion }}
+            </button>
+          }
+        </div>
+      }
+      @if (detectedGroup()) {
+        <span class="detected-group">{{ detectedGroup() }}</span>
+      }
+    </div>
+
+    <div class="pickers-row">
+      <div class="picker-col">
+        <span class="picker-label">Poids</span>
+        <app-drum-picker
+          [values]="weightValues"
+          [selectedValue]="weightKg()"
+          unit="kg"
+          (valueChange)="weightKg.set(+$event)"
+        />
+      </div>
+      <div class="picker-col">
+        <span class="picker-label">Séries</span>
+        <app-drum-picker
+          [values]="setsValues"
+          [selectedValue]="sets()"
+          (valueChange)="sets.set(+$event)"
+        />
+      </div>
+      <div class="picker-col">
+        <span class="picker-label">Répétitions</span>
+        <app-drum-picker
+          [values]="repsValues"
+          [selectedValue]="reps()"
+          (valueChange)="reps.set(+$event)"
+        />
+      </div>
+      <div class="picker-col">
+        <span class="picker-label">Repos</span>
+        <app-drum-picker  style="min-width: 90px !important"
+          [values]="breakValues"
+          [selectedValue]="breakSelectedValue()"
+          (valueChange)="setBreakFromMmss($event)"
+        />
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-cancel" (click)="cancelled.emit()">Annuler</button>
+      <button class="btn-submit" (click)="onSubmit()">Ajouter</button>
+    </div>
+  </div>
+</div>

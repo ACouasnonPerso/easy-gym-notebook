@@ -1,0 +1,37 @@
+<div class="exercise-card" [class.validated]="isValidated()" (click)="toggleExpand.emit()">
+  <div class="exercise-header">
+    <span class="exercise-name">{{ exercise().name }}</span>
+    @if (exercise().muscleGroup) {
+      <span class="tag" [ngStyle]="tagStyle(exercise().muscleGroup)">{{ exercise().muscleGroup }}</span>
+    }
+  </div>
+  <div class="exercise-stats">
+    <div class="ex-stat">
+      <span class="ex-stat-value orange">{{ exercise().weightKg }} kg</span>
+      <span class="ex-stat-label">Poids</span>
+    </div>
+    <div class="ex-stat">
+      <span class="ex-stat-value">{{ exercise().sets }}</span>
+      <span class="ex-stat-label">Séries</span>
+    </div>
+    <div class="ex-stat">
+      <span class="ex-stat-value blue">{{ breakLabel() }}</span>
+      <span class="ex-stat-label">Break</span>
+    </div>
+    <div class="ex-stat right">
+      <span class="ex-stat-value">{{ exercise().reps }}</span>
+      <span class="ex-stat-label">Répétitions</span>
+    </div>
+  </div>
+</div>
+@if (isExpanded()) {
+  <app-exercise-expanded
+    [exercise]="exercise()"
+    (update)="exerciseUpdate.emit($event)"
+    (validate)="exerciseValidate.emit()"
+    (cancel)="exerciseCancel.emit()"
+    (delete)="exerciseDelete.emit()"
+    (openChrono)="openChrono.emit()"
+    (openStats)="openStats.emit()"
+  />
+}

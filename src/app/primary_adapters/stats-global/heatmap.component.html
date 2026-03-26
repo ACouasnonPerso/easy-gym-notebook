@@ -1,0 +1,18 @@
+<div class="heatmap">
+  <!-- Header row -->
+  <div></div>
+  <div class="hm-day-label">L</div>
+  <div class="hm-day-label">M</div>
+  <div class="hm-day-label">M</div>
+  <div class="hm-day-label">J</div>
+  <div class="hm-day-label">V</div>
+  <div class="hm-day-label">S</div>
+  <div class="hm-day-label">D</div>
+
+  @for (week of weeks(); track $index) {
+    <div class="hm-week-label">S{{ $index + 1 }}</div>
+    @for (cell of week; track cell.date.toISOString()) {
+      <div [class]="getCellClass(cell)"></div>
+    }
+  }
+</div>
