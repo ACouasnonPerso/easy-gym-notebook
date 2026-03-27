@@ -65,7 +65,9 @@
     "addHint": "Dodaj pierwsze!",
     "deleteConfirm": "Usunąć to ćwiczenie?",
     "validateAria": "Zatwierdź ćwiczenie",
-    "cancelAria": "Anuluj ćwiczenie"
+    "cancelAria": "Anuluj ćwiczenie",
+    "pyramid": "Ćwiczenie piramidalne",
+    "addSet": "Add a set"
   },
   "session": {
     "endConfirm": "Zakończyć sesję?"
@@ -90,6 +92,21 @@
     "total": "Łącznie",
     "noDataMonth": "Brak danych w tym miesiącu",
     "trainingTime": "Czas treningu"
+  },
+  "import": {
+    "cardTitle": "Import / Export",
+    "exportJson": "Eksportuj JSON",
+    "importJson": "Import JSON",
+    "confirmTitle": "Confirm import",
+    "successMessage": "Import successful",
+    "errorInvalidJson": "Invalid JSON file",
+    "errorMissingSessions": "Missing 'sessions' array",
+    "errorMissingExercises": "Missing 'exercises' array",
+    "errorInvalidSession": "Invalid session entry",
+    "errorInvalidExercise": "Invalid exercise entry",
+    "errorUnknown": "Unknown error",
+    "sessions": "session(s)",
+    "exercises": "exercise(s)"
   },
   "chrono": {
     "startTraining": "ROZPOCZNIJ TRENING",

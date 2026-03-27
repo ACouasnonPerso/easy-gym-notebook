@@ -31,8 +31,10 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     isCardio: false,
     durationSeconds: 0,
     distanceKm: null,
+    isPyramid: false,
+    pyramidSets: [],
     ...overrides,
-  };
+  } as Exercise;
 }
 
 async function setup(exercise: Exercise) {
@@ -51,6 +53,39 @@ async function setup(exercise: Exercise) {
 
   return { fixture, component: fixture.componentInstance };
 }
+
+describe('ExerciseCardComponent — pyramid compact display', () => {
+  it('should display the individual weight and reps values without a mean symbol when the exercise uses standard mode', async () => {
+    const { fixture } = await setup(makeExercise({ isPyramid: false, weightKg: 80, sets: 4, reps: 8 }));
+
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.textContent).toContain('80');
+    expect(el.textContent).toContain('8');
+    expect(el.textContent).not.toContain('≈');
+  });
+
+  it('should display the averaged weight and averaged reps with a mean symbol when the exercise uses pyramid mode', async () => {
+    const { fixture } = await setup(makeExercise({
+      isPyramid: true,
+      pyramidSets: [{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }, { weightKg: 100, reps: 4 }],
+    }));
+
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.textContent).toContain('≈');
+    // avg weight = (60+80+100)/3 = 80
+    expect(el.textContent).toContain('80');
+    // avg reps = (12+8+4)/3 = 8
+    expect(el.textContent).toContain('8');
+  });
+
+  it('should display a dash instead of averaged values when the exercise uses pyramid mode but the set list is unexpectedly empty', async () => {
+    const { fixture } = await setup(makeExercise({ isPyramid: true, pyramidSets: [] }));
+
+    const el: HTMLElement = fixture.nativeElement;
+    const statsEl = el.querySelector('.exercise-stats') as HTMLElement;
+    expect(statsEl.textContent).toContain('—');
+  });
+});
 
 describe('ExerciseCardComponent', () => {
   describe('affichage des stats selon le type exercice', () => {

@@ -42,6 +42,17 @@ export class ExerciseCardComponent {
   readonly breakLabel = computed(() => formatBreakDuration(this.exercise().breakDurationSeconds));
   readonly isCardio = computed(() => this.exercise().isCardio);
   readonly durationMinutes = computed(() => formatDurationMinutes(this.exercise().durationSeconds));
+  readonly isPyramid = computed(() => this.exercise().isPyramid);
+  readonly avgPyramidWeight = computed(() => {
+    const sets = this.exercise().pyramidSets;
+    if (!sets || sets.length === 0) return null;
+    return Math.round(sets.reduce((s, r) => s + r.weightKg, 0) / sets.length);
+  });
+  readonly avgPyramidReps = computed(() => {
+    const sets = this.exercise().pyramidSets;
+    if (!sets || sets.length === 0) return null;
+    return Math.round(sets.reduce((s, r) => s + r.reps, 0) / sets.length);
+  });
 
   tagStyle(muscle: MuscleGroup | 'Cardio' | null): Record<string, string> {
     if (!muscle) return {};

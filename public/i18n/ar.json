@@ -65,7 +65,9 @@
     "addHint": "أضف واحداً!",
     "deleteConfirm": "حذف هذا التمرين؟",
     "validateAria": "تأكيد التمرين",
-    "cancelAria": "إلغاء التمرين"
+    "cancelAria": "إلغاء التمرين",
+    "pyramid": "تمرين هرمي",
+    "addSet": "Add a set"
   },
   "session": {
     "endConfirm": "إنهاء الجلسة؟"
@@ -90,6 +92,21 @@
     "total": "الإجمالي",
     "noDataMonth": "لا توجد بيانات هذا الشهر",
     "trainingTime": "وقت التدريب"
+  },
+  "import": {
+    "cardTitle": "Import / Export",
+    "exportJson": "تصدير JSON",
+    "importJson": "Import JSON",
+    "confirmTitle": "Confirm import",
+    "successMessage": "Import successful",
+    "errorInvalidJson": "Invalid JSON file",
+    "errorMissingSessions": "Missing 'sessions' array",
+    "errorMissingExercises": "Missing 'exercises' array",
+    "errorInvalidSession": "Invalid session entry",
+    "errorInvalidExercise": "Invalid exercise entry",
+    "errorUnknown": "Unknown error",
+    "sessions": "session(s)",
+    "exercises": "exercise(s)"
   },
   "chrono": {
     "startTraining": "ابدأ التدريب",

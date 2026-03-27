@@ -65,7 +65,9 @@
     "addHint": "추가해보세요!",
     "deleteConfirm": "이 운동을 삭제하시겠습니까?",
     "validateAria": "운동 확인",
-    "cancelAria": "운동 취소"
+    "cancelAria": "운동 취소",
+    "pyramid": "피라미드 운동",
+    "addSet": "Add a set"
   },
   "session": {
     "endConfirm": "세션을 종료하시겠습니까?"
@@ -90,6 +92,21 @@
     "total": "전체",
     "noDataMonth": "이번 달 데이터 없음",
     "trainingTime": "운동 시간"
+  },
+  "import": {
+    "cardTitle": "Import / Export",
+    "exportJson": "JSON 내보내기",
+    "importJson": "Import JSON",
+    "confirmTitle": "Confirm import",
+    "successMessage": "Import successful",
+    "errorInvalidJson": "Invalid JSON file",
+    "errorMissingSessions": "Missing 'sessions' array",
+    "errorMissingExercises": "Missing 'exercises' array",
+    "errorInvalidSession": "Invalid session entry",
+    "errorInvalidExercise": "Invalid exercise entry",
+    "errorUnknown": "Unknown error",
+    "sessions": "session(s)",
+    "exercises": "exercise(s)"
   },
   "chrono": {
     "startTraining": "START TRAINING",

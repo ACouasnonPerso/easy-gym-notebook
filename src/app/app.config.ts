@@ -10,6 +10,8 @@ import { ExerciseRepository } from './secondary_ports/exercise/exercise.reposito
 import { ExerciseMapper } from './secondary_adapters/exercise/exercise.mapper';
 import { REVIEW_REPOSITORY } from './secondary_ports/review/review.repository.interface';
 import { ReviewRepository } from './secondary_ports/review/review.repository';
+import { ImportService } from './core_logic/import/import.service';
+import { ImportMapper } from './secondary_adapters/import/import.mapper';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -34,5 +36,7 @@ export const appConfig: ApplicationConfig = {
     ExerciseMapper,
     { provide: EXERCISE_REPOSITORY, useClass: ExerciseRepository },
     { provide: REVIEW_REPOSITORY, useClass: ReviewRepository },
+    ImportMapper,
+    ImportService,
   ],
 };

@@ -2,12 +2,14 @@
 <div class="stats-card">
   <div class="exercise-card-header">
     <div class="stats-card-title" style="margin-bottom:0">{{ 'common.exercises' | translate }}</div>
-    <button
-      data-testid="merge-btn"
-      class="merge-btn"
-      [class.active]="isMergeMode()"
-      (click)="toggleMergeMode()"
-    >{{ 'common.merge' | translate }}</button>
+    @if (exercises().length >= 2) {
+      <button
+        data-testid="merge-btn"
+        class="merge-btn"
+        [class.active]="isMergeMode()"
+        (click)="toggleMergeMode()"
+      >{{ 'common.merge' | translate }}</button>
+    }
   </div>
   <div class="divider"style="margin-bottom: 15px;"></div>
 

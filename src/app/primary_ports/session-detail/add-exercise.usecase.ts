@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { ExerciseService } from '../../core_logic/session-detail/exercise.service';
 import { MuscleGroupDetectorService } from '../../core_logic/shared/muscle-group-detector.service';
 import { SessionService } from '../../core_logic/session/session.service';
+import { Exercise, PyramidSet } from '../../core_logic/shared/models';
 
 interface AddExerciseParams {
   name: string;
@@ -13,6 +14,8 @@ interface AddExerciseParams {
   isCardio?: boolean;
   durationSeconds?: number;
   distanceKm?: number | null;
+  isPyramid?: boolean;
+  pyramidSets?: PyramidSet[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -30,7 +33,7 @@ export class AddExerciseUseCase {
     const rawName = params.name.slice(0, 60);
     const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
 
-    const exercise = {
+    const exercise: Exercise = {
       id: crypto.randomUUID(),
       sessionId: params.sessionId,
       name: formattedName,
@@ -44,6 +47,8 @@ export class AddExerciseUseCase {
       isCardio,
       durationSeconds: params.durationSeconds ?? 0,
       distanceKm: params.distanceKm ?? null,
+      isPyramid: params.isPyramid ?? false,
+      pyramidSets: params.pyramidSets ?? [],
     };
 
     await this.exerciseService.add(exercise);

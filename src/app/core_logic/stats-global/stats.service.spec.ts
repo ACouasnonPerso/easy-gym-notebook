@@ -32,8 +32,10 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     isCardio: false,
     durationSeconds: 0,
     distanceKm: null,
+    isPyramid: false,
+    pyramidSets: [],
     ...overrides,
-  };
+  } as Exercise;
 }
 
 /** Returns a Date for Monday of the current week at midnight */
@@ -64,6 +66,73 @@ describe('StatsService', () => {
     });
 
     service = TestBed.inject(StatsService);
+  });
+
+  describe('monthSummary — pyramid volume', () => {
+    it('should compute the total monthly volume using the flat formula for all standard exercises', () => {
+      const march1 = new Date(2026, 2, 1);
+      service._allSessions.set([makeSession({ id: 's1', date: march1 })]);
+      service._allExercises.set([
+        makeExercise({ sessionId: 's1', weightKg: 80, sets: 4, reps: 8, isPyramid: false, pyramidSets: [] }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result = service.monthSummary();
+
+      expect(result.totalWeightKg).toBe(80 * 4 * 8);
+    });
+
+    it('should compute the total monthly volume using per-set weights and reps for all pyramid exercises', () => {
+      const march1 = new Date(2026, 2, 1);
+      service._allSessions.set([makeSession({ id: 's1', date: march1 })]);
+      service._allExercises.set([
+        makeExercise({
+          sessionId: 's1',
+          isPyramid: true,
+          pyramidSets: [{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }, { weightKg: 100, reps: 4 }],
+        }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result = service.monthSummary();
+
+      expect(result.totalWeightKg).toBe(60 * 12 + 80 * 8 + 100 * 4);
+    });
+
+    it('should compute the correct total monthly volume when the session contains a mix of standard and pyramid exercises', () => {
+      const march1 = new Date(2026, 2, 1);
+      service._allSessions.set([makeSession({ id: 's1', date: march1 })]);
+      service._allExercises.set([
+        makeExercise({ sessionId: 's1', weightKg: 60, sets: 3, reps: 10, isPyramid: false, pyramidSets: [] }),
+        makeExercise({
+          id: 'ex-2',
+          sessionId: 's1',
+          isPyramid: true,
+          pyramidSets: [{ weightKg: 80, reps: 8 }, { weightKg: 100, reps: 4 }],
+        }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result = service.monthSummary();
+
+      expect(result.totalWeightKg).toBe(60 * 3 * 10 + 80 * 8 + 100 * 4);
+    });
+
+    it('should compute the weekly volume summary using the same pyramid-aware formula', () => {
+      const monday = getMondayOfCurrentWeek();
+      service._allSessions.set([makeSession({ id: 's1', date: monday })]);
+      service._allExercises.set([
+        makeExercise({
+          sessionId: 's1',
+          isPyramid: true,
+          pyramidSets: [{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }],
+        }),
+      ]);
+
+      const result = service.weekSummary();
+
+      expect(result.totalWeightKg).toBe(60 * 12 + 80 * 8);
+    });
   });
 
   describe('sessionDurationsInMonth', () => {
@@ -181,6 +250,65 @@ describe('StatsService', () => {
 
       expect(result.sessionCount).toBe(0);
       expect(result.totalDurationSeconds).toBe(0);
+    });
+  });
+
+  describe('exerciseSummaries — maxWeightKg', () => {
+    it('should use weightKg for a standard exercise', () => {
+      const march1 = new Date(2026, 2, 1);
+      service._allSessions.set([makeSession({ id: 's1', date: march1 })]);
+      service._allExercises.set([
+        makeExercise({ sessionId: 's1', weightKg: 80, sets: 3, reps: 10, isPyramid: false, pyramidSets: [] }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result = service.exerciseSummaries();
+
+      expect(result[0].maxWeightKg).toBe(80);
+    });
+
+    it('should use the max pyramidSet weightKg for a pyramid exercise', () => {
+      const march1 = new Date(2026, 2, 1);
+      service._allSessions.set([makeSession({ id: 's1', date: march1 })]);
+      service._allExercises.set([
+        makeExercise({
+          sessionId: 's1',
+          weightKg: 0,
+          isPyramid: true,
+          pyramidSets: [{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }, { weightKg: 100, reps: 4 }],
+        }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result = service.exerciseSummaries();
+
+      expect(result[0].maxWeightKg).toBe(100);
+    });
+
+    it('should return the highest maxWeightKg across multiple pyramid occurrences', () => {
+      const march1 = new Date(2026, 2, 1);
+      const march15 = new Date(2026, 2, 15);
+      service._allSessions.set([
+        makeSession({ id: 's1', date: march1 }),
+        makeSession({ id: 's2', date: march15 }),
+      ]);
+      service._allExercises.set([
+        makeExercise({
+          id: 'ex-1', sessionId: 's1', name: 'Squat',
+          weightKg: 0, isPyramid: true,
+          pyramidSets: [{ weightKg: 80, reps: 8 }, { weightKg: 100, reps: 4 }],
+        }),
+        makeExercise({
+          id: 'ex-2', sessionId: 's2', name: 'Squat',
+          weightKg: 0, isPyramid: true,
+          pyramidSets: [{ weightKg: 90, reps: 8 }, { weightKg: 120, reps: 3 }],
+        }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result = service.exerciseSummaries();
+
+      expect(result[0].maxWeightKg).toBe(120);
     });
   });
 });

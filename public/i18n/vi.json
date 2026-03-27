@@ -65,7 +65,9 @@
     "addHint": "Thêm một bài!",
     "deleteConfirm": "Xóa bài tập này?",
     "validateAria": "Xác nhận bài tập",
-    "cancelAria": "Hủy bài tập"
+    "cancelAria": "Hủy bài tập",
+    "pyramid": "Bài tập kim tự tháp",
+    "addSet": "Add a set"
   },
   "session": {
     "endConfirm": "Kết thúc buổi tập?"
@@ -90,6 +92,21 @@
     "total": "Tổng",
     "noDataMonth": "Không có dữ liệu tháng này",
     "trainingTime": "Thời gian tập luyện"
+  },
+  "import": {
+    "cardTitle": "Import / Export",
+    "exportJson": "Xuất JSON",
+    "importJson": "Import JSON",
+    "confirmTitle": "Confirm import",
+    "successMessage": "Import successful",
+    "errorInvalidJson": "Invalid JSON file",
+    "errorMissingSessions": "Missing 'sessions' array",
+    "errorMissingExercises": "Missing 'exercises' array",
+    "errorInvalidSession": "Invalid session entry",
+    "errorInvalidExercise": "Invalid exercise entry",
+    "errorUnknown": "Unknown error",
+    "sessions": "session(s)",
+    "exercises": "exercise(s)"
   },
   "chrono": {
     "startTraining": "BẮT ĐẦU TẬP",

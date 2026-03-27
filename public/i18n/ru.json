@@ -65,7 +65,9 @@
     "addHint": "Добавьте одно!",
     "deleteConfirm": "Удалить это упражнение?",
     "validateAria": "Подтвердить упражнение",
-    "cancelAria": "Отменить упражнение"
+    "cancelAria": "Отменить упражнение",
+    "pyramid": "Пирамидальное упражнение",
+    "addSet": "Add a set"
   },
   "session": {
     "endConfirm": "Завершить тренировку?"
@@ -90,6 +92,21 @@
     "total": "Итого",
     "noDataMonth": "Нет данных за этот месяц",
     "trainingTime": "Время тренировки"
+  },
+  "import": {
+    "cardTitle": "Import / Export",
+    "exportJson": "Экспорт JSON",
+    "importJson": "Import JSON",
+    "confirmTitle": "Confirm import",
+    "successMessage": "Import successful",
+    "errorInvalidJson": "Invalid JSON file",
+    "errorMissingSessions": "Missing 'sessions' array",
+    "errorMissingExercises": "Missing 'exercises' array",
+    "errorInvalidSession": "Invalid session entry",
+    "errorInvalidExercise": "Invalid exercise entry",
+    "errorUnknown": "Unknown error",
+    "sessions": "session(s)",
+    "exercises": "exercise(s)"
   },
   "chrono": {
     "startTraining": "START TRAINING",

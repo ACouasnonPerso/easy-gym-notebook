@@ -11,6 +11,7 @@ import { GetGlobalStatsUseCase } from '../../primary_ports/stats-global/get-glob
 import { SelectMonthUseCase } from '../../primary_ports/stats-global/select-month.usecase';
 import { MergeExercisesUseCase } from '../../primary_ports/stats-global/merge-exercises.usecase';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { formatSummaryDuration } from '../../core_logic/shared/utils';
 import { StatsHeatmapCardComponent } from './stats-heatmap-card.component';
 import { StatsMuscleDonutCardComponent } from './stats-muscle-donut-card.component';
 import { StatsSummaryCardComponent } from './stats-summary-card.component';
@@ -18,6 +19,7 @@ import { StatsTrainingTimeCardComponent } from './stats-training-time-card.compo
 import { BarChartMode } from './training-time-bar-chart.component';
 import { StatsExerciseListCardComponent, MergeSubmitEvent } from './stats-exercise-list-card.component';
 import { StatsMonthSelectorComponent } from './stats-month-selector.component';
+import { StatsImportExportCardComponent } from './stats-import-export-card.component';
 
 @Component({
   selector: 'app-stats-global',
@@ -30,6 +32,7 @@ import { StatsMonthSelectorComponent } from './stats-month-selector.component';
     StatsTrainingTimeCardComponent,
     StatsExerciseListCardComponent,
     StatsMonthSelectorComponent,
+    StatsImportExportCardComponent,
     TranslateModule,
   ],
   templateUrl: './stats-global.component.html',
@@ -96,16 +99,17 @@ export class StatsGlobalComponent implements OnInit {
     await this.getGlobalStatsUseCase.execute();
   }
 
+  async onDataImported(): Promise<void> {
+    await this.getGlobalStatsUseCase.execute();
+  }
+
   formatWeight(kg: number): string {
     if (kg >= 1000) return (kg / 1000).toFixed(1).replace('.', ',') + ' t';
     return Math.round(kg) + ' kg';
   }
 
   formatDuration(totalSeconds: number): string {
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    if (hours > 0) return `${hours}h${minutes}`;
-    return `${minutes}min`;
+    return formatSummaryDuration(totalSeconds);
   }
 
   private generateMonths(): { label: string; value: Date | null; type: 'month' | 'current-year' | 'total' }[] {

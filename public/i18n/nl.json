@@ -65,7 +65,9 @@
     "addHint": "Voeg er een toe!",
     "deleteConfirm": "Deze oefening verwijderen?",
     "validateAria": "Oefening valideren",
-    "cancelAria": "Oefening annuleren"
+    "cancelAria": "Oefening annuleren",
+    "pyramid": "Pyramide oefening",
+    "addSet": "Add a set"
   },
   "session": {
     "endConfirm": "De sessie beëindigen?"
@@ -90,6 +92,21 @@
     "total": "Totaal",
     "noDataMonth": "Geen gegevens deze maand",
     "trainingTime": "Trainingstijd"
+  },
+  "import": {
+    "cardTitle": "Import / Export",
+    "exportJson": "JSON exporteren",
+    "importJson": "Import JSON",
+    "confirmTitle": "Confirm import",
+    "successMessage": "Import successful",
+    "errorInvalidJson": "Invalid JSON file",
+    "errorMissingSessions": "Missing 'sessions' array",
+    "errorMissingExercises": "Missing 'exercises' array",
+    "errorInvalidSession": "Invalid session entry",
+    "errorInvalidExercise": "Invalid exercise entry",
+    "errorUnknown": "Unknown error",
+    "sessions": "session(s)",
+    "exercises": "exercise(s)"
   },
   "chrono": {
     "startTraining": "START TRAINING",

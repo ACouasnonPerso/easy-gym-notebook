@@ -132,6 +132,205 @@
       margin-bottom: 4px;
       text-align: center;
     }
+    .name-field-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .name-field-top .field-label { margin-bottom: 0; }
+    .pyramid-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .pyramid-toggle--active {
+      color: var(--orange);
+    }
+    .pyramid-toggle__icon {
+      flex-shrink: 0;
+      transition: color 0.15s;
+    }
+    .pyramid-toggle__label {
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      transition: color 0.15s;
+    }
+    .pyramid-toggle__input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .pyramid-toggle__track {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: 34px;
+      height: 19px;
+      border-radius: 10px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      transition: background 0.18s, border-color 0.18s;
+    }
+    .pyramid-toggle--active .pyramid-toggle__track {
+      background: var(--orange-dim);
+      border-color: var(--orange);
+    }
+    .pyramid-toggle__thumb {
+      position: absolute;
+      left: 2px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: transform 0.18s ease, background 0.18s;
+    }
+    .pyramid-toggle--active .pyramid-toggle__thumb {
+      transform: translateX(15px);
+      background: var(--orange);
+    }
+    .pyramid-section {
+      margin-bottom: 20px;
+    }
+    .pyramid-sets-list {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 10px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .pyramid-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pyramid-row-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      width: 16px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .pyramid-field-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 5px 8px;
+      flex: 1;
+    }
+    .pyramid-field-group:focus-within {
+      border-color: var(--orange);
+    }
+    .pyramid-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      width: 100%;
+      min-width: 0;
+      -moz-appearance: textfield;
+    }
+    .pyramid-input::-webkit-outer-spin-button,
+    .pyramid-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    .pyramid-unit {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      font-family: 'Syne', sans-serif;
+      flex-shrink: 0;
+    }
+    .pyramid-sep {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .pyramid-delete {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      border: 1px solid rgba(239,68,68,0.2);
+      background: rgba(239,68,68,0.08);
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      padding: 0;
+    }
+    .pyramid-delete:hover {
+      background: rgba(239,68,68,0.18);
+      border-color: rgba(239,68,68,0.4);
+    }
+    .pyramid-add-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px dashed var(--border);
+      background: transparent;
+      color: var(--sub);
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      width: 100%;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .pyramid-add-row:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+    .pyramid-break-row {
+      margin-bottom: 0;
+    }
+    .pyramid-break-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pyramid-break-inline__label {
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Syne', sans-serif;
+      flex-shrink: 0;
+    }
+    .pyramid-break-inline__field {
+      flex: 0 0 auto;
+      width: 90px;
+    }
     .actions { display: flex; gap: 12px; }
     .btn-cancel {
       flex: 1;

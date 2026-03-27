@@ -33,6 +33,8 @@ export class AutocompleteService {
       sets: last.sets,
       reps: last.reps,
       breakDurationSeconds: last.breakDurationSeconds,
+      isPyramid: last.isPyramid,
+      pyramidSets: last.pyramidSets,
     };
   }
 

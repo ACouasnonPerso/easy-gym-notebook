@@ -8,6 +8,141 @@ import { MuscleGroupDetectorService } from '../../core_logic/shared/muscle-group
 import { EXERCISE_REPOSITORY } from '../../secondary_ports/exercise/exercise.repository.interface';
 import { SESSION_REPOSITORY } from '../../secondary_ports/session/session.repository.interface';
 
+describe('AddExerciseFormComponent — pyramid toggle', () => {
+  let fixture: ComponentFixture<AddExerciseFormComponent>;
+  let component: AddExerciseFormComponent;
+  let autocompleteSpy: jasmine.SpyObj<AutocompleteService>;
+  let addUseCaseSpy: jasmine.SpyObj<AddExerciseUseCase>;
+
+  beforeEach(async () => {
+    autocompleteSpy = jasmine.createSpyObj('AutocompleteService', [
+      'getSuggestions',
+      'getDefaultsByExactName',
+      'getLastParams',
+    ]);
+    autocompleteSpy.getSuggestions.and.returnValue(Promise.resolve([]));
+    autocompleteSpy.getDefaultsByExactName.and.returnValue(Promise.resolve(null));
+    autocompleteSpy.getLastParams.and.returnValue(Promise.resolve(null));
+
+    addUseCaseSpy = jasmine.createSpyObj('AddExerciseUseCase', ['execute']);
+    addUseCaseSpy.execute.and.returnValue(Promise.resolve());
+
+    const exerciseRepoSpy = jasmine.createSpyObj('ExerciseRepository', ['getAll', 'getBySessionId', 'save', 'delete']);
+    exerciseRepoSpy.save.and.returnValue(Promise.resolve());
+    exerciseRepoSpy.getBySessionId.and.returnValue(Promise.resolve([]));
+    exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([]));
+
+    const sessionRepoSpy = jasmine.createSpyObj('SessionRepository', ['getAll', 'getById', 'save', 'delete']);
+    sessionRepoSpy.save.and.returnValue(Promise.resolve());
+    sessionRepoSpy.getAll.and.returnValue(Promise.resolve([]));
+
+    await TestBed.configureTestingModule({
+      imports: [AddExerciseFormComponent],
+      providers: [
+        { provide: AutocompleteService, useValue: autocompleteSpy },
+        { provide: AddExerciseUseCase, useValue: addUseCaseSpy },
+        { provide: EXERCISE_REPOSITORY, useValue: exerciseRepoSpy },
+        { provide: SESSION_REPOSITORY, useValue: sessionRepoSpy },
+        provideTranslateService({ defaultLanguage: 'fr' }),
+      ],
+    }).overrideComponent(AddExerciseFormComponent, {
+      set: { providers: [] },
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AddExerciseFormComponent);
+    fixture.componentRef.setInput('sessionId', 'session-1');
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should hide the pyramid toggle when the current exercise is a cardio exercise', async () => {
+    await component.onNameInput({ target: { value: 'course à pied' } } as unknown as Event);
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.querySelector('.pyramid-toggle')).toBeNull();
+  });
+
+  it('should show the pyramid toggle when the current exercise is a strength exercise', () => {
+    component.isCardio.set(false);
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.querySelector('.pyramid-toggle')).not.toBeNull();
+  });
+
+  it('should show the individual set rows and hide the standard weight, sets and reps pickers when the user activates pyramid mode', () => {
+    component.isCardio.set(false);
+    component.isPyramid.set(false);
+    component.pyramidSets.set([{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }]);
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.nativeElement;
+    const toggleBtn = el.querySelector('.pyramid-toggle') as HTMLButtonElement;
+    toggleBtn.click();
+    fixture.detectChanges();
+
+    expect(el.querySelector('.pyramid-sets')).not.toBeNull();
+    expect(el.querySelector('.standard-pickers')).toBeNull();
+  });
+
+  it('should show the standard weight, sets and reps pickers and hide the set rows when the user deactivates pyramid mode', () => {
+    component.isCardio.set(false);
+    component.isPyramid.set(true);
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.nativeElement;
+    const toggleBtn = el.querySelector('.pyramid-toggle') as HTMLButtonElement;
+    toggleBtn.click();
+    fixture.detectChanges();
+
+    expect(el.querySelector('.standard-pickers')).not.toBeNull();
+    expect(el.querySelector('.pyramid-sets')).toBeNull();
+  });
+
+  it('should block submission when the user activates pyramid mode and has not added any set rows', () => {
+    component.name.set('Squat');
+    component.isCardio.set(false);
+    component.isPyramid.set(true);
+    component.pyramidSets.set([]);
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.nativeElement;
+    const submitBtn = el.querySelector('.btn-submit') as HTMLButtonElement;
+    expect(submitBtn.disabled).toBeTrue();
+  });
+
+  it('should include pyramid mode as active and all set row data in the submitted exercise when the user submits a pyramid exercise', async () => {
+    component.name.set('Squat');
+    component.isCardio.set(false);
+    component.isPyramid.set(true);
+    component.pyramidSets.set([{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }]);
+
+    await component.onSubmit();
+
+    expect(addUseCaseSpy.execute).toHaveBeenCalledOnceWith(jasmine.objectContaining({
+      isPyramid: true,
+      pyramidSets: [{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }],
+    }));
+  });
+
+  it('should restore pyramid mode and all set rows when an autocomplete suggestion is selected and that exercise was previously recorded as a pyramid exercise', async () => {
+    autocompleteSpy.getLastParams.and.returnValue(Promise.resolve({
+      weightKg: 80,
+      sets: 3,
+      reps: 8,
+      breakDurationSeconds: 120,
+      isPyramid: true,
+      pyramidSets: [{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }],
+    }));
+
+    await component.onSuggestionSelect('Squat');
+
+    expect(component.isPyramid()).toBeTrue();
+    expect(component.pyramidSets()).toEqual([{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }]);
+  });
+});
+
 describe('AddExerciseFormComponent — onSuggestionSelect', () => {
   let component: AddExerciseFormComponent;
   let autocompleteSpy: jasmine.SpyObj<AutocompleteService>;

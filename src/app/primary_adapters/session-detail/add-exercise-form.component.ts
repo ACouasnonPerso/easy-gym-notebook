@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, input, output, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgStyle } from '@angular/common';
-import { MuscleGroup } from '../../core_logic/shared/models';
+import { MuscleGroup, PyramidSet } from '../../core_logic/shared/models';
 import { AddExerciseUseCase } from '../../primary_ports/session-detail/add-exercise.usecase';
 import { AutocompleteService } from '../../core_logic/session-detail/autocomplete.service';
 import { MuscleGroupDetectorService } from '../../core_logic/shared/muscle-group-detector.service';
@@ -61,13 +61,19 @@ export class AddExerciseFormComponent {
   readonly suggestions = signal<string[]>([]);
   readonly detectedGroups = signal<MuscleGroup[]>([]);
   readonly isCardio = signal(false);
+  readonly isPyramid = signal(false);
+  readonly pyramidSets = signal<PyramidSet[]>([]);
 
   readonly durationHours = signal(0);
   readonly durationMinutes = signal(0);
   readonly distanceKm = signal<number | null>(null);
   readonly durationSeconds = computed(() => this.durationHours() * 3600 + this.durationMinutes() * 60);
 
-  readonly isSubmitDisabled = computed(() => !this.name().trim() || (this.isCardio() && this.durationSeconds() === 0));
+  readonly isSubmitDisabled = computed(() =>
+    !this.name().trim() ||
+    (this.isCardio() && this.durationSeconds() === 0) ||
+    (!this.isCardio() && this.isPyramid() && this.pyramidSets().length === 0)
+  );
 
   readonly weightValues = WEIGHT_VALUES;
   readonly setsValues = SETS_VALUES;
@@ -118,10 +124,36 @@ export class AddExerciseFormComponent {
       if (lastParams.sets !== undefined) this.sets.set(lastParams.sets);
       if (lastParams.reps !== undefined) this.reps.set(lastParams.reps);
       if (lastParams.breakDurationSeconds !== undefined) this.breakDurationSeconds.set(lastParams.breakDurationSeconds);
+      if (lastParams.isPyramid !== undefined) this.isPyramid.set(lastParams.isPyramid);
+      if (lastParams.pyramidSets !== undefined) this.pyramidSets.set(lastParams.pyramidSets);
     }
     const { muscleGroups, isCardio } = this.muscleDetector.detect(suggestion);
     this.isCardio.set(isCardio);
     this.detectedGroups.set(isCardio ? [] : muscleGroups);
+  }
+
+  togglePyramid(): void {
+    const next = !this.isPyramid();
+    this.isPyramid.set(next);
+    if (next && this.pyramidSets().length === 0) {
+      const count = this.sets();
+      this.pyramidSets.set(
+        Array.from({ length: count }, () => ({ weightKg: this.weightKg(), reps: this.reps() }))
+      );
+    }
+  }
+
+  addPyramidSet(): void {
+    const last = this.pyramidSets().at(-1);
+    this.pyramidSets.update(sets => [...sets, { weightKg: last?.weightKg ?? 30, reps: last?.reps ?? 10 }]);
+  }
+
+  removePyramidSet(index: number): void {
+    this.pyramidSets.update(sets => sets.filter((_, i) => i !== index));
+  }
+
+  updatePyramidSet(index: number, field: 'weightKg' | 'reps', value: number): void {
+    this.pyramidSets.update(sets => sets.map((s, i) => i === index ? { ...s, [field]: value } : s));
   }
 
   async onSubmit(): Promise<void> {
@@ -138,6 +170,8 @@ export class AddExerciseFormComponent {
       isCardio: this.isCardio(),
       durationSeconds: this.durationSeconds(),
       distanceKm: this.distanceKm() ?? null,
+      isPyramid: this.isPyramid(),
+      pyramidSets: this.isPyramid() ? this.pyramidSets() : [],
     });
     this.exerciseAdded.emit();
   }

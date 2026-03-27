@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, input, output, computed } from '@angular/core';
 import { DatePipe, NgStyle } from '@angular/common';
 import { Session, MuscleGroup } from '../../core_logic/shared/models';
-import { formatDuration } from '../../core_logic/shared/utils';
+import { formatDuration, computeVolume } from '../../core_logic/shared/utils';
 import { LongPressDirective } from '../shared/long-press.directive';
 import { TranslateModule } from '@ngx-translate/core';
 import { muscleGroupChipStyle } from '../../core_logic/shared/muscle-group-colors';
@@ -23,7 +23,7 @@ export class SessionCardComponent {
   readonly totalWeight = computed(() =>
     this.session()
       .exercises.filter(e => e.status === 'validated')
-      .reduce((sum, e) => sum + e.weightKg * e.sets * e.reps, 0)
+      .reduce((sum, e) => sum + computeVolume(e), 0)
   );
 
   readonly duration = computed(() => formatDuration(this.session().durationSeconds));

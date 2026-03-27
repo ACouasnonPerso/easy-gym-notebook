@@ -65,7 +65,9 @@
     "addHint": "एक जोड़ें!",
     "deleteConfirm": "इस व्यायाम को हटाएं?",
     "validateAria": "व्यायाम मान्य करें",
-    "cancelAria": "व्यायाम रद्द करें"
+    "cancelAria": "व्यायाम रद्द करें",
+    "pyramid": "पिरामिड व्यायाम",
+    "addSet": "Add a set"
   },
   "session": {
     "endConfirm": "सत्र समाप्त करें?"
@@ -90,6 +92,21 @@
     "total": "कुल",
     "noDataMonth": "इस महीने कोई डेटा नहीं",
     "trainingTime": "प्रशिक्षण समय"
+  },
+  "import": {
+    "cardTitle": "Import / Export",
+    "exportJson": "JSON निर्यात करें",
+    "importJson": "Import JSON",
+    "confirmTitle": "Confirm import",
+    "successMessage": "Import successful",
+    "errorInvalidJson": "Invalid JSON file",
+    "errorMissingSessions": "Missing 'sessions' array",
+    "errorMissingExercises": "Missing 'exercises' array",
+    "errorInvalidSession": "Invalid session entry",
+    "errorInvalidExercise": "Invalid exercise entry",
+    "errorUnknown": "Unknown error",
+    "sessions": "session(s)",
+    "exercises": "exercise(s)"
   },
   "chrono": {
     "startTraining": "START TRAINING",

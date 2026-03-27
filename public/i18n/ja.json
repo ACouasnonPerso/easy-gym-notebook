@@ -65,7 +65,9 @@
     "addHint": "追加しましょう！",
     "deleteConfirm": "このエクササイズを削除しますか？",
     "validateAria": "エクササイズを確定",
-    "cancelAria": "エクササイズをキャンセル"
+    "cancelAria": "エクササイズをキャンセル",
+    "pyramid": "ピラミッドエクササイズ",
+    "addSet": "Add a set"
   },
   "session": {
     "endConfirm": "セッションを終了しますか？"
@@ -90,6 +92,21 @@
     "total": "合計",
     "noDataMonth": "今月のデータがありません",
     "trainingTime": "トレーニング時間"
+  },
+  "import": {
+    "cardTitle": "Import / Export",
+    "exportJson": "JSONをエクスポート",
+    "importJson": "Import JSON",
+    "confirmTitle": "Confirm import",
+    "successMessage": "Import successful",
+    "errorInvalidJson": "Invalid JSON file",
+    "errorMissingSessions": "Missing 'sessions' array",
+    "errorMissingExercises": "Missing 'exercises' array",
+    "errorInvalidSession": "Invalid session entry",
+    "errorInvalidExercise": "Invalid exercise entry",
+    "errorUnknown": "Unknown error",
+    "sessions": "session(s)",
+    "exercises": "exercise(s)"
   },
   "chrono": {
     "startTraining": "トレーニング開始",

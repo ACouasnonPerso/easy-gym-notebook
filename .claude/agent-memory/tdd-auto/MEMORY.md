@@ -13,3 +13,5 @@
 | [project_cardio_ui_components.md](project_cardio_ui_components.md) | project | Cardio UI components (Steps 8-9): ExerciseCard/Expanded/AddForm cardio pickers, CardioTimeChart, CardioDistanceChart |
 | [project_training_time_bar_chart.md](project_training_time_bar_chart.md) | project | Training time bar chart feature — 9 tests green, stats-global.component.spec.ts fixed with FakeTranslateLoader |
 | [project_tips_review.md](project_tips_review.md) | project | Tips-review feature: in-app review flow via ReviewService/ReviewRepository/RequestReviewUseCase — 16 tests green |
+| [project_pyramid_mode.md](project_pyramid_mode.md) | project | Pyramid mode feature: per-set weight/reps for strength exercises — 24 tests green as of 2026-03-27 |
+| [project_data_import.md](project_data_import.md) | project | Data import feature: ImportMapper/ImportService/ImportDataUseCase/ImportConfirmModalComponent — 21 tests green as of 2026-03-27 |

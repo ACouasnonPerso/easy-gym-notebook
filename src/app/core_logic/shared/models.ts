@@ -27,6 +27,11 @@ export interface Session {
   exercises: Exercise[];
 }
 
+export interface PyramidSet {
+  weightKg: number;
+  reps: number;
+}
+
 export interface Exercise {
   id: string;
   sessionId: string;
@@ -41,6 +46,8 @@ export interface Exercise {
   isCardio: boolean;
   durationSeconds: number;
   distanceKm: number | null;
+  isPyramid: boolean;
+  pyramidSets: PyramidSet[];
 }
 
 export interface ExerciseOccurrence {
@@ -77,10 +84,24 @@ export interface RawExercise {
   isCardio: boolean;
   durationSeconds: number;
   distanceKm: number | null;
+  isPyramid?: boolean;
+  pyramidSets?: PyramidSet[];
 }
 
 export interface CardioOccurrence {
   date: Date;
   durationSeconds: number;
   distanceKm: number | null;
+}
+
+export interface ImportPayload {
+  sessions: RawSession[];
+  exercises: RawExercise[];
+}
+
+export interface ImportResult {
+  valid: boolean;
+  sessionCount?: number;
+  exerciseCount?: number;
+  error?: string;
 }

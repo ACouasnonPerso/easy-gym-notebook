@@ -65,7 +65,9 @@
     "addHint": "Aggiungine uno!",
     "deleteConfirm": "Eliminare questo esercizio?",
     "validateAria": "Valida esercizio",
-    "cancelAria": "Annulla esercizio"
+    "cancelAria": "Annulla esercizio",
+    "pyramid": "Esercizio a piramide",
+    "addSet": "Add a set"
   },
   "session": {
     "endConfirm": "Terminare la sessione?"
@@ -90,6 +92,21 @@
     "total": "Totale",
     "noDataMonth": "Nessun dato questo mese",
     "trainingTime": "Tempo di allenamento"
+  },
+  "import": {
+    "cardTitle": "Import / Export",
+    "exportJson": "Esporta JSON",
+    "importJson": "Import JSON",
+    "confirmTitle": "Confirm import",
+    "successMessage": "Import successful",
+    "errorInvalidJson": "Invalid JSON file",
+    "errorMissingSessions": "Missing 'sessions' array",
+    "errorMissingExercises": "Missing 'exercises' array",
+    "errorInvalidSession": "Invalid session entry",
+    "errorInvalidExercise": "Invalid exercise entry",
+    "errorUnknown": "Unknown error",
+    "sessions": "session(s)",
+    "exercises": "exercise(s)"
   },
   "chrono": {
     "startTraining": "START TRAINING",
@@ -127,23 +144,23 @@
     "adductors": "adduttori,adduttore,inner thigh,adduzione",
     "abductors": "abduttori,abduttore,outer thigh,abduzione"
   },
-	"englishMuscleDetector": {
-		"chest": "bench press,benchpress,chest press,chest fly,pec deck,chest,pecs,bench,bp",
-		"back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rowing,back,pull",
-		"backHamstrings": "deadlift,dead lift",
-		"shoulders": "shoulder press,overhead press,lateral raise,front raise,shoulder,deltoid,ohp",
-		"biceps": "bicep curl,hammer curl,bicep,biceps, bibi",
-		"triceps": "tricep extension,skull crusher,pushdown,tricep,triceps, tritri",
-		"tricepsChest": "dips",
-		"glutesQuads": "squat,squats,lunge,lunges",
-		"forearms": "wrist curl,forearm,forearms,grip",
-		"abs": "crunch,plank,sit-up,sit up,abs,core,abdominal",
-		"quads": "leg extension,legs extension,leg press,legs press,quadricep,quadriceps,quads",
-		"hamstrings": "leg curl,hamstring,hamstrings",
-		"glutes": "hip thrust,glute bridge,glute,glutes,booty",
-		"calves": "calf raise,calf,calves",
-		"traps": "shrug,trap,traps,trapezius",
-		"adductors": "adductor,adductors,inner thigh,adduction",
-		"abductors": "abductor,abductors,outer thigh,abduction"
-	}
+  "englishMuscleDetector": {
+    "chest": "bench press,benchpress,chest press,chest fly,pec deck,chest,pecs,bench,bp",
+    "back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rowing,back,pull",
+    "backHamstrings": "deadlift,dead lift",
+    "shoulders": "shoulder press,overhead press,lateral raise,front raise,shoulder,deltoid,ohp",
+    "biceps": "bicep curl,hammer curl,bicep,biceps, bibi",
+    "triceps": "tricep extension,skull crusher,pushdown,tricep,triceps, tritri",
+    "tricepsChest": "dips",
+    "glutesQuads": "squat,squats,lunge,lunges",
+    "forearms": "wrist curl,forearm,forearms,grip",
+    "abs": "crunch,plank,sit-up,sit up,abs,core,abdominal",
+    "quads": "leg extension,legs extension,leg press,legs press,quadricep,quadriceps,quads",
+    "hamstrings": "leg curl,hamstring,hamstrings",
+    "glutes": "hip thrust,glute bridge,glute,glutes,booty",
+    "calves": "calf raise,calf,calves",
+    "traps": "shrug,trap,traps,trapezius",
+    "adductors": "adductor,adductors,inner thigh,adduction",
+    "abductors": "abductor,abductors,outer thigh,abduction"
+  }
 }

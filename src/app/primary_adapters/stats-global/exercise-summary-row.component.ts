@@ -3,6 +3,7 @@ import { NgStyle } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MuscleGroup } from '../../core_logic/shared/models';
 import { muscleGroupChipStyle } from '../../core_logic/shared/muscle-group-colors';
+import { formatSummaryDuration } from '../../core_logic/shared/utils';
 
 @Component({
   selector: 'app-exercise-summary-row',
@@ -30,10 +31,7 @@ export class ExerciseSummaryRowComponent {
   }
 
   formatDuration(seconds: number): string {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    if (h > 0) return `${h}h${m > 0 ? m + 'min' : ''}`;
-    return `${m}min`;
+    return formatSummaryDuration(seconds);
   }
 
   formatDistance(km: number | null): string {

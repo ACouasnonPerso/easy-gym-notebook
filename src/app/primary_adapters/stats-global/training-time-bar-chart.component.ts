@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
+import { formatSummaryDuration } from '../../core_logic/shared/utils';
 
 export interface SessionDurationEntry {
   date: Date;
@@ -115,11 +116,7 @@ export class TrainingTimeBarChartComponent {
   });
 
   formatDuration(totalSeconds: number): string {
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    if (hours > 0 && minutes > 0) return `${hours}h${minutes}`;
-    if (hours > 0) return `${hours}h`;
-    return `${minutes}min`;
+    return formatSummaryDuration(totalSeconds);
   }
 
   formatDateLabel(date: Date): string {
