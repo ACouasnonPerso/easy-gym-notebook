@@ -1,5 +1,8 @@
 <div class="page">
-  <div class="page-title">{{ 'sessionList.title' | translate }}</div>
+  <div class="page-header">
+    <div class="page-title">{{ 'sessionList.title' | translate }}</div>
+    <app-language-selector [langs]="['fr', 'en', 'es']" (langChange)="changeLanguage($event)" />
+  </div>
 
   @if (sessions().length === 0) {
     <p class="empty">{{ 'sessionList.empty' | translate }}</p>

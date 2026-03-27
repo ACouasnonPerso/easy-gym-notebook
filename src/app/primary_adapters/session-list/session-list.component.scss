@@ -16,14 +16,22 @@
     padding: 40px 32px 120px;
   }
 }
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
 .page-title {
   font-family: 'Syne', sans-serif;
   font-size: 22px;
   font-weight: 800;
   color: var(--text);
   letter-spacing: -0.3px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
+
 .empty {
   color: var(--muted);
   text-align: center;

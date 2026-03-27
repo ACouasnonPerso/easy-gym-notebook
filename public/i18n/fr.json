@@ -105,5 +105,24 @@
     "fri": "V",
     "sat": "S",
     "sun": "D"
+  },
+  "muscleDetector": {
+    "chest": "développé couché,développé,developpe,pectoraux,poitrine,bench,pecs,dc",
+    "back": "dorsaux,tirage,rowing,tractions,pull,dos",
+    "backHamstrings": "soulevé de terre,deadlift",
+    "shoulders": "deltoides,deltoide,militaire,epaules,epaule,ohp",
+    "biceps": "biceps,bibi",
+    "triceps": "triceps,pushdown,tritri",
+    "tricepsChest": "dips",
+    "glutesQuads": "squats,squat,fentes",
+    "forearms": "avant-bras,avant bras,grip",
+    "abs": "abdominaux,planche,crunch,abdos,gainage",
+    "quads": "leg extension,legs extension,leg press,legs press,quadriceps,quads,quadri",
+    "hamstrings": "leg curl,ischios,ischio",
+    "glutes": "hip thrust,fessiers,fessier,glutes,booty,fesses,hip trust",
+    "calves": "mollets,mollet,calves,calf",
+    "traps": "trapezes,trapèzes,shrug,trap",
+    "adductors": "adducteurs,adducteur,inner thigh,adduction",
+    "abductors": "abducteurs,abducteur,outer thigh,abduction"
   }
 }

@@ -1,0 +1,19 @@
+<div class="month-selector">
+  <span class="app-version">v{{ appVersion.version }}</span>
+  <div class="month-select-wrapper" (click)="showDropdown.set(!showDropdown())">
+    <span class="month-label">{{ currentMonthLabel() }}</span>
+    <span class="month-arrow" [class.open]="showDropdown()">▼</span>
+  </div>
+  @if (showDropdown()) {
+    <div class="dropdown-backdrop" (click)="showDropdown.set(false)"></div>
+    <div class="dropdown-list">
+      @for (month of months(); track month.label; let i = $index) {
+        <div
+          class="dropdown-item"
+          [class.selected]="i === selectedMonthIndex()"
+          (click)="selectMonth(i)"
+        >{{ month.label }}</div>
+      }
+    </div>
+  }
+</div>

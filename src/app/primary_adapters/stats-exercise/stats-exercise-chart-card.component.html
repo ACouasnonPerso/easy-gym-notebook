@@ -1,0 +1,39 @@
+<div class="chart-card">
+  @if (isCardio()) {
+    <div class="chart-tabs">
+      <button
+        class="tab-btn"
+        [class.active]="selectedChart() === 'volume'"
+        (click)="chartSelect.emit('volume')"
+      >{{ 'common.duration' | translate }}</button>
+      <button
+        class="tab-btn"
+        [class.active]="selectedChart() === 'weight'"
+        (click)="chartSelect.emit('weight')"
+      >{{ 'statsExercise.distanceKm' | translate }}</button>
+    </div>
+    @if (selectedChart() === 'volume') {
+      <app-cardio-time-chart [occurrences]="cardioOccurrences()" />
+    } @else {
+      <app-cardio-distance-chart [occurrences]="cardioOccurrences()" />
+    }
+  } @else {
+    <div class="chart-tabs">
+      <button
+        class="tab-btn"
+        [class.active]="selectedChart() === 'volume'"
+        (click)="chartSelect.emit('volume')"
+      >{{ 'common.volume' | translate }}</button>
+      <button
+        class="tab-btn"
+        [class.active]="selectedChart() === 'weight'"
+        (click)="chartSelect.emit('weight')"
+      >{{ 'common.weight' | translate }}</button>
+    </div>
+    @if (selectedChart() === 'volume') {
+      <app-volume-line-chart [occurrences]="occurrences()" />
+    } @else {
+      <app-weight-line-chart [occurrences]="occurrences()" />
+    }
+  }
+</div>

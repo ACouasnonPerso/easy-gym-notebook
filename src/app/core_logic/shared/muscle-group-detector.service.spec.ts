@@ -1,12 +1,42 @@
 import { TestBed } from '@angular/core/testing';
 import { MuscleGroupDetectorService } from './muscle-group-detector.service';
 import { MuscleGroup } from './models';
+import { TranslateService } from '@ngx-translate/core';
+import { Subject } from 'rxjs';
+
+const MUSCLE_DETECTOR_FR: Record<string, string> = {
+  'muscleDetector.chest':          'développé couché,développé,developpe,pectoraux,poitrine,bench,pecs,dc',
+  'muscleDetector.back':           'dorsaux,tirage,rowing,tractions,pull,dos',
+  'muscleDetector.backHamstrings': 'soulevé de terre,deadlift',
+  'muscleDetector.shoulders':      'deltoides,deltoide,militaire,epaules,epaule,ohp',
+  'muscleDetector.biceps':         'biceps,bibi',
+  'muscleDetector.triceps':        'triceps,pushdown,tritri',
+  'muscleDetector.tricepsChest':   'dips',
+  'muscleDetector.glutesQuads':    'squats,squat,fentes',
+  'muscleDetector.forearms':       'avant-bras,avant bras,grip',
+  'muscleDetector.abs':            'abdominaux,planche,crunch,abdos,gainage',
+  'muscleDetector.quads':          'leg extension,legs extension,leg press,legs press,quadriceps,quads,quadri',
+  'muscleDetector.hamstrings':     'leg curl,ischios,ischio',
+  'muscleDetector.glutes':         'hip thrust,fessiers,fessier,glutes,booty,fesses,hip trust',
+  'muscleDetector.calves':         'mollets,mollet,calves,calf',
+  'muscleDetector.traps':          'trapezes,trapèzes,shrug,trap',
+  'muscleDetector.adductors':      'adducteurs,adducteur,inner thigh,adduction',
+  'muscleDetector.abductors':      'abducteurs,abducteur,outer thigh,abduction',
+};
 
 describe('MuscleGroupDetectorService', () => {
   let service: MuscleGroupDetectorService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    const langChange = new Subject<void>();
+    const translateStub = {
+      instant: (key: string) => MUSCLE_DETECTOR_FR[key] ?? key,
+      onLangChange: langChange,
+    };
+
+    TestBed.configureTestingModule({
+      providers: [{ provide: TranslateService, useValue: translateStub }],
+    });
     service = TestBed.inject(MuscleGroupDetectorService);
   });
 

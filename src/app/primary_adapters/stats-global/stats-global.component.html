@@ -1,25 +1,12 @@
 
 <div class="page">
 
-  <!-- Month selector -->
-  <div class="month-selector">
-    <div class="month-select-wrapper" (click)="showDropdown.set(!showDropdown())">
-      <span class="month-label">{{ currentMonthLabel() }}</span>
-      <span class="month-arrow" [class.open]="showDropdown()">▼</span>
-    </div>
-    @if (showDropdown()) {
-      <div class="dropdown-backdrop" (click)="showDropdown.set(false)"></div>
-      <div class="dropdown-list">
-        @for (month of months(); track month.label; let i = $index) {
-          <div
-            class="dropdown-item"
-            [class.selected]="i === selectedMonthIndex()"
-            (click)="onMonthChange(i); showDropdown.set(false)"
-          >{{ month.label }}</div>
-        }
-      </div>
-    }
-  </div>
+  <!-- Top bar: version + month selector -->
+  <app-stats-month-selector
+    [months]="months()"
+    [selectedMonthIndex]="selectedMonthIndex()"
+    (monthChange)="onMonthChange($event)"
+  />
 
   <!-- Heatmap -->
   @if (showHeatmap()) {

@@ -12,7 +12,10 @@ import { GetSessionsUseCase } from '../../primary_ports/session-list/get-session
 import { CreateSessionUseCase } from '../../primary_ports/session-list/create-session.usecase';
 import { DuplicateSessionUseCase } from '../../primary_ports/session-list/duplicate-session.usecase';
 import { DeleteSessionUseCase } from '../../primary_ports/session-list/delete-session.usecase';
+import { SetLanguageUseCase } from '../../primary_ports/language/set-language.usecase';
+import { ActiveLang } from '../../core_logic/language/language.service';
 import { SessionCardComponent } from './session-card.component';
+import { LanguageSelectorComponent } from '../shared/language-selector.component';
 import { ScrollSentinelDirective } from '../shared/scroll-sentinel.directive';
 import { ContextMenuComponent } from '../shared/context-menu.component';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
@@ -30,6 +33,7 @@ const PAGE_SIZE = 20;
     ContextMenuComponent,
     ConfirmDialogComponent,
     TranslateModule,
+    LanguageSelectorComponent,
   ],
   templateUrl: './session-list.component.html',
   styleUrl: './session-list.component.scss',
@@ -39,6 +43,7 @@ export class SessionListComponent implements OnInit {
   private readonly createSessionUseCase = inject(CreateSessionUseCase);
   private readonly duplicateSessionUseCase = inject(DuplicateSessionUseCase);
   private readonly deleteSessionUseCase = inject(DeleteSessionUseCase);
+  private readonly setLanguageUseCase = inject(SetLanguageUseCase);
   private readonly router = inject(Router);
 
   readonly sessions = this.getSessionsUseCase.sessions;
@@ -85,5 +90,9 @@ export class SessionListComponent implements OnInit {
 
   createSession(): void {
     this.createSessionUseCase.execute();
+  }
+
+  changeLanguage(lang: ActiveLang): void {
+    this.setLanguageUseCase.execute(lang);
   }
 }

@@ -16,6 +16,7 @@ import { StatsMuscleDonutCardComponent } from './stats-muscle-donut-card.compone
 import { StatsSummaryCardComponent } from './stats-summary-card.component';
 import { StatsTrainingTimeCardComponent } from './stats-training-time-card.component';
 import { StatsExerciseListCardComponent, MergeSubmitEvent } from './stats-exercise-list-card.component';
+import { StatsMonthSelectorComponent } from './stats-month-selector.component';
 
 @Component({
   selector: 'app-stats-global',
@@ -27,6 +28,7 @@ import { StatsExerciseListCardComponent, MergeSubmitEvent } from './stats-exerci
     StatsSummaryCardComponent,
     StatsTrainingTimeCardComponent,
     StatsExerciseListCardComponent,
+    StatsMonthSelectorComponent,
     TranslateModule,
   ],
   templateUrl: './stats-global.component.html',
@@ -41,9 +43,6 @@ export class StatsGlobalComponent implements OnInit {
 
   readonly months = signal<{ label: string; value: Date | null; type: 'month' | 'current-year' | 'total' }[]>([]);
   readonly selectedMonthIndex = signal<number>(0);
-  readonly showDropdown = signal(false);
-
-  readonly currentMonthLabel = computed(() => this.months()[this.selectedMonthIndex()]?.label ?? '');
 
   readonly isCurrentMonth = computed(() => this.selectedMonthIndex() === 2);
 

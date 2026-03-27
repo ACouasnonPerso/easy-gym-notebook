@@ -8,6 +8,7 @@ describe('ExerciseChronoService', () => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(ExerciseChronoService);
     jasmine.clock().install();
+    jasmine.clock().mockDate(new Date(0));
   });
 
   afterEach(() => {

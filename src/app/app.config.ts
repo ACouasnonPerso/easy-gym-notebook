@@ -11,6 +11,10 @@ import { ExerciseMapper } from './secondary_adapters/exercise/exercise.mapper';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
+const storedLang = localStorage.getItem('lang');
+const browserLang = navigator.language?.startsWith('en') ? 'en' : navigator.language?.startsWith('es') ? 'es' : 'fr';
+const initialLang = storedLang === 'en' || storedLang === 'fr' || storedLang === 'es' ? storedLang : browserLang;
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(appRoutes, withHashLocation()),
@@ -21,7 +25,7 @@ export const appConfig: ApplicationConfig = {
         suffix: '.json',
       }),
       fallbackLang: 'fr',
-      lang: 'fr',
+      lang: initialLang,
     }),
     SessionMapper,
     { provide: SESSION_REPOSITORY, useClass: SessionRepository },

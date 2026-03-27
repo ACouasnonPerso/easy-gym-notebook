@@ -105,5 +105,24 @@
     "fri": "F",
     "sat": "S",
     "sun": "S"
+  },
+  "muscleDetector": {
+    "chest": "bench press,chest press,chest fly,pec deck,chest,pecs,bench,dc",
+    "back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rows,rowing,back,pull",
+    "backHamstrings": "deadlift,dead lift",
+    "shoulders": "shoulder press,overhead press,lateral raise,front raise,shoulder,deltoid,ohp",
+    "biceps": "bicep curl,hammer curl,bicep,biceps",
+    "triceps": "tricep extension,skull crusher,pushdown,tricep,triceps",
+    "tricepsChest": "dips",
+    "glutesQuads": "squat,squats,lunge,lunges",
+    "forearms": "wrist curl,forearm,forearms,grip",
+    "abs": "crunch,plank,sit-up,sit up,abs,core,abdominal",
+    "quads": "leg extension,legs extension,leg press,legs press,quadricep,quadriceps,quads",
+    "hamstrings": "leg curl,hamstring,hamstrings",
+    "glutes": "hip thrust,glute bridge,glute,glutes,booty",
+    "calves": "calf raise,calf,calves",
+    "traps": "shrug,trap,traps,trapezius",
+    "adductors": "adductor,adductors,inner thigh,adduction",
+    "abductors": "abductor,abductors,outer thigh,abduction"
   }
 }
