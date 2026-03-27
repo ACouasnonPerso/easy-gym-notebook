@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { ExerciseService } from '../../core_logic/session-detail/exercise.service';
 import { MuscleGroupDetectorService } from '../../core_logic/shared/muscle-group-detector.service';
 import { SessionService } from '../../core_logic/session/session.service';
+import { SessionChronoService } from '../../core_logic/chrono/session-chrono.service';
 import { Exercise, PyramidSet } from '../../core_logic/shared/models';
 
 interface AddExerciseParams {
@@ -23,6 +24,7 @@ export class AddExerciseUseCase {
   private readonly exerciseService = inject(ExerciseService);
   private readonly muscleDetector = inject(MuscleGroupDetectorService);
   private readonly sessionService = inject(SessionService);
+  private readonly sessionChronoService = inject(SessionChronoService);
 
   async execute(params: AddExerciseParams): Promise<void> {
     const isCardio = params.isCardio ?? false;
@@ -56,5 +58,11 @@ export class AddExerciseUseCase {
     const session = this.sessionService.currentSession();
     if (!isCardio && muscleGroup !== null && session && !session.muscleGroup)
       await this.sessionService.updateCurrentSession({ muscleGroup });
+
+    if (isCardio && exercise.durationSeconds > 0 && session && session.exercises.length === 0) {
+      await this.sessionService.updateCurrentSession({ durationSeconds: exercise.durationSeconds });
+      if (session.status === 'active')
+        this.sessionChronoService.overrideElapsedForSession(params.sessionId, exercise.durationSeconds);
+    }
   }
 }

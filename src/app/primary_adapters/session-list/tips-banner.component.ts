@@ -17,6 +17,8 @@ export class TipsBannerComponent {
 
   private readonly justReviewed = signal(false);
   private readonly pending = signal(false);
+  private readonly dismissed = signal(false);
+  readonly showConfirm = signal(false);
 
   readonly showOnboarding = computed(() => {
     const count = this.sessionCount();
@@ -25,18 +27,30 @@ export class TipsBannerComponent {
 
   readonly showReview = computed(() => {
     const count = this.sessionCount();
-    return count >= 4  && !this.justReviewed();
+    const hasRequested = this.requestReviewUseCase.hasRequested();
+    return count >= 4 && !this.justReviewed() && !hasRequested && !this.dismissed();
   });
 
   readonly showThanks = computed(() => {
     return this.justReviewed();
   });
 
-  async onReviewClick(): Promise<void> {
+  onReviewClick(): void {
     if (this.pending()) return;
+    this.showConfirm.set(true);
+  }
+
+  async onConfirmYes(): Promise<void> {
+    if (this.pending()) return;
+    this.showConfirm.set(false);
     this.pending.set(true);
     const success = await this.requestReviewUseCase.execute();
     this.pending.set(false);
     if (success) this.justReviewed.set(true);
+  }
+
+  onConfirmNo(): void {
+    this.showConfirm.set(false);
+    this.dismissed.set(true);
   }
 }

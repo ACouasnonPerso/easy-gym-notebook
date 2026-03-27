@@ -90,6 +90,7 @@
     "confirmMergeBody": "¿Renombrar {{count}} ejercicio(s) a \"{{name}}\"? Esta acción es irreversible.",
     "currentYear": "Año en curso",
     "total": "Total",
+    "thisWeek": "Esta semana",
     "noDataMonth": "Sin datos este mes",
     "trainingTime": "Tiempo de entrenamiento"
   },
@@ -143,5 +144,21 @@
     "traps": "encogimientos,trapecio,trapecios,shrug",
     "adductors": "aductores,aductor,inner thigh,adducción",
     "abductors": "abductores,abductor,outer thigh,abducción"
+  },
+  "muscleGroups": {
+    "Chest": "Pecho",
+    "Back": "Espalda",
+    "Shoulders": "Hombros",
+    "Biceps": "Biceps",
+    "Triceps": "Triceps",
+    "Forearms": "Antebrazos",
+    "Abs": "Abdominales",
+    "Quads": "Cuadriceps",
+    "Hamstrings": "Isquiotibiales",
+    "Glutes": "Gluteos",
+    "Calves": "Pantorrillas",
+    "Traps": "Trapecios",
+    "Adductors": "Aductores",
+    "Abductors": "Abductores"
   }
 }

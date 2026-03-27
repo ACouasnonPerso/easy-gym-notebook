@@ -24,19 +24,19 @@
     />
   }
 
-  <!-- Summary (title adapts to selected view: month / year / total) -->
+  <!-- Summary (title adapts to selected view: month / year / total / week) -->
   <app-stats-summary-card
     [title]="summaryTitle() | translate"
-    [summary]="getGlobalStatsUseCase.monthSummary()"
+    [summary]="selectedViewType() === 'current-week' ? getGlobalStatsUseCase.weekSummary() : getGlobalStatsUseCase.monthSummary()"
   />
 
   <!-- Training time bar chart -->
-  @if (getGlobalStatsUseCase.sessionDurationsInMonth().length > 0) {
+  @if (selectedViewType() !== 'current-week' && getGlobalStatsUseCase.sessionDurationsInMonth().length > 0) {
     <app-stats-training-time-card [sessions]="getGlobalStatsUseCase.sessionDurationsInMonth()" [mode]="barChartMode()" />
   }
 
   <!-- Exercise list -->
-  @if (getGlobalStatsUseCase.exerciseSummaries().length > 0) {
+  @if (selectedViewType() !== 'current-week' && getGlobalStatsUseCase.exerciseSummaries().length > 0) {
     <app-stats-exercise-list-card
       [exercises]="getGlobalStatsUseCase.exerciseSummaries()"
       (exerciseSelected)="navigateToExerciseStats($event)"

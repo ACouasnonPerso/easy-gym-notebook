@@ -162,5 +162,21 @@
     "traps": "shrug,trap,traps,trapezius",
     "adductors": "adductor,adductors,inner thigh,adduction",
     "abductors": "abductor,abductors,outer thigh,abduction"
+  },
+  "muscleGroups": {
+    "Chest": "Грудь",
+    "Back": "Спина",
+    "Shoulders": "Плечи",
+    "Biceps": "Бицепс",
+    "Triceps": "Трицепс",
+    "Forearms": "Предплечья",
+    "Abs": "Пресс",
+    "Quads": "Квадрицепс",
+    "Hamstrings": "Бедро",
+    "Glutes": "Ягодицы",
+    "Calves": "Икры",
+    "Traps": "Трапеции",
+    "Adductors": "Приводящие",
+    "Abductors": "Отводящие"
   }
 }

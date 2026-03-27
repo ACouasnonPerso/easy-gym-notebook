@@ -162,5 +162,21 @@
     "traps": "shrug,trap,traps,trapezius",
     "adductors": "adductor,adductors,inner thigh,adduction",
     "abductors": "abductor,abductors,outer thigh,abduction"
+  },
+  "muscleGroups": {
+    "Chest": "가슴",
+    "Back": "등",
+    "Shoulders": "어깨",
+    "Biceps": "이두",
+    "Triceps": "삼두",
+    "Forearms": "전완",
+    "Abs": "복근",
+    "Quads": "대퇴사두",
+    "Hamstrings": "햄스트링",
+    "Glutes": "둔근",
+    "Calves": "종아리",
+    "Traps": "승모근",
+    "Adductors": "내전근",
+    "Abductors": "외전근"
   }
 }

@@ -54,7 +54,10 @@
     "delete": "Delete",
     "tip": "Long press a session to duplicate it",
     "reviewTip": "Do you\nlike the app? Please give it 5 stars and leave a review—it really helps us out \uD83D\uDE4F",
-    "reviewThanks": "Thank you for your review!"
+    "reviewThanks": "Thank you for your review!",
+    "reviewConfirmTitle": "Do you enjoy this app?",
+    "reviewConfirmYes": "Yes, rate it",
+    "reviewConfirmNo": "No thanks"
   },
   "exercise": {
     "new": "New exercise",
@@ -90,6 +93,7 @@
     "confirmMergeBody": "Rename {{count}} exercise(s) to \"{{name}}\"? This action is irreversible.",
     "currentYear": "Current year",
     "total": "Total",
+    "thisWeek": "This week",
     "noDataMonth": "No data this month",
     "trainingTime": "Training time"
   },
@@ -162,5 +166,21 @@
 		"traps": "shrug,trap,traps,trapezius",
 		"adductors": "adductor,adductors,inner thigh,adduction",
 		"abductors": "abductor,abductors,outer thigh,abduction"
-	}
+	},
+  "muscleGroups": {
+    "Chest": "Chest",
+    "Back": "Back",
+    "Shoulders": "Shoulders",
+    "Biceps": "Biceps",
+    "Triceps": "Triceps",
+    "Forearms": "Forearms",
+    "Abs": "Abs",
+    "Quads": "Quads",
+    "Hamstrings": "Hamstrings",
+    "Glutes": "Glutes",
+    "Calves": "Calves",
+    "Traps": "Traps",
+    "Adductors": "Adductors",
+    "Abductors": "Abductors"
+  }
 }

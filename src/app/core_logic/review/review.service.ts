@@ -21,6 +21,7 @@ export class ReviewService {
     try {
       const { InAppReview } = await import('@capacitor-community/in-app-review');
       await InAppReview.requestReview();
+      await new Promise(resolve => setTimeout(resolve, 3000));
       await this.reviewRepo.markAsRequested();
       this._hasRequested.set(true);
       return true;

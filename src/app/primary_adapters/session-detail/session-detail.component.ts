@@ -13,6 +13,7 @@ import { PauseSessionChronoUseCase } from '../../primary_ports/session-chrono/pa
 import { SetSessionChronoUseCase } from '../../primary_ports/session-chrono/set-session-chrono.usecase';
 import { formatDuration, computeVolume } from '../../core_logic/shared/utils';
 import { Exercise } from '../../core_logic/shared/models';
+import { HapticService } from '../../core_logic/shared/haptic.service';
 import { EditDurationPopupComponent } from './edit-duration-popup.component';
 import { EndSessionModalComponent } from './end-session-modal.component';
 import { SessionHeaderComponent } from './session-header.component';
@@ -42,6 +43,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private readonly pauseSessionChronoUseCase = inject(PauseSessionChronoUseCase);
   private readonly setSessionChronoUseCase = inject(SetSessionChronoUseCase);
   private readonly sessionDetailUiService = inject(SessionDetailUiService);
+  private readonly haptic = inject(HapticService);
 
   readonly session = this.getSessionDetailUseCase.session;
   readonly exercises = this.getSessionDetailUseCase.exercises;
@@ -135,6 +137,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
+    this.haptic.vibrate();
     if (this.session()?.status === 'active') {
       const elapsed = this.getSessionChronoUseCase.getElapsedForSession(this.sessionId())();
       this.updateSessionDurationUseCase.execute(elapsed);

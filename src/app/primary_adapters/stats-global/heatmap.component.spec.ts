@@ -14,6 +14,7 @@ function makeCell(date: Date, opts: Partial<HeatmapCell> = {}): HeatmapCell {
     hasSession: false,
     isCurrentMonth: true,
     tags: [],
+    hasCardio: false,
     ...opts,
   };
 }

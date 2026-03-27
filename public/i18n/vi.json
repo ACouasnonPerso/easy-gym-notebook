@@ -162,5 +162,21 @@
     "traps": "shrug,trap,traps,trapezius",
     "adductors": "adductor,adductors,inner thigh,adduction",
     "abductors": "abductor,abductors,outer thigh,abduction"
+  },
+  "muscleGroups": {
+    "Chest": "Ngực",
+    "Back": "Lưng",
+    "Shoulders": "Vai",
+    "Biceps": "Bắp tay trước",
+    "Triceps": "Bắp tay sau",
+    "Forearms": "Cẳng tay",
+    "Abs": "Bụng",
+    "Quads": "Đùi trước",
+    "Hamstrings": "Đùi sau",
+    "Glutes": "Mông",
+    "Calves": "Bắp chân",
+    "Traps": "Cơ thang",
+    "Adductors": "Khép đùi",
+    "Abductors": "Dạng đùi"
   }
 }

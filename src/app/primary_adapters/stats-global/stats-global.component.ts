@@ -45,10 +45,10 @@ export class StatsGlobalComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
 
-  readonly months = signal<{ label: string; value: Date | null; type: 'month' | 'current-year' | 'total' }[]>([]);
+  readonly months = signal<{ label: string; value: Date | null; type: 'month' | 'current-year' | 'total' | 'current-week' }[]>([]);
   readonly selectedMonthIndex = signal<number>(0);
 
-  readonly isCurrentMonth = computed(() => this.selectedMonthIndex() === 2);
+  readonly isCurrentMonth = computed(() => this.selectedMonthIndex() === 3);
 
   readonly weekSameAsMonth = computed(() => {
     const w = this.getGlobalStatsUseCase.weekSummary();
@@ -62,7 +62,7 @@ export class StatsGlobalComponent implements OnInit {
 
   readonly showHeatmap = computed(() => {
     const type = this.selectedViewType();
-    return type !== 'current-year' && type !== 'total';
+    return type !== 'current-year' && type !== 'total' && type !== 'current-week';
   });
 
   readonly barChartMode = computed((): BarChartMode => {
@@ -75,12 +75,13 @@ export class StatsGlobalComponent implements OnInit {
     const type = this.selectedViewType();
     if (type === 'total') return 'statsGlobal.totalSummary';
     if (type === 'current-year') return 'statsGlobal.yearSummary';
+    if (type === 'current-week') return 'statsGlobal.weekSummary';
     return 'statsGlobal.monthSummary';
   });
 
   ngOnInit(): void {
     this.months.set(this.generateMonths());
-    this.selectedMonthIndex.set(2);
+    this.selectedMonthIndex.set(3);
     this.getGlobalStatsUseCase.execute();
   }
 
@@ -112,10 +113,11 @@ export class StatsGlobalComponent implements OnInit {
     return formatSummaryDuration(totalSeconds);
   }
 
-  private generateMonths(): { label: string; value: Date | null; type: 'month' | 'current-year' | 'total' }[] {
-    const months: { label: string; value: Date | null; type: 'month' | 'current-year' | 'total' }[] = [];
+  private generateMonths(): { label: string; value: Date | null; type: 'month' | 'current-year' | 'total' | 'current-week' }[] {
+    const months: { label: string; value: Date | null; type: 'month' | 'current-year' | 'total' | 'current-week' }[] = [];
     months.push({ label: this.translate.instant('statsGlobal.currentYear'), value: null, type: 'current-year' });
     months.push({ label: this.translate.instant('statsGlobal.total'), value: null, type: 'total' });
+    months.push({ label: this.translate.instant('statsGlobal.thisWeek'), value: null, type: 'current-week' });
     const now = new Date();
     const locale = this.translate.currentLang === 'en' ? 'en-US' : 'fr-FR';
     for (let i = 0; i < 13; i++) {

@@ -162,5 +162,21 @@
     "traps": "shrug,trap,traps,trapezius",
     "adductors": "adductor,adductors,inner thigh,adduction",
     "abductors": "abductor,abductors,outer thigh,abduction"
+  },
+  "muscleGroups": {
+    "Chest": "อก",
+    "Back": "หลัง",
+    "Shoulders": "ไหล่",
+    "Biceps": "ต้นแขนหน้า",
+    "Triceps": "ต้นแขนหลัง",
+    "Forearms": "แขนส่วนล่าง",
+    "Abs": "ท้อง",
+    "Quads": "ต้นขาหน้า",
+    "Hamstrings": "ต้นขาหลัง",
+    "Glutes": "สะโพก",
+    "Calves": "น่อง",
+    "Traps": "บ่า",
+    "Adductors": "กล้ามเนื้อดึงเข้า",
+    "Abductors": "กล้ามเนื้อดึงออก"
   }
 }
