@@ -51,7 +51,7 @@ import { HapticService } from '../../core_logic/shared/haptic.service';
       background: rgba(239,68,68,0.15);
     }
     .chrono-btn-label {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 14px;
       font-weight: 700;
       color: var(--sub);
@@ -65,7 +65,7 @@ import { HapticService } from '../../core_logic/shared/haptic.service';
       margin-top: 16px;
     }
     .add-time-btn {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 14px;
       font-weight: 700;
       color: var(--sub);

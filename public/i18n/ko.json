@@ -54,7 +54,10 @@
     "delete": "삭제",
     "tip": "세션을 길게 눌러 복제하세요",
     "reviewTip": "앱이\n마음에 드세요? 별 5개와 리뷰를 남겨주세요 — 정말 큰 힘이 됩니다 🙏",
-    "reviewThanks": "리뷰해 주셔서 감사합니다!"
+    "reviewThanks": "리뷰해 주셔서 감사합니다!",
+    "reviewConfirmTitle": "이 앱이 마음에 드세요?",
+    "reviewConfirmYes": "네, 평가하기",
+    "reviewConfirmNo": "아니요"
   },
   "exercise": {
     "new": "새 운동",
@@ -67,7 +70,7 @@
     "validateAria": "운동 확인",
     "cancelAria": "운동 취소",
     "pyramid": "피라미드 운동",
-    "addSet": "Add a set"
+    "addSet": "세트 추가"
   },
   "session": {
     "endConfirm": "세션을 종료하시겠습니까?"
@@ -90,23 +93,24 @@
     "confirmMergeBody": "{{count}}개 운동을 \"{{name}}\"으로 이름 변경하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
     "currentYear": "올해",
     "total": "전체",
+    "thisWeek": "이번 주",
     "noDataMonth": "이번 달 데이터 없음",
     "trainingTime": "운동 시간"
   },
   "import": {
     "cardTitle": "Import / Export",
     "exportJson": "JSON 내보내기",
-    "importJson": "Import JSON",
-    "confirmTitle": "Confirm import",
-    "successMessage": "Import successful",
-    "errorInvalidJson": "Invalid JSON file",
-    "errorMissingSessions": "Missing 'sessions' array",
-    "errorMissingExercises": "Missing 'exercises' array",
-    "errorInvalidSession": "Invalid session entry",
-    "errorInvalidExercise": "Invalid exercise entry",
-    "errorUnknown": "Unknown error",
-    "sessions": "session(s)",
-    "exercises": "exercise(s)"
+    "importJson": "JSON 가져오기",
+    "confirmTitle": "가져오기 확인",
+    "successMessage": "가져오기 성공",
+    "errorInvalidJson": "잘못된 JSON 파일",
+    "errorMissingSessions": "'sessions' 배열 없음",
+    "errorMissingExercises": "'exercises' 배열 없음",
+    "errorInvalidSession": "잘못된 세션 항목",
+    "errorInvalidExercise": "잘못된 운동 항목",
+    "errorUnknown": "알 수 없는 오류",
+    "sessions": "세션",
+    "exercises": "운동"
   },
   "chrono": {
     "startTraining": "START TRAINING",

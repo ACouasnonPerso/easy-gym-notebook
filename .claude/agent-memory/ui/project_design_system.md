@@ -20,7 +20,7 @@ The project does NOT have a tailwind.config file. All design tokens are CSS cust
 - `--sub: #9999aa` — tertiary text
 
 Fonts (loaded via Google Fonts in index.html):
-- `'Syne'` — headings/nav labels (weights 400, 600, 700, 800)
+- `'Space Grotesk'` — headings/nav labels (weights 400, 600, 700, 800)
 - `'DM Sans'` — body text (weights 300, 400, 500, 600)
 - `'IBM Plex Mono'` — monospace (weights 400, 500, 600)
 

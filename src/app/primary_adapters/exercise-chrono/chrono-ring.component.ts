@@ -44,7 +44,7 @@ import { Component, input, ChangeDetectionStrategy } from '@angular/core';
       line-height: 1;
     }
     .chrono-label {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 3px;

@@ -81,8 +81,8 @@
     "distanceKm": "km"
   },
   "statsGlobal": {
-    "trainingRecurrences": "Training recurrences",
-    "workedMuscles": "Worked muscles",
+    "trainingRecurrences": "Récurrences d'entraînement",
+    "workedMuscles": "Muscles travaillés",
     "weekSummary": "Résumé de la semaine",
     "monthSummary": "Résumé du mois",
     "totalSummary": "Récap total",

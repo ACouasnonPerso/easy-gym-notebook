@@ -51,7 +51,7 @@ These files contain **no application logic** — only the visual structure and s
 
 | Family | Usage |
 |---|---|
-| `Syne` (800/700/600) | Page titles, section headings, dates, key labels |
+| `Space Grotesk` (800/700/600) | Page titles, section headings, dates, key labels |
 | `DM Sans` (300–600) | Body text, descriptions, form fields |
 | `IBM Plex Mono` (400–600) | Numeric values (weights, times, reps) |
 

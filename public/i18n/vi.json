@@ -54,7 +54,10 @@
     "delete": "Xóa",
     "tip": "Giữ lâu để sao chép buổi tập",
     "reviewTip": "Bạn\nthích ứng dụng? Hãy cho 5 sao và để lại đánh giá — điều đó giúp chúng tôi rất nhiều 🙏",
-    "reviewThanks": "Cảm ơn bạn đã đánh giá!"
+    "reviewThanks": "Cảm ơn bạn đã đánh giá!",
+    "reviewConfirmTitle": "Bạn có thích ứng dụng này không?",
+    "reviewConfirmYes": "Có, đánh giá ngay",
+    "reviewConfirmNo": "Không, cảm ơn"
   },
   "exercise": {
     "new": "Bài tập mới",
@@ -67,7 +70,7 @@
     "validateAria": "Xác nhận bài tập",
     "cancelAria": "Hủy bài tập",
     "pyramid": "Bài tập kim tự tháp",
-    "addSet": "Add a set"
+    "addSet": "Thêm hiệp"
   },
   "session": {
     "endConfirm": "Kết thúc buổi tập?"
@@ -90,23 +93,24 @@
     "confirmMergeBody": "Đổi tên {{count}} bài tập thành \"{{name}}\"? Hành động này không thể hoàn tác.",
     "currentYear": "Năm hiện tại",
     "total": "Tổng",
+    "thisWeek": "Tuần này",
     "noDataMonth": "Không có dữ liệu tháng này",
     "trainingTime": "Thời gian tập luyện"
   },
   "import": {
     "cardTitle": "Import / Export",
     "exportJson": "Xuất JSON",
-    "importJson": "Import JSON",
-    "confirmTitle": "Confirm import",
-    "successMessage": "Import successful",
-    "errorInvalidJson": "Invalid JSON file",
-    "errorMissingSessions": "Missing 'sessions' array",
-    "errorMissingExercises": "Missing 'exercises' array",
-    "errorInvalidSession": "Invalid session entry",
-    "errorInvalidExercise": "Invalid exercise entry",
-    "errorUnknown": "Unknown error",
-    "sessions": "session(s)",
-    "exercises": "exercise(s)"
+    "importJson": "Nhập JSON",
+    "confirmTitle": "Xác nhận nhập",
+    "successMessage": "Nhập thành công",
+    "errorInvalidJson": "File JSON không hợp lệ",
+    "errorMissingSessions": "Thiếu mảng 'sessions'",
+    "errorMissingExercises": "Thiếu mảng 'exercises'",
+    "errorInvalidSession": "Dữ liệu buổi tập không hợp lệ",
+    "errorInvalidExercise": "Dữ liệu bài tập không hợp lệ",
+    "errorUnknown": "Lỗi không xác định",
+    "sessions": "buổi tập",
+    "exercises": "bài tập"
   },
   "chrono": {
     "startTraining": "BẮT ĐẦU TẬP",

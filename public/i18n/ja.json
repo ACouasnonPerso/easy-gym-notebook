@@ -54,7 +54,10 @@
     "delete": "削除",
     "tip": "セッションを長押しして複製する",
     "reviewTip": "アプリを\n気に入りましたか？5つ星とレビューをお願いします — とても励みになります 🙏",
-    "reviewThanks": "レビューありがとうございます！"
+    "reviewThanks": "レビューありがとうございます！",
+    "reviewConfirmTitle": "このアプリを楽しんでいますか？",
+    "reviewConfirmYes": "はい、評価する",
+    "reviewConfirmNo": "いいえ"
   },
   "exercise": {
     "new": "新しいエクササイズ",
@@ -67,7 +70,7 @@
     "validateAria": "エクササイズを確定",
     "cancelAria": "エクササイズをキャンセル",
     "pyramid": "ピラミッドエクササイズ",
-    "addSet": "Add a set"
+    "addSet": "セットを追加"
   },
   "session": {
     "endConfirm": "セッションを終了しますか？"
@@ -90,23 +93,24 @@
     "confirmMergeBody": "{{count}}エクササイズを「{{name}}」に名前変更しますか？この操作は元に戻せません。",
     "currentYear": "今年",
     "total": "合計",
+    "thisWeek": "今週",
     "noDataMonth": "今月のデータがありません",
     "trainingTime": "トレーニング時間"
   },
   "import": {
     "cardTitle": "Import / Export",
     "exportJson": "JSONをエクスポート",
-    "importJson": "Import JSON",
-    "confirmTitle": "Confirm import",
-    "successMessage": "Import successful",
-    "errorInvalidJson": "Invalid JSON file",
-    "errorMissingSessions": "Missing 'sessions' array",
-    "errorMissingExercises": "Missing 'exercises' array",
-    "errorInvalidSession": "Invalid session entry",
-    "errorInvalidExercise": "Invalid exercise entry",
-    "errorUnknown": "Unknown error",
-    "sessions": "session(s)",
-    "exercises": "exercise(s)"
+    "importJson": "JSONをインポート",
+    "confirmTitle": "インポートの確認",
+    "successMessage": "インポート成功",
+    "errorInvalidJson": "無効なJSONファイル",
+    "errorMissingSessions": "'sessions'配列がありません",
+    "errorMissingExercises": "'exercises'配列がありません",
+    "errorInvalidSession": "無効なセッションデータ",
+    "errorInvalidExercise": "無効なエクササイズデータ",
+    "errorUnknown": "不明なエラー",
+    "sessions": "セッション",
+    "exercises": "エクササイズ"
   },
   "chrono": {
     "startTraining": "トレーニング開始",

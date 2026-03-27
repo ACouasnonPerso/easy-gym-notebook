@@ -54,7 +54,10 @@
     "delete": "ลบ",
     "tip": "กดค้างที่เซสชันเพื่อทำซ้ำ",
     "reviewTip": "ชอบ\nแอปนี้ไหม? ให้ 5 ดาวและฝากรีวิวด้วยนะ — ช่วยเราได้มากเลย 🙏",
-    "reviewThanks": "ขอบคุณสำหรับรีวิวของคุณ!"
+    "reviewThanks": "ขอบคุณสำหรับรีวิวของคุณ!",
+    "reviewConfirmTitle": "คุณชอบแอปนี้ไหม?",
+    "reviewConfirmYes": "ใช่ ให้คะแนน",
+    "reviewConfirmNo": "ไม่ ขอบคุณ"
   },
   "exercise": {
     "new": "การออกกำลังกายใหม่",
@@ -67,7 +70,7 @@
     "validateAria": "ยืนยันการออกกำลังกาย",
     "cancelAria": "ยกเลิกการออกกำลังกาย",
     "pyramid": "การออกกำลังกายแบบพีระมิด",
-    "addSet": "Add a set"
+    "addSet": "เพิ่มเซ็ต"
   },
   "session": {
     "endConfirm": "สิ้นสุดเซสชัน?"
@@ -90,28 +93,29 @@
     "confirmMergeBody": "เปลี่ยนชื่อ {{count}} การออกกำลังกายเป็น \"{{name}}\" ? การกระทำนี้ไม่สามารถย้อนกลับได้",
     "currentYear": "ปีปัจจุบัน",
     "total": "รวม",
+    "thisWeek": "สัปดาห์นี้",
     "noDataMonth": "ไม่มีข้อมูลเดือนนี้",
     "trainingTime": "เวลาฝึก"
   },
   "import": {
     "cardTitle": "Import / Export",
     "exportJson": "ส่งออก JSON",
-    "importJson": "Import JSON",
-    "confirmTitle": "Confirm import",
-    "successMessage": "Import successful",
-    "errorInvalidJson": "Invalid JSON file",
-    "errorMissingSessions": "Missing 'sessions' array",
-    "errorMissingExercises": "Missing 'exercises' array",
-    "errorInvalidSession": "Invalid session entry",
-    "errorInvalidExercise": "Invalid exercise entry",
-    "errorUnknown": "Unknown error",
-    "sessions": "session(s)",
-    "exercises": "exercise(s)"
+    "importJson": "นำเข้า JSON",
+    "confirmTitle": "ยืนยันการนำเข้า",
+    "successMessage": "นำเข้าสำเร็จ",
+    "errorInvalidJson": "ไฟล์ JSON ไม่ถูกต้อง",
+    "errorMissingSessions": "ไม่พบ array 'sessions'",
+    "errorMissingExercises": "ไม่พบ array 'exercises'",
+    "errorInvalidSession": "ข้อมูลเซสชันไม่ถูกต้อง",
+    "errorInvalidExercise": "ข้อมูลการออกกำลังกายไม่ถูกต้อง",
+    "errorUnknown": "ข้อผิดพลาดที่ไม่ทราบสาเหตุ",
+    "sessions": "เซสชัน",
+    "exercises": "การออกกำลังกาย"
   },
   "chrono": {
-    "startTraining": "START TRAINING",
-    "goBreak": "GO BREAK",
-    "goTraining": "GO TRAINING",
+    "startTraining": "เริ่มฝึก",
+    "goBreak": "พักเดี๋ยวนี้",
+    "goTraining": "กลับไปฝึก",
     "ready": "พร้อม",
     "training": "ฝึก",
     "series": "เซ็ต"
