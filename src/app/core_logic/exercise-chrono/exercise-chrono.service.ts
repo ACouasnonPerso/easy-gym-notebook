@@ -1,5 +1,7 @@
 import { Injectable, PLATFORM_ID, inject, signal, computed } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Capacitor } from '@capacitor/core';
+import { NativeAudio } from '@capacitor-community/native-audio';
 
 export type ChronoState = 'initial' | 'training' | 'training_paused' | 'break' | 'break_paused';
 
@@ -43,6 +45,20 @@ export class ExerciseChronoService {
     }
   }
 
+  private _soundsPreloaded = false;
+
+  private async preloadSounds(): Promise<void> {
+    if (!Capacitor.isNativePlatform() || this._soundsPreloaded) return;
+    this._soundsPreloaded = true;
+    await Promise.all([
+      NativeAudio.preload({ assetId: 'ten', assetPath: 'assets/sounds/ten.mp3', focus: false } as any),
+      NativeAudio.preload({ assetId: 'three', assetPath: 'assets/sounds/three.mp3', focus: false } as any),
+      NativeAudio.preload({ assetId: 'two', assetPath: 'assets/sounds/two.mp3', focus: false } as any),
+      NativeAudio.preload({ assetId: 'one', assetPath: 'assets/sounds/one.mp3', focus: false } as any),
+      NativeAudio.preload({ assetId: 'alert', assetPath: 'sounds/alert.wav', focus: false } as any),
+    ]);
+  }
+
   /** Called once on page load to configure break duration. Does NOT start the timer. */
   init(breakDuration: number): void {
     this.clearTimer();
@@ -51,6 +67,7 @@ export class ExerciseChronoService {
     this._chronoState.set('initial');
     this._timeSeconds.set(0);
     this._seriesCount.set(0);
+    this.preloadSounds();
   }
 
   /** Start training from initial state. */
@@ -154,10 +171,11 @@ export class ExerciseChronoService {
 
   playCountdownSound(name: 'ten' | 'three' | 'two' | 'one'): void {
     if (!isPlatformBrowser(this.platformId) || !this._soundEnabled()) return;
-    try {
-      const audio = new Audio(`assets/sounds/${name}.mp3`);
-      audio.play().catch(() => { /* ignore autoplay policy errors */ });
-    } catch (e) { /* ignore */ }
+    if (Capacitor.isNativePlatform()) {
+      NativeAudio.play({ assetId: name }).catch(() => {});
+    } else {
+      new Audio(`assets/sounds/${name}.mp3`).play().catch(() => {});
+    }
   }
 
   startCountup(): void {
@@ -172,10 +190,11 @@ export class ExerciseChronoService {
 
   playBeep(): void {
     if (!isPlatformBrowser(this.platformId) || !this._soundEnabled()) return;
-    try {
-      const audio = new Audio('sounds/alert.wav');
-      audio.play().catch(() => { /* ignore autoplay policy errors */ });
-    } catch (e) { /* ignore */ }
+    if (Capacitor.isNativePlatform()) {
+      NativeAudio.play({ assetId: 'alert' }).catch(() => {});
+    } else {
+      new Audio('sounds/alert.wav').play().catch(() => {});
+    }
   }
 
   persist(): void {

@@ -6,7 +6,7 @@
             <span class="muscle-tag cardio-tag">{{ 'common.cardio' | translate }}</span>
           } @else {
             @for (muscle of muscleGroups(); track muscle) {
-              <span class="muscle-tag" [ngStyle]="tagStyle(muscle)">{{ muscle }}</span>
+              <span class="muscle-tag" [ngStyle]="tagStyle(muscle)">{{ 'muscleGroups.' + muscle | translate }}</span>
             }
           }
         </div>

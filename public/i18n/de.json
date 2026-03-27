@@ -54,7 +54,10 @@
     "delete": "Löschen",
     "tip": "Halte eine Einheit gedrückt, um sie zu duplizieren",
     "reviewTip": "Gefällt\ndir die App? Gib ihr 5 Sterne und hinterlasse eine Bewertung — das hilft uns sehr 🙏",
-    "reviewThanks": "Danke für deine Bewertung!"
+    "reviewThanks": "Danke für deine Bewertung!",
+    "reviewConfirmTitle": "Gefällt dir die App?",
+    "reviewConfirmYes": "Ja, bewerten",
+    "reviewConfirmNo": "Nein danke"
   },
   "exercise": {
     "new": "Neue Übung",
@@ -162,5 +165,21 @@
     "traps": "shrug,trap,traps,trapezius",
     "adductors": "adductor,adductors,inner thigh,adduction",
     "abductors": "abductor,abductors,outer thigh,abduction"
+  },
+  "muscleGroups": {
+    "Chest": "Brust",
+    "Back": "Rucken",
+    "Shoulders": "Schultern",
+    "Biceps": "Bizeps",
+    "Triceps": "Trizeps",
+    "Forearms": "Unterarme",
+    "Abs": "Bauch",
+    "Quads": "Quadrizeps",
+    "Hamstrings": "Ischios",
+    "Glutes": "Gesass",
+    "Calves": "Waden",
+    "Traps": "Trapez",
+    "Adductors": "Adduktoren",
+    "Abductors": "Abduktoren"
   }
 }

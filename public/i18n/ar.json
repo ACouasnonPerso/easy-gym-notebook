@@ -54,7 +54,10 @@
     "delete": "حذف",
     "tip": "اضغط مطولاً على جلسة لتكرارها",
     "reviewTip": "هل\nأعجبك التطبيق؟ أعطنا 5 نجوم واترك تقييمًا — هذا يساعدنا كثيرًا 🙏",
-    "reviewThanks": "شكرًا على تقييمك!"
+    "reviewThanks": "شكرًا على تقييمك!",
+    "reviewConfirmTitle": "هل تستمتع بهذا التطبيق؟",
+    "reviewConfirmYes": "نعم، تقييم",
+    "reviewConfirmNo": "لا شكرًا"
   },
   "exercise": {
     "new": "تمرين جديد",
@@ -162,5 +165,21 @@
     "traps": "shrug,trap,traps,trapezius",
     "adductors": "adductor,adductors,inner thigh,adduction",
     "abductors": "abductor,abductors,outer thigh,abduction"
+  },
+  "muscleGroups": {
+    "Chest": "صدر",
+    "Back": "ظهر",
+    "Shoulders": "اكتاف",
+    "Biceps": "بايسبس",
+    "Triceps": "ترايسبس",
+    "Forearms": "ساعد",
+    "Abs": "بطن",
+    "Quads": "فخذ امامي",
+    "Hamstrings": "فخذ خلفي",
+    "Glutes": "ارداف",
+    "Calves": "ربلة الساق",
+    "Traps": "شبه منحرف",
+    "Adductors": "مقربات",
+    "Abductors": "مبعدات"
   }
 }

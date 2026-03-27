@@ -162,5 +162,21 @@
     "traps": "shrug,trap,traps,trapezius",
     "adductors": "adductor,adductors,inner thigh,adduction",
     "abductors": "abductor,abductors,outer thigh,abduction"
+  },
+  "muscleGroups": {
+    "Chest": "Petto",
+    "Back": "Schiena",
+    "Shoulders": "Spalle",
+    "Biceps": "Bicipiti",
+    "Triceps": "Tricipiti",
+    "Forearms": "Avambracci",
+    "Abs": "Addominali",
+    "Quads": "Quadricipiti",
+    "Hamstrings": "Femorali",
+    "Glutes": "Glutei",
+    "Calves": "Polpacci",
+    "Traps": "Trapezi",
+    "Adductors": "Adduttori",
+    "Abductors": "Abduttori"
   }
 }

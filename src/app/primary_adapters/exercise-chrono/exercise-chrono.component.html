@@ -3,7 +3,7 @@
     [hasExercise]="hasExercise()"
     [seriesCount]="seriesCount()"
     [formattedBreakDuration]="formattedBreakDuration()"
-    (back)="location.back()"
+    (back)="haptic.vibrate(); location.back()"
     (openBreakDurationPopup)="showBreakDurationPopup.set(true)"
   />
   <div class="chrono-body">

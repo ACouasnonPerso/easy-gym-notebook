@@ -12,6 +12,18 @@
   </button>
 }
 
+@if (showConfirm()) {
+  <div class="review-confirm-popup">
+    <span class="review-confirm-title">{{ 'sessionList.reviewConfirmTitle' | translate }}</span>
+    <button class="review-confirm-yes" (click)="onConfirmYes()">
+      {{ 'sessionList.reviewConfirmYes' | translate }}
+    </button>
+    <button class="review-confirm-no" (click)="onConfirmNo()">
+      {{ 'sessionList.reviewConfirmNo' | translate }}
+    </button>
+  </div>
+}
+
 @if (showThanks()) {
   <div class="tips-banner">
     <span class="tips-icon">🙏</span>

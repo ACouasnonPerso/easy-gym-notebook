@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { StatsService, MonthSummary } from './stats.service';
 import { SESSION_REPOSITORY } from '../../secondary_ports/session/session.repository.interface';
 import { EXERCISE_REPOSITORY } from '../../secondary_ports/exercise/exercise.repository.interface';
-import { Session, Exercise } from '../shared/models';
+import { Session, Exercise, MuscleGroup } from '../shared/models';
 import { SessionDuration } from './stats.service';
 
 function makeSession(overrides: Partial<Session> = {}): Session {
@@ -250,6 +250,96 @@ describe('StatsService', () => {
 
       expect(result.sessionCount).toBe(0);
       expect(result.totalDurationSeconds).toBe(0);
+    });
+  });
+
+  describe('heatmapData — tags from exercises', () => {
+    it('should include all muscleGroups from a single exercise in the cell tags', () => {
+      const march10 = new Date(2026, 2, 10);
+      service._allSessions.set([makeSession({ id: 's1', date: march10 })]);
+      service._allExercises.set([
+        makeExercise({ sessionId: 's1', muscleGroups: [MuscleGroup.Chest, MuscleGroup.Triceps] }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const cell = service.heatmapData().find(c => c.date.getDate() === 10 && c.date.getMonth() === 2 && c.date.getFullYear() === 2026)!;
+
+      expect(cell.tags).toContain('Chest');
+      expect(cell.tags).toContain('Triceps');
+    });
+
+    it('should aggregate muscleGroups from two sessions on the same day', () => {
+      const march10 = new Date(2026, 2, 10);
+      service._allSessions.set([
+        makeSession({ id: 's1', date: march10 }),
+        makeSession({ id: 's2', date: march10 }),
+      ]);
+      service._allExercises.set([
+        makeExercise({ id: 'ex-1', sessionId: 's1', muscleGroups: [MuscleGroup.Chest] }),
+        makeExercise({ id: 'ex-2', sessionId: 's2', muscleGroups: [MuscleGroup.Back] }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const cell = service.heatmapData().find(c => c.date.getDate() === 10 && c.date.getMonth() === 2 && c.date.getFullYear() === 2026)!;
+
+      expect(cell.tags).toContain('Chest');
+      expect(cell.tags).toContain('Back');
+    });
+
+    it('should deduplicate muscleGroups when multiple exercises share the same muscle group', () => {
+      const march10 = new Date(2026, 2, 10);
+      service._allSessions.set([makeSession({ id: 's1', date: march10 })]);
+      service._allExercises.set([
+        makeExercise({ id: 'ex-1', sessionId: 's1', muscleGroups: [MuscleGroup.Chest] }),
+        makeExercise({ id: 'ex-2', sessionId: 's1', muscleGroups: [MuscleGroup.Chest] }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const cell = service.heatmapData().find(c => c.date.getDate() === 10 && c.date.getMonth() === 2 && c.date.getFullYear() === 2026)!;
+
+      expect(cell.tags.filter(t => t === 'Chest').length).toBe(1);
+    });
+  });
+
+  describe('heatmapData — hasCardio', () => {
+    it('should set hasCardio to false when no exercises on that day are cardio', () => {
+      const march10 = new Date(2026, 2, 10);
+      service._allSessions.set([makeSession({ id: 's1', date: march10 })]);
+      service._allExercises.set([
+        makeExercise({ sessionId: 's1', isCardio: false }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const cell = service.heatmapData().find(c => c.date.getDate() === 10 && c.date.getMonth() === 2 && c.date.getFullYear() === 2026)!;
+
+      expect(cell.hasCardio).toBe(false);
+    });
+
+    it('should set hasCardio to true when at least one exercise on that day has isCardio true', () => {
+      const march10 = new Date(2026, 2, 10);
+      service._allSessions.set([makeSession({ id: 's1', date: march10 })]);
+      service._allExercises.set([
+        makeExercise({ sessionId: 's1', isCardio: true }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const cell = service.heatmapData().find(c => c.date.getDate() === 10 && c.date.getMonth() === 2 && c.date.getFullYear() === 2026)!;
+
+      expect(cell.hasCardio).toBe(true);
+    });
+
+    it('should set hasCardio to true when there is a mix of cardio and non-cardio exercises on the same day', () => {
+      const march10 = new Date(2026, 2, 10);
+      service._allSessions.set([makeSession({ id: 's1', date: march10 })]);
+      service._allExercises.set([
+        makeExercise({ id: 'ex-1', sessionId: 's1', isCardio: false }),
+        makeExercise({ id: 'ex-2', sessionId: 's1', isCardio: true }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const cell = service.heatmapData().find(c => c.date.getDate() === 10 && c.date.getMonth() === 2 && c.date.getFullYear() === 2026)!;
+
+      expect(cell.hasCardio).toBe(true);
     });
   });
 

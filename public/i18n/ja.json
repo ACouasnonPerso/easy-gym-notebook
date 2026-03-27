@@ -162,5 +162,21 @@
     "traps": "shrug,trap,traps,trapezius",
     "adductors": "adductor,adductors,inner thigh,adduction",
     "abductors": "abductor,abductors,outer thigh,abduction"
+  },
+  "muscleGroups": {
+    "Chest": "胸",
+    "Back": "背中",
+    "Shoulders": "肩",
+    "Biceps": "上腕二頭筋",
+    "Triceps": "上腕三頭筋",
+    "Forearms": "前腕",
+    "Abs": "腹筋",
+    "Quads": "大腿四頭筋",
+    "Hamstrings": "ハムストリング",
+    "Glutes": "臀部",
+    "Calves": "ふくらはぎ",
+    "Traps": "僧帽筋",
+    "Adductors": "内転筋",
+    "Abductors": "外転筋"
   }
 }

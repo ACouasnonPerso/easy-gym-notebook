@@ -12,6 +12,9 @@ class FakeTranslateLoader implements TranslateLoader {
         tip: 'Conseil',
         reviewTip: 'Notez cette application',
         reviewThanks: 'Merci pour votre avis !',
+        reviewConfirmTitle: 'Vous aimez cette app ?',
+        reviewConfirmYes: 'Oui, noter',
+        reviewConfirmNo: 'Non merci',
       },
     } as unknown as TranslationObject);
   }
@@ -88,15 +91,16 @@ describe('TipsBannerComponent', () => {
     });
   });
 
-  describe('bandeau de remerciement après clic', () => {
-    it('affiche le remerciement et appelle execute() après le clic sur la bannière review', async () => {
+  describe('bandeau de remerciement après confirmation', () => {
+    it('affiche le remerciement et appelle execute() après clic banner puis confirmation', async () => {
       const { fixture, useCaseSpy } = setupFixture(10, false);
       const el: HTMLElement = fixture.nativeElement;
 
-      const button = el.querySelector<HTMLButtonElement>('.tips-banner--clickable');
-      expect(button).toBeTruthy();
-      button!.click();
+      el.querySelector<HTMLButtonElement>('.tips-banner--clickable')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
 
+      el.querySelector<HTMLButtonElement>('.review-confirm-yes')!.click();
       await fixture.whenStable();
       fixture.detectChanges();
 
@@ -128,6 +132,24 @@ describe('TipsBannerComponent', () => {
       fixture.detectChanges();
 
       const el: HTMLElement = fixture.nativeElement;
+      el.querySelector<HTMLButtonElement>('.tips-banner--clickable')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      el.querySelector<HTMLButtonElement>('.review-confirm-yes')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      expect(useCaseSpy.execute).toHaveBeenCalledTimes(1);
+      expect(el.querySelector('.tips-banner')).toBeNull();
+    });
+  });
+
+  describe('popup de confirmation au clic sur le banner review', () => {
+    it('affiche la popup de confirmation quand on clique sur le banner review (sans appeler execute)', async () => {
+      const { fixture, useCaseSpy } = setupFixture(10, false);
+      const el: HTMLElement = fixture.nativeElement;
+
       const button = el.querySelector<HTMLButtonElement>('.tips-banner--clickable');
       expect(button).toBeTruthy();
       button!.click();
@@ -135,7 +157,68 @@ describe('TipsBannerComponent', () => {
       await fixture.whenStable();
       fixture.detectChanges();
 
+      expect(useCaseSpy.execute).not.toHaveBeenCalled();
+      const confirmPopup = el.querySelector('.review-confirm-popup');
+      expect(confirmPopup).toBeTruthy();
+      expect(confirmPopup?.textContent).toContain('Vous aimez cette app ?');
+    });
+
+    it('confirmer dans la popup appelle execute() et affiche les remerciements', async () => {
+      const { fixture, useCaseSpy } = setupFixture(10, false);
+      const el: HTMLElement = fixture.nativeElement;
+
+      el.querySelector<HTMLButtonElement>('.tips-banner--clickable')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const confirmBtn = el.querySelector<HTMLButtonElement>('.review-confirm-yes');
+      expect(confirmBtn).toBeTruthy();
+      confirmBtn!.click();
+
+      await fixture.whenStable();
+      fixture.detectChanges();
+
       expect(useCaseSpy.execute).toHaveBeenCalledTimes(1);
+      expect(el.querySelector('.review-confirm-popup')).toBeNull();
+      const text = el.querySelector('.tips-text')?.textContent;
+      expect(text).toContain('Merci pour votre avis');
+    });
+
+    it('refuser dans la popup ne appelle pas execute() et fait disparaitre la bannière review', async () => {
+      const { fixture, useCaseSpy } = setupFixture(10, false);
+      const el: HTMLElement = fixture.nativeElement;
+
+      el.querySelector<HTMLButtonElement>('.tips-banner--clickable')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const refuseBtn = el.querySelector<HTMLButtonElement>('.review-confirm-no');
+      expect(refuseBtn).toBeTruthy();
+      refuseBtn!.click();
+
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      expect(useCaseSpy.execute).not.toHaveBeenCalled();
+      expect(el.querySelector('.review-confirm-popup')).toBeNull();
+      expect(el.querySelector('.tips-banner--clickable')).toBeNull();
+    });
+
+    it("après refus, la bannière review ne réapparait pas dans la même session (pas de persistance)", async () => {
+      const { fixture, useCaseSpy } = setupFixture(10, false);
+      const el: HTMLElement = fixture.nativeElement;
+
+      el.querySelector<HTMLButtonElement>('.tips-banner--clickable')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      el.querySelector<HTMLButtonElement>('.review-confirm-no')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      // Le banner review est masqué mais useCaseSpy.hasRequested reste false (non persisté)
+      expect(useCaseSpy.execute).not.toHaveBeenCalled();
+      expect(useCaseSpy.hasRequested()).toBe(false);
+      expect(el.querySelector('.tips-banner--clickable')).toBeNull();
       expect(el.querySelector('.tips-banner')).toBeNull();
     });
   });

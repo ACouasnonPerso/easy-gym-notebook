@@ -23,7 +23,7 @@
           [style.opacity]="selectedTags().size > 0 && !selectedTags().has(tag) ? '0.4' : '1'"
           [ngStyle]="tagChipStyle(tag)"
           (click)="toggleTagFilter(tag)"
-        >{{ tag }}</button>
+        >{{ 'muscleGroups.' + tag | translate }}</button>
       }
       @if (hasCardio()) {
         <button

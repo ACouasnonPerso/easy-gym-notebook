@@ -12,12 +12,22 @@ export class EndSessionUseCase {
   readonly showManualOverride = signal<boolean>(false);
 
   execute(): void {
-    const sessionId = this.sessionService.currentSession()?.id;
+    const session = this.sessionService.currentSession();
+    const sessionId = session?.id;
     const elapsed = sessionId
       ? this.sessionChronoService.stopForSession(sessionId)
       : this.sessionChronoService.stop();
-    if (elapsed > 0) {
-      this.sessionService.updateCurrentSession({ durationSeconds: elapsed, status: 'completed' });
+
+    const exercises = session?.exercises ?? [];
+    const singleCardioDuration =
+      exercises.length === 1 && exercises[0].isCardio && exercises[0].durationSeconds > 0
+        ? exercises[0].durationSeconds
+        : null;
+
+    const durationToSave = singleCardioDuration ?? elapsed;
+
+    if (durationToSave > 0) {
+      this.sessionService.updateCurrentSession({ durationSeconds: durationToSave, status: 'completed' });
       this.router.navigate(['/sessions']);
     } else {
       this.showManualOverride.set(true);

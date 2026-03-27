@@ -1,10 +1,10 @@
 
     <div class="session-card" appLongPress (longPress)="longPress.emit()">
       <div class="session-header">
-        <span class="session-date">{{ session().date | date:'EEE d MMM yyyy' }}</span>
+        <span class="session-date">{{ dateLabel() }}</span>
         <div class="tag-list">
           @for (muscle of muscleTags(); track muscle) {
-            <span class="muscle-tag" [ngStyle]="tagStyle(muscle)">{{ muscle }}</span>
+            <span class="muscle-tag" [ngStyle]="tagStyle(muscle)">{{ 'muscleGroups.' + muscle | translate }}</span>
           }
           @if (hasCardio()) {
             <span class="muscle-tag cardio-tag">{{ 'common.cardio' | translate }}</span>
@@ -13,8 +13,13 @@
       </div>
       <div class="session-stats">
         <div class="stat-item">
-          <span class="stat-value orange">{{ totalWeightFormatted() }}</span>
-          <span class="stat-label">{{ 'common.weight' | translate }}</span>
+          @if (isOnlyCardio()) {
+            <span class="stat-value orange">{{ totalDistanceKmFormatted() }}</span>
+            <span class="stat-label">{{ 'common.distance' | translate }}</span>
+          } @else {
+            <span class="stat-value orange">{{ totalWeightFormatted() }}</span>
+            <span class="stat-label">{{ 'common.weight' | translate }}</span>
+          }
         </div>
         <div class="stat-item">
           <span class="stat-value blue">{{ exerciseCount() }}</span>

@@ -9,6 +9,7 @@ export interface HeatmapCell {
   hasSession: boolean;
   isCurrentMonth: boolean;
   tags: string[];
+  hasCardio: boolean;
 }
 
 export interface MonthSummary {
@@ -100,13 +101,23 @@ export class StatsService {
     const gridStart = getMondayOfWeek(firstDay);
     const gridEnd = getSundayOfWeek(lastDay);
 
-    const sessionTagsByDate = new Map<string, string[]>();
+    const sessionDateBySessionId = new Map<string, string>();
     for (const s of this._allSessions()) {
       const key = `${s.date.getFullYear()}-${s.date.getMonth()}-${s.date.getDate()}`;
+      sessionDateBySessionId.set(s.id, key);
+    }
+
+    const sessionTagsByDate = new Map<string, string[]>();
+    const sessionCardioByDate = new Map<string, boolean>();
+    for (const e of this._allExercises()) {
+      const key = sessionDateBySessionId.get(e.sessionId);
+      if (key === undefined) continue;
       if (!sessionTagsByDate.has(key)) sessionTagsByDate.set(key, []);
-      if (s.muscleGroup !== null && !sessionTagsByDate.get(key)!.includes(s.muscleGroup)) {
-        sessionTagsByDate.get(key)!.push(s.muscleGroup);
+      const tags = sessionTagsByDate.get(key)!;
+      for (const mg of e.muscleGroups) {
+        if (!tags.includes(mg)) tags.push(mg);
       }
+      if (e.isCardio) sessionCardioByDate.set(key, true);
     }
 
     const cells: HeatmapCell[] = [];
@@ -118,6 +129,7 @@ export class StatsService {
         hasSession: sessionTagsByDate.has(key),
         isCurrentMonth: cursor.getMonth() === month && cursor.getFullYear() === year,
         tags: sessionTagsByDate.get(key) ?? [],
+        hasCardio: sessionCardioByDate.get(key) ?? false,
       });
       cursor.setDate(cursor.getDate() + 1);
     }

@@ -1,22 +1,31 @@
-import { Component, ChangeDetectionStrategy, input, output, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, computed, inject } from '@angular/core';
 import { DatePipe, NgStyle } from '@angular/common';
 import { Session, MuscleGroup } from '../../core_logic/shared/models';
 import { formatDuration, computeVolume } from '../../core_logic/shared/utils';
 import { LongPressDirective } from '../shared/long-press.directive';
 import { TranslateModule } from '@ngx-translate/core';
 import { muscleGroupChipStyle } from '../../core_logic/shared/muscle-group-colors';
+import { LanguageService } from '../../core_logic/language/language.service';
 
 @Component({
   selector: 'app-session-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe, LongPressDirective, NgStyle, TranslateModule],
+  imports: [LongPressDirective, NgStyle, TranslateModule],
   templateUrl: './session-card.component.html',
   styleUrl: './session-card.component.scss',
 })
 export class SessionCardComponent {
+  private readonly languageService = inject(LanguageService);
   readonly session = input.required<Session>();
   readonly longPress = output<void>();
+  readonly locale = computed(() => this.languageService.activeLang());
+
+  readonly dateLabel = computed(() => {
+    const pipe = new DatePipe(this.locale());
+    const raw = pipe.transform(this.session().date, 'EEE d MMM yyyy') ?? '';
+    return raw.charAt(0).toUpperCase() + raw.slice(1);
+  });
 
   readonly exerciseCount = computed(() => this.session().exercises.length);
 
@@ -49,6 +58,23 @@ export class SessionCardComponent {
   });
 
   readonly hasCardio = computed(() => this.session().exercises.some(e => e.isCardio));
+
+  readonly isOnlyCardio = computed((): boolean => {
+    const exercises = this.session().exercises;
+    return exercises.length > 0 && exercises.every(e => e.isCardio);
+  });
+
+  readonly totalDistanceKm = computed((): number =>
+    this.session()
+      .exercises.filter(e => e.isCardio && e.status === 'validated' && e.distanceKm !== null)
+      .reduce((sum, e) => sum + (e.distanceKm as number), 0)
+  );
+
+  readonly totalDistanceKmFormatted = computed(() => {
+    const km = this.totalDistanceKm();
+    if (km === 0) return '_';
+    return km.toFixed(1).replace('.', ',') + ' km';
+  });
 
   tagStyle(muscle: string): Record<string, string> {
     return muscleGroupChipStyle(muscle as MuscleGroup);

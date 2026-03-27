@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
 import { Location } from '@angular/common';
+import { HapticService } from '../../core_logic/shared/haptic.service';
 import { ActivatedRoute } from '@angular/router';
 import { GetExerciseStatsUseCase } from '../../primary_ports/stats-exercise/get-exercise-stats.usecase';
 import { ChartSelectionService } from './chart-selection.service';
@@ -16,7 +17,8 @@ import { ExerciseHistoryListComponent } from './exercise-history-list.component'
   styleUrl: './stats-exercise.component.scss',
 })
 export class StatsExerciseComponent implements OnInit {
-  protected readonly location = inject(Location);
+  private readonly location = inject(Location);
+  private readonly haptic = inject(HapticService);
   private readonly route = inject(ActivatedRoute);
   protected readonly useCase = inject(GetExerciseStatsUseCase);
   protected readonly chartSelection = inject(ChartSelectionService);
@@ -26,5 +28,10 @@ export class StatsExerciseComponent implements OnInit {
   ngOnInit(): void {
     this.exerciseName = decodeURIComponent(this.route.snapshot.params['exerciseName']);
     this.useCase.execute(this.exerciseName);
+  }
+
+  goBack(): void {
+    this.haptic.vibrate();
+    this.location.back();
   }
 }

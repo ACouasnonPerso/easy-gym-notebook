@@ -18,7 +18,7 @@
           <span class="tag" [ngStyle]="tagStyle('Cardio')">{{ 'common.cardio' | translate }}</span>
         } @else {
           @for (group of exercise().muscleGroups; track group) {
-            <span class="tag" [ngStyle]="tagStyle(group)">{{ group }}</span>
+            <span class="tag" [ngStyle]="tagStyle(group)">{{ 'muscleGroups.' + group | translate }}</span>
           }
         }
       </div>

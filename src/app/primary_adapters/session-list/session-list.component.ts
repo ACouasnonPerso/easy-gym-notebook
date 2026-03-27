@@ -22,6 +22,7 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
 import { TipsBannerComponent } from './tips-banner.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ReviewService } from '../../core_logic/review/review.service';
+import { HapticService } from '../../core_logic/shared/haptic.service';
 
 const PAGE_SIZE = 20;
 
@@ -48,6 +49,7 @@ export class SessionListComponent implements OnInit {
   private readonly deleteSessionUseCase = inject(DeleteSessionUseCase);
   private readonly setLanguageUseCase = inject(SetLanguageUseCase);
   private readonly reviewService = inject(ReviewService);
+  private readonly haptic = inject(HapticService);
   private readonly router = inject(Router);
 
   readonly sessions = this.getSessionsUseCase.sessions;
@@ -75,6 +77,7 @@ export class SessionListComponent implements OnInit {
   }
 
   onLongPress(session: Session): void {
+    this.haptic.vibrate();
     this.contextMenuSession.set(session);
     this.showContextMenu.set(true);
   }

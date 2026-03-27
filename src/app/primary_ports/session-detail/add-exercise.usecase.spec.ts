@@ -3,6 +3,7 @@ import { AddExerciseUseCase } from './add-exercise.usecase';
 import { ExerciseService } from '../../core_logic/session-detail/exercise.service';
 import { MuscleGroupDetectorService } from '../../core_logic/shared/muscle-group-detector.service';
 import { SessionService } from '../../core_logic/session/session.service';
+import { SessionChronoService } from '../../core_logic/chrono/session-chrono.service';
 import { Exercise, MuscleGroup, Session } from '../../core_logic/shared/models';
 import { EXERCISE_REPOSITORY } from '../../secondary_ports/exercise/exercise.repository.interface';
 import { SESSION_REPOSITORY } from '../../secondary_ports/session/session.repository.interface';
@@ -72,6 +73,7 @@ describe('AddExerciseUseCase', () => {
   let sessionRepoSpy: jasmine.SpyObj<{ getAll: () => Promise<Session[]>; getById: (id: string) => Promise<Session | null>; save: (s: Session) => Promise<void>; delete: (id: string) => Promise<void> }>;
   let exerciseService: ExerciseService;
   let sessionService: SessionService;
+  let sessionChronoService: SessionChronoService;
 
   beforeEach(() => {
     exerciseRepoSpy = jasmine.createSpyObj('ExerciseRepository', ['getAll', 'getBySessionId', 'save', 'delete']);
@@ -87,6 +89,7 @@ describe('AddExerciseUseCase', () => {
         AddExerciseUseCase,
         ExerciseService,
         SessionService,
+        SessionChronoService,
         MuscleGroupDetectorService,
         { provide: EXERCISE_REPOSITORY, useValue: exerciseRepoSpy },
         { provide: SESSION_REPOSITORY, useValue: sessionRepoSpy },
@@ -97,6 +100,7 @@ describe('AddExerciseUseCase', () => {
     useCase = TestBed.inject(AddExerciseUseCase);
     exerciseService = TestBed.inject(ExerciseService);
     sessionService = TestBed.inject(SessionService);
+    sessionChronoService = TestBed.inject(SessionChronoService);
   });
 
   describe('muscleGroup on the saved exercise', () => {
@@ -270,7 +274,101 @@ describe('AddExerciseUseCase', () => {
       });
 
       expect(sessionService.currentSession()?.muscleGroup).toBeNull();
-      expect(sessionRepoSpy.save).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('cardio session duration auto-fill', () => {
+    it('should update session duration when the cardio exercise is the only one and has durationSeconds > 0', async () => {
+      sessionService.currentSession.set(makeSession({ durationSeconds: 0, exercises: [] }));
+
+      await useCase.execute({
+        name: 'Course à pied',
+        weightKg: 0,
+        sets: 0,
+        reps: 0,
+        breakDurationSeconds: 0,
+        sessionId: 'session-1',
+        isCardio: true,
+        durationSeconds: 1800,
+        distanceKm: null,
+      });
+
+      expect(sessionService.currentSession()?.durationSeconds).toBe(1800);
+    });
+
+    it('should NOT update session duration when a cardio exercise is added to a session that already has one exercise', async () => {
+      const existingExercise = makeExercise({ id: 'ex-existing' });
+      sessionService.currentSession.set(makeSession({ durationSeconds: 0, exercises: [existingExercise] }));
+
+      await useCase.execute({
+        name: 'Course à pied',
+        weightKg: 0,
+        sets: 0,
+        reps: 0,
+        breakDurationSeconds: 0,
+        sessionId: 'session-1',
+        isCardio: true,
+        durationSeconds: 1800,
+        distanceKm: null,
+      });
+
+      expect(sessionService.currentSession()?.durationSeconds).toBe(0);
+    });
+
+    it('should NOT update session duration when the cardio exercise has durationSeconds equal to 0', async () => {
+      sessionService.currentSession.set(makeSession({ durationSeconds: 0, exercises: [] }));
+
+      await useCase.execute({
+        name: 'Course à pied',
+        weightKg: 0,
+        sets: 0,
+        reps: 0,
+        breakDurationSeconds: 0,
+        sessionId: 'session-1',
+        isCardio: true,
+        durationSeconds: 0,
+        distanceKm: null,
+      });
+
+      expect(sessionService.currentSession()?.durationSeconds).toBe(0);
+    });
+
+    it('should override the session chrono when the session is active and the auto-fill triggers', async () => {
+      sessionService.currentSession.set(makeSession({ status: 'active', durationSeconds: 0, exercises: [] }));
+      spyOn(sessionChronoService, 'overrideElapsedForSession');
+
+      await useCase.execute({
+        name: 'Course à pied',
+        weightKg: 0,
+        sets: 0,
+        reps: 0,
+        breakDurationSeconds: 0,
+        sessionId: 'session-1',
+        isCardio: true,
+        durationSeconds: 1800,
+        distanceKm: null,
+      });
+
+      expect(sessionChronoService.overrideElapsedForSession).toHaveBeenCalledWith('session-1', 1800);
+    });
+
+    it('should NOT override the session chrono when the session is completed', async () => {
+      sessionService.currentSession.set(makeSession({ status: 'completed', durationSeconds: 0, exercises: [] }));
+      spyOn(sessionChronoService, 'overrideElapsedForSession');
+
+      await useCase.execute({
+        name: 'Course à pied',
+        weightKg: 0,
+        sets: 0,
+        reps: 0,
+        breakDurationSeconds: 0,
+        sessionId: 'session-1',
+        isCardio: true,
+        durationSeconds: 1800,
+        distanceKm: null,
+      });
+
+      expect(sessionChronoService.overrideElapsedForSession).not.toHaveBeenCalled();
     });
   });
 });
