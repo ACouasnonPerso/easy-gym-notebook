@@ -52,7 +52,9 @@
     "deleteConfirm": "Excluir esta sessão?",
     "duplicate": "Duplicar",
     "delete": "Excluir",
-    "tip": "Pressione longamente uma sessão para duplicá-la"
+    "tip": "Pressione longamente uma sessão para duplicá-la",
+    "reviewTip": "Gosta\ndo app? Dê 5 estrelas e deixe uma avaliação — nos ajuda muito 🙏",
+    "reviewThanks": "Obrigado pela avaliação!"
   },
   "exercise": {
     "new": "Novo exercício",

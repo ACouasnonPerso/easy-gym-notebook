@@ -52,7 +52,9 @@
     "deleteConfirm": "Xóa buổi tập này?",
     "duplicate": "Sao chép",
     "delete": "Xóa",
-    "tip": "Giữ lâu để sao chép buổi tập"
+    "tip": "Giữ lâu để sao chép buổi tập",
+    "reviewTip": "Bạn\nthích ứng dụng? Hãy cho 5 sao và để lại đánh giá — điều đó giúp chúng tôi rất nhiều 🙏",
+    "reviewThanks": "Cảm ơn bạn đã đánh giá!"
   },
   "exercise": {
     "new": "Bài tập mới",

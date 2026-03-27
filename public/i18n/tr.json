@@ -52,7 +52,9 @@
     "deleteConfirm": "Bu seansı sil?",
     "duplicate": "Kopyala",
     "delete": "Sil",
-    "tip": "Kopyalamak için bir seansa uzun basın"
+    "tip": "Kopyalamak için bir seansa uzun basın",
+    "reviewTip": "Uygulamayı\nbeğendiniz mi? 5 yıldız verin ve yorum bırakın — bu bize çok yardımcı oluyor 🙏",
+    "reviewThanks": "Yorumunuz için teşekkürler!"
   },
   "exercise": {
     "new": "Yeni egzersiz",

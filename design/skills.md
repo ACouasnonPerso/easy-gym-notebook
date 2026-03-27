@@ -292,6 +292,13 @@ UI (re-render automatique via Signals)
 - Composants **dumb** : reçoivent des données, émettent des événements.
 - **Toujours séparer** le template, les styles et la classe en trois fichiers distincts (`.html`, `.scss`, `.ts`). Ne jamais utiliser `template` ou `styles` inline dans le décorateur `@Component`.
 
+### Internationalisation (i18n)
+- **Tous les textes** affichés dans l'UI doivent être externalisés dans `src/assets/i18n/en.json`.
+- Utiliser le **pipe `translate`** dans les templates HTML : `{{ 'key' | translate }}`.
+- Utiliser le **`TranslateService`** dans les fichiers TypeScript quand nécessaire.
+- Ne pas ajouter les traductions dans les autres fichiers de langue (ils seront générés automatiquement).
+- Les clés doivent être organisées par feature : `{ "featureName": { "keyName": "Text value" } }`.
+
 ### Injection de dépendances
 - Utiliser `inject()` dans le constructeur ou en propriété de classe.
 - `InjectionToken` pour les interfaces et configurations.

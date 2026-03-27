@@ -52,7 +52,9 @@
     "deleteConfirm": "Delete this session?",
     "duplicate": "Duplicate",
     "delete": "Delete",
-    "tip": "Long press a session to duplicate it"
+    "tip": "Long press a session to duplicate it",
+    "reviewTip": "Do you\nlike the app? Please give it 5 stars and leave a review—it really helps us out \uD83D\uDE4F",
+    "reviewThanks": "Thank you for your review!"
   },
   "exercise": {
     "new": "New exercise",

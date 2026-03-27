@@ -15,6 +15,7 @@ import { StatsHeatmapCardComponent } from './stats-heatmap-card.component';
 import { StatsMuscleDonutCardComponent } from './stats-muscle-donut-card.component';
 import { StatsSummaryCardComponent } from './stats-summary-card.component';
 import { StatsTrainingTimeCardComponent } from './stats-training-time-card.component';
+import { BarChartMode } from './training-time-bar-chart.component';
 import { StatsExerciseListCardComponent, MergeSubmitEvent } from './stats-exercise-list-card.component';
 import { StatsMonthSelectorComponent } from './stats-month-selector.component';
 
@@ -59,6 +60,12 @@ export class StatsGlobalComponent implements OnInit {
   readonly showHeatmap = computed(() => {
     const type = this.selectedViewType();
     return type !== 'current-year' && type !== 'total';
+  });
+
+  readonly barChartMode = computed((): BarChartMode => {
+    const type = this.selectedViewType();
+    if (type === 'current-year' || type === 'total') return 'month';
+    return 'day';
   });
 
   readonly summaryTitle = computed((): string => {

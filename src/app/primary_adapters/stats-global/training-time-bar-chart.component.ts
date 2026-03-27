@@ -5,6 +5,23 @@ export interface SessionDurationEntry {
   durationSeconds: number;
 }
 
+export type BarChartMode = 'day' | 'week' | 'month';
+
+function getGroupKey(date: Date, mode: BarChartMode): string {
+  const y = date.getFullYear();
+  const m = date.getMonth();
+  const d = date.getDate();
+  if (mode === 'day') return `${y}-${m}-${d}`;
+  if (mode === 'month') return `${y}-${m}`;
+  // 'week': ISO week — Monday-anchored
+  const tmp = new Date(date);
+  tmp.setHours(0, 0, 0, 0);
+  const day = tmp.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  tmp.setDate(tmp.getDate() + diff);
+  return `${tmp.getFullYear()}-W${tmp.getMonth()}-${tmp.getDate()}`;
+}
+
 @Component({
   selector: 'app-training-time-bar-chart',
   standalone: true,
@@ -67,9 +84,26 @@ export interface SessionDurationEntry {
 })
 export class TrainingTimeBarChartComponent {
   sessions = input<SessionDurationEntry[]>([]);
+  mode = input<BarChartMode>('day');
 
   readonly bars = computed(() => {
-    const entries = this.sessions().filter(s => s.durationSeconds > 0);
+    const mode = this.mode();
+    const grouped = new Map<string, { date: Date; durationSeconds: number }>();
+
+    for (const s of this.sessions()) {
+      const key = getGroupKey(s.date, mode);
+      const existing = grouped.get(key);
+      if (existing) {
+        existing.durationSeconds += s.durationSeconds;
+      } else {
+        grouped.set(key, { date: s.date, durationSeconds: s.durationSeconds });
+      }
+    }
+
+    const entries = Array.from(grouped.values())
+      .filter(e => e.durationSeconds > 0)
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
+
     if (entries.length === 0) return [];
     const max = Math.max(...entries.map(e => e.durationSeconds));
     return entries.map(e => ({

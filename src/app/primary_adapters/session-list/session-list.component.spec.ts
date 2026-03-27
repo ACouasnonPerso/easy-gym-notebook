@@ -9,6 +9,9 @@ import { DuplicateSessionUseCase } from '../../primary_ports/session-list/duplic
 import { DeleteSessionUseCase } from '../../primary_ports/session-list/delete-session.usecase';
 import { SetLanguageUseCase } from '../../primary_ports/language/set-language.usecase';
 import { LanguageService } from '../../core_logic/language/language.service';
+import { RequestReviewUseCase } from '../../primary_ports/session-list/request-review.usecase';
+import { ReviewService } from '../../core_logic/review/review.service';
+import { REVIEW_REPOSITORY } from '../../secondary_ports/review/review.repository.interface';
 import { Router } from '@angular/router';
 
 class FakeTranslateLoader implements TranslateLoader {
@@ -38,6 +41,14 @@ function makeProviders(activeLang = signal<'fr' | 'en'>('fr')) {
   const setLanguageSpy = { execute: jasmine.createSpy('execute') };
   const languageServiceSpy = { activeLang, setLanguage: jasmine.createSpy('setLanguage') };
   const routerSpy = { navigate: jasmine.createSpy('navigate') };
+  const requestReviewSpy = {
+    hasRequested: signal(false),
+    execute: jasmine.createSpy('execute').and.returnValue(Promise.resolve()),
+  };
+  const reviewServiceSpy = {
+    initialize: jasmine.createSpy('initialize').and.returnValue(Promise.resolve()),
+    hasRequested: signal(false),
+  };
 
   return {
     getSessionsSpy,
@@ -47,6 +58,8 @@ function makeProviders(activeLang = signal<'fr' | 'en'>('fr')) {
     setLanguageSpy,
     languageServiceSpy,
     routerSpy,
+    requestReviewSpy,
+    reviewServiceSpy,
   };
 }
 
@@ -54,7 +67,7 @@ describe('SessionListComponent — sélecteur de langue', () => {
   let fixture: ReturnType<typeof TestBed.createComponent<SessionListComponent>>;
 
   beforeEach(() => {
-    const { getSessionsSpy, createSessionSpy, duplicateSessionSpy, deleteSessionSpy, setLanguageSpy, languageServiceSpy, routerSpy } = makeProviders();
+    const { getSessionsSpy, createSessionSpy, duplicateSessionSpy, deleteSessionSpy, setLanguageSpy, languageServiceSpy, routerSpy, requestReviewSpy, reviewServiceSpy } = makeProviders();
 
     TestBed.configureTestingModule({
       imports: [SessionListComponent, translateModuleConfig],
@@ -65,6 +78,9 @@ describe('SessionListComponent — sélecteur de langue', () => {
         { provide: DeleteSessionUseCase, useValue: deleteSessionSpy },
         { provide: SetLanguageUseCase, useValue: setLanguageSpy },
         { provide: LanguageService, useValue: languageServiceSpy },
+        { provide: RequestReviewUseCase, useValue: requestReviewSpy },
+        { provide: ReviewService, useValue: reviewServiceSpy },
+        { provide: REVIEW_REPOSITORY, useValue: { hasRequested: async () => false, markAsRequested: async () => {} } },
         { provide: Router, useValue: routerSpy },
       ],
     });

@@ -19,7 +19,9 @@ import { LanguageSelectorComponent } from '../shared/language-selector.component
 import { ScrollSentinelDirective } from '../shared/scroll-sentinel.directive';
 import { ContextMenuComponent } from '../shared/context-menu.component';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
+import { TipsBannerComponent } from './tips-banner.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { ReviewService } from '../../core_logic/review/review.service';
 
 const PAGE_SIZE = 20;
 
@@ -32,6 +34,7 @@ const PAGE_SIZE = 20;
     ScrollSentinelDirective,
     ContextMenuComponent,
     ConfirmDialogComponent,
+    TipsBannerComponent,
     TranslateModule,
     LanguageSelectorComponent,
   ],
@@ -44,6 +47,7 @@ export class SessionListComponent implements OnInit {
   private readonly duplicateSessionUseCase = inject(DuplicateSessionUseCase);
   private readonly deleteSessionUseCase = inject(DeleteSessionUseCase);
   private readonly setLanguageUseCase = inject(SetLanguageUseCase);
+  private readonly reviewService = inject(ReviewService);
   private readonly router = inject(Router);
 
   readonly sessions = this.getSessionsUseCase.sessions;
@@ -59,6 +63,7 @@ export class SessionListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSessionsUseCase.execute();
+    this.reviewService.initialize();
   }
 
   loadMore(): void {

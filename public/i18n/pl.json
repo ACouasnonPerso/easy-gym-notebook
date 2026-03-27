@@ -52,7 +52,9 @@
     "deleteConfirm": "Usunąć tę sesję?",
     "duplicate": "Duplikuj",
     "delete": "Usuń",
-    "tip": "Przytrzymaj sesję, aby ją zduplikować"
+    "tip": "Przytrzymaj sesję, aby ją zduplikować",
+    "reviewTip": "Podoba\nci się aplikacja? Daj 5 gwiazdek i zostaw opinię — to nam bardzo pomaga 🙏",
+    "reviewThanks": "Dziękujemy za ocenę!"
   },
   "exercise": {
     "new": "Nowe ćwiczenie",

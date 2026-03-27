@@ -52,7 +52,9 @@
     "deleteConfirm": "Diese Einheit löschen?",
     "duplicate": "Duplizieren",
     "delete": "Löschen",
-    "tip": "Halte eine Einheit gedrückt, um sie zu duplizieren"
+    "tip": "Halte eine Einheit gedrückt, um sie zu duplizieren",
+    "reviewTip": "Gefällt\ndir die App? Gib ihr 5 Sterne und hinterlasse eine Bewertung — das hilft uns sehr 🙏",
+    "reviewThanks": "Danke für deine Bewertung!"
   },
   "exercise": {
     "new": "Neue Übung",

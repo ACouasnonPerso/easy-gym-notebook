@@ -52,7 +52,9 @@
     "deleteConfirm": "Ta bort detta pass?",
     "duplicate": "Duplicera",
     "delete": "Ta bort",
-    "tip": "Håll länge på ett pass för att duplicera det"
+    "tip": "Håll länge på ett pass för att duplicera det",
+    "reviewTip": "Gillar\ndu appen? Ge den 5 stjärnor och lämna ett omdöme — det hjälper oss mycket 🙏",
+    "reviewThanks": "Tack för ditt omdöme!"
   },
   "exercise": {
     "new": "Ny övning",

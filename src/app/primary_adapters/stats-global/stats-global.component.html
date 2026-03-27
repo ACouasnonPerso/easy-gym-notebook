@@ -32,7 +32,7 @@
 
   <!-- Training time bar chart -->
   @if (getGlobalStatsUseCase.sessionDurationsInMonth().length > 0) {
-    <app-stats-training-time-card [sessions]="getGlobalStatsUseCase.sessionDurationsInMonth()" />
+    <app-stats-training-time-card [sessions]="getGlobalStatsUseCase.sessionDurationsInMonth()" [mode]="barChartMode()" />
   }
 
   <!-- Exercise list -->

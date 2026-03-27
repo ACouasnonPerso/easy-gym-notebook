@@ -52,7 +52,9 @@
     "deleteConfirm": "Deze sessie verwijderen?",
     "duplicate": "Dupliceren",
     "delete": "Verwijderen",
-    "tip": "Houd een sessie ingedrukt om te dupliceren"
+    "tip": "Houd een sessie ingedrukt om te dupliceren",
+    "reviewTip": "Vind\nje de app fijn? Geef hem 5 sterren en laat een beoordeling achter — dat helpt ons enorm 🙏",
+    "reviewThanks": "Bedankt voor je beoordeling!"
   },
   "exercise": {
     "new": "Nieuwe oefening",

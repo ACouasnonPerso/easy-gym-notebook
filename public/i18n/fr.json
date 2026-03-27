@@ -52,7 +52,9 @@
     "deleteConfirm": "Supprimer cette seance ?",
     "duplicate": "Dupliquer",
     "delete": "Supprimer",
-    "tip": "Restez appuye sur une seance pour la dupliquer"
+    "tip": "Restez appuye sur une seance pour la dupliquer",
+    "reviewTip": "Vous\naimez l'app ? Pensez à mettre 5 ⭐ et un com ça nous aide beaucoup \uD83D\uDE4F",
+    "reviewThanks": "Merci pour votre avis !"
   },
   "exercise": {
     "new": "Nouvel exercice",

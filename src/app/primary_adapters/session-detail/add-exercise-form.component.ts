@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, input, output, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgStyle } from '@angular/common';
 import { MuscleGroup } from '../../core_logic/shared/models';
 import { AddExerciseUseCase } from '../../primary_ports/session-detail/add-exercise.usecase';
 import { AutocompleteService } from '../../core_logic/session-detail/autocomplete.service';
@@ -8,6 +9,7 @@ import { HapticService } from '../../core_logic/shared/haptic.service';
 import { DrumPickerComponent } from '../shared/drum-picker.component';
 import { generateRange } from '../../core_logic/shared/utils';
 import { TranslateModule } from '@ngx-translate/core';
+import { muscleGroupChipStyle } from '../../core_logic/shared/muscle-group-colors';
 
 function secondsToMmss(s: number): string {
   const m = Math.floor(s / 60);
@@ -37,7 +39,7 @@ const KM_VALUES: (number | string)[] = [
   selector: 'app-add-exercise-form',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, DrumPickerComponent, TranslateModule],
+  imports: [FormsModule, NgStyle, DrumPickerComponent, TranslateModule],
   templateUrl: './add-exercise-form.component.html',
   styleUrl: './add-exercise-form.component.scss',
 })
@@ -57,7 +59,7 @@ export class AddExerciseFormComponent {
   readonly reps = signal(10);
   readonly breakDurationSeconds = signal(60);
   readonly suggestions = signal<string[]>([]);
-  readonly detectedGroup = signal<MuscleGroup | null>(null);
+  readonly detectedGroups = signal<MuscleGroup[]>([]);
   readonly isCardio = signal(false);
 
   readonly durationHours = signal(0);
@@ -65,7 +67,7 @@ export class AddExerciseFormComponent {
   readonly distanceKm = signal<number | null>(null);
   readonly durationSeconds = computed(() => this.durationHours() * 3600 + this.durationMinutes() * 60);
 
-  readonly isSubmitDisabled = computed(() => this.isCardio() && this.durationSeconds() === 0);
+  readonly isSubmitDisabled = computed(() => !this.name().trim() || (this.isCardio() && this.durationSeconds() === 0));
 
   readonly weightValues = WEIGHT_VALUES;
   readonly setsValues = SETS_VALUES;
@@ -75,6 +77,10 @@ export class AddExerciseFormComponent {
   readonly minutesValues = MINUTES_VALUES;
   readonly kmValues = KM_VALUES;
   readonly breakSelectedValue = computed(() => secondsToMmss(this.breakDurationSeconds()));
+
+  tagStyle(muscle: MuscleGroup): Record<string, string> {
+    return muscleGroupChipStyle(muscle);
+  }
 
   setBreakFromMmss(v: string | number): void {
     this.breakDurationSeconds.set(mmssToSeconds(String(v)));
@@ -94,7 +100,7 @@ export class AddExerciseFormComponent {
     ]);
     this.suggestions.set(fetchedSuggestions);
     this.isCardio.set(detection.isCardio);
-    this.detectedGroup.set(detection.isCardio ? null : (detection.muscleGroups[0] ?? null));
+    this.detectedGroups.set(detection.isCardio ? [] : detection.muscleGroups);
     if (!detection.isCardio && defaults) {
       if (defaults.weightKg !== undefined) this.weightKg.set(defaults.weightKg);
       if (defaults.sets !== undefined) this.sets.set(defaults.sets);
@@ -115,7 +121,7 @@ export class AddExerciseFormComponent {
     }
     const { muscleGroups, isCardio } = this.muscleDetector.detect(suggestion);
     this.isCardio.set(isCardio);
-    this.detectedGroup.set(isCardio ? null : (muscleGroups[0] ?? null));
+    this.detectedGroups.set(isCardio ? [] : muscleGroups);
   }
 
   async onSubmit(): Promise<void> {

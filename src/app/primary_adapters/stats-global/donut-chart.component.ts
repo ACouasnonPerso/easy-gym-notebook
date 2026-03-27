@@ -1,23 +1,7 @@
 import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
 import { MuscleGroup } from '../../core_logic/shared/models';
 import { TranslateModule } from '@ngx-translate/core';
-
-const MUSCLE_COLORS: Record<MuscleGroup, string> = {
-  [MuscleGroup.Chest]: '#e74c3c',
-  [MuscleGroup.Back]: '#3498db',
-  [MuscleGroup.Shoulders]: '#9b59b6',
-  [MuscleGroup.Biceps]: '#1abc9c',
-  [MuscleGroup.Triceps]: '#27ae60',
-  [MuscleGroup.Forearms]: '#f39c12',
-  [MuscleGroup.Abs]: '#d35400',
-  [MuscleGroup.Quads]: '#2980b9',
-  [MuscleGroup.Hamstrings]: '#8e44ad',
-  [MuscleGroup.Glutes]: '#c0392b',
-  [MuscleGroup.Calves]: '#16a085',
-  [MuscleGroup.Traps]:      '#f5a623',
-  [MuscleGroup.Adductors]:  '#ec407a',
-  [MuscleGroup.Abductors]:  '#ab47bc',
-};
+import { MUSCLE_GROUP_COLORS } from '../../core_logic/shared/muscle-group-colors';
 
 const RADIUS = 55;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -55,7 +39,7 @@ export class DonutChartComponent {
       if (percentage <= 0) continue;
       const dashLen = (percentage / 100) * CIRCUMFERENCE;
       const dashOffset = -previousLength;
-      result.push({ group, percentage, color: MUSCLE_COLORS[group], dashLen, dashOffset });
+      result.push({ group, percentage, color: MUSCLE_GROUP_COLORS[group].color, dashLen, dashOffset });
       previousLength += dashLen;
     }
 

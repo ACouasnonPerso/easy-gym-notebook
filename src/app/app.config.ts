@@ -8,6 +8,8 @@ import { SessionMapper } from './secondary_adapters/session/session.mapper';
 import { EXERCISE_REPOSITORY } from './secondary_ports/exercise/exercise.repository.interface';
 import { ExerciseRepository } from './secondary_ports/exercise/exercise.repository';
 import { ExerciseMapper } from './secondary_adapters/exercise/exercise.mapper';
+import { REVIEW_REPOSITORY } from './secondary_ports/review/review.repository.interface';
+import { ReviewRepository } from './secondary_ports/review/review.repository';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -31,5 +33,6 @@ export const appConfig: ApplicationConfig = {
     { provide: SESSION_REPOSITORY, useClass: SessionRepository },
     ExerciseMapper,
     { provide: EXERCISE_REPOSITORY, useClass: ExerciseRepository },
+    { provide: REVIEW_REPOSITORY, useClass: ReviewRepository },
   ],
 };

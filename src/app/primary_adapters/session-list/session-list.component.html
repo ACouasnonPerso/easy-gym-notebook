@@ -39,9 +39,4 @@
   }
 </div>
 
-@if (sessions().length > 0 && sessions().length < 4) {
-  <div class="tips-banner">
-    <span class="tips-icon">💡</span>
-    <span class="tips-text">{{ 'sessionList.tip' | translate }}</span>
-  </div>
-}
+<app-tips-banner [sessionCount]="sessions().length" />

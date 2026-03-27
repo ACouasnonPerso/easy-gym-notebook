@@ -250,4 +250,17 @@ describe('ExerciseChronoComponent — boutons +15s et +30s', () => {
 
     expect(useCaseSpy.addTime).toHaveBeenCalledOnceWith(30);
   });
+
+  it('affiche les boutons +15s et +30s quand l\'état est break', () => {
+    const { fixture, useCaseSpy } = createComponent({});
+    useCaseSpy.chronoState.set('break');
+    fixture.detectChanges();
+
+    const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
+    const btn15 = btns.find(b => b.nativeElement.textContent.trim() === '+15s');
+    const btn30 = btns.find(b => b.nativeElement.textContent.trim() === '+30s');
+
+    expect(btn15).not.toBeUndefined();
+    expect(btn30).not.toBeUndefined();
+  });
 });

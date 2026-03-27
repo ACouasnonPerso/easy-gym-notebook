@@ -1,17 +1,93 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChronoState } from '../../core_logic/exercise-chrono/exercise-chrono.service';
+import { HapticService } from '../../core_logic/shared/haptic.service';
 
 @Component({
   selector: 'app-chrono-actions',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslateModule],
+  styles: [`
+    .chrono-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 40px;
+      flex-wrap: nowrap;
+      justify-content: center;
+      width: 100%;
+    }
+    .chrono-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+    .chrono-btn-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s;
+    }
+    .chrono-btn-icon svg { width: 32px; height: 32px; }
+    .chrono-btn:hover .chrono-btn-icon {
+      border-color: var(--orange);
+      background: var(--orange-dim);
+      transform: translateY(-2px);
+    }
+    .chrono-btn.danger .chrono-btn-icon {
+      border-color: rgba(239,68,68,0.3);
+      background: rgba(239,68,68,0.08);
+    }
+    .chrono-btn.danger:hover .chrono-btn-icon {
+      border-color: var(--red);
+      background: rgba(239,68,68,0.15);
+    }
+    .chrono-btn-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--sub);
+      letter-spacing: 0.5px;
+    }
+    .chrono-btn.danger .chrono-btn-label { color: var(--red); }
+    .add-time-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .add-time-btn {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--sub);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 20px;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.18s;
+    }
+    .add-time-btn:hover {
+      color: var(--text);
+      border-color: var(--orange);
+      background: var(--orange-dim);
+    }
+  `],
   template: `
-    @if (chronoState() === 'break_paused' || chronoState() === 'break') {
+    @if (chronoState() === 'break' || chronoState() === 'break_paused') {
       <div class="add-time-actions">
-        <button class="add-time-btn" (click)="addTime.emit(15)">+15s</button>
-        <button class="add-time-btn" (click)="addTime.emit(30)">+30s</button>
+        <button class="add-time-btn" (click)="onAddTime(15)">+15s</button>
+        <button class="add-time-btn" (click)="onAddTime(30)">+30s</button>
       </div>
     }
 
@@ -121,6 +197,8 @@ import { ChronoState } from '../../core_logic/exercise-chrono/exercise-chrono.se
   `,
 })
 export class ChronoActionsComponent {
+  private readonly haptic = inject(HapticService);
+
   readonly chronoState = input.required<ChronoState>();
 
   readonly start = output<void>();
@@ -130,4 +208,9 @@ export class ChronoActionsComponent {
   readonly goBreak = output<void>();
   readonly goTraining = output<void>();
   readonly addTime = output<number>();
+
+  onAddTime(seconds: number): void {
+    this.haptic.vibrate();
+    this.addTime.emit(seconds);
+  }
 }

@@ -21,11 +21,15 @@
               }
             </div>
           }
-          @if (detectedGroup()) {
-            <span class="detected-group">{{ detectedGroup() }}</span>
-          }
-          @if (isCardio()) {
-            <span class="detected-cardio">{{ 'common.cardio' | translate }}</span>
+          @if (detectedGroups().length > 0 || isCardio()) {
+            <div class="detected-tags">
+              @for (group of detectedGroups(); track group) {
+                <span class="detected-group" [ngStyle]="tagStyle(group)">{{ group }}</span>
+              }
+              @if (isCardio()) {
+                <span class="detected-cardio">{{ 'common.cardio' | translate }}</span>
+              }
+            </div>
           }
         </div>
 
