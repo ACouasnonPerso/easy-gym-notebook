@@ -56,7 +56,7 @@ const SYNONYMS_BY_GROUP: { groups: MuscleGroup[]; terms: string[] }[] = [
   },
   {
     groups: [MuscleGroup.Glutes],
-    terms: ['hip thrust', 'fessiers', 'fessier', 'glutes', 'booty'],
+    terms: ['hip thrust', 'fessiers', 'fessier', 'glutes', 'booty', 'fesses', 'squats', 'squat'],
   },
   {
     groups: [MuscleGroup.Calves],
@@ -67,8 +67,12 @@ const SYNONYMS_BY_GROUP: { groups: MuscleGroup[]; terms: string[] }[] = [
     terms: ['trapezes', 'trapèzes', 'shrug', 'trap'],
   },
   {
-    groups: [MuscleGroup.FullBody],
-    terms: ['full body', 'fullbody', 'circuit'],
+    groups: [MuscleGroup.Adductors],
+    terms: ['adducteurs', 'adducteur', 'inner thigh', 'adduction'],
+  },
+  {
+    groups: [MuscleGroup.Abductors],
+    terms: ['abducteurs', 'abducteur', 'outer thigh', 'abduction'],
   },
 ];
 

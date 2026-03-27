@@ -194,4 +194,90 @@ describe('ExerciseChronoService', () => {
       expect(service.chronoState()).toBe('break');
     });
   });
+
+  describe('incrementSeriesCount()', () => {
+    it('should increment seriesCount by 1', () => {
+      service.init(60);
+      service.start();
+      expect(service.seriesCount()).toBe(1);
+
+      service.incrementSeriesCount();
+
+      expect(service.seriesCount()).toBe(2);
+    });
+  });
+
+  describe('decrementSeriesCount()', () => {
+    it('should decrement seriesCount by 1 when count is greater than 1', () => {
+      service.init(60);
+      service.start();
+      service.incrementSeriesCount();
+      expect(service.seriesCount()).toBe(2);
+
+      service.decrementSeriesCount();
+
+      expect(service.seriesCount()).toBe(1);
+    });
+
+    it('should not decrement below 1', () => {
+      service.init(60);
+      service.start();
+      expect(service.seriesCount()).toBe(1);
+
+      service.decrementSeriesCount();
+
+      expect(service.seriesCount()).toBe(1);
+    });
+  });
+
+  describe('addTime()', () => {
+    it('n\'a aucun effet quand l\'état est training_paused', () => {
+      service.init(60);
+      service.start();
+      jasmine.clock().tick(10000);
+      service.pause();
+      const before = service.timeSeconds();
+
+      service.addTime(15);
+
+      expect(service.timeSeconds()).toBe(before);
+    });
+
+    it('incrémente timeSeconds de 30 quand l\'état est break_paused et qu\'on appelle addTime(30)', () => {
+      service.init(60);
+      service.start();
+      service.goBreak();
+      jasmine.clock().tick(5000);
+      service.pause();
+      const before = service.timeSeconds();
+
+      service.addTime(30);
+
+      expect(service.timeSeconds()).toBe(before + 30);
+    });
+
+    it('n\'a aucun effet quand l\'état est training (chrono en cours)', () => {
+      service.init(60);
+      service.start();
+      jasmine.clock().tick(5000);
+      const before = service.timeSeconds();
+
+      service.addTime(15);
+
+      expect(service.timeSeconds()).toBe(before);
+    });
+
+    it('incrémente timeSeconds quand l\'état est break_paused', () => {
+      service.init(60);
+      service.start();
+      service.goBreak();
+      jasmine.clock().tick(10000);
+      service.pause();
+      const before = service.timeSeconds();
+
+      service.addTime(15);
+
+      expect(service.timeSeconds()).toBe(before + 15);
+    });
+  });
 });

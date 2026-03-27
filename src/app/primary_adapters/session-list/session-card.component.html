@@ -3,11 +3,8 @@
       <div class="session-header">
         <span class="session-date">{{ session().date | date:'EEE d MMM yyyy' }}</span>
         <div class="tag-list">
-          @for (muscle of visibleTags(); track muscle) {
+          @for (muscle of muscleTags(); track muscle) {
             <span class="muscle-tag" [ngStyle]="tagStyle(muscle)">{{ muscle }}</span>
-          }
-          @if (extraTagCount() > 0) {
-            <span class="muscle-tag extra-tag">+{{ extraTagCount() }}</span>
           }
           @if (hasCardio()) {
             <span class="muscle-tag cardio-tag">{{ 'common.cardio' | translate }}</span>

@@ -11,7 +11,8 @@ export enum MuscleGroup {
   Glutes = 'Glutes',
   Calves = 'Calves',
   Traps = 'Traps',
-  FullBody = 'FullBody',
+  Adductors = 'Adductors',
+  Abductors = 'Abductors',
 }
 
 export type SessionStatus = 'active' | 'completed';

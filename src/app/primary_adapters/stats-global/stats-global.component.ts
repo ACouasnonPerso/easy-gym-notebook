@@ -62,6 +62,13 @@ export class StatsGlobalComponent implements OnInit {
     return type !== 'current-year' && type !== 'total';
   });
 
+  readonly summaryTitle = computed((): string => {
+    const type = this.selectedViewType();
+    if (type === 'total') return 'statsGlobal.totalSummary';
+    if (type === 'current-year') return 'statsGlobal.yearSummary';
+    return 'statsGlobal.monthSummary';
+  });
+
   ngOnInit(): void {
     this.months.set(this.generateMonths());
     this.selectedMonthIndex.set(2);

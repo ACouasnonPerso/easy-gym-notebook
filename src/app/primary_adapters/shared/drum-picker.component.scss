@@ -2,11 +2,13 @@
     .drum-wrapper {
       position: relative;
       height: 120px;
+	    min-width: 90px;
       overflow: hidden;
     }
     .drum-scroll {
       height: 120px;
       overflow-y: scroll;
+      overflow-x: hidden;
       scroll-snap-type: y mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;

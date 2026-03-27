@@ -55,7 +55,8 @@ export class ExerciseCardComponent {
     [MuscleGroup.Glutes]:     { color: '#e91e8c', bg: 'rgba(233,30,140,0.15)',   border: 'rgba(233,30,140,0.3)' },
     [MuscleGroup.Calves]:     { color: '#f1c40f', bg: 'rgba(241,196,15,0.15)',   border: 'rgba(241,196,15,0.3)' },
     [MuscleGroup.Traps]:      { color: '#ff9800', bg: 'rgba(255,152,0,0.15)',    border: 'rgba(255,152,0,0.3)' },
-    [MuscleGroup.FullBody]:   { color: '#ecf0f1', bg: 'rgba(236,240,241,0.1)',   border: 'rgba(236,240,241,0.2)' },
+    [MuscleGroup.Adductors]:  { color: '#ec407a', bg: 'rgba(236,64,122,0.15)',  border: 'rgba(236,64,122,0.3)' },
+    [MuscleGroup.Abductors]:  { color: '#ab47bc', bg: 'rgba(171,71,188,0.15)',  border: 'rgba(171,71,188,0.3)' },
     Cardio:                   { color: '#06b6d4', bg: 'rgba(6,182,212,0.15)',    border: 'rgba(6,182,212,0.3)' },
   };
 

@@ -1,16 +1,15 @@
 ---
 name: user_profile
-description: User role, tech stack preferences, and project context
+description: User role, tech stack, and project context for easy-gym-notebook
 type: user
 ---
 
-Angular monorepo project using:
-- Angular standalone components with signals API
-- Firebase Cloud Functions (v2, onCall pattern)
-- jest + jest-preset-angular for Angular component tests
-- ts-jest for functions/shared-lib unit tests
+easy-gym-notebook: Angular standalone component app using:
+- Angular standalone components with signals API (Angular 19)
+- Karma + Jasmine for component tests — run with: `npx ng test --include="path/to/spec.ts" --watch=false --browsers=ChromeHeadless`
+- `npx jest` does NOT work — there is no jest in node_modules, and the npx-cached jest uses Babel which cannot parse TypeScript `implements` keyword
 - TDD with RED-GREEN cycles strictly enforced
 - French language used in component-level test descriptions (describe/it labels)
-- English used for service/function/model test descriptions
+- No Firebase, no jest, no WAEC project — this is a gym tracking app
 
-User works on a WAEC (World Athletics Events & Competitions) project. The codebase has two apps: `visitor` and `organizer`, plus a `shared-lib` library and a `functions` (Firebase) project.
+Note: earlier memory entries about "jest + jest-preset-angular" and "WAEC project" were stale — they referred to a different project.

@@ -17,6 +17,8 @@ const FR_TRANSLATIONS = {
     trainingRecurrences: 'Training recurrences',
     weekSummary: 'Resume de la semaine',
     monthSummary: 'Resume du mois',
+    totalSummary: 'Recap total',
+    yearSummary: 'Recap annee',
     workedMuscles: 'Muscles sollicites',
     newNamePlaceholder: 'Nouveau nom',
     mergeCount: 'Fusionner ({{ count }})',
@@ -330,6 +332,80 @@ describe("StatsGlobalComponent — merge d'exercices", () => {
       jasmine.arrayContaining(['Développé couché', 'Squat']),
       'Compound'
     );
+  });
+});
+
+describe("StatsGlobalComponent — titre du récap (summaryTitle)", () => {
+  let component: StatsGlobalComponent;
+
+  beforeEach(() => {
+    const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+    const selectMonthUseCaseSpy = { execute: jasmine.createSpy('execute') };
+    const mergeUseCaseSpy = makeMergeExercisesUseCaseSpy();
+    const routerSpy = { navigate: jasmine.createSpy('navigate') };
+
+    TestBed.configureTestingModule({
+      imports: [StatsGlobalComponent, translateModuleConfig],
+      providers: [
+        { provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+        { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
+        { provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
+        { provide: Router, useValue: routerSpy },
+      ],
+    });
+
+    setupI18n();
+    component = TestBed.createComponent(StatsGlobalComponent).componentInstance;
+    component.ngOnInit();
+  });
+
+  it("devrait retourner 'statsGlobal.monthSummary' quand un mois normal est sélectionné", () => {
+    component.selectedMonthIndex.set(2); // index 2 = premier mois normal
+    expect(component.summaryTitle()).toBe('statsGlobal.monthSummary');
+  });
+
+  it("devrait retourner 'statsGlobal.totalSummary' quand 'total' est sélectionné (index 1)", () => {
+    component.selectedMonthIndex.set(1); // index 1 = total
+    expect(component.summaryTitle()).toBe('statsGlobal.totalSummary');
+  });
+
+  it("devrait retourner 'statsGlobal.yearSummary' quand 'Annee en cours' est sélectionné (index 0)", () => {
+    component.selectedMonthIndex.set(0); // index 0 = current-year
+    expect(component.summaryTitle()).toBe('statsGlobal.yearSummary');
+  });
+});
+
+describe("StatsGlobalComponent — titre du récap dans le DOM", () => {
+  function setup(monthIndex: number) {
+    const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+    const selectMonthUseCaseSpy = { execute: jasmine.createSpy('execute') };
+    const mergeUseCaseSpy = makeMergeExercisesUseCaseSpy();
+    const routerSpy = { navigate: jasmine.createSpy('navigate') };
+
+    TestBed.configureTestingModule({
+      imports: [StatsGlobalComponent, translateModuleConfig],
+      providers: [
+        { provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+        { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
+        { provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
+        { provide: Router, useValue: routerSpy },
+      ],
+    });
+
+    setupI18n();
+    const fixture = TestBed.createComponent(StatsGlobalComponent);
+    fixture.detectChanges();
+    fixture.componentInstance.selectedMonthIndex.set(monthIndex);
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  it("devrait afficher 'Recap total' dans le titre du récap quand 'Total' est sélectionné", () => {
+    const fixture = setup(1);
+    const el: HTMLElement = fixture.nativeElement;
+    const titles = Array.from(el.querySelectorAll('.stats-card-title'));
+    const summaryTitle = titles.find(t => t.textContent?.trim() === 'Recap total');
+    expect(summaryTitle).toBeTruthy();
   });
 });
 

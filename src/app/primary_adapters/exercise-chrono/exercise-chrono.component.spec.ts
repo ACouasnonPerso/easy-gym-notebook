@@ -5,11 +5,24 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ExerciseChronoComponent } from './exercise-chrono.component';
 import { ExerciseChronoUseCase } from '../../primary_ports/exercise-chrono/exercise-chrono.usecase';
+import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation(_lang: string): Observable<TranslationObject> {
+    return of({
+      common: { back: 'Retour', pause: 'Pause', resume: 'Reprendre', reset: 'Reset', rest: 'repos', break: 'Pause' },
+      chrono: { ready: 'Prêt', training: 'Training', startTraining: 'Démarrer', goBreak: 'Pause', goTraining: 'Training', series: 'Série' },
+    } as unknown as TranslationObject);
+  }
+}
 
 function buildUseCase() {
   return {
     chronoState: signal<string>('initial'),
     timeSeconds: signal(0),
+    seriesCount: signal(0),
+    soundEnabled: signal(true),
     initWithBreakDuration: jasmine.createSpy('initWithBreakDuration'),
     updateBreakDuration: jasmine.createSpy('updateBreakDuration'),
     start: jasmine.createSpy('start'),
@@ -18,6 +31,8 @@ function buildUseCase() {
     goBreak: jasmine.createSpy('goBreak'),
     goTraining: jasmine.createSpy('goTraining'),
     reset: jasmine.createSpy('reset'),
+    toggleSound: jasmine.createSpy('toggleSound'),
+    addTime: jasmine.createSpy('addTime'),
   };
 }
 
@@ -26,13 +41,20 @@ function createComponent(queryParams: Record<string, string> = {}) {
   const locationSpy = { back: jasmine.createSpy('back') };
 
   TestBed.configureTestingModule({
-    imports: [ExerciseChronoComponent],
+    imports: [
+      ExerciseChronoComponent,
+      TranslateModule.forRoot({ loader: { provide: TranslateLoader, useClass: FakeTranslateLoader } }),
+    ],
     providers: [
       { provide: ActivatedRoute, useValue: { snapshot: { queryParams } } },
       { provide: Location, useValue: locationSpy },
       { provide: ExerciseChronoUseCase, useValue: useCaseSpy },
     ],
   });
+
+  const translate = TestBed.inject(TranslateService);
+  translate.setDefaultLang('fr');
+  translate.use('fr');
 
   const fixture = TestBed.createComponent(ExerciseChronoComponent);
   fixture.detectChanges();
@@ -168,5 +190,65 @@ describe('ExerciseChronoComponent — mise à jour du label après confirmation 
 
     const updatedLabel = fixture.debugElement.query(By.css('.break-duration-label'));
     expect(updatedLabel.nativeElement.textContent.trim()).toBe('3:00 repos');
+  });
+});
+
+describe('ExerciseChronoComponent — boutons +15s et +30s', () => {
+  it('n\'affiche PAS les boutons +15s et +30s quand l\'état est training_paused', () => {
+    const { fixture, useCaseSpy } = createComponent({});
+    useCaseSpy.chronoState.set('training_paused');
+    fixture.detectChanges();
+
+    const btn15 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="15"]'));
+    const btn30 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="30"]'));
+
+    expect(btn15).toBeNull();
+    expect(btn30).toBeNull();
+  });
+
+  it('affiche les boutons +15s et +30s quand l\'état est break_paused', () => {
+    const { fixture, useCaseSpy } = createComponent({});
+    useCaseSpy.chronoState.set('break_paused');
+    fixture.detectChanges();
+
+    const btn15 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="15"]'));
+    const btn30 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="30"]'));
+
+    expect(btn15).not.toBeNull();
+    expect(btn30).not.toBeNull();
+  });
+
+  it('n\'affiche pas les boutons +15s et +30s quand l\'état est training', () => {
+    const { fixture, useCaseSpy } = createComponent({});
+    useCaseSpy.chronoState.set('training');
+    fixture.detectChanges();
+
+    const btn15 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="15"]'));
+    const btn30 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="30"]'));
+
+    expect(btn15).toBeNull();
+    expect(btn30).toBeNull();
+  });
+
+  it('cliquer sur +15s appelle addTime(15)', () => {
+    const { fixture, useCaseSpy } = createComponent({});
+    useCaseSpy.chronoState.set('break_paused');
+    fixture.detectChanges();
+
+    const btn15 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="15"]'));
+    btn15.triggerEventHandler('click', null);
+
+    expect(useCaseSpy.addTime).toHaveBeenCalledOnceWith(15);
+  });
+
+  it('cliquer sur +30s appelle addTime(30)', () => {
+    const { fixture, useCaseSpy } = createComponent({});
+    useCaseSpy.chronoState.set('break_paused');
+    fixture.detectChanges();
+
+    const btn30 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="30"]'));
+    btn30.triggerEventHandler('click', null);
+
+    expect(useCaseSpy.addTime).toHaveBeenCalledOnceWith(30);
   });
 });

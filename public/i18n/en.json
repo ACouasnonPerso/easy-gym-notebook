@@ -78,6 +78,8 @@
     "workedMuscles": "Worked muscles",
     "weekSummary": "Weekly summary",
     "monthSummary": "Monthly summary",
+    "totalSummary": "Total recap",
+    "yearSummary": "Current year recap",
     "newNamePlaceholder": "New name...",
     "mergeCount": "Merge {{count}} exercise(s)",
     "confirmMergeTitle": "Confirm merge",

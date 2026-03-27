@@ -18,6 +18,39 @@ function makeCell(date: Date, opts: Partial<HeatmapCell> = {}): HeatmapCell {
   };
 }
 
+describe('HeatmapComponent — jours futurs du mois courant', () => {
+  let component: HeatmapComponent;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HeatmapComponent],
+      providers: [provideTranslateService()],
+    });
+    const fixture = TestBed.createComponent(HeatmapComponent);
+    component = fixture.componentInstance;
+  });
+
+  it("ne doit PAS retourner 'hm-cell dim' pour un jour futur appartenant au mois courant", () => {
+    const tomorrow = makeToday();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const cell = makeCell(tomorrow, { isCurrentMonth: true, hasSession: false });
+
+    const cssClass = component.getCellClass(cell);
+
+    expect(cssClass).not.toBe('hm-cell dim');
+  });
+
+  it("doit retourner 'hm-cell empty' pour un jour futur appartenant au mois courant", () => {
+    const tomorrow = makeToday();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const cell = makeCell(tomorrow, { isCurrentMonth: true, hasSession: false });
+
+    const cssClass = component.getCellClass(cell);
+
+    expect(cssClass).toBe('hm-cell empty');
+  });
+});
+
 describe('HeatmapComponent — jour actuel', () => {
   let component: HeatmapComponent;
 

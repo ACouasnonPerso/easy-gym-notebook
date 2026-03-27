@@ -9,6 +9,9 @@ export class ExerciseChronoUseCase {
   readonly mode = this.service.mode;
   readonly timeSeconds = this.service.timeSeconds;
   readonly seriesCount = this.service.seriesCount;
+  readonly soundEnabled = this.service.soundEnabled;
+
+  toggleSound(): void { this.service.toggleSound(); }
 
   initWithBreakDuration(n: number): void {
     this.service.init(n);
@@ -40,5 +43,17 @@ export class ExerciseChronoUseCase {
 
   reset(): void {
     this.service.reset();
+  }
+
+  incrementSeriesCount(): void {
+    this.service.incrementSeriesCount();
+  }
+
+  decrementSeriesCount(): void {
+    this.service.decrementSeriesCount();
+  }
+
+  addTime(seconds: number): void {
+    this.service.addTime(seconds);
   }
 }

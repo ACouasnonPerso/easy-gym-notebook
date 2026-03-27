@@ -1,139 +1,34 @@
 <div class="page" [class.blinking]="isBlinking()">
-  <div class="header-pad">
-    <div class="back-btn" (click)="location.back()"><span class="back-arrow">←</span> {{ 'common.back' | translate }}</div>
-    @if (!hasExercise()) {
-      <span class="break-duration-label" (click)="showBreakDurationPopup.set(true)">
-        {{ formattedBreakDuration() }} {{ 'common.rest' | translate }}
-      </span>
-    }
-    @if (hasExercise() && seriesCount() > 0) {
-      <span class="series-badge">
-        {{ 'chrono.series' | translate }} {{ seriesCount() }}
-      </span>
-    }
-  </div>
+  <app-chrono-header
+    [hasExercise]="hasExercise()"
+    [soundEnabled]="soundEnabled()"
+    [seriesCount]="seriesCount()"
+    [formattedBreakDuration]="formattedBreakDuration()"
+    (back)="location.back()"
+    (toggleSound)="exerciseChronoUseCase.toggleSound()"
+    (openBreakDurationPopup)="showBreakDurationPopup.set(true)"
+    (incrementSeries)="haptic.vibrate(); exerciseChronoUseCase.incrementSeriesCount()"
+    (decrementSeries)="haptic.vibrate(); exerciseChronoUseCase.decrementSeriesCount()"
+  />
+
   <div class="chrono-body">
-    <div class="chrono-ring-wrap">
-      <svg class="chrono-ring-svg" width="200" height="200" viewBox="0 0 200 200">
-        <circle class="chrono-ring-track" cx="100" cy="100" r="90"/>
-        <circle class="chrono-ring-fill" cx="100" cy="100" r="90"
-          [attr.stroke]="ringColor()"
-          [attr.stroke-dashoffset]="ringOffset()"/>
-      </svg>
-      <div class="chrono-inner">
-        <div class="chrono-time">{{ formattedTime() }}</div>
-        <div class="chrono-label" [style.color]="ringColor()">{{ statusLabel() }}</div>
-      </div>
-    </div>
+    <app-chrono-ring
+      [formattedTime]="formattedTime()"
+      [statusLabel]="statusLabel()"
+      [ringColor]="ringColor()"
+      [ringOffset]="ringOffset()"
+    />
 
-    <div class="chrono-actions">
-
-      <!-- INITIAL: START TRAINING -->
-      @if (chronoState() === 'initial') {
-        <div class="chrono-btn" (click)="haptic.vibrate(); exerciseChronoUseCase.start()">
-          <div class="chrono-btn-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
-            </svg>
-          </div>
-          <span class="chrono-btn-label">{{ 'chrono.startTraining' | translate }}</span>
-        </div>
-      }
-
-      <!-- TRAINING EN COURS: PAUSE -->
-      @if (chronoState() === 'training') {
-        <div class="chrono-btn" (click)="haptic.vibrate(); exerciseChronoUseCase.pause()">
-          <div class="chrono-btn-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="7" y="8" width="5" height="16" rx="2" fill="#4caf50"/>
-              <rect x="20" y="8" width="5" height="16" rx="2" fill="#4caf50"/>
-            </svg>
-          </div>
-          <span class="chrono-btn-label">{{ 'common.pause' | translate }}</span>
-        </div>
-      }
-
-      <!-- TRAINING EN PAUSE: REPRENDRE + RESET + GO BREAK -->
-      @if (chronoState() === 'training_paused') {
-        <div class="chrono-btn" (click)="haptic.vibrate(); exerciseChronoUseCase.resume()">
-          <div class="chrono-btn-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
-            </svg>
-          </div>
-          <span class="chrono-btn-label">{{ 'common.resume' | translate }}</span>
-        </div>
-        <div class="chrono-btn danger" (click)="haptic.vibrate(); exerciseChronoUseCase.reset()">
-          <div class="chrono-btn-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16 7 A9 9 0 1 0 25 16" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-              <polygon points="22,8 28,14 28,7" fill="#ef4444"/>
-            </svg>
-          </div>
-          <span class="chrono-btn-label">{{ 'common.reset' | translate }}</span>
-        </div>
-        <div class="chrono-btn" (click)="haptic.vibrate(); exerciseChronoUseCase.goBreak()">
-          <div class="chrono-btn-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="7" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
-              <rect x="20" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
-            </svg>
-          </div>
-          <span class="chrono-btn-label">{{ 'chrono.goBreak' | translate }}</span>
-        </div>
-      }
-
-      <!-- BREAK EN COURS: GO TRAINING + PAUSE -->
-      @if (chronoState() === 'break') {
-        <div class="chrono-btn" (click)="haptic.vibrate(); exerciseChronoUseCase.goTraining()">
-          <div class="chrono-btn-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
-            </svg>
-          </div>
-          <span class="chrono-btn-label">{{ 'chrono.goTraining' | translate }}</span>
-        </div>
-        <div class="chrono-btn" (click)="haptic.vibrate(); exerciseChronoUseCase.pause()">
-          <div class="chrono-btn-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="7" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
-              <rect x="20" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
-            </svg>
-          </div>
-          <span class="chrono-btn-label">{{ 'common.pause' | translate }}</span>
-        </div>
-      }
-
-      <!-- BREAK EN PAUSE: REPRENDRE + RESET + GO TRAINING -->
-      @if (chronoState() === 'break_paused') {
-        <div class="chrono-btn" (click)="haptic.vibrate(); exerciseChronoUseCase.resume()">
-          <div class="chrono-btn-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="10,7 26,16 10,25" fill="#f5a623"/>
-            </svg>
-          </div>
-          <span class="chrono-btn-label">{{ 'common.resume' | translate }}</span>
-        </div>
-        <div class="chrono-btn danger" (click)="haptic.vibrate(); exerciseChronoUseCase.reset()">
-          <div class="chrono-btn-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16 7 A9 9 0 1 0 25 16" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-              <polygon points="22,8 28,14 28,7" fill="#ef4444"/>
-            </svg>
-          </div>
-          <span class="chrono-btn-label">{{ 'common.reset' | translate }}</span>
-        </div>
-        <div class="chrono-btn" (click)="haptic.vibrate(); exerciseChronoUseCase.goTraining()">
-          <div class="chrono-btn-icon">
-            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
-            </svg>
-          </div>
-          <span class="chrono-btn-label">{{ 'chrono.goTraining' | translate }}</span>
-        </div>
-      }
-
-    </div>
+    <app-chrono-actions
+      [chronoState]="chronoState()"
+      (start)="haptic.vibrate(); exerciseChronoUseCase.start()"
+      (pause)="haptic.vibrate(); exerciseChronoUseCase.pause()"
+      (resume)="haptic.vibrate(); exerciseChronoUseCase.resume()"
+      (reset)="haptic.vibrate(); exerciseChronoUseCase.reset()"
+      (goBreak)="haptic.vibrate(); exerciseChronoUseCase.goBreak()"
+      (goTraining)="haptic.vibrate(); exerciseChronoUseCase.goTraining()"
+      (addTime)="exerciseChronoUseCase.addTime($event)"
+    />
   </div>
 </div>
 

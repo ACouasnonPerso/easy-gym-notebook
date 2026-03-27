@@ -54,7 +54,6 @@ export class HeatmapComponent {
       return 'hm-cell today';
     }
     if (cell.hasSession) return 'hm-cell done';
-    if (cell.date > today) return 'hm-cell dim';
     return 'hm-cell empty';
   }
 }

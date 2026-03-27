@@ -40,8 +40,7 @@ export class SessionCardComponent {
       if (exercise.muscleGroup !== null && !seen.has(exercise.muscleGroup)) {
         seen.add(exercise.muscleGroup);
         result.push(exercise.muscleGroup);
-        if (result.length === 5) break;
-      }
+        }
     }
     if (result.length === 0 && this.session().muscleGroup !== null)
       result.push(this.session().muscleGroup as MuscleGroup);
@@ -49,10 +48,6 @@ export class SessionCardComponent {
   });
 
   readonly hasCardio = computed(() => this.session().exercises.some(e => e.isCardio));
-
-  readonly visibleTags = computed(() => this.muscleTags().slice(0, 2));
-
-  readonly extraTagCount = computed(() => Math.max(0, this.muscleTags().length - 2));
 
   private readonly muscleColorMap: Record<MuscleGroup, { color: string; bg: string; border: string }> = {
     [MuscleGroup.Chest]:      { color: '#e74c3c', bg: 'rgba(231,76,60,0.15)',    border: 'rgba(231,76,60,0.3)' },
@@ -67,7 +62,8 @@ export class SessionCardComponent {
     [MuscleGroup.Glutes]:     { color: '#e91e8c', bg: 'rgba(233,30,140,0.15)',   border: 'rgba(233,30,140,0.3)' },
     [MuscleGroup.Calves]:     { color: '#f1c40f', bg: 'rgba(241,196,15,0.15)',   border: 'rgba(241,196,15,0.3)' },
     [MuscleGroup.Traps]:      { color: '#ff9800', bg: 'rgba(255,152,0,0.15)',    border: 'rgba(255,152,0,0.3)' },
-    [MuscleGroup.FullBody]:   { color: '#ecf0f1', bg: 'rgba(236,240,241,0.1)',   border: 'rgba(236,240,241,0.2)' },
+    [MuscleGroup.Adductors]:  { color: '#ec407a', bg: 'rgba(236,64,122,0.15)',  border: 'rgba(236,64,122,0.3)' },
+    [MuscleGroup.Abductors]:  { color: '#ab47bc', bg: 'rgba(171,71,188,0.15)',  border: 'rgba(171,71,188,0.3)' },
   };
 
   tagStyle(muscle: string): Record<string, string> {

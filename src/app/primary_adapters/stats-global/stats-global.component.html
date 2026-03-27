@@ -37,9 +37,9 @@
     />
   }
 
-  <!-- Month summary -->
+  <!-- Summary (title adapts to selected view: month / year / total) -->
   <app-stats-summary-card
-    [title]="'statsGlobal.monthSummary' | translate"
+    [title]="summaryTitle() | translate"
     [summary]="getGlobalStatsUseCase.monthSummary()"
   />
 

@@ -11,10 +11,14 @@ export class ExerciseChronoService {
   private readonly _timeSeconds = signal<number>(0);
   private readonly _breakDuration = signal<number>(60);
   private readonly _seriesCount = signal<number>(0);
+  private readonly _soundEnabled = signal<boolean>(true);
 
   readonly chronoState = this._chronoState.asReadonly();
   readonly timeSeconds = this._timeSeconds.asReadonly();
   readonly seriesCount = this._seriesCount.asReadonly();
+  readonly soundEnabled = this._soundEnabled.asReadonly();
+
+  toggleSound(): void { this._soundEnabled.update(v => !v); }
 
   /** Backward-compat: 'exercise' when training, 'pause' when on break */
   readonly mode = computed<'pause' | 'exercise'>(() => {
@@ -135,7 +139,7 @@ export class ExerciseChronoService {
   }
 
   playCountdownSound(name: 'ten' | 'three' | 'two' | 'one'): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!isPlatformBrowser(this.platformId) || !this._soundEnabled()) return;
     try {
       const audio = new Audio(`assets/sounds/${name}.mp3`);
       audio.play().catch(() => { /* ignore autoplay policy errors */ });
@@ -149,7 +153,7 @@ export class ExerciseChronoService {
   }
 
   playBeep(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!isPlatformBrowser(this.platformId) || !this._soundEnabled()) return;
     try {
       const audio = new Audio('sounds/alert.wav');
       audio.play().catch(() => { /* ignore autoplay policy errors */ });
@@ -163,6 +167,20 @@ export class ExerciseChronoService {
       startedAt: Date.now(),
       state: this._chronoState(),
     }));
+  }
+
+  incrementSeriesCount(): void {
+    this._seriesCount.update(n => n + 1);
+  }
+
+  decrementSeriesCount(): void {
+    this._seriesCount.update(n => Math.max(1, n - 1));
+  }
+
+  addTime(seconds: number): void {
+    if (this._chronoState() === 'break_paused' || this._chronoState() === 'break') {
+      this._timeSeconds.update(t => t + seconds);
+    }
   }
 
   private clearTimer(): void {

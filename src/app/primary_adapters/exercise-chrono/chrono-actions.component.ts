@@ -1,0 +1,133 @@
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { ChronoState } from '../../core_logic/exercise-chrono/exercise-chrono.service';
+
+@Component({
+  selector: 'app-chrono-actions',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TranslateModule],
+  template: `
+    @if (chronoState() === 'break_paused' || chronoState() === 'break') {
+      <div class="add-time-actions">
+        <button class="add-time-btn" (click)="addTime.emit(15)">+15s</button>
+        <button class="add-time-btn" (click)="addTime.emit(30)">+30s</button>
+      </div>
+    }
+
+    <div class="chrono-actions">
+
+      @if (chronoState() === 'initial') {
+        <div class="chrono-btn" (click)="start.emit()">
+          <div class="chrono-btn-icon">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
+            </svg>
+          </div>
+          <span class="chrono-btn-label">{{ 'chrono.startTraining' | translate }}</span>
+        </div>
+      }
+
+      @if (chronoState() === 'training') {
+        <div class="chrono-btn" (click)="pause.emit()">
+          <div class="chrono-btn-icon">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="7" y="8" width="5" height="16" rx="2" fill="#4caf50"/>
+              <rect x="20" y="8" width="5" height="16" rx="2" fill="#4caf50"/>
+            </svg>
+          </div>
+          <span class="chrono-btn-label">{{ 'common.pause' | translate }}</span>
+        </div>
+      }
+
+      @if (chronoState() === 'training_paused') {
+        <div class="chrono-btn" (click)="resume.emit()">
+          <div class="chrono-btn-icon">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
+            </svg>
+          </div>
+          <span class="chrono-btn-label">{{ 'common.resume' | translate }}</span>
+        </div>
+        <div class="chrono-btn danger" (click)="reset.emit()">
+          <div class="chrono-btn-icon">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 7 A9 9 0 1 0 25 16" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <polygon points="22,8 28,14 28,7" fill="#ef4444"/>
+            </svg>
+          </div>
+          <span class="chrono-btn-label">{{ 'common.reset' | translate }}</span>
+        </div>
+        <div class="chrono-btn" (click)="goBreak.emit()">
+          <div class="chrono-btn-icon">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="7" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
+              <rect x="20" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
+            </svg>
+          </div>
+          <span class="chrono-btn-label">{{ 'chrono.goBreak' | translate }}</span>
+        </div>
+      }
+
+      @if (chronoState() === 'break') {
+        <div class="chrono-btn" (click)="goTraining.emit()">
+          <div class="chrono-btn-icon">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
+            </svg>
+          </div>
+          <span class="chrono-btn-label">{{ 'chrono.goTraining' | translate }}</span>
+        </div>
+        <div class="chrono-btn" (click)="pause.emit()">
+          <div class="chrono-btn-icon">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="7" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
+              <rect x="20" y="8" width="5" height="16" rx="2" fill="#f5a623"/>
+            </svg>
+          </div>
+          <span class="chrono-btn-label">{{ 'common.pause' | translate }}</span>
+        </div>
+      }
+
+      @if (chronoState() === 'break_paused') {
+        <div class="chrono-btn" (click)="resume.emit()">
+          <div class="chrono-btn-icon">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="10,7 26,16 10,25" fill="#f5a623"/>
+            </svg>
+          </div>
+          <span class="chrono-btn-label">{{ 'common.resume' | translate }}</span>
+        </div>
+        <div class="chrono-btn danger" (click)="reset.emit()">
+          <div class="chrono-btn-icon">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 7 A9 9 0 1 0 25 16" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <polygon points="22,8 28,14 28,7" fill="#ef4444"/>
+            </svg>
+          </div>
+          <span class="chrono-btn-label">{{ 'common.reset' | translate }}</span>
+        </div>
+        <div class="chrono-btn" (click)="goTraining.emit()">
+          <div class="chrono-btn-icon">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="10,7 26,16 10,25" fill="#4caf50"/>
+            </svg>
+          </div>
+          <span class="chrono-btn-label">{{ 'chrono.goTraining' | translate }}</span>
+        </div>
+      }
+
+    </div>
+  `,
+})
+export class ChronoActionsComponent {
+  readonly chronoState = input.required<ChronoState>();
+
+  readonly start = output<void>();
+  readonly pause = output<void>();
+  readonly resume = output<void>();
+  readonly reset = output<void>();
+  readonly goBreak = output<void>();
+  readonly goTraining = output<void>();
+  readonly addTime = output<number>();
+}

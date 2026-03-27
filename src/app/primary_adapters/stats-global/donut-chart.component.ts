@@ -14,8 +14,9 @@ const MUSCLE_COLORS: Record<MuscleGroup, string> = {
   [MuscleGroup.Hamstrings]: '#8e44ad',
   [MuscleGroup.Glutes]: '#c0392b',
   [MuscleGroup.Calves]: '#16a085',
-  [MuscleGroup.Traps]: '#f5a623',
-  [MuscleGroup.FullBody]: '#7f8c8d',
+  [MuscleGroup.Traps]:      '#f5a623',
+  [MuscleGroup.Adductors]:  '#ec407a',
+  [MuscleGroup.Abductors]:  '#ab47bc',
 };
 
 const RADIUS = 55;

@@ -9,7 +9,32 @@
       (click)="toggleMergeMode()"
     >{{ 'common.merge' | translate }}</button>
   </div>
-  <div class="divider"></div>
+  <div class="divider"style="margin-bottom: 15px;"></div>
+
+  @if (availableTags().length > 0 || hasCardio()) {
+    <div class="tag-filter-bar">
+      @for (tag of availableTags(); track tag) {
+        <button
+          data-testid="tag-filter-chip"
+          class="tag-filter-chip"
+          [class.active]="selectedTags().has(tag)"
+          [style.opacity]="selectedTags().size > 0 && !selectedTags().has(tag) ? '0.4' : '1'"
+          [ngStyle]="tagChipStyle(tag)"
+          (click)="toggleTagFilter(tag)"
+        >{{ tag }}</button>
+      }
+      @if (hasCardio()) {
+        <button
+          data-testid="tag-filter-chip"
+          class="tag-filter-chip"
+          [class.active]="selectedTags().has('cardio')"
+          [style.opacity]="selectedTags().size > 0 && !selectedTags().has('cardio') ? '0.4' : '1'"
+          [ngStyle]="tagChipStyle('cardio')"
+          (click)="toggleTagFilter('cardio')"
+        >{{ 'common.cardio' | translate }}</button>
+      }
+    </div>
+  }
 
   @if (isMergeMode()) {
     <div class="merge-controls">
@@ -31,7 +56,7 @@
   }
 
   <div class="exercise-list" [style.margin-top]="isMergeMode() ? '12px' : '0'">
-    @for (exercise of exercises(); track exercise.name) {
+    @for (exercise of filteredExercises(); track exercise.name) {
       @if (isMergeMode()) {
         <div
           class="exercise-merge-row"
