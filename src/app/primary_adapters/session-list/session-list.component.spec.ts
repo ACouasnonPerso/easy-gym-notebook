@@ -76,16 +76,26 @@ describe('SessionListComponent — sélecteur de langue', () => {
 
   it('devrait afficher les boutons de sélection de langue FR et EN dans le header', () => {
     const el: HTMLElement = fixture.nativeElement;
-    const buttons = Array.from(el.querySelectorAll('.lang-btn')).map(b => b.textContent?.trim());
+    // Open the dropdown to reveal language options
+    const langToggle = el.querySelector<HTMLElement>('.lang-select-wrapper');
+    langToggle!.click();
+    fixture.detectChanges();
 
-    expect(buttons).toContain('FR');
-    expect(buttons).toContain('EN');
+    const items = Array.from(el.querySelectorAll('.dropdown-item')).map(b => b.textContent?.trim());
+
+    expect(items).toContain('FR');
+    expect(items).toContain('EN');
   });
 
   it('devrait appeler le use case avec en quand on clique sur le bouton EN', () => {
     const el: HTMLElement = fixture.nativeElement;
-    const enButton = Array.from(el.querySelectorAll<HTMLButtonElement>('.lang-btn')).find(b => b.textContent?.trim() === 'EN');
-    enButton!.click();
+    // Open the dropdown
+    const langToggle = el.querySelector<HTMLElement>('.lang-select-wrapper');
+    langToggle!.click();
+    fixture.detectChanges();
+
+    const enItem = Array.from(el.querySelectorAll<HTMLElement>('.dropdown-item')).find(b => b.textContent?.trim() === 'EN');
+    enItem!.click();
     fixture.detectChanges();
 
     const setLanguageSpy = TestBed.inject(SetLanguageUseCase) as unknown as { execute: jasmine.Spy };
@@ -94,11 +104,16 @@ describe('SessionListComponent — sélecteur de langue', () => {
 
   it('devrait ajouter la classe active au bouton correspondant à la langue active', () => {
     const el: HTMLElement = fixture.nativeElement;
-    const frButton = Array.from(el.querySelectorAll<HTMLButtonElement>('.lang-btn')).find(b => b.textContent?.trim() === 'FR');
-    const enButton = Array.from(el.querySelectorAll<HTMLButtonElement>('.lang-btn')).find(b => b.textContent?.trim() === 'EN');
+    // Open the dropdown
+    const langToggle = el.querySelector<HTMLElement>('.lang-select-wrapper');
+    langToggle!.click();
+    fixture.detectChanges();
+
+    const frItem = Array.from(el.querySelectorAll<HTMLElement>('.dropdown-item')).find(b => b.textContent?.trim() === 'FR');
+    const enItem = Array.from(el.querySelectorAll<HTMLElement>('.dropdown-item')).find(b => b.textContent?.trim() === 'EN');
 
     // langue active est fr par défaut
-    expect(frButton!.classList).toContain('active');
-    expect(enButton!.classList).not.toContain('active');
+    expect(frItem!.classList).toContain('selected');
+    expect(enItem!.classList).not.toContain('selected');
   });
 });

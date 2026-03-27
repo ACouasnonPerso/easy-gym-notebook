@@ -3,6 +3,8 @@ import { By } from '@angular/platform-browser';
 import { signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionDetailComponent } from './session-detail.component';
+import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
 import { GetSessionDetailUseCase } from '../../primary_ports/session-detail/get-session-detail.usecase';
 import { ValidateExerciseUseCase } from '../../primary_ports/session-detail/validate-exercise.usecase';
 import { CancelExerciseUseCase } from '../../primary_ports/session-detail/cancel-exercise.usecase';
@@ -16,6 +18,27 @@ import { PauseSessionChronoUseCase } from '../../primary_ports/session-chrono/pa
 import { SetSessionChronoUseCase } from '../../primary_ports/session-chrono/set-session-chrono.usecase';
 import { Session } from '../../core_logic/shared/models';
 import { ChronoStatus } from '../../core_logic/chrono/session-chrono.service';
+
+const FR_TRANSLATIONS = {
+  common: { break: 'Break', end: 'End', resume: 'Reprendre', edit: 'Modifier', cancel: 'Annuler', confirm: 'Confirmer', validate: 'Valider', delete: 'Supprimer' },
+  session: { endConfirm: 'Terminer la seance ?' },
+  exercise: { deleteConfirm: 'Supprimer cet exercice ?' },
+};
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation(_lang: string): Observable<TranslationObject> {
+    return of(FR_TRANSLATIONS as unknown as TranslationObject);
+  }
+}
+const translateModuleConfig = TranslateModule.forRoot({
+  loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
+});
+
+function setupI18n(): void {
+  const translate = TestBed.inject(TranslateService);
+  translate.setDefaultLang('fr');
+  translate.use('fr');
+}
 
 function buildSession(overrides: Partial<Session> = {}): Session {
   return {
@@ -73,7 +96,7 @@ function createComponent() {
   };
 
   TestBed.configureTestingModule({
-    imports: [SessionDetailComponent],
+    imports: [SessionDetailComponent, translateModuleConfig],
     providers: [
       { provide: ActivatedRoute, useValue: { snapshot: { params: { id: 'session-1' } } } },
       { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
@@ -90,6 +113,7 @@ function createComponent() {
       { provide: SetSessionChronoUseCase, useValue: setChronoSpy },
     ],
   });
+  setupI18n();
 
   const fixture = TestBed.createComponent(SessionDetailComponent);
   fixture.detectChanges();
@@ -162,13 +186,13 @@ describe('SessionDetailComponent — boutons chrono selon le statut', () => {
 });
 
 describe('SessionDetailComponent — visibilité du timer-block selon le statut de la session', () => {
-  it('ne s\'affiche pas pour une session non-active (status=completed)', () => {
+  it('le timer-block est présent pour une session non-active (status=completed)', () => {
     const { fixture, sessionSignal } = createComponent();
     sessionSignal.set(buildSession({ status: 'completed' }));
     fixture.detectChanges();
 
     const timerBlock = fixture.debugElement.query(By.css('.timer-block'));
-    expect(timerBlock).toBeNull();
+    expect(timerBlock).not.toBeNull();
   });
 
   it('s\'affiche pour une session active (status=active)', () => {

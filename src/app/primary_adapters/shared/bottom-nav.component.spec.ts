@@ -3,6 +3,27 @@ import { By } from '@angular/platform-browser';
 import { Router, provideRouter } from '@angular/router';
 import { BottomNavComponent } from './bottom-nav.component';
 import { CreateSessionUseCase } from '../../primary_ports/session-list/create-session.usecase';
+import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+
+const FR_TRANSLATIONS = {
+  nav: { main: 'Navigation principale', sessions: 'Sessions', addSession: 'Ajouter une séance', stats: 'Stats' },
+};
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation(_lang: string): Observable<TranslationObject> {
+    return of(FR_TRANSLATIONS as unknown as TranslationObject);
+  }
+}
+const translateModuleConfig = TranslateModule.forRoot({
+  loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
+});
+
+function setupI18n(): void {
+  const translate = TestBed.inject(TranslateService);
+  translate.setDefaultLang('fr');
+  translate.use('fr');
+}
 
 function createCreateSessionSpy() {
   return { execute: jasmine.createSpy('execute') };
@@ -12,7 +33,7 @@ async function setup(initialUrl = '/sessions') {
   const createSessionSpy = createCreateSessionSpy();
 
   await TestBed.configureTestingModule({
-    imports: [BottomNavComponent],
+    imports: [BottomNavComponent, translateModuleConfig],
     providers: [
       provideRouter([
         { path: 'sessions', component: BottomNavComponent },
@@ -22,6 +43,7 @@ async function setup(initialUrl = '/sessions') {
       { provide: CreateSessionUseCase, useValue: createSessionSpy },
     ],
   }).compileComponents();
+  setupI18n();
 
   const router = TestBed.inject(Router);
   await router.navigateByUrl(initialUrl);

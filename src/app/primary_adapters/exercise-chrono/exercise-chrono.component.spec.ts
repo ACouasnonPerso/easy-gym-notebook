@@ -199,11 +199,9 @@ describe('ExerciseChronoComponent — boutons +15s et +30s', () => {
     useCaseSpy.chronoState.set('training_paused');
     fixture.detectChanges();
 
-    const btn15 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="15"]'));
-    const btn30 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="30"]'));
+    const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
 
-    expect(btn15).toBeNull();
-    expect(btn30).toBeNull();
+    expect(btns.length).toBe(0);
   });
 
   it('affiche les boutons +15s et +30s quand l\'état est break_paused', () => {
@@ -211,11 +209,12 @@ describe('ExerciseChronoComponent — boutons +15s et +30s', () => {
     useCaseSpy.chronoState.set('break_paused');
     fixture.detectChanges();
 
-    const btn15 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="15"]'));
-    const btn30 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="30"]'));
+    const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
+    const btn15 = btns.find(b => b.nativeElement.textContent.trim() === '+15s');
+    const btn30 = btns.find(b => b.nativeElement.textContent.trim() === '+30s');
 
-    expect(btn15).not.toBeNull();
-    expect(btn30).not.toBeNull();
+    expect(btn15).not.toBeUndefined();
+    expect(btn30).not.toBeUndefined();
   });
 
   it('n\'affiche pas les boutons +15s et +30s quand l\'état est training', () => {
@@ -223,11 +222,9 @@ describe('ExerciseChronoComponent — boutons +15s et +30s', () => {
     useCaseSpy.chronoState.set('training');
     fixture.detectChanges();
 
-    const btn15 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="15"]'));
-    const btn30 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="30"]'));
+    const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
 
-    expect(btn15).toBeNull();
-    expect(btn30).toBeNull();
+    expect(btns.length).toBe(0);
   });
 
   it('cliquer sur +15s appelle addTime(15)', () => {
@@ -235,7 +232,8 @@ describe('ExerciseChronoComponent — boutons +15s et +30s', () => {
     useCaseSpy.chronoState.set('break_paused');
     fixture.detectChanges();
 
-    const btn15 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="15"]'));
+    const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
+    const btn15 = btns.find(b => b.nativeElement.textContent.trim() === '+15s')!;
     btn15.triggerEventHandler('click', null);
 
     expect(useCaseSpy.addTime).toHaveBeenCalledOnceWith(15);
@@ -246,7 +244,8 @@ describe('ExerciseChronoComponent — boutons +15s et +30s', () => {
     useCaseSpy.chronoState.set('break_paused');
     fixture.detectChanges();
 
-    const btn30 = fixture.debugElement.query(By.css('.add-time-btn[data-seconds="30"]'));
+    const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
+    const btn30 = btns.find(b => b.nativeElement.textContent.trim() === '+30s')!;
     btn30.triggerEventHandler('click', null);
 
     expect(useCaseSpy.addTime).toHaveBeenCalledOnceWith(30);

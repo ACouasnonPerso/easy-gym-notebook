@@ -2,6 +2,27 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { WeightLineChartComponent } from './weight-line-chart.component';
 import { ExerciseOccurrence } from '../../core_logic/shared/models';
+import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+
+const FR_TRANSLATIONS = {
+  common: { weight: 'Poids', noData: 'Aucune donnée' },
+};
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation(_lang: string): Observable<TranslationObject> {
+    return of(FR_TRANSLATIONS as unknown as TranslationObject);
+  }
+}
+const translateModuleConfig = TranslateModule.forRoot({
+  loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
+});
+
+function setupI18n(): void {
+  const translate = TestBed.inject(TranslateService);
+  translate.setDefaultLang('fr');
+  translate.use('fr');
+}
 
 @Component({
   standalone: true,
@@ -32,8 +53,9 @@ describe("WeightLineChartComponent — graphique de progression du poids", () =>
 
   function setup(occurrences: ExerciseOccurrence[]) {
     TestBed.configureTestingModule({
-      imports: [HostComponent],
+      imports: [HostComponent, translateModuleConfig],
     });
+    setupI18n();
     hostFixture = TestBed.createComponent(HostComponent);
     hostFixture.componentInstance.occurrences = occurrences;
     hostFixture.detectChanges();

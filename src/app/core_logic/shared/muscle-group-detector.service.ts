@@ -57,11 +57,29 @@ export class MuscleGroupDetectorService {
 	private getSynonyms(): SynonymEntry[] {
 		if (this.synonymsCache) return this.synonymsCache;
 
-		this.synonymsCache = MUSCLE_GROUP_KEYS
-			.flatMap(({key, groups}) => {
-				const csv = this.translate.instant(`muscleDetector.${key}`) as string;
-				return csv.split(',').map(term => ({term: term.trim(), groups}));
-			})
+		const seen = new Set<string>();
+
+		const fromCurrentLang = MUSCLE_GROUP_KEYS.flatMap(({key, groups}) => {
+			const csv = this.translate.instant(`muscleDetector.${key}`) as string;
+			return csv.split(',').map(term => term.trim()).filter(term => {
+				const normalized = normalize(term);
+				if (seen.has(normalized)) return false;
+				seen.add(normalized);
+				return true;
+			}).map(term => ({term, groups}));
+		});
+
+		const fromEnglish = MUSCLE_GROUP_KEYS.flatMap(({key, groups}) => {
+			const csv = this.translate.instant(`englishMuscleDetector.${key}`) as string;
+			return csv.split(',').map(term => term.trim()).filter(term => {
+				const normalized = normalize(term);
+				if (seen.has(normalized)) return false;
+				seen.add(normalized);
+				return true;
+			}).map(term => ({term, groups}));
+		});
+
+		this.synonymsCache = [...fromCurrentLang, ...fromEnglish]
 			.sort((a, b) => b.term.length - a.term.length);
 
 		return this.synonymsCache;

@@ -5,6 +5,7 @@ import { filter, map, startWith } from 'rxjs/operators';
 import { BottomNavComponent } from './primary_adapters/shared/bottom-nav.component';
 import { SessionBottomNavComponent } from './primary_adapters/shared/session-bottom-nav.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ActiveLang } from './core_logic/language/language.service';
 import { SessionChronoService } from './core_logic/chrono/session-chrono.service';
 import { SessionService } from './core_logic/session/session.service';
 
@@ -23,10 +24,11 @@ export class AppComponent {
   private readonly sessionChronoService = inject(SessionChronoService);
 
   constructor() {
-    this.translate.addLangs(['fr', 'en']);
+    this.translate.addLangs(['fr', 'en', 'pt', 'de', 'it', 'es', 'ko', 'ru', 'ja', 'nl', 'ar', 'hi', 'pl', 'sv', 'vi', 'th']);
     this.translate.setDefaultLang('fr');
+    const savedLang = localStorage.getItem('lang') as ActiveLang | null;
     const browserLang = this.translate.getBrowserLang();
-    const lang = browserLang === 'en' ? 'en' : 'fr';
+    const lang: ActiveLang = savedLang ?? (browserLang === 'en' ? 'en' : browserLang === 'pt' ? 'pt' : browserLang === 'de' ? 'de' : browserLang === 'it' ? 'it' : browserLang === 'es' ? 'es' : browserLang === 'ko' ? 'ko' : browserLang === 'ru' ? 'ru' : browserLang === 'ja' ? 'ja' : browserLang === 'nl' ? 'nl' : browserLang === 'ar' ? 'ar' : browserLang === 'hi' ? 'hi' : browserLang === 'pl' ? 'pl' : browserLang === 'sv' ? 'sv' : browserLang === 'vi' ? 'vi' : browserLang === 'th' ? 'th' : 'fr');
     this.translate.use(lang);
   }
 

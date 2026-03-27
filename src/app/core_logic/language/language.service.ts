@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-export type ActiveLang = 'fr' | 'en' | 'es';
+export type ActiveLang = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'it' | 'ko' | 'ru' | 'ja' | 'nl' | 'ar' | 'hi' | 'pl' | 'sv' | 'tr' | 'vi' | 'th';
 
 @Injectable({ providedIn: 'root' })
 export class LanguageService {

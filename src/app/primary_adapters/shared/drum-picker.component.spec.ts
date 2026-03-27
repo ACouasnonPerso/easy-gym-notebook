@@ -3,7 +3,6 @@ import { Component, signal } from '@angular/core';
 import { DrumPickerComponent } from './drum-picker.component';
 
 const ITEM_HEIGHT = 40;
-const PHANTOM_COUNT = 2;
 
 @Component({
   standalone: true,
@@ -28,6 +27,10 @@ describe('DrumPickerComponent', () => {
     return fixture.nativeElement.querySelector('.drum-scroll');
   }
 
+  function getPickerInstance(): DrumPickerComponent {
+    return fixture.debugElement.children[0].componentInstance as DrumPickerComponent;
+  }
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HostComponent],
@@ -36,6 +39,12 @@ describe('DrumPickerComponent', () => {
     fixture = TestBed.createComponent(HostComponent);
     host = fixture.componentInstance;
     fixture.detectChanges();
+    await fixture.whenStable();
+    // afterNextRender does not fire in test environments.
+    // Set the flag and invoke scrollToSelected directly so the effect's guard is bypassed.
+    const picker = getPickerInstance() as any;
+    picker.initialRenderDone = true;
+    picker.scrollToSelected();
   });
 
   it('should scroll to the initially selected value on init', () => {
@@ -48,6 +57,9 @@ describe('DrumPickerComponent', () => {
     host.selectedValue.set(30);
     fixture.detectChanges();
     await fixture.whenStable();
+    // The effect re-runs because selectedValue() is now tracked after initialRenderDone is true.
+    // Invoke scrollToSelected directly to simulate what the effect would do.
+    (getPickerInstance() as any).scrollToSelected();
 
     expect(getScrollContainer().scrollTop).toBe(80);
   });

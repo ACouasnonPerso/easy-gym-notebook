@@ -5,6 +5,32 @@ import { MuscleGroupDetectorService } from '../../core_logic/shared/muscle-group
 import { Exercise, MuscleGroup } from '../../core_logic/shared/models';
 import { EXERCISE_REPOSITORY } from '../../secondary_ports/exercise/exercise.repository.interface';
 import { SESSION_REPOSITORY } from '../../secondary_ports/session/session.repository.interface';
+import { TranslateService } from '@ngx-translate/core';
+import { Subject } from 'rxjs';
+
+const MUSCLE_DETECTOR_FR: Record<string, string> = {
+  'muscleDetector.chest':          'développé couché,développé,developpe,pectoraux,poitrine,bench,pecs,dc',
+  'muscleDetector.back':           'dorsaux,tirage,rowing,tractions,pull,dos',
+  'muscleDetector.backHamstrings': 'soulevé de terre,deadlift',
+  'muscleDetector.shoulders':      'deltoides,deltoide,militaire,epaules,epaule,ohp',
+  'muscleDetector.biceps':         'biceps,bibi',
+  'muscleDetector.triceps':        'triceps,pushdown,tritri',
+  'muscleDetector.tricepsChest':   'dips',
+  'muscleDetector.glutesQuads':    'squats,squat,fentes',
+  'muscleDetector.forearms':       'avant-bras,avant bras,grip',
+  'muscleDetector.abs':            'abdominaux,planche,crunch,abdos,gainage',
+  'muscleDetector.quads':          'leg extension,legs extension,leg press,legs press,quadriceps,quads,quadri',
+  'muscleDetector.hamstrings':     'leg curl,ischios,ischio',
+  'muscleDetector.glutes':         'hip thrust,fessiers,fessier,glutes,booty,fesses,hip trust',
+  'muscleDetector.calves':         'mollets,mollet,calves,calf',
+  'muscleDetector.traps':          'trapezes,trapèzes,shrug,trap',
+  'muscleDetector.adductors':      'adducteurs,adducteur,inner thigh,adduction',
+  'muscleDetector.abductors':      'abducteurs,abducteur,outer thigh,abduction',
+};
+const translateServiceStub = {
+  instant: (key: string) => MUSCLE_DETECTOR_FR[key] ?? key,
+  onLangChange: new Subject(),
+};
 
 function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
   return {
@@ -62,6 +88,7 @@ describe('UpdateExerciseUseCase', () => {
         MuscleGroupDetectorService,
         { provide: EXERCISE_REPOSITORY, useValue: exerciseRepoSpy },
         { provide: SESSION_REPOSITORY, useValue: sessionRepoSpy },
+        { provide: TranslateService, useValue: translateServiceStub },
       ],
     });
 

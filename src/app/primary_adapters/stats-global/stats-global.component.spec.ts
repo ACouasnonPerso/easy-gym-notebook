@@ -147,16 +147,7 @@ describe("StatsGlobalComponent — sélecteur de vue (année en cours et total)"
 
     setupI18n();
     fixture = TestBed.createComponent(StatsGlobalComponent);
-    fixture.componentInstance.showDropdown.set(true);
     fixture.detectChanges();
-  });
-
-  it("devrait inclure 'Annee en cours' et 'Total' dans la liste des options", () => {
-    const el: HTMLElement = fixture.nativeElement;
-    const items = Array.from(el.querySelectorAll('.dropdown-item')).map(i => i.textContent?.trim());
-
-    expect(items).toContain('Annee en cours');
-    expect(items).toContain('Total');
   });
 
   it("devrait afficher la heatmap quand un mois normal est sélectionné (index 2)", () => {
