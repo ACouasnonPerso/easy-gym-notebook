@@ -37,7 +37,7 @@ export class HeatmapComponent {
 
     const parts: string[] = [];
     if (cell.tags.length > 0) {
-      parts.push(cell.tags.join(', '));
+      parts.push(cell.tags.map(tag => this.translate.instant('muscleGroups.' + tag)).join(', '));
     }
     if (cell.hasCardio) {
       parts.push(this.translate.instant('common.cardio'));

@@ -70,7 +70,7 @@
     "validateAria": "تأكيد التمرين",
     "cancelAria": "إلغاء التمرين",
     "pyramid": "تمرين هرمي",
-    "addSet": "Add a set"
+    "addSet": "إضافة مجموعة"
   },
   "session": {
     "endConfirm": "إنهاء الجلسة؟"
@@ -93,23 +93,24 @@
     "confirmMergeBody": "إعادة تسمية {{count}} تمرين إلى \"{{name}}\"؟ هذا الإجراء لا رجعة فيه.",
     "currentYear": "السنة الحالية",
     "total": "الإجمالي",
+    "thisWeek": "هذا الأسبوع",
     "noDataMonth": "لا توجد بيانات هذا الشهر",
     "trainingTime": "وقت التدريب"
   },
   "import": {
     "cardTitle": "Import / Export",
     "exportJson": "تصدير JSON",
-    "importJson": "Import JSON",
-    "confirmTitle": "Confirm import",
-    "successMessage": "Import successful",
-    "errorInvalidJson": "Invalid JSON file",
-    "errorMissingSessions": "Missing 'sessions' array",
-    "errorMissingExercises": "Missing 'exercises' array",
-    "errorInvalidSession": "Invalid session entry",
-    "errorInvalidExercise": "Invalid exercise entry",
-    "errorUnknown": "Unknown error",
-    "sessions": "session(s)",
-    "exercises": "exercise(s)"
+    "importJson": "استيراد JSON",
+    "confirmTitle": "تأكيد الاستيراد",
+    "successMessage": "تم الاستيراد بنجاح",
+    "errorInvalidJson": "ملف JSON غير صالح",
+    "errorMissingSessions": "مصفوفة 'sessions' مفقودة",
+    "errorMissingExercises": "مصفوفة 'exercises' مفقودة",
+    "errorInvalidSession": "إدخال جلسة غير صالح",
+    "errorInvalidExercise": "إدخال تمرين غير صالح",
+    "errorUnknown": "خطأ غير معروف",
+    "sessions": "جلسة/جلسات",
+    "exercises": "تمرين/تمارين"
   },
   "chrono": {
     "startTraining": "ابدأ التدريب",

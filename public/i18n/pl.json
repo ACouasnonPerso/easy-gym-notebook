@@ -54,7 +54,10 @@
     "delete": "Usuń",
     "tip": "Przytrzymaj sesję, aby ją zduplikować",
     "reviewTip": "Podoba\nci się aplikacja? Daj 5 gwiazdek i zostaw opinię — to nam bardzo pomaga 🙏",
-    "reviewThanks": "Dziękujemy za ocenę!"
+    "reviewThanks": "Dziękujemy za ocenę!",
+    "reviewConfirmTitle": "Podoba ci się aplikacja?",
+    "reviewConfirmYes": "Tak, oceń",
+    "reviewConfirmNo": "Nie, dziękuję"
   },
   "exercise": {
     "new": "Nowe ćwiczenie",
@@ -67,7 +70,7 @@
     "validateAria": "Zatwierdź ćwiczenie",
     "cancelAria": "Anuluj ćwiczenie",
     "pyramid": "Ćwiczenie piramidalne",
-    "addSet": "Add a set"
+    "addSet": "Dodaj serię"
   },
   "session": {
     "endConfirm": "Zakończyć sesję?"
@@ -90,23 +93,24 @@
     "confirmMergeBody": "Zmienić nazwę {{count}} ćwiczenia(ń) na \"{{name}}\"? Ta akcja jest nieodwracalna.",
     "currentYear": "Bieżący rok",
     "total": "Łącznie",
+    "thisWeek": "Ten tydzień",
     "noDataMonth": "Brak danych w tym miesiącu",
     "trainingTime": "Czas treningu"
   },
   "import": {
     "cardTitle": "Import / Export",
     "exportJson": "Eksportuj JSON",
-    "importJson": "Import JSON",
-    "confirmTitle": "Confirm import",
-    "successMessage": "Import successful",
-    "errorInvalidJson": "Invalid JSON file",
-    "errorMissingSessions": "Missing 'sessions' array",
-    "errorMissingExercises": "Missing 'exercises' array",
-    "errorInvalidSession": "Invalid session entry",
-    "errorInvalidExercise": "Invalid exercise entry",
-    "errorUnknown": "Unknown error",
-    "sessions": "session(s)",
-    "exercises": "exercise(s)"
+    "importJson": "Importuj JSON",
+    "confirmTitle": "Potwierdź import",
+    "successMessage": "Import zakończony sukcesem",
+    "errorInvalidJson": "Nieprawidłowy plik JSON",
+    "errorMissingSessions": "Brakująca tablica 'sessions'",
+    "errorMissingExercises": "Brakująca tablica 'exercises'",
+    "errorInvalidSession": "Nieprawidłowy wpis sesji",
+    "errorInvalidExercise": "Nieprawidłowy wpis ćwiczenia",
+    "errorUnknown": "Nieznany błąd",
+    "sessions": "sesja/sesje",
+    "exercises": "ćwiczenie/ćwiczenia"
   },
   "chrono": {
     "startTraining": "ROZPOCZNIJ TRENING",

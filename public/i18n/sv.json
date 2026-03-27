@@ -54,7 +54,10 @@
     "delete": "Ta bort",
     "tip": "Håll länge på ett pass för att duplicera det",
     "reviewTip": "Gillar\ndu appen? Ge den 5 stjärnor och lämna ett omdöme — det hjälper oss mycket 🙏",
-    "reviewThanks": "Tack för ditt omdöme!"
+    "reviewThanks": "Tack för ditt omdöme!",
+    "reviewConfirmTitle": "Gillar du appen?",
+    "reviewConfirmYes": "Ja, betygsätt",
+    "reviewConfirmNo": "Nej tack"
   },
   "exercise": {
     "new": "Ny övning",
@@ -67,7 +70,7 @@
     "validateAria": "Bekräfta övning",
     "cancelAria": "Avbryt övning",
     "pyramid": "Pyramidövning",
-    "addSet": "Add a set"
+    "addSet": "Lägg till ett set"
   },
   "session": {
     "endConfirm": "Avsluta passet?"
@@ -90,23 +93,24 @@
     "confirmMergeBody": "Byta namn på {{count}} övning(ar) till \"{{name}}\"? Denna åtgärd är oåterkallelig.",
     "currentYear": "Innevarande år",
     "total": "Totalt",
+    "thisWeek": "Denna vecka",
     "noDataMonth": "Inga data denna månad",
     "trainingTime": "Träningstid"
   },
   "import": {
     "cardTitle": "Import / Export",
     "exportJson": "Exportera JSON",
-    "importJson": "Import JSON",
-    "confirmTitle": "Confirm import",
-    "successMessage": "Import successful",
-    "errorInvalidJson": "Invalid JSON file",
-    "errorMissingSessions": "Missing 'sessions' array",
-    "errorMissingExercises": "Missing 'exercises' array",
-    "errorInvalidSession": "Invalid session entry",
-    "errorInvalidExercise": "Invalid exercise entry",
-    "errorUnknown": "Unknown error",
-    "sessions": "session(s)",
-    "exercises": "exercise(s)"
+    "importJson": "Importera JSON",
+    "confirmTitle": "Bekräfta import",
+    "successMessage": "Import lyckades",
+    "errorInvalidJson": "Ogiltig JSON-fil",
+    "errorMissingSessions": "Saknat 'sessions'-fält",
+    "errorMissingExercises": "Saknat 'exercises'-fält",
+    "errorInvalidSession": "Ogiltig sessionspost",
+    "errorInvalidExercise": "Ogiltig övningspost",
+    "errorUnknown": "Okänt fel",
+    "sessions": "pass",
+    "exercises": "övning/ar"
   },
   "chrono": {
     "startTraining": "STARTA TRÄNING",

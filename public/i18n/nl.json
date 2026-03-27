@@ -54,7 +54,10 @@
     "delete": "Verwijderen",
     "tip": "Houd een sessie ingedrukt om te dupliceren",
     "reviewTip": "Vind\nje de app fijn? Geef hem 5 sterren en laat een beoordeling achter — dat helpt ons enorm 🙏",
-    "reviewThanks": "Bedankt voor je beoordeling!"
+    "reviewThanks": "Bedankt voor je beoordeling!",
+    "reviewConfirmTitle": "Vind je de app leuk?",
+    "reviewConfirmYes": "Ja, beoordelen",
+    "reviewConfirmNo": "Nee bedankt"
   },
   "exercise": {
     "new": "Nieuwe oefening",
@@ -67,7 +70,7 @@
     "validateAria": "Oefening valideren",
     "cancelAria": "Oefening annuleren",
     "pyramid": "Pyramide oefening",
-    "addSet": "Add a set"
+    "addSet": "Set toevoegen"
   },
   "session": {
     "endConfirm": "De sessie beëindigen?"
@@ -90,23 +93,24 @@
     "confirmMergeBody": "{{count}} oefening(en) hernoemen naar \"{{name}}\"? Deze actie is onomkeerbaar.",
     "currentYear": "Huidig jaar",
     "total": "Totaal",
+    "thisWeek": "Deze week",
     "noDataMonth": "Geen gegevens deze maand",
     "trainingTime": "Trainingstijd"
   },
   "import": {
     "cardTitle": "Import / Export",
     "exportJson": "JSON exporteren",
-    "importJson": "Import JSON",
-    "confirmTitle": "Confirm import",
-    "successMessage": "Import successful",
-    "errorInvalidJson": "Invalid JSON file",
-    "errorMissingSessions": "Missing 'sessions' array",
-    "errorMissingExercises": "Missing 'exercises' array",
-    "errorInvalidSession": "Invalid session entry",
-    "errorInvalidExercise": "Invalid exercise entry",
-    "errorUnknown": "Unknown error",
-    "sessions": "session(s)",
-    "exercises": "exercise(s)"
+    "importJson": "JSON importeren",
+    "confirmTitle": "Import bevestigen",
+    "successMessage": "Import geslaagd",
+    "errorInvalidJson": "Ongeldig JSON-bestand",
+    "errorMissingSessions": "Array 'sessions' ontbreekt",
+    "errorMissingExercises": "Array 'exercises' ontbreekt",
+    "errorInvalidSession": "Ongeldige sessie-invoer",
+    "errorInvalidExercise": "Ongeldige oefening-invoer",
+    "errorUnknown": "Onbekende fout",
+    "sessions": "sessie(s)",
+    "exercises": "oefening(en)"
   },
   "chrono": {
     "startTraining": "START TRAINING",

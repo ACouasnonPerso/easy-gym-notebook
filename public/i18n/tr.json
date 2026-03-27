@@ -54,7 +54,10 @@
     "delete": "Sil",
     "tip": "Kopyalamak için bir seansa uzun basın",
     "reviewTip": "Uygulamayı\nbeğendiniz mi? 5 yıldız verin ve yorum bırakın — bu bize çok yardımcı oluyor 🙏",
-    "reviewThanks": "Yorumunuz için teşekkürler!"
+    "reviewThanks": "Yorumunuz için teşekkürler!",
+    "reviewConfirmTitle": "Bu uygulamayı beğeniyor musunuz?",
+    "reviewConfirmYes": "Evet, değerlendir",
+    "reviewConfirmNo": "Hayır teşekkürler"
   },
   "exercise": {
     "new": "Yeni egzersiz",
@@ -67,7 +70,7 @@
     "validateAria": "Egzersizi onayla",
     "cancelAria": "Egzersizi iptal et",
     "pyramid": "Piramit egzersizi",
-    "addSet": "Add a set"
+    "addSet": "Set ekle"
   },
   "session": {
     "endConfirm": "Seansı bitir?"
@@ -90,23 +93,24 @@
     "confirmMergeBody": "{{count}} egzersizin adını \"{{name}}\" olarak değiştir? Bu işlem geri alınamaz.",
     "currentYear": "Mevcut yıl",
     "total": "Toplam",
+    "thisWeek": "Bu hafta",
     "noDataMonth": "Bu ay veri yok",
     "trainingTime": "Antrenman süresi"
   },
   "import": {
     "cardTitle": "Import / Export",
     "exportJson": "JSON dışa aktar",
-    "importJson": "Import JSON",
-    "confirmTitle": "Confirm import",
-    "successMessage": "Import successful",
-    "errorInvalidJson": "Invalid JSON file",
-    "errorMissingSessions": "Missing 'sessions' array",
-    "errorMissingExercises": "Missing 'exercises' array",
-    "errorInvalidSession": "Invalid session entry",
-    "errorInvalidExercise": "Invalid exercise entry",
-    "errorUnknown": "Unknown error",
-    "sessions": "session(s)",
-    "exercises": "exercise(s)"
+    "importJson": "JSON içe aktar",
+    "confirmTitle": "İçe aktarmayı onayla",
+    "successMessage": "İçe aktarma başarılı",
+    "errorInvalidJson": "Geçersiz JSON dosyası",
+    "errorMissingSessions": "'sessions' dizisi eksik",
+    "errorMissingExercises": "'exercises' dizisi eksik",
+    "errorInvalidSession": "Geçersiz seans kaydı",
+    "errorInvalidExercise": "Geçersiz egzersiz kaydı",
+    "errorUnknown": "Bilinmeyen hata",
+    "sessions": "seans",
+    "exercises": "egzersiz"
   },
   "chrono": {
     "startTraining": "ANTRENMAN BAŞLAT",

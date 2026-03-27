@@ -31,7 +31,7 @@ import { TranslateModule } from '@ngx-translate/core';
     .back-btn:hover { color: var(--text); }
     .back-arrow { font-size: 18px; line-height: 1; }
     .series-badge {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 12px;
       font-weight: 700;
       color: #4caf50;
@@ -42,7 +42,7 @@ import { TranslateModule } from '@ngx-translate/core';
       letter-spacing: 0.5px;
     }
     .break-duration-label {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 12px;
       font-weight: 700;
       color: #fff;

@@ -54,7 +54,10 @@
     "delete": "Удалить",
     "tip": "Удерживайте тренировку, чтобы дублировать её",
     "reviewTip": "Нравится\nприложение? Поставьте 5 звёзд и оставьте отзыв — это нам очень помогает 🙏",
-    "reviewThanks": "Спасибо за ваш отзыв!"
+    "reviewThanks": "Спасибо за ваш отзыв!",
+    "reviewConfirmTitle": "Вам нравится это приложение?",
+    "reviewConfirmYes": "Да, оценить",
+    "reviewConfirmNo": "Нет, спасибо"
   },
   "exercise": {
     "new": "Новое упражнение",
@@ -67,7 +70,7 @@
     "validateAria": "Подтвердить упражнение",
     "cancelAria": "Отменить упражнение",
     "pyramid": "Пирамидальное упражнение",
-    "addSet": "Add a set"
+    "addSet": "Добавить подход"
   },
   "session": {
     "endConfirm": "Завершить тренировку?"
@@ -90,23 +93,24 @@
     "confirmMergeBody": "Переименовать {{count}} упражнение(й) в \"{{name}}\"? Это действие необратимо.",
     "currentYear": "Текущий год",
     "total": "Итого",
+    "thisWeek": "На этой неделе",
     "noDataMonth": "Нет данных за этот месяц",
     "trainingTime": "Время тренировки"
   },
   "import": {
     "cardTitle": "Import / Export",
     "exportJson": "Экспорт JSON",
-    "importJson": "Import JSON",
-    "confirmTitle": "Confirm import",
-    "successMessage": "Import successful",
-    "errorInvalidJson": "Invalid JSON file",
-    "errorMissingSessions": "Missing 'sessions' array",
-    "errorMissingExercises": "Missing 'exercises' array",
-    "errorInvalidSession": "Invalid session entry",
-    "errorInvalidExercise": "Invalid exercise entry",
-    "errorUnknown": "Unknown error",
-    "sessions": "session(s)",
-    "exercises": "exercise(s)"
+    "importJson": "Импорт JSON",
+    "confirmTitle": "Подтвердить импорт",
+    "successMessage": "Импорт выполнен",
+    "errorInvalidJson": "Неверный файл JSON",
+    "errorMissingSessions": "Отсутствует массив 'sessions'",
+    "errorMissingExercises": "Отсутствует массив 'exercises'",
+    "errorInvalidSession": "Неверная запись тренировки",
+    "errorInvalidExercise": "Неверная запись упражнения",
+    "errorUnknown": "Неизвестная ошибка",
+    "sessions": "тренировка(ок)",
+    "exercises": "упражнение(й)"
   },
   "chrono": {
     "startTraining": "START TRAINING",
