@@ -35,9 +35,68 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     isCardio: true,
     durationSeconds: 1800,
     distanceKm: 5,
+    isPyramid: false,
+    pyramidSets: [],
     ...overrides,
-  };
+  } as Exercise;
 }
+
+describe('ExerciseMapper — pyramid fields', () => {
+  let mapper: ExerciseMapper;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [ExerciseMapper] });
+    mapper = TestBed.inject(ExerciseMapper);
+  });
+
+  describe('toDomain — pyramid', () => {
+    it('should map pyramid mode as inactive and the set list as empty when converting a legacy storage record that has no pyramid fields', () => {
+      const raw = makeRawExercise();
+      delete (raw as any).isPyramid;
+      delete (raw as any).pyramidSets;
+
+      const result = mapper.toDomain(raw);
+
+      expect(result.isPyramid).toBeFalse();
+      expect(result.pyramidSets).toEqual([]);
+    });
+
+    it('should map pyramid mode as active and preserve all set rows when converting a full pyramid storage record', () => {
+      const raw = makeRawExercise({
+        isPyramid: true,
+        pyramidSets: [{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }],
+      });
+
+      const result = mapper.toDomain(raw);
+
+      expect(result.isPyramid).toBeTrue();
+      expect(result.pyramidSets).toEqual([{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }]);
+    });
+  });
+
+  describe('toStorage — pyramid', () => {
+    it('should write pyramid mode and all set rows to storage when saving a pyramid exercise', () => {
+      const exercise = makeExercise({
+        isPyramid: true,
+        pyramidSets: [{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }],
+      });
+
+      const result = mapper.toStorage(exercise);
+
+      expect(result.isPyramid).toBeTrue();
+      expect(result.pyramidSets).toEqual([{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }]);
+    });
+
+    it('should write pyramid mode as inactive and the set list as empty to storage when saving a standard exercise', () => {
+      const exercise = makeExercise({ isPyramid: false, pyramidSets: [] });
+
+      const result = mapper.toStorage(exercise);
+
+      expect(result.isPyramid).toBeFalse();
+      expect(result.pyramidSets).toEqual([]);
+    });
+  });
+});
 
 describe('ExerciseMapper', () => {
   let mapper: ExerciseMapper;

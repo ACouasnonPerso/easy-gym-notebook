@@ -1,13 +1,28 @@
 
     <div class="expanded-panel" (click)="$event.stopPropagation()">
       <div class="name-row">
-        <input
-          class="name-input"
-          type="text"
-          [ngModel]="exercise().name"
-          (ngModelChange)="update.emit({ name: $event })"
-          [placeholder]="'exercise.name' | translate"
-        />
+        <div class="name-row-top">
+          <input
+            class="name-input"
+            type="text"
+            [ngModel]="exercise().name"
+            (ngModelChange)="update.emit({ name: $event })"
+            [placeholder]="'exercise.name' | translate"
+          />
+          @if (!exercise().isCardio) {
+            <button
+              type="button"
+              class="pyramid-chip"
+              [class.pyramid-chip--active]="isPyramidLocal()"
+              (click)="togglePyramid()"
+              aria-label="Toggle pyramid mode"
+            >
+              <svg width="10" height="10" viewBox="0 0 11 11" fill="none">
+                <polygon points="5.5,1 10,10 1,10" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+              </svg>
+            </button>
+          }
+        </div>
       </div>
       @if (exercise().isCardio) {
         <div class="pickers-row">
@@ -34,6 +49,74 @@
               [selectedValue]="exercise().distanceKm ?? '-'"
               (valueChange)="update.emit({ distanceKm: $event === '-' ? null : +$event })"
             />
+          </div>
+        </div>
+      } @else if (isPyramidLocal()) {
+        <div class="pyramid-section">
+          <div class="pyramid-sets-list">
+            @for (set of effectivePyramidSets(); track $index) {
+              <div class="pyramid-row">
+                <span class="pyramid-row-num">{{ $index + 1 }}</span>
+                <div class="pyramid-field-group">
+                  <input
+                    type="number"
+                    class="pyramid-input"
+                    [value]="set.weightKg"
+                    (change)="updatePyramidSet($index, 'weightKg', +$any($event.target).value)"
+                    min="0"
+                    step="0.5"
+                    inputmode="decimal"
+                  />
+                  <span class="pyramid-unit">kg</span>
+                </div>
+                <span class="pyramid-sep">×</span>
+                <div class="pyramid-field-group">
+                  <input
+                    type="number"
+                    class="pyramid-input"
+                    [value]="set.reps"
+                    (change)="updatePyramidSet($index, 'reps', +$any($event.target).value)"
+                    min="1"
+                    step="1"
+                    inputmode="numeric"
+                  />
+                  <span class="pyramid-unit">{{ 'common.reps' | translate }}</span>
+                </div>
+                <button
+                  type="button"
+                  class="pyramid-delete"
+                  (click)="removePyramidSet($index)"
+                  aria-label="Remove set"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <line x1="2" y1="2" x2="10" y2="10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    <line x1="10" y1="2" x2="2" y2="10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            }
+            <button type="button" class="pyramid-add-row" (click)="addPyramidSet()">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <line x1="6" y1="1" x2="6" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              {{ 'exercise.addSet' | translate }}
+            </button>
+          </div>
+          <div class="pyramid-break-inline">
+            <span class="pyramid-break-inline__label">{{ 'common.rest' | translate }}</span>
+            <div class="pyramid-field-group pyramid-break-inline__field">
+              <input
+                type="number"
+                class="pyramid-input"
+                [value]="exercise().breakDurationSeconds"
+                (change)="update.emit({ breakDurationSeconds: +$any($event.target).value })"
+                min="0"
+                step="5"
+                inputmode="numeric"
+              />
+              <span class="pyramid-unit">s</span>
+            </div>
           </div>
         </div>
       } @else {
@@ -76,7 +159,7 @@
 
       <div class="actions-row">
         <button class="btn btn-secondary" (click)="openChrono.emit()">{{ 'nav.chrono' | translate }}</button>
-<button class="btn btn-secondary" (click)="openStats.emit()">{{ 'exercise.page' | translate }}</button>
+        <button class="btn btn-secondary" (click)="openStats.emit()">{{ 'exercise.page' | translate }}</button>
         <button class="btn btn-delete" (click)="delete.emit()">{{ 'common.delete' | translate }}</button>
       </div>
     </div>

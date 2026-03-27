@@ -17,6 +17,34 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Scrollbar custom — discret, fin, arrondi, thème sombre */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(153, 153, 170, 0.25) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(153, 153, 170, 0.25);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(153, 153, 170, 0.45);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 body {
   background: var(--bg);
   font-family: 'DM Sans', sans-serif;

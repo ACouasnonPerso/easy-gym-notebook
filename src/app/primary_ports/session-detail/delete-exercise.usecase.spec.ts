@@ -21,8 +21,10 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     isCardio: false,
     durationSeconds: 0,
     distanceKm: null,
+    isPyramid: false,
+    pyramidSets: [],
     ...overrides,
-  };
+  } as Exercise;
 }
 
 function makeSession(overrides: Partial<Session> = {}): Session {

@@ -1,24 +1,19 @@
-<div class="page" [class.blinking]="isBlinking()">
+<div class="page">
   <app-chrono-header
     [hasExercise]="hasExercise()"
-    [soundEnabled]="soundEnabled()"
     [seriesCount]="seriesCount()"
     [formattedBreakDuration]="formattedBreakDuration()"
     (back)="location.back()"
-    (toggleSound)="exerciseChronoUseCase.toggleSound()"
     (openBreakDurationPopup)="showBreakDurationPopup.set(true)"
-    (incrementSeries)="haptic.vibrate(); exerciseChronoUseCase.incrementSeriesCount()"
-    (decrementSeries)="haptic.vibrate(); exerciseChronoUseCase.decrementSeriesCount()"
   />
-
   <div class="chrono-body">
     <app-chrono-ring
       [formattedTime]="formattedTime()"
       [statusLabel]="statusLabel()"
       [ringColor]="ringColor()"
       [ringOffset]="ringOffset()"
+      [isBlinking]="isBlinking()"
     />
-
     <app-chrono-actions
       [chronoState]="chronoState()"
       (start)="haptic.vibrate(); exerciseChronoUseCase.start()"

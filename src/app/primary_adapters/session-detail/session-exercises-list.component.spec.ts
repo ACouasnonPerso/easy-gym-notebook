@@ -3,6 +3,23 @@ import { By } from '@angular/platform-browser';
 import { Component, input, output, signal } from '@angular/core';
 import { SessionExercisesListComponent } from './session-exercises-list.component';
 import { SessionDetailUiService } from './session-detail-ui.service';
+import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation(_lang: string): Observable<TranslationObject> {
+    return of({} as TranslationObject);
+  }
+}
+const translateModuleConfig = TranslateModule.forRoot({
+  loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
+});
+
+function setupI18n(): void {
+  const translate = TestBed.inject(TranslateService);
+  translate.setDefaultLang('fr');
+  translate.use('fr');
+}
 
 @Component({ selector: 'app-exercise-card', standalone: true, template: '' })
 class FakeExerciseCardComponent {}
@@ -30,17 +47,18 @@ async function setup() {
   };
 
   await TestBed.configureTestingModule({
-    imports: [SessionExercisesListComponent],
+    imports: [SessionExercisesListComponent, translateModuleConfig],
     providers: [
       { provide: SessionDetailUiService, useValue: uiServiceStub },
     ],
   })
     .overrideComponent(SessionExercisesListComponent, {
       set: {
-        imports: [FakeExerciseCardComponent, FakeAddExerciseFormComponent, FakeConfirmDialogComponent],
+        imports: [FakeExerciseCardComponent, FakeAddExerciseFormComponent, FakeConfirmDialogComponent, TranslateModule],
       },
     })
     .compileComponents();
+  setupI18n();
 
   const fixture = TestBed.createComponent(SessionExercisesListComponent);
   fixture.componentRef.setInput('exercises', []);

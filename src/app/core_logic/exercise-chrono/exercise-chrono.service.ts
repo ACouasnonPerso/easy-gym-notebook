@@ -27,6 +27,12 @@ export class ExerciseChronoService {
   });
 
   private _intervalId: ReturnType<typeof setInterval> | null = null;
+  private _visibilityChangeListener: (() => void) | null = null;
+
+  /** Timestamp (ms) at which the current timer segment was started. */
+  private _timerStartedAtMs: number = 0;
+  /** Value of _timeSeconds at the moment the current timer segment was started. */
+  private _timeAtStart: number = 0;
 
   /** Update break duration without resetting chrono state. */
   updateBreakDuration(breakDuration: number): void {
@@ -40,6 +46,7 @@ export class ExerciseChronoService {
   /** Called once on page load to configure break duration. Does NOT start the timer. */
   init(breakDuration: number): void {
     this.clearTimer();
+    this.removeVisibilityListener();
     this._breakDuration.set(breakDuration);
     this._chronoState.set('initial');
     this._timeSeconds.set(0);
@@ -61,10 +68,12 @@ export class ExerciseChronoService {
     const s = this._chronoState();
     if (s === 'training') {
       this.clearTimer();
+      this.removeVisibilityListener();
       this._chronoState.set('training_paused');
       this.persist();
     } else if (s === 'break') {
       this.clearTimer();
+      this.removeVisibilityListener();
       this._chronoState.set('break_paused');
       this.persist();
     }
@@ -121,11 +130,16 @@ export class ExerciseChronoService {
   }
 
   startCountdown(): void {
+    this._timerStartedAtMs = Date.now();
+    this._timeAtStart = this._timeSeconds();
+    this.addVisibilityListener('countdown');
     this._intervalId = setInterval(() => {
-      this._timeSeconds.update(t => t - 1);
-      const remaining = this._timeSeconds();
+      const elapsed = Math.floor((Date.now() - this._timerStartedAtMs) / 1000);
+      const remaining = this._timeAtStart - elapsed;
+      this._timeSeconds.set(remaining);
       if (remaining <= 0) {
         this.clearTimer();
+        this.removeVisibilityListener();
         this.playBeep();
         this._chronoState.set('training');
         this._timeSeconds.set(0);
@@ -147,8 +161,12 @@ export class ExerciseChronoService {
   }
 
   startCountup(): void {
+    this._timerStartedAtMs = Date.now();
+    this._timeAtStart = this._timeSeconds();
+    this.addVisibilityListener('countup');
     this._intervalId = setInterval(() => {
-      this._timeSeconds.update(t => t + 1);
+      const elapsed = Math.floor((Date.now() - this._timerStartedAtMs) / 1000);
+      this._timeSeconds.set(this._timeAtStart + elapsed);
     }, 1000);
   }
 
@@ -164,9 +182,48 @@ export class ExerciseChronoService {
     if (!isPlatformBrowser(this.platformId)) return;
     localStorage.setItem('egn_exercise_chrono', JSON.stringify({
       breakDuration: this._breakDuration(),
-      startedAt: Date.now(),
+      timerStartedAtMs: this._timerStartedAtMs,
+      timeAtStart: this._timeAtStart,
       state: this._chronoState(),
     }));
+  }
+
+  restoreFromPersist(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const raw = localStorage.getItem('egn_exercise_chrono');
+    if (!raw) return;
+    try {
+      const data = JSON.parse(raw) as {
+        breakDuration: number;
+        timerStartedAtMs: number;
+        timeAtStart: number;
+        state: ChronoState;
+      };
+      this._breakDuration.set(data.breakDuration);
+      this._timerStartedAtMs = data.timerStartedAtMs;
+      this._timeAtStart = data.timeAtStart;
+      this._chronoState.set(data.state);
+      const elapsed = Math.floor((Date.now() - data.timerStartedAtMs) / 1000);
+      const s = data.state;
+      if (s === 'training') {
+        this._timeSeconds.set(data.timeAtStart + elapsed);
+        this.startCountup();
+      } else if (s === 'break') {
+        const remaining = Math.max(0, data.timeAtStart - elapsed);
+        this._timeSeconds.set(remaining);
+        if (remaining > 0) this.startCountdown();
+        else {
+          this._chronoState.set('training');
+          this._timeSeconds.set(0);
+          this._seriesCount.update(n => n + 1);
+          this.startCountup();
+        }
+      } else if (s === 'training_paused') {
+        this._timeSeconds.set(data.timeAtStart);
+      } else if (s === 'break_paused') {
+        this._timeSeconds.set(data.timeAtStart);
+      }
+    } catch (e) { /* ignore malformed data */ }
   }
 
   incrementSeriesCount(): void {
@@ -178,8 +235,12 @@ export class ExerciseChronoService {
   }
 
   addTime(seconds: number): void {
-    if (this._chronoState() === 'break_paused' || this._chronoState() === 'break') {
-      this._timeSeconds.update(t => t + seconds);
+    const s = this._chronoState();
+    if (s !== 'break_paused' && s !== 'break') return;
+    this._timeSeconds.update(t => t + seconds);
+    if (s === 'break') {
+      this._timerStartedAtMs = Date.now();
+      this._timeAtStart = this._timeSeconds();
     }
   }
 
@@ -188,5 +249,25 @@ export class ExerciseChronoService {
       clearInterval(this._intervalId);
       this._intervalId = null;
     }
+  }
+
+  private addVisibilityListener(mode: 'countup' | 'countdown'): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    this.removeVisibilityListener();
+    this._visibilityChangeListener = () => {
+      if (document.visibilityState !== 'visible') return;
+      const elapsed = Math.floor((Date.now() - this._timerStartedAtMs) / 1000);
+      if (mode === 'countup')
+        this._timeSeconds.set(this._timeAtStart + elapsed);
+      else
+        this._timeSeconds.set(Math.max(0, this._timeAtStart - elapsed));
+    };
+    document.addEventListener('visibilitychange', this._visibilityChangeListener);
+  }
+
+  private removeVisibilityListener(): void {
+    if (!isPlatformBrowser(this.platformId) || !this._visibilityChangeListener) return;
+    document.removeEventListener('visibilitychange', this._visibilityChangeListener);
+    this._visibilityChangeListener = null;
   }
 }

@@ -1,12 +1,30 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { EditDurationPopupComponent } from './edit-duration-popup.component';
+import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation(_lang: string): Observable<TranslationObject> {
+    return of({} as TranslationObject);
+  }
+}
+const translateModuleConfig = TranslateModule.forRoot({
+  loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
+});
+
+function setupI18n(): void {
+  const translate = TestBed.inject(TranslateService);
+  translate.setDefaultLang('fr');
+  translate.use('fr');
+}
 
 describe('EditDurationPopupComponent', () => {
   function createComponent(initialSeconds: number) {
     TestBed.configureTestingModule({
-      imports: [EditDurationPopupComponent],
+      imports: [EditDurationPopupComponent, translateModuleConfig],
     });
+    setupI18n();
     const fixture = TestBed.createComponent(EditDurationPopupComponent);
     fixture.componentRef.setInput('initialSeconds', initialSeconds);
     fixture.detectChanges();

@@ -18,6 +18,8 @@ export class ExerciseMapper {
       isCardio: raw.isCardio ?? false,
       durationSeconds: raw.durationSeconds ?? 0,
       distanceKm: raw.distanceKm ?? null,
+      isPyramid: raw.isPyramid ?? false,
+      pyramidSets: raw.pyramidSets ?? [],
     };
   }
 
@@ -35,6 +37,8 @@ export class ExerciseMapper {
       isCardio: exercise.isCardio,
       durationSeconds: exercise.durationSeconds,
       distanceKm: exercise.distanceKm,
+      isPyramid: exercise.isPyramid,
+      pyramidSets: exercise.pyramidSets,
     };
   }
 }

@@ -2,6 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { Session, Exercise, MuscleGroup } from '../shared/models';
 import { SESSION_REPOSITORY } from '../../secondary_ports/session/session.repository.interface';
 import { EXERCISE_REPOSITORY } from '../../secondary_ports/exercise/exercise.repository.interface';
+import { computeVolume } from '../shared/utils';
 
 export interface HeatmapCell {
   date: Date;
@@ -126,7 +127,7 @@ export class StatsService {
   readonly monthSummary = computed((): MonthSummary => {
     const exercises = this._exercisesInMonth();
     const sessions = this._sessionsInMonth();
-    const totalWeightKg = exercises.reduce((sum, e) => sum + e.weightKg * e.sets * e.reps, 0);
+    const totalWeightKg = exercises.reduce((sum, e) => sum + computeVolume(e), 0);
     const sessionCount = sessions.length;
     const totalDurationSeconds = sessions.reduce((sum, s) => sum + s.durationSeconds, 0);
     return { totalWeightKg, sessionCount, totalDurationSeconds };
@@ -181,7 +182,7 @@ export class StatsService {
       e => sessionIds.has(e.sessionId) && e.status === 'validated'
     );
 
-    const totalWeightKg = exercisesInWeek.reduce((sum, e) => sum + e.weightKg * e.sets * e.reps, 0);
+    const totalWeightKg = exercisesInWeek.reduce((sum, e) => sum + computeVolume(e), 0);
     const sessionCount = sessionsInWeek.length;
     const totalDurationSeconds = sessionsInWeek.reduce((sum, s) => sum + s.durationSeconds, 0);
 
@@ -209,8 +210,12 @@ export class StatsService {
     const summaries: ExerciseSummary[] = [];
     for (const [name, group] of byName) {
       const isCardio = group[0].isCardio;
-      const maxWeightKg = Math.max(...group.map(e => e.weightKg));
-      const totalVolumeKg = group.reduce((sum, e) => sum + e.weightKg * e.sets * e.reps, 0);
+      const maxWeightKg = Math.max(...group.map(e =>
+        e.isPyramid && e.pyramidSets.length > 0
+          ? Math.max(...e.pyramidSets.map(s => s.weightKg))
+          : e.weightKg
+      ));
+      const totalVolumeKg = group.reduce((sum, e) => sum + computeVolume(e), 0);
       const totalDurationSeconds = group.reduce((sum, e) => sum + e.durationSeconds, 0);
       const rawDistanceKm = group.reduce((sum, e) => sum + (e.distanceKm ?? 0), 0);
       const totalDistanceKm = isCardio && rawDistanceKm > 0 ? rawDistanceKm : null;

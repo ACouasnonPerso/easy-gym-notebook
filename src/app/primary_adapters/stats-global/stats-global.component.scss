@@ -20,76 +20,7 @@
         padding: 40px 32px 120px;
       }
     }
-    .month-selector {
-      display: flex;
-      justify-content: flex-end;
-      position: relative;
-    }
-    .month-select-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      user-select: none;
-    }
-    .month-label {
-      font-family: 'Syne', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .month-arrow {
-      font-size: 9px;
-      color: var(--orange);
-      transition: transform 0.2s;
-    }
-    .month-arrow.open {
-      transform: rotate(180deg);
-    }
-    .dropdown-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 99;
-    }
-    .dropdown-list {
-      position: absolute;
-      top: calc(100% + 8px);
-      right: 0;
-      z-index: 100;
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 180px;
-      max-height: 260px;
-      overflow-y: auto;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-      scrollbar-width: none;
-    }
-    .dropdown-list::-webkit-scrollbar { display: none; }
-    .dropdown-item {
-      font-family: 'Syne', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--sub);
-      padding: 9px 14px;
-      border-radius: 9px;
-      cursor: pointer;
-      transition: background 0.12s, color 0.12s;
-      text-transform: capitalize;
-    }
-    .dropdown-item:hover {
-      background: var(--card);
-      color: var(--text);
-    }
-    .dropdown-item.selected {
-      color: var(--orange);
-      background: var(--orange-dim);
-    }
-    .stats-card {
+.stats-card {
       background: var(--card);
       border-radius: 18px;
       padding: 14px;

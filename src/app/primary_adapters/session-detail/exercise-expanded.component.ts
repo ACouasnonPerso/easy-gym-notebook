@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, input, output, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Exercise } from '../../core_logic/shared/models';
+import { Exercise, PyramidSet } from '../../core_logic/shared/models';
 import { DrumPickerComponent } from '../shared/drum-picker.component';
 import { generateRange } from '../../core_logic/shared/utils';
 import { TranslateModule } from '@ngx-translate/core';
@@ -56,6 +56,41 @@ export class ExerciseExpandedComponent {
   readonly breakSelectedValue = computed(() => secondsToMmss(this.exercise().breakDurationSeconds));
   readonly durationHours = computed(() => Math.floor(this.exercise().durationSeconds / 3600));
   readonly durationMinutes = computed(() => Math.floor((this.exercise().durationSeconds % 3600) / 60));
+
+  readonly isPyramidLocal = computed(() => this.exercise().isPyramid ?? false);
+  readonly pyramidSetsLocal = signal<PyramidSet[] | null>(null);
+  readonly effectivePyramidSets = computed(() => this.pyramidSetsLocal() ?? this.exercise().pyramidSets ?? []);
+
+  togglePyramid(): void {
+    const next = !this.isPyramidLocal();
+    if (next && (this.exercise().pyramidSets ?? []).length === 0) {
+      this.pyramidSetsLocal.set([{ weightKg: this.exercise().weightKg, reps: this.exercise().reps }]);
+      this.update.emit({ isPyramid: true, pyramidSets: this.pyramidSetsLocal()! });
+    } else {
+      this.pyramidSetsLocal.set(null);
+      this.update.emit({ isPyramid: next, pyramidSets: next ? this.exercise().pyramidSets : [] });
+    }
+  }
+
+  addPyramidSet(): void {
+    const current = this.effectivePyramidSets();
+    const last = current.at(-1);
+    const next = [...current, { weightKg: last?.weightKg ?? 30, reps: last?.reps ?? 10 }];
+    this.pyramidSetsLocal.set(next);
+    this.update.emit({ pyramidSets: next });
+  }
+
+  removePyramidSet(index: number): void {
+    const next = this.effectivePyramidSets().filter((_, i) => i !== index);
+    this.pyramidSetsLocal.set(next);
+    this.update.emit({ pyramidSets: next });
+  }
+
+  updatePyramidSet(index: number, field: 'weightKg' | 'reps', value: number): void {
+    const next = this.effectivePyramidSets().map((s, i) => i === index ? { ...s, [field]: value } : s);
+    this.pyramidSetsLocal.set(next);
+    this.update.emit({ pyramidSets: next });
+  }
 
   emitBreakUpdate(v: string | number): void {
     this.update.emit({ breakDurationSeconds: mmssToSeconds(String(v)) });

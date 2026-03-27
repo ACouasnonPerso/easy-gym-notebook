@@ -2,11 +2,33 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SessionHeaderChronoComponent } from './session-header-chrono.component';
 import { ChronoStatus } from '../../core_logic/chrono/session-chrono.service';
+import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+
+const FR_TRANSLATIONS = {
+  common: { break: 'Break', end: 'End', resume: 'Reprendre', edit: 'Modifier' },
+};
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation(_lang: string): Observable<TranslationObject> {
+    return of(FR_TRANSLATIONS as unknown as TranslationObject);
+  }
+}
+const translateModuleConfig = TranslateModule.forRoot({
+  loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
+});
+
+function setupI18n(): void {
+  const translate = TestBed.inject(TranslateService);
+  translate.setDefaultLang('fr');
+  translate.use('fr');
+}
 
 function createComponent(chronoStatus: ChronoStatus, durationLabel = '00:01:30') {
   TestBed.configureTestingModule({
-    imports: [SessionHeaderChronoComponent],
+    imports: [SessionHeaderChronoComponent, translateModuleConfig],
   });
+  setupI18n();
   const fixture = TestBed.createComponent(SessionHeaderChronoComponent);
   fixture.componentRef.setInput('chronoStatus', chronoStatus);
   fixture.componentRef.setInput('durationLabel', durationLabel);

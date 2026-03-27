@@ -1,0 +1,7 @@
+
+@if (visible()) {
+  <div class="toast" [class.toast--success]="type() === 'success'" [class.toast--error]="type() === 'error'">
+    <span class="toast__icon">{{ type() === 'success' ? '✓' : '✕' }}</span>
+    <span class="toast__message">{{ message() }}</span>
+  </div>
+}

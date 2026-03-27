@@ -5,10 +5,34 @@ import { GetExerciseStatsUseCase } from '../../primary_ports/stats-exercise/get-
 import { ChartSelectionService } from './chart-selection.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+
+const FR_TRANSLATIONS = {
+  common: { back: 'Retour', volume: 'Volume', weight: 'Poids', noData: 'Aucune donnée', duration: 'Durée' },
+  statsExercise: { distanceKm: 'km', volumeFormula: '= Poids x Rep x Series' },
+};
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation(_lang: string): Observable<TranslationObject> {
+    return of(FR_TRANSLATIONS as unknown as TranslationObject);
+  }
+}
+const translateModuleConfig = TranslateModule.forRoot({
+  loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
+});
+
+function setupI18n(): void {
+  const translate = TestBed.inject(TranslateService);
+  translate.setDefaultLang('fr');
+  translate.use('fr');
+}
 
 function makeUseCaseSpy() {
   return {
     occurrences: signal([]),
+    cardioOccurrences: signal([]),
+    isCardio: signal(false),
     execute: jasmine.createSpy('execute').and.returnValue(Promise.resolve()),
   };
 }
@@ -22,7 +46,7 @@ describe("StatsExerciseComponent — sélecteur de graphique", () => {
     if (selectedChart === 'weight') localStorage.setItem('chart-selection', 'weight');
 
     TestBed.configureTestingModule({
-      imports: [StatsExerciseComponent],
+      imports: [StatsExerciseComponent, translateModuleConfig],
       providers: [
         { provide: GetExerciseStatsUseCase, useValue: makeUseCaseSpy() },
         { provide: ActivatedRoute, useValue: { snapshot: { params: { exerciseName: 'Squat' } } } },
@@ -30,6 +54,7 @@ describe("StatsExerciseComponent — sélecteur de graphique", () => {
       ],
     });
 
+    setupI18n();
     fixture = TestBed.createComponent(StatsExerciseComponent);
     chartSelectionService = TestBed.inject(ChartSelectionService);
     fixture.detectChanges();

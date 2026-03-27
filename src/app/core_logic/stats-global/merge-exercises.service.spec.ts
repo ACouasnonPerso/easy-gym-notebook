@@ -18,8 +18,10 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     isCardio: false,
     durationSeconds: 0,
     distanceKm: null,
+    isPyramid: false,
+    pyramidSets: [],
     ...overrides,
-  };
+  } as Exercise;
 }
 
 describe('MergeExercisesService', () => {

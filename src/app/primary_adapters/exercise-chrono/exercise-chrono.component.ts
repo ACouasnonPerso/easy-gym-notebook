@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ExerciseChronoUseCase } from '../../primary_ports/exercise-chrono/exercise-chrono.usecase';
 import { EditDurationPopupComponent } from '../session-detail/edit-duration-popup.component';
-import { TranslateService } from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import { HapticService } from '../../core_logic/shared/haptic.service';
 import { ChronoHeaderComponent } from './chrono-header.component';
 import { ChronoRingComponent } from './chrono-ring.component';
@@ -13,7 +13,7 @@ import { ChronoActionsComponent } from './chrono-actions.component';
   selector: 'app-exercise-chrono',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [EditDurationPopupComponent, ChronoHeaderComponent, ChronoRingComponent, ChronoActionsComponent],
+	imports: [EditDurationPopupComponent, ChronoHeaderComponent, ChronoRingComponent, ChronoActionsComponent, TranslatePipe],
   templateUrl: './exercise-chrono.component.html',
   styleUrl: './exercise-chrono.component.scss',
 })

@@ -299,3 +299,60 @@ describe('StatsExerciseListCardComponent — cardio chip', () => {
     expect(names).toContain('Développé couché');
   });
 });
+
+describe('StatsExerciseListCardComponent — merge button visibility', () => {
+  let fixture: ReturnType<typeof TestBed.createComponent<StatsExerciseListCardComponent>>;
+
+  function setup(exercises: ExerciseSummary[]) {
+    TestBed.configureTestingModule({
+      imports: [StatsExerciseListCardComponent, translateModuleConfig],
+    });
+    setupI18n();
+    fixture = TestBed.createComponent(StatsExerciseListCardComponent);
+    fixture.componentRef.setInput('exercises', exercises);
+    fixture.detectChanges();
+  }
+
+  // Test 1 — merge button is hidden when there are 0 exercises
+  it('ne doit pas afficher le bouton merge quand il n\'y a aucun exercice', () => {
+    setup([]);
+
+    const el: HTMLElement = fixture.nativeElement;
+    const mergeBtn = el.querySelector('[data-testid="merge-btn"]');
+    expect(mergeBtn).toBeNull();
+  });
+
+  // Test 2 — merge button is hidden when there is exactly 1 exercise
+  it('ne doit pas afficher le bouton merge quand il y a un seul exercice', () => {
+    setup([makeExercise({ name: 'Développé couché' })]);
+
+    const el: HTMLElement = fixture.nativeElement;
+    const mergeBtn = el.querySelector('[data-testid="merge-btn"]');
+    expect(mergeBtn).toBeNull();
+  });
+
+  // Test 3 — merge button is visible when there are exactly 2 exercises
+  it('doit afficher le bouton merge quand il y a exactement 2 exercices', () => {
+    setup([
+      makeExercise({ name: 'Développé couché' }),
+      makeExercise({ name: 'Curl biceps' }),
+    ]);
+
+    const el: HTMLElement = fixture.nativeElement;
+    const mergeBtn = el.querySelector('[data-testid="merge-btn"]');
+    expect(mergeBtn).not.toBeNull();
+  });
+
+  // Test 4 — merge button is visible when there are 3 or more exercises
+  it('doit afficher le bouton merge quand il y a 3 exercices ou plus', () => {
+    setup([
+      makeExercise({ name: 'Développé couché' }),
+      makeExercise({ name: 'Curl biceps' }),
+      makeExercise({ name: 'Squat' }),
+    ]);
+
+    const el: HTMLElement = fixture.nativeElement;
+    const mergeBtn = el.querySelector('[data-testid="merge-btn"]');
+    expect(mergeBtn).not.toBeNull();
+  });
+});

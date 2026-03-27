@@ -3,99 +3,17 @@
       <div class="back-btn" (click)="location.back()"><span class="back-arrow">←</span> {{ 'common.back' | translate }}</div>
       <div class="page-title">{{ exerciseName }}</div>
 
-      <div class="chart-card">
-        @if (useCase.isCardio()) {
-          <div class="chart-tabs">
-            <button
-              class="tab-btn"
-              [class.active]="chartSelection.selectedChart() === 'volume'"
-              (click)="chartSelection.select('volume')"
-            >{{ 'common.duration' | translate }}</button>
-            <button
-              class="tab-btn"
-              [class.active]="chartSelection.selectedChart() === 'weight'"
-              (click)="chartSelection.select('weight')"
-            >{{ 'statsExercise.distanceKm' | translate }}</button>
-          </div>
-          @if (chartSelection.selectedChart() === 'volume') {
-            <app-cardio-time-chart [occurrences]="useCase.cardioOccurrences()" />
-          } @else {
-            <app-cardio-distance-chart [occurrences]="useCase.cardioOccurrences()" />
-          }
-        } @else {
-          <div class="chart-tabs">
-            <button
-              class="tab-btn"
-              [class.active]="chartSelection.selectedChart() === 'volume'"
-              (click)="chartSelection.select('volume')"
-            >{{ 'common.volume' | translate }}</button>
-            <button
-              class="tab-btn"
-              [class.active]="chartSelection.selectedChart() === 'weight'"
-              (click)="chartSelection.select('weight')"
-            >{{ 'common.weight' | translate }}</button>
-          </div>
-          @if (chartSelection.selectedChart() === 'volume') {
-            <app-volume-line-chart [occurrences]="useCase.occurrences()" />
-          } @else {
-            <app-weight-line-chart [occurrences]="useCase.occurrences()" />
-          }
-        }
-      </div>
+      <app-stats-exercise-chart-card
+        [isCardio]="useCase.isCardio()"
+        [occurrences]="useCase.occurrences()"
+        [cardioOccurrences]="useCase.cardioOccurrences()"
+        [selectedChart]="chartSelection.selectedChart()"
+        (chartSelect)="chartSelection.select($event)"
+      />
 
-      @if (useCase.isCardio()) {
-        @if (useCase.cardioOccurrences().length === 0) {
-          <p class="empty">{{ 'statsExercise.empty' | translate }}</p>
-        } @else {
-          @for (o of useCase.cardioOccurrences(); track o.date) {
-            <div class="history-card">
-              <div class="history-header">
-                <span class="history-date">{{ formatDate(o.date) }}</span>
-              </div>
-              <div class="history-stats">
-                <div class="h-stat">
-                  <span class="h-stat-value orange">{{ (o.durationSeconds / 60) | number:'1.0-0' }} {{ 'common.unitMin' | translate }}</span>
-                  <span class="h-stat-label">{{ 'common.duration' | translate }}</span>
-                </div>
-                @if (o.distanceKm) {
-                  <div class="h-stat right">
-                    <span class="h-stat-value">{{ o.distanceKm }} {{ 'statsExercise.distanceKm' | translate }}</span>
-                    <span class="h-stat-label">{{ 'common.distance' | translate }}</span>
-                  </div>
-                }
-              </div>
-            </div>
-          }
-        }
-      } @else {
-        @if (useCase.occurrences().length === 0) {
-          <p class="empty">{{ 'statsExercise.empty' | translate }}</p>
-        } @else {
-          @for (o of useCase.occurrences(); track o.exerciseId) {
-            <div class="history-card">
-              <div class="history-header">
-                <span class="history-date">{{ formatDate(o.date) }}</span>
-              </div>
-              <div class="history-stats">
-                <div class="h-stat">
-                  <span class="h-stat-value orange">{{ o.weightKg }} {{ 'common.unitKg' | translate }}</span>
-                  <span class="h-stat-label">{{ 'common.weight' | translate }}</span>
-                </div>
-                <div class="h-stat">
-                  <span class="h-stat-value">{{ o.sets }}</span>
-                  <span class="h-stat-label">{{ 'common.sets' | translate }}</span>
-                </div>
-                <div class="h-stat">
-                  <span class="h-stat-value">{{ o.reps }}</span>
-                  <span class="h-stat-label">{{ 'common.reps' | translate }}</span>
-                </div>
-                <div class="h-stat right">
-                  <span class="h-stat-value">{{ o.breakDurationSeconds }}{{ 'common.unitSec' | translate }}</span>
-                  <span class="h-stat-label">{{ 'common.break' | translate }}</span>
-                </div>
-              </div>
-            </div>
-          }
-        }
-      }
+      <app-exercise-history-list
+        [isCardio]="useCase.isCardio()"
+        [occurrences]="useCase.occurrences()"
+        [cardioOccurrences]="useCase.cardioOccurrences()"
+      />
     </div>

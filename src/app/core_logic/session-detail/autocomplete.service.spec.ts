@@ -18,8 +18,10 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     isCardio: false,
     durationSeconds: 0,
     distanceKm: null,
+    isPyramid: false,
+    pyramidSets: [],
     ...overrides,
-  };
+  } as Exercise;
 }
 
 describe('AutocompleteService', () => {
@@ -37,6 +39,36 @@ describe('AutocompleteService', () => {
     });
 
     service = TestBed.inject(AutocompleteService);
+  });
+
+  describe('getLastParams — pyramid fields', () => {
+    it('should include pyramid mode as inactive and an empty set list in the last params when the most recent matching exercise uses standard mode', async () => {
+      repoSpy.getAll.and.returnValue(Promise.resolve([
+        makeExercise({ name: 'Squat', weightKg: 80, sets: 4, reps: 8, isPyramid: false, pyramidSets: [] }),
+      ]));
+
+      const result = await service.getLastParams('Squat');
+
+      expect(result).not.toBeNull();
+      expect(result!.isPyramid).toBeFalse();
+      expect(result!.pyramidSets).toEqual([]);
+    });
+
+    it('should include pyramid mode as active and all set rows in the last params when the most recent matching exercise uses pyramid mode', async () => {
+      repoSpy.getAll.and.returnValue(Promise.resolve([
+        makeExercise({
+          name: 'Squat',
+          isPyramid: true,
+          pyramidSets: [{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }],
+        }),
+      ]));
+
+      const result = await service.getLastParams('Squat');
+
+      expect(result).not.toBeNull();
+      expect(result!.isPyramid).toBeTrue();
+      expect(result!.pyramidSets).toEqual([{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }]);
+    });
   });
 
   describe('getDefaultsByExactName', () => {
@@ -65,7 +97,7 @@ describe('AutocompleteService', () => {
 
       const result = await service.getDefaultsByExactName('Développé couché');
 
-      expect(result).toEqual({ weightKg: 75, sets: 4, reps: 8, breakDurationSeconds: 120 });
+      expect(result).toEqual({ weightKg: 75, sets: 4, reps: 8, breakDurationSeconds: 120, isPyramid: false, pyramidSets: [] });
     });
 
     it('should match exercise name case-insensitively', async () => {
@@ -75,7 +107,7 @@ describe('AutocompleteService', () => {
 
       const result = await service.getDefaultsByExactName('DÉVELOPPÉ COUCHÉ');
 
-      expect(result).toEqual({ weightKg: 75, sets: 4, reps: 8, breakDurationSeconds: 120 });
+      expect(result).toEqual({ weightKg: 75, sets: 4, reps: 8, breakDurationSeconds: 120, isPyramid: false, pyramidSets: [] });
     });
 
     it('should return the most recent (last) match when multiple exercises share the same name', async () => {
@@ -86,7 +118,7 @@ describe('AutocompleteService', () => {
 
       const result = await service.getDefaultsByExactName('Squat');
 
-      expect(result).toEqual({ weightKg: 80, sets: 5, reps: 5, breakDurationSeconds: 180 });
+      expect(result).toEqual({ weightKg: 80, sets: 5, reps: 5, breakDurationSeconds: 180, isPyramid: false, pyramidSets: [] });
     });
   });
 });

@@ -11,7 +11,7 @@ import { EndSessionUseCase } from '../../primary_ports/session-detail/end-sessio
 import { GetSessionChronoUseCase } from '../../primary_ports/session-chrono/get-session-chrono.usecase';
 import { PauseSessionChronoUseCase } from '../../primary_ports/session-chrono/pause-session-chrono.usecase';
 import { SetSessionChronoUseCase } from '../../primary_ports/session-chrono/set-session-chrono.usecase';
-import { formatDuration } from '../../core_logic/shared/utils';
+import { formatDuration, computeVolume } from '../../core_logic/shared/utils';
 import { Exercise } from '../../core_logic/shared/models';
 import { EditDurationPopupComponent } from './edit-duration-popup.component';
 import { EndSessionModalComponent } from './end-session-modal.component';
@@ -67,7 +67,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   readonly totalWeight = computed(() =>
     this.exercises()
       .filter(e => e.status === 'validated')
-      .reduce((sum, e) => sum + e.weightKg * e.sets * e.reps, 0)
+      .reduce((sum, e) => sum + computeVolume(e), 0)
   );
 
   readonly currentElapsedSeconds = computed(() =>

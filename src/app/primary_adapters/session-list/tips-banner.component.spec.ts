@@ -1,0 +1,156 @@
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { signal, Signal } from '@angular/core';
+import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+import { TipsBannerComponent } from './tips-banner.component';
+import { RequestReviewUseCase } from '../../primary_ports/session-list/request-review.usecase';
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation(_lang: string): Observable<TranslationObject> {
+    return of({
+      sessionList: {
+        tip: 'Conseil',
+        reviewTip: 'Notez cette application',
+        reviewThanks: 'Merci pour votre avis !',
+      },
+    } as unknown as TranslationObject);
+  }
+}
+
+const translateModuleConfig = TranslateModule.forRoot({
+  loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
+});
+
+function makeUseCaseSpy(hasRequestedValue = false) {
+  const hasRequestedSignal = signal(hasRequestedValue);
+  return {
+    hasRequested: hasRequestedSignal as Signal<boolean>,
+    execute: jasmine.createSpy('execute').and.returnValue(Promise.resolve(true)),
+  };
+}
+
+function setupFixture(
+  sessionCount: number,
+  hasRequested = false,
+): {
+  fixture: ComponentFixture<TipsBannerComponent>;
+  useCaseSpy: ReturnType<typeof makeUseCaseSpy>;
+} {
+  const useCaseSpy = makeUseCaseSpy(hasRequested);
+
+  TestBed.configureTestingModule({
+    imports: [TipsBannerComponent, translateModuleConfig],
+    providers: [
+      { provide: RequestReviewUseCase, useValue: useCaseSpy },
+    ],
+  });
+
+  const translate = TestBed.inject(TranslateService);
+  translate.setDefaultLang('fr');
+  translate.use('fr');
+
+  const fixture = TestBed.createComponent(TipsBannerComponent);
+  fixture.componentRef.setInput('sessionCount', sessionCount);
+  fixture.detectChanges();
+
+  return { fixture, useCaseSpy };
+}
+
+describe('TipsBannerComponent', () => {
+  describe('bandeau onboarding', () => {
+    it('affiche le conseil onboarding quand sessionCount est entre 1 et 3', () => {
+      const { fixture } = setupFixture(2);
+      const el: HTMLElement = fixture.nativeElement;
+      const banner = el.querySelector('.tips-banner');
+      expect(banner).toBeTruthy();
+      const text = banner?.querySelector('.tips-text')?.textContent;
+      expect(text).toContain('Conseil');
+    });
+  });
+
+  describe('bandeau review', () => {
+    it('affiche le tips de review quand sessionCount >= 4 et que la review na pas encore été demandée', () => {
+      const { fixture } = setupFixture(10, false);
+      const el: HTMLElement = fixture.nativeElement;
+      const banner = el.querySelector('.tips-banner');
+      expect(banner).toBeTruthy();
+      const text = banner?.querySelector('.tips-text')?.textContent;
+      expect(text).toContain('Notez cette application');
+    });
+
+    it('affiche le tips de review quand sessionCount est exactement 4', () => {
+      const { fixture } = setupFixture(4, false);
+      const el: HTMLElement = fixture.nativeElement;
+      const banner = el.querySelector('.tips-banner');
+      expect(banner).toBeTruthy();
+      const text = banner?.querySelector('.tips-text')?.textContent;
+      expect(text).toContain('Notez cette application');
+    });
+  });
+
+  describe('bandeau de remerciement après clic', () => {
+    it('affiche le remerciement et appelle execute() après le clic sur la bannière review', async () => {
+      const { fixture, useCaseSpy } = setupFixture(10, false);
+      const el: HTMLElement = fixture.nativeElement;
+
+      const button = el.querySelector<HTMLButtonElement>('.tips-banner--clickable');
+      expect(button).toBeTruthy();
+      button!.click();
+
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      expect(useCaseSpy.execute).toHaveBeenCalledTimes(1);
+      expect(el.querySelector('.tips-banner')).toBeTruthy();
+      const text = el.querySelector('.tips-text')?.textContent;
+      expect(text).toContain('Merci pour votre avis');
+    });
+
+    it("n'affiche ni remerciement ni bandeau review quand execute() retourne false (erreur plugin)", async () => {
+      const hasRequestedSignal = signal(false);
+      const useCaseSpy = {
+        hasRequested: hasRequestedSignal as Signal<boolean>,
+        execute: jasmine.createSpy('execute').and.callFake(async () => {
+          hasRequestedSignal.set(true);
+          return false;
+        }),
+      };
+
+      TestBed.configureTestingModule({
+        imports: [TipsBannerComponent, translateModuleConfig],
+        providers: [{ provide: RequestReviewUseCase, useValue: useCaseSpy }],
+      });
+      const translate = TestBed.inject(TranslateService);
+      translate.setDefaultLang('fr');
+      translate.use('fr');
+      const fixture = TestBed.createComponent(TipsBannerComponent);
+      fixture.componentRef.setInput('sessionCount', 10);
+      fixture.detectChanges();
+
+      const el: HTMLElement = fixture.nativeElement;
+      const button = el.querySelector<HTMLButtonElement>('.tips-banner--clickable');
+      expect(button).toBeTruthy();
+      button!.click();
+
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      expect(useCaseSpy.execute).toHaveBeenCalledTimes(1);
+      expect(el.querySelector('.tips-banner')).toBeNull();
+    });
+  });
+
+  describe('masquage de la bannière', () => {
+    it('masque la bannière quand sessionCount est 0', () => {
+      const { fixture } = setupFixture(0);
+      const el: HTMLElement = fixture.nativeElement;
+      expect(el.querySelector('.tips-banner')).toBeNull();
+    });
+
+    it('masque la bannière au démarrage quand sessionCount >= 4 ET la review a déjà été demandée', () => {
+      const { fixture } = setupFixture(10, true);
+      const el: HTMLElement = fixture.nativeElement;
+      expect(el.querySelector('.tips-banner')).toBeNull();
+    });
+  });
+});

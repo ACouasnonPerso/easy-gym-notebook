@@ -8,6 +8,7 @@ import { StatsExerciseListCardComponent } from './stats-exercise-list-card.compo
 import { GetGlobalStatsUseCase } from '../../primary_ports/stats-global/get-global-stats.usecase';
 import { SelectMonthUseCase } from '../../primary_ports/stats-global/select-month.usecase';
 import { MergeExercisesUseCase } from '../../primary_ports/stats-global/merge-exercises.usecase';
+import { ImportDataUseCase } from '../../primary_ports/stats-global/import-data.usecase';
 import { Router } from '@angular/router';
 
 const FR_TRANSLATIONS = {
@@ -73,6 +74,16 @@ function makeMergeExercisesUseCaseSpy() {
   };
 }
 
+function makeImportDataUseCaseSpy() {
+  return {
+    importCount: signal(0),
+    importError: signal<string | null>(null),
+    importPending: signal(false),
+    validate: jasmine.createSpy('validate').and.returnValue(Promise.resolve()),
+    persist: jasmine.createSpy('persist').and.returnValue(Promise.resolve()),
+  };
+}
+
 function makeProviders(overrides: { exerciseSummaries?: ReturnType<typeof signal<{ name: string; maxWeightKg: number; totalVolumeKg: number; occurrenceCount: number }[]>> } = {}) {
   const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
   if (overrides.exerciseSummaries) {
@@ -102,6 +113,7 @@ describe("StatsGlobalComponent — formatDuration", () => {
         { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
         { provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
         { provide: Router, useValue: routerSpy },
+        { provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
       ],
     });
 
@@ -142,21 +154,13 @@ describe("StatsGlobalComponent — sélecteur de vue (année en cours et total)"
         { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
         { provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
         { provide: Router, useValue: routerSpy },
+        { provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
       ],
     });
 
     setupI18n();
     fixture = TestBed.createComponent(StatsGlobalComponent);
-    fixture.componentInstance.showDropdown.set(true);
     fixture.detectChanges();
-  });
-
-  it("devrait inclure 'Annee en cours' et 'Total' dans la liste des options", () => {
-    const el: HTMLElement = fixture.nativeElement;
-    const items = Array.from(el.querySelectorAll('.dropdown-item')).map(i => i.textContent?.trim());
-
-    expect(items).toContain('Annee en cours');
-    expect(items).toContain('Total');
   });
 
   it("devrait afficher la heatmap quand un mois normal est sélectionné (index 2)", () => {
@@ -212,6 +216,7 @@ describe("StatsGlobalComponent — résumé de la semaine", () => {
         { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
         { provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
         { provide: Router, useValue: routerSpy },
+        { provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
       ],
     });
 
@@ -263,6 +268,7 @@ describe("StatsGlobalComponent — merge d'exercices", () => {
         { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
         { provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
         { provide: Router, useValue: routerSpy },
+        { provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
       ],
     });
 
@@ -351,6 +357,7 @@ describe("StatsGlobalComponent — titre du récap (summaryTitle)", () => {
         { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
         { provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
         { provide: Router, useValue: routerSpy },
+        { provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
       ],
     });
 
@@ -389,6 +396,7 @@ describe("StatsGlobalComponent — titre du récap dans le DOM", () => {
         { provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
         { provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
         { provide: Router, useValue: routerSpy },
+        { provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
       ],
     });
 
@@ -421,6 +429,7 @@ describe("StatsGlobalComponent — graphique de durée des séances", () => {
         { provide: SelectMonthUseCase, useValue: { execute: jasmine.createSpy('execute') } },
         { provide: MergeExercisesUseCase, useValue: { execute: jasmine.createSpy('execute').and.returnValue(Promise.resolve()) } },
         { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
+        { provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
       ],
     });
     setupI18n();
@@ -446,6 +455,7 @@ describe("StatsGlobalComponent — graphique de durée des séances", () => {
         { provide: SelectMonthUseCase, useValue: { execute: jasmine.createSpy('execute') } },
         { provide: MergeExercisesUseCase, useValue: { execute: jasmine.createSpy('execute').and.returnValue(Promise.resolve()) } },
         { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
+        { provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
       ],
     });
     setupI18n();

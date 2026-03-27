@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { MonthSummary } from '../../core_logic/stats-global/stats.service';
+import { formatSummaryDuration } from '../../core_logic/shared/utils';
 
 @Component({
   selector: 'app-stats-summary-card',
@@ -40,9 +41,6 @@ export class StatsSummaryCardComponent {
   }
 
   formatDuration(totalSeconds: number): string {
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    if (hours > 0) return `${hours}h${minutes}`;
-    return `${minutes}min`;
+    return formatSummaryDuration(totalSeconds);
   }
 }
