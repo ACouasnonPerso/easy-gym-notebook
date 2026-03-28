@@ -1,5 +1,5 @@
 
-    <div class="session-card" appLongPress (longPress)="longPress.emit()">
+    <div class="session-card" appLongPress (longPress)="longPress.emit()" (click)="onClick()">
       <div class="session-header">
         <span class="session-date">{{ dateLabel() }}</span>
         <div class="tag-list">

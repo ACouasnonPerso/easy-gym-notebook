@@ -6,6 +6,7 @@ import { LongPressDirective } from '../shared/long-press.directive';
 import { TranslateModule } from '@ngx-translate/core';
 import { muscleGroupChipStyle } from '../../core_logic/shared/muscle-group-colors';
 import { LanguageService } from '../../core_logic/language/language.service';
+import { HapticService } from '../../core_logic/shared/haptic.service';
 
 @Component({
   selector: 'app-session-card',
@@ -17,6 +18,7 @@ import { LanguageService } from '../../core_logic/language/language.service';
 })
 export class SessionCardComponent {
   private readonly languageService = inject(LanguageService);
+  private readonly haptic = inject(HapticService);
   readonly session = input.required<Session>();
   readonly longPress = output<void>();
   readonly locale = computed(() => this.languageService.activeLang());
@@ -75,6 +77,10 @@ export class SessionCardComponent {
     if (km === 0) return '_';
     return km.toFixed(1).replace('.', ',') + ' km';
   });
+
+  onClick(): void {
+    this.haptic.vibrate();
+  }
 
   tagStyle(muscle: string): Record<string, string> {
     return muscleGroupChipStyle(muscle as MuscleGroup);

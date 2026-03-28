@@ -60,6 +60,11 @@ export class ExerciseCardComponent {
     return muscleGroupChipStyle(muscle);
   }
 
+  onCardClick(): void {
+    this.haptic.vibrate();
+    this.toggleExpand.emit();
+  }
+
   onCheckboxClick(): void {
     this.haptic.vibrate();
     if (this.isValidated()) this.exerciseCancel.emit();

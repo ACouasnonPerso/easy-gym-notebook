@@ -1,5 +1,5 @@
 
-    <div class="exercise-card" [class.validated]="isValidated()" (click)="toggleExpand.emit()">
+    <div class="exercise-card" [class.validated]="isValidated()" (click)="onCardClick()">
       <div class="exercise-header">
         <button
           class="status-checkbox"
