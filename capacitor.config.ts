@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.easygym.notebook',
+  appId: 'easy.gym.notebook',
   appName: 'EasyGymNotebook',
   webDir: 'dist/easy-gym-notebook/browser'
 };

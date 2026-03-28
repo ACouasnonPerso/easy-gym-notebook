@@ -1,4 +1,4 @@
-package com.easygym.notebook;
+package easy.gym.notebook;
 
 import com.getcapacitor.BridgeActivity;
 
