@@ -51,11 +51,11 @@ export class ExerciseChronoService {
     if (!Capacitor.isNativePlatform() || this._soundsPreloaded) return;
     this._soundsPreloaded = true;
     await Promise.all([
-      NativeAudio.preload({ assetId: 'ten', assetPath: 'assets/sounds/ten.mp3', focus: false } as any),
-      NativeAudio.preload({ assetId: 'three', assetPath: 'assets/sounds/three.mp3', focus: false } as any),
-      NativeAudio.preload({ assetId: 'two', assetPath: 'assets/sounds/two.mp3', focus: false } as any),
-      NativeAudio.preload({ assetId: 'one', assetPath: 'assets/sounds/one.mp3', focus: false } as any),
-      NativeAudio.preload({ assetId: 'alert', assetPath: 'sounds/alert.wav', focus: false } as any),
+      NativeAudio.preload({ assetId: 'ten', assetPath: 'public/assets/sounds/ten.mp3' }),
+      NativeAudio.preload({ assetId: 'three', assetPath: 'public/assets/sounds/three.mp3' }),
+      NativeAudio.preload({ assetId: 'two', assetPath: 'public/assets/sounds/two.mp3' }),
+      NativeAudio.preload({ assetId: 'one', assetPath: 'public/assets/sounds/one.mp3' }),
+      NativeAudio.preload({ assetId: 'alert', assetPath: 'public/sounds/alert.wav' }),
     ]);
   }
 

@@ -3,8 +3,10 @@
     [hasExercise]="hasExercise()"
     [seriesCount]="seriesCount()"
     [formattedBreakDuration]="formattedBreakDuration()"
+    [soundEnabled]="soundEnabled()"
     (back)="haptic.vibrate(); location.back()"
     (openBreakDurationPopup)="showBreakDurationPopup.set(true)"
+    (toggleSound)="exerciseChronoUseCase.toggleSound()"
   />
   <div class="chrono-body">
     <app-chrono-ring
