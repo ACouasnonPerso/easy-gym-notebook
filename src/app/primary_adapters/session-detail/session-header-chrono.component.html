@@ -3,7 +3,7 @@
   <div class="timer-actions">
     @if (chronoStatus() === 'running') {
       <button class="timer-btn" (click)="pause.emit()">{{ 'common.break' | translate }}</button>
-      <button class="timer-btn end" (click)="endSession.emit()">{{ 'common.end' | translate }}</button>
+      <button class="timer-btn end" (click)="onEndSession()">{{ 'common.end' | translate }}</button>
     } @else if (chronoStatus() === 'paused') {
       <button class="timer-btn" (click)="resume.emit()">{{ 'common.resume' | translate }}</button>
     } @else if (chronoStatus() === 'ended') {

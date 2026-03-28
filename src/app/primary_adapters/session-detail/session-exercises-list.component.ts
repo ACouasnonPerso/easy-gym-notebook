@@ -5,6 +5,7 @@ import { AddExerciseFormComponent } from './add-exercise-form.component';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
 import { SessionDetailUiService } from './session-detail-ui.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { HapticService } from '../../core_logic/shared/haptic.service';
 
 @Component({
   selector: 'app-session-exercises-list',
@@ -26,11 +27,17 @@ export class SessionExercisesListComponent {
   readonly openStats = output<Exercise>();
 
   readonly uiService = inject(SessionDetailUiService);
+  private readonly haptic = inject(HapticService);
 
   readonly expandedExerciseId = signal<string | null>(null);
   readonly showAddForm = this.uiService.showAddExerciseForm;
   readonly showDeleteConfirm = signal(false);
   readonly pendingDeleteId = signal<string | null>(null);
+
+  openAddExercise(): void {
+    this.haptic.vibrate();
+    this.uiService.openAddExerciseForm();
+  }
 
   toggleExpand(exerciseId: string): void {
     this.expandedExerciseId.set(
