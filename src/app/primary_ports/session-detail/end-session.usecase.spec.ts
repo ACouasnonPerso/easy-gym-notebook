@@ -6,6 +6,7 @@ import { Exercise, Session } from '../../core_logic/shared/models';
 import { SESSION_REPOSITORY } from '../../secondary_ports/session/session.repository.interface';
 import { EXERCISE_REPOSITORY } from '../../secondary_ports/exercise/exercise.repository.interface';
 import { Router } from '@angular/router';
+import { ANALYTICS_REPOSITORY } from '../../secondary_ports/analytics/analytics.repository.interface';
 
 function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
   return {
@@ -70,6 +71,7 @@ describe('EndSessionUseCase — cardio duration auto-fill on end', () => {
         { provide: EXERCISE_REPOSITORY, useValue: exerciseRepoSpy },
         { provide: SessionChronoService, useValue: sessionChronoService },
         { provide: Router, useValue: routerSpy },
+        { provide: ANALYTICS_REPOSITORY, useValue: (() => { const s = jasmine.createSpyObj('IAnalyticsRepo', ['trackSessionStarted','trackSessionUpdated','trackSessionCompleted']); s.trackSessionStarted.and.returnValue(Promise.resolve()); s.trackSessionUpdated.and.returnValue(Promise.resolve()); s.trackSessionCompleted.and.returnValue(Promise.resolve()); return s; })() },
       ],
     });
 

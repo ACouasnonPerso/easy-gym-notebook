@@ -5,6 +5,7 @@ import { SessionService } from '../../core_logic/session/session.service';
 import { SESSION_REPOSITORY } from '../../secondary_ports/session/session.repository.interface';
 import { EXERCISE_REPOSITORY } from '../../secondary_ports/exercise/exercise.repository.interface';
 import { SessionChronoService } from '../../core_logic/chrono/session-chrono.service';
+import { AnalyticsService } from '../../core_logic/analytics/analytics.service';
 
 @Injectable({ providedIn: 'root' })
 export class DuplicateSessionUseCase {
@@ -13,6 +14,7 @@ export class DuplicateSessionUseCase {
   private readonly exerciseRepo = inject(EXERCISE_REPOSITORY);
   private readonly router = inject(Router);
   private readonly sessionChronoService = inject(SessionChronoService);
+  private readonly analyticsService = inject(AnalyticsService);
 
   async execute(sourceSessionId: string): Promise<void> {
     const sourceSession = await this.sessionRepo.getById(sourceSessionId);
@@ -39,6 +41,7 @@ export class DuplicateSessionUseCase {
     await this.sessionRepo.save(newSession);
     await Promise.all(copiedExercises.map(e => this.exerciseRepo.save(e)));
     await this.sessionService.loadAll();
+    this.analyticsService.trackSessionStarted(newSession);
     this.sessionChronoService.start();
     this.router.navigate(['/sessions', newSession.id]);
   }

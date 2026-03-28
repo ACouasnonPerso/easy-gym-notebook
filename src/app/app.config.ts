@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, InjectionToken } from '@angular/core';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { appRoutes } from './app.routes';
@@ -14,6 +14,15 @@ import { ImportService } from './core_logic/import/import.service';
 import { ImportMapper } from './secondary_adapters/import/import.mapper';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, Firestore } from 'firebase/firestore';
+import { environment } from '../environments/environment';
+import { ANALYTICS_REPOSITORY } from './secondary_ports/analytics/analytics.repository.interface';
+import { FirestoreAnalyticsRepository } from './secondary_adapters/analytics/firestore-analytics.repository';
+
+export const FIRESTORE = new InjectionToken<Firestore>('Firestore');
+
+const firebaseApp = initializeApp(environment.firebase);
 
 const storedLang = localStorage.getItem('lang');
 const browserLang = navigator.language?.startsWith('en') ? 'en' : navigator.language?.startsWith('es') ? 'es' : 'fr';
@@ -31,6 +40,8 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'fr',
       lang: initialLang,
     }),
+    { provide: FIRESTORE, useValue: getFirestore(firebaseApp, 'default') },
+    { provide: ANALYTICS_REPOSITORY, useClass: FirestoreAnalyticsRepository },
     SessionMapper,
     { provide: SESSION_REPOSITORY, useClass: SessionRepository },
     ExerciseMapper,

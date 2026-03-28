@@ -8,6 +8,7 @@ import { Exercise, MuscleGroup, Session } from '../../core_logic/shared/models';
 import { EXERCISE_REPOSITORY } from '../../secondary_ports/exercise/exercise.repository.interface';
 import { SESSION_REPOSITORY } from '../../secondary_ports/session/session.repository.interface';
 import { TranslateService } from '@ngx-translate/core';
+import { ANALYTICS_REPOSITORY } from '../../secondary_ports/analytics/analytics.repository.interface';
 import { Subject } from 'rxjs';
 
 const MUSCLE_DETECTOR_FR: Record<string, string> = {
@@ -93,6 +94,7 @@ describe('AddExerciseUseCase', () => {
         MuscleGroupDetectorService,
         { provide: EXERCISE_REPOSITORY, useValue: exerciseRepoSpy },
         { provide: SESSION_REPOSITORY, useValue: sessionRepoSpy },
+        { provide: ANALYTICS_REPOSITORY, useValue: (() => { const s = jasmine.createSpyObj('IAnalyticsRepo', ['trackSessionStarted','trackSessionUpdated','trackSessionCompleted']); s.trackSessionStarted.and.returnValue(Promise.resolve()); s.trackSessionUpdated.and.returnValue(Promise.resolve()); s.trackSessionCompleted.and.returnValue(Promise.resolve()); return s; })() },
         { provide: TranslateService, useValue: translateServiceStub },
       ],
     });
