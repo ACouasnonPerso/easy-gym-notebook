@@ -256,7 +256,6 @@ export class ExerciseChronoService {
 	private async preloadSounds(): Promise<void> {
 		if (!Capacitor.isNativePlatform() || this._soundsPreloaded) return;
 		this._soundsPreloaded = true;
-		await NativeAudio.configure({focus: false});
 		await Promise.all([
 			NativeAudio.preload({assetId: 'ten', assetPath: 'public/assets/sounds/ten.mp3'}),
 			NativeAudio.preload({assetId: 'three', assetPath: 'public/assets/sounds/three.mp3'}),
