@@ -9,7 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [TranslateModule, NgClass],
   styles: [`
     .header-pad {
-      padding: 51px 20px 0;
+      padding: 32px 20px 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
