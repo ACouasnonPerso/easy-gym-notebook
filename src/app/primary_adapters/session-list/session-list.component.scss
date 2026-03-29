@@ -23,6 +23,12 @@
   margin-bottom: 20px;
 }
 
+.header-selectors {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .page-title {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 22px;

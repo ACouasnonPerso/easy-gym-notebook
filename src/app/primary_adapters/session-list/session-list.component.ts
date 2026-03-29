@@ -14,8 +14,10 @@ import { DuplicateSessionUseCase } from '../../primary_ports/session-list/duplic
 import { DeleteSessionUseCase } from '../../primary_ports/session-list/delete-session.usecase';
 import { SetLanguageUseCase } from '../../primary_ports/language/set-language.usecase';
 import { ActiveLang } from '../../core_logic/language/language.service';
+import { MassUnitService, MassUnit } from '../../core_logic/mass-unit/mass-unit.service';
 import { SessionCardComponent } from './session-card.component';
 import { LanguageSelectorComponent } from '../shared/language-selector.component';
+import { MassUnitSelectorComponent } from '../shared/mass-unit-selector.component';
 import { ScrollSentinelDirective } from '../shared/scroll-sentinel.directive';
 import { ContextMenuComponent } from '../shared/context-menu.component';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
@@ -38,6 +40,7 @@ const PAGE_SIZE = 20;
     TipsBannerComponent,
     TranslateModule,
     LanguageSelectorComponent,
+    MassUnitSelectorComponent,
   ],
   templateUrl: './session-list.component.html',
   styleUrl: './session-list.component.scss',
@@ -48,6 +51,7 @@ export class SessionListComponent implements OnInit {
   private readonly duplicateSessionUseCase = inject(DuplicateSessionUseCase);
   private readonly deleteSessionUseCase = inject(DeleteSessionUseCase);
   private readonly setLanguageUseCase = inject(SetLanguageUseCase);
+  private readonly massUnitService = inject(MassUnitService);
   private readonly reviewService = inject(ReviewService);
   private readonly haptic = inject(HapticService);
   private readonly router = inject(Router);
@@ -102,5 +106,9 @@ export class SessionListComponent implements OnInit {
 
   changeLanguage(lang: ActiveLang): void {
     this.setLanguageUseCase.execute(lang);
+  }
+
+  changeMassUnit(unit: MassUnit): void {
+    this.massUnitService.setMassUnit(unit);
   }
 }
