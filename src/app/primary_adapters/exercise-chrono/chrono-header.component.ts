@@ -11,6 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
     .header-pad {
       padding: 32px 20px 0;
       display: flex;
+	    margin-top: 19px;
       align-items: center;
       justify-content: space-between;
     }
