@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, input, output, signal } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { Exercise } from '../../core_logic/shared/models';
 import { ExerciseCardComponent } from './exercise-card.component';
 import { AddExerciseFormComponent } from './add-exercise-form.component';
@@ -16,6 +17,8 @@ import { HapticService } from '../../core_logic/shared/haptic.service';
   styleUrl: './session-exercises-list.component.scss',
 })
 export class SessionExercisesListComponent {
+  readonly isAndroid = Capacitor.getPlatform() === 'android';
+
   readonly exercises = input.required<Exercise[]>();
   readonly sessionId = input.required<string>();
 

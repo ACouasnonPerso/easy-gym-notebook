@@ -1,6 +1,6 @@
 
     <div class="overlay" (click)="cancelled.emit()">
-      <div class="form-card" (click)="$event.stopPropagation()">
+      <div class="form-card" (click)="$event.stopPropagation()" [style.padding-bottom]="isAndroid ? '300px' : null">
         <h2 class="form-title">{{ 'exercise.new' | translate }}</h2>
 
         <div class="name-field">

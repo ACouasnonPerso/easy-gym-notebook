@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, input, output, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgStyle } from '@angular/common';
+import { Capacitor } from '@capacitor/core';
 import { MuscleGroup, PyramidSet } from '../../core_logic/shared/models';
 import { AddExerciseUseCase } from '../../primary_ports/session-detail/add-exercise.usecase';
 import { AutocompleteService } from '../../core_logic/session-detail/autocomplete.service';
@@ -68,6 +69,8 @@ export class AddExerciseFormComponent {
   readonly durationMinutes = signal(0);
   readonly distanceKm = signal<number | null>(null);
   readonly durationSeconds = computed(() => this.durationHours() * 3600 + this.durationMinutes() * 60);
+
+  readonly isAndroid = Capacitor.getPlatform() === 'android';
 
   readonly isSubmitDisabled = computed(() =>
     !this.name().trim() ||

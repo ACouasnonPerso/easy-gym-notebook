@@ -1,18 +1,20 @@
+@if (session()) {
+	<app-session-header
+			[session]="session()!"
+			[durationLabel]="durationLabel()"
+			[chronoStatus]="chronoStatus()"
+			[totalWeightFormatted]="totalWeightFormatted()"
+			(goBack)="goBack()"
+			(dateChange)="onDateChange($event)"
+			(durationClick)="onDurationClick()"
+			(endSession)="onEndSession()"
+			(pause)="onPause()"
+			(resume)="onResume()"
+	/>
+}
+
+
 <div class="page">
-  @if (session()) {
-    <app-session-header
-      [session]="session()!"
-      [durationLabel]="durationLabel()"
-      [chronoStatus]="chronoStatus()"
-      [totalWeightFormatted]="totalWeightFormatted()"
-      (goBack)="goBack()"
-      (dateChange)="onDateChange($event)"
-      (durationClick)="onDurationClick()"
-      (endSession)="onEndSession()"
-      (pause)="onPause()"
-      (resume)="onResume()"
-    />
-  }
 
   <app-session-exercises-list
     [exercises]="exercises()"
