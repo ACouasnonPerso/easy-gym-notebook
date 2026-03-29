@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "このエクササイズのデータがありません",
     "volumeFormula": "= 重量 x 回数 x セット",
-    "distanceKm": "km"
+    "distanceKm": "km",
+    "pace": "ペース",
+    "speed": "スピード"
   },
   "statsGlobal": {
     "trainingRecurrences": "トレーニング頻度",

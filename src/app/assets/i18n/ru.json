@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "Нет данных для этого упражнения",
     "volumeFormula": "= Вес x Повт x Подходы",
-    "distanceKm": "км"
+    "distanceKm": "км",
+    "pace": "Темп",
+    "speed": "Скорость"
   },
   "statsGlobal": {
     "trainingRecurrences": "Частота тренировок",

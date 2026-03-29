@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "Inga data för denna övning",
     "volumeFormula": "= Vikt x Rep x Set",
-    "distanceKm": "km"
+    "distanceKm": "km",
+    "pace": "Tempo",
+    "speed": "Hastighet"
   },
   "statsGlobal": {
     "trainingRecurrences": "Träningsfrekvens",

@@ -5,6 +5,8 @@ import { VolumeLineChartComponent } from './volume-line-chart.component';
 import { WeightLineChartComponent } from './weight-line-chart.component';
 import { CardioTimeChartComponent } from './cardio-time-chart.component';
 import { CardioDistanceChartComponent } from './cardio-distance-chart.component';
+import { CardioPaceChartComponent } from './cardio-pace-chart.component';
+import { CardioSpeedChartComponent } from './cardio-speed-chart.component';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -16,6 +18,8 @@ import { TranslateModule } from '@ngx-translate/core';
     WeightLineChartComponent,
     CardioTimeChartComponent,
     CardioDistanceChartComponent,
+    CardioPaceChartComponent,
+    CardioSpeedChartComponent,
     TranslateModule,
   ],
   templateUrl: './stats-exercise-chart-card.component.html',

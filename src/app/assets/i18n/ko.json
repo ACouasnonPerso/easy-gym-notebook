@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "이 운동에 대한 데이터가 없습니다",
     "volumeFormula": "= 무게 x 횟수 x 세트",
-    "distanceKm": "km"
+    "distanceKm": "km",
+    "pace": "페이스",
+    "speed": "속도"
   },
   "statsGlobal": {
     "trainingRecurrences": "운동 빈도",

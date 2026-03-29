@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "Sin datos para este ejercicio",
     "volumeFormula": "= Peso x Rep x Series",
-    "distanceKm": "km"
+    "distanceKm": "km",
+    "pace": "Ritmo",
+    "speed": "Velocidad"
   },
   "statsGlobal": {
     "trainingRecurrences": "Recurrencias de entrenamiento",

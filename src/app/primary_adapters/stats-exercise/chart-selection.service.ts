@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-export type ChartType = 'volume' | 'weight';
+export type ChartType = 'volume' | 'weight' | 'pace' | 'speed';
 
 const STORAGE_KEY = 'chart-selection';
 
@@ -16,6 +16,7 @@ export class ChartSelectionService {
 
   private loadFromStorage(): ChartType {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored === 'weight' ? 'weight' : 'volume';
+    if (stored === 'weight' || stored === 'pace' || stored === 'speed') return stored;
+    return 'volume';
   }
 }

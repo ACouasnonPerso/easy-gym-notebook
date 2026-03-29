@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "इस व्यायाम के लिए कोई डेटा नहीं",
     "volumeFormula": "= भार x दोहराव x सेट",
-    "distanceKm": "किमी"
+    "distanceKm": "किमी",
+    "pace": "गति",
+    "speed": "रफ़्तार"
   },
   "statsGlobal": {
     "trainingRecurrences": "प्रशिक्षण आवृत्ति",

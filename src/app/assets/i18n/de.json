@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "Keine Daten für diese Übung",
     "volumeFormula": "= Gewicht x Wdh x Sätze",
-    "distanceKm": "km"
+    "distanceKm": "km",
+    "pace": "Tempo",
+    "speed": "Geschwindigkeit"
   },
   "statsGlobal": {
     "trainingRecurrences": "Trainingshäufigkeit",

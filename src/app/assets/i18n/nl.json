@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "Geen gegevens voor deze oefening",
     "volumeFormula": "= Gewicht x Herh x Sets",
-    "distanceKm": "km"
+    "distanceKm": "km",
+    "pace": "Tempo",
+    "speed": "Snelheid"
   },
   "statsGlobal": {
     "trainingRecurrences": "Trainingsfrequentie",

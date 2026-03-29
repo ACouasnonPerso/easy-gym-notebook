@@ -1,7 +1,10 @@
 .page {
   background: var(--bg);
   min-height: 100vh;
-	padding-top: 170px;
+	overflow-y: auto;
+	position: relative;
+	top: 170px;
+	width: 100%;
   padding-bottom: 100px;
 }
 

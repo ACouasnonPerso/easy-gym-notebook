@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "ไม่มีข้อมูลสำหรับการออกกำลังกายนี้",
     "volumeFormula": "= น้ำหนัก x ครั้ง x เซ็ต",
-    "distanceKm": "กม."
+    "distanceKm": "กม.",
+    "pace": "เพซ",
+    "speed": "ความเร็ว"
   },
   "statsGlobal": {
     "trainingRecurrences": "ความถี่การฝึก",

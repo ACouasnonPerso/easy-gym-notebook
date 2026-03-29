@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "Không có dữ liệu cho bài tập này",
     "volumeFormula": "= Tạ x Lần x Hiệp",
-    "distanceKm": "km"
+    "distanceKm": "km",
+    "pace": "Nhịp",
+    "speed": "Tốc độ"
   },
   "statsGlobal": {
     "trainingRecurrences": "Tần suất tập luyện",

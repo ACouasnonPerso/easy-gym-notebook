@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "Bu egzersiz için veri yok",
     "volumeFormula": "= Ağırlık x Tekrar x Set",
-    "distanceKm": "km"
+    "distanceKm": "km",
+    "pace": "Tempo",
+    "speed": "Hız"
   },
   "statsGlobal": {
     "trainingRecurrences": "Antrenman sıklıkları",

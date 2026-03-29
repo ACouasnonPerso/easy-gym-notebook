@@ -78,7 +78,9 @@
   "statsExercise": {
     "empty": "لا توجد بيانات لهذا التمرين",
     "volumeFormula": "= الوزن × التكرارات × المجموعات",
-    "distanceKm": "كم"
+    "distanceKm": "كم",
+    "pace": "الإيقاع",
+    "speed": "السرعة"
   },
   "statsGlobal": {
     "trainingRecurrences": "تكرارات التدريب",
