@@ -32,19 +32,19 @@
     (openChrono)="navigateToExerciseChrono($event)"
     (openStats)="navigateToStats($event)"
   />
-
-  @if (endSessionUseCase.showManualOverride()) {
-    <app-end-session-modal
-      (confirmed)="onEndSessionConfirmed()"
-      (cancelled)="endSessionUseCase.showManualOverride.set(false)"
-    />
-  }
-
-  @if (showDurationPicker()) {
-    <app-edit-duration-popup
-      [initialSeconds]="session()?.status === 'active' ? currentElapsedSeconds() : (session()?.durationSeconds ?? 0)"
-      (confirmed)="onDurationConfirmed($event)"
-      (cancelled)="showDurationPicker.set(false)"
-    />
-  }
 </div>
+
+@if (endSessionUseCase.showManualOverride()) {
+  <app-end-session-modal
+    (confirmed)="onEndSessionConfirmed()"
+    (cancelled)="endSessionUseCase.showManualOverride.set(false)"
+  />
+}
+
+@if (showDurationPicker()) {
+  <app-edit-duration-popup
+    [initialSeconds]="session()?.status === 'active' ? currentElapsedSeconds() : (session()?.durationSeconds ?? 0)"
+    (confirmed)="onDurationConfirmed($event)"
+    (cancelled)="showDurationPicker.set(false)"
+  />
+}
