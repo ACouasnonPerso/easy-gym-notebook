@@ -120,7 +120,8 @@
     "goTraining": "GO TRAINING",
     "ready": "Ready",
     "training": "Training",
-    "series": "Série"
+    "series": "Série",
+    "iosSilentWarning": "Son désactivé si le téléphone est en mode silence"
   },
   "days": {
     "mon": "L",

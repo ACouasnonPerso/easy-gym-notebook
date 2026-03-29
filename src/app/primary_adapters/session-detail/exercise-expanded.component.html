@@ -124,10 +124,10 @@
           <div class="picker-col">
             <span class="picker-label">{{ 'common.weight' | translate }}</span>
             <app-drum-picker
-              [values]="weightValues"
-              [selectedValue]="exercise().weightKg"
+              [values]="weightValuesForDisplay()"
+              [selectedValue]="weightSelectedValue()"
               [unit]="weightUnit()"
-              (valueChange)="update.emit({ weightKg: +$event })"
+              (valueChange)="emitWeightUpdate($event)"
             />
           </div>
           <div class="picker-col">

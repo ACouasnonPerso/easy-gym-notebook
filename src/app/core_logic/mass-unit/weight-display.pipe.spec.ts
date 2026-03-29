@@ -55,16 +55,22 @@ describe('WeightDisplayPipe', () => {
       expect(result).toBe('5.5 st');
     });
 
-    it('devrait retourner "220.5 lb" quand la valeur est 100 kg en système US', () => {
+    it('devrait retourner "220 lb" quand la valeur est 100 kg en système US', () => {
       const result = pipe.transform(100, 'kg');
 
-      expect(result).toBe('220.5 lb');
+      expect(result).toBe('220 lb');
     });
 
-    it('devrait retourner "1.1 lb" quand la valeur est 0.5 kg en système US', () => {
+    it('devrait retourner "1 lb" quand la valeur est 0.5 kg en système US', () => {
       const result = pipe.transform(0.5, 'kg');
 
-      expect(result).toBe('1.1 lb');
+      expect(result).toBe('1 lb');
+    });
+
+    it('devrait retourner "191 lb" quand la valeur est 86.6 kg en système US', () => {
+      const result = pipe.transform(86.6, 'kg');
+
+      expect(result).toBe('191 lb');
     });
   });
 

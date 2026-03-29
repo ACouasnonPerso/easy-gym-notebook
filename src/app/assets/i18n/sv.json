@@ -120,7 +120,8 @@
     "goTraining": "TRÄNA",
     "ready": "Redo",
     "training": "Träning",
-    "series": "Set"
+    "series": "Set",
+    "iosSilentWarning": "Ljud inaktiverat när telefonen är i tyst läge"
   },
   "days": {
     "mon": "M",

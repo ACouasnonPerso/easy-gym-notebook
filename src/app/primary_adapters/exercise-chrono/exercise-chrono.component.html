@@ -9,7 +9,7 @@
     (toggleSound)="exerciseChronoUseCase.toggleSound()"
   />
   @if (isIos) {
-    <p class="ios-silent-warning">Son désactivé si le téléphone est en mode silence</p>
+    <p class="ios-silent-warning">{{ 'chrono.iosSilentWarning' | translate }}</p>
   }
   <div class="chrono-body">
     <app-chrono-ring

@@ -120,7 +120,8 @@
     "goTraining": "GO TRAINING",
     "ready": "Klaar",
     "training": "Training",
-    "series": "Set"
+    "series": "Set",
+    "iosSilentWarning": "Geluid uitgeschakeld als de telefoon in stille modus staat"
   },
   "days": {
     "mon": "M",

@@ -120,7 +120,8 @@
     "goTraining": "トレーニングへ",
     "ready": "準備完了",
     "training": "トレーニング",
-    "series": "セット"
+    "series": "セット",
+    "iosSilentWarning": "サイレントモード時は音が無効になります"
   },
   "days": {
     "mon": "月",

@@ -18,6 +18,7 @@ function mmssToSeconds(mmss: string): number {
 }
 
 const WEIGHT_VALUES = [...generateRange(0, 30, 0.5), ...generateRange(31, 300, 1)];
+const WEIGHT_VALUES_LB = generateRange(10, 500, 1);
 const SETS_VALUES = generateRange(1, 20, 1);
 const REPS_VALUES = generateRange(1, 50, 1);
 const BREAK_VALUES = generateRange(0, 600, 5).map(secondsToMmss);
@@ -50,7 +51,17 @@ export class ExerciseExpandedComponent {
   readonly openChrono = output<void>();
   readonly openStats = output<void>();
 
-  readonly weightValues = WEIGHT_VALUES;
+  readonly weightValuesForDisplay = computed<(number | string)[]>(() => {
+    if (this.massUnitService.activeMassUnit() === 'metric') return WEIGHT_VALUES;
+    return WEIGHT_VALUES_LB;
+  });
+
+  readonly weightSelectedValue = computed<number | string>(() => {
+    const kg = this.exercise().weightKg;
+    if (this.massUnitService.activeMassUnit() === 'metric') return kg;
+    return Math.round(kg * 2.20462);
+  });
+
   readonly setsValues = SETS_VALUES;
   readonly repsValues = REPS_VALUES;
   readonly breakValues = BREAK_VALUES;
@@ -94,6 +105,16 @@ export class ExerciseExpandedComponent {
     const next = this.effectivePyramidSets().map((s, i) => i === index ? { ...s, [field]: value } : s);
     this.pyramidSetsLocal.set(next);
     this.update.emit({ pyramidSets: next });
+  }
+
+  emitWeightUpdate(value: number | string): void {
+    const displayValue = +value;
+    if (this.massUnitService.activeMassUnit() === 'metric') {
+      this.update.emit({ weightKg: displayValue });
+    } else {
+      const kg = Math.round((displayValue / 2.20462) * 10) / 10;
+      this.update.emit({ weightKg: kg });
+    }
   }
 
   emitBreakUpdate(v: string | number): void {

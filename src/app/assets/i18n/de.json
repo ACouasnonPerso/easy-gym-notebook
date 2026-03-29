@@ -120,7 +120,8 @@
     "goTraining": "GO TRAINING",
     "ready": "Bereit",
     "training": "Training",
-    "series": "Satz"
+    "series": "Satz",
+    "iosSilentWarning": "Ton deaktiviert, wenn das Telefon im Lautlos-Modus ist"
   },
   "days": {
     "mon": "M",

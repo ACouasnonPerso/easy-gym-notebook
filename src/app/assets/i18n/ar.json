@@ -120,7 +120,8 @@
     "goTraining": "استأنف التدريب",
     "ready": "جاهز",
     "training": "تدريب",
-    "series": "مجموعة"
+    "series": "مجموعة",
+    "iosSilentWarning": "الصوت معطل إذا كان الهاتف في وضع الصمت"
   },
   "days": {
     "mon": "إ",

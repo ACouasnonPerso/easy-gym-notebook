@@ -18,7 +18,7 @@ export class WeightDisplayPipe implements PipeTransform {
     }
 
     if (unit === 'kg') {
-      const lbs = Math.round(value * 2.20462 * 10) / 10;
+      const lbs = Math.round(value * 2.20462);
       return `${lbs} lb`;
     }
 

@@ -120,7 +120,8 @@
     "goTraining": "กลับไปฝึก",
     "ready": "พร้อม",
     "training": "ฝึก",
-    "series": "เซ็ต"
+    "series": "เซ็ต",
+    "iosSilentWarning": "เสียงถูกปิดเมื่อโทรศัพท์อยู่ในโหมดเงียบ"
   },
   "days": {
     "mon": "จ",

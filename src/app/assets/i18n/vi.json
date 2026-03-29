@@ -120,7 +120,8 @@
     "goTraining": "VÀO TẬP",
     "ready": "Sẵn sàng",
     "training": "Đang tập",
-    "series": "Hiệp"
+    "series": "Hiệp",
+    "iosSilentWarning": "Âm thanh bị tắt khi điện thoại ở chế độ im lặng"
   },
   "days": {
     "mon": "T2",

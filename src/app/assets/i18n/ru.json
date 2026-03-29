@@ -120,7 +120,8 @@
     "goTraining": "GO TRAINING",
     "ready": "Готово",
     "training": "Тренировка",
-    "series": "Подход"
+    "series": "Подход",
+    "iosSilentWarning": "Звук отключён, если телефон в беззвучном режиме"
   },
   "days": {
     "mon": "П",

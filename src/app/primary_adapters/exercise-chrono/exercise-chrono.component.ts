@@ -14,7 +14,7 @@ import { ChronoActionsComponent } from './chrono-actions.component';
   selector: 'app-exercise-chrono',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [EditDurationPopupComponent, ChronoHeaderComponent, ChronoRingComponent, ChronoActionsComponent],
+	imports: [EditDurationPopupComponent, ChronoHeaderComponent, ChronoRingComponent, ChronoActionsComponent, TranslatePipe],
   templateUrl: './exercise-chrono.component.html',
   styleUrl: './exercise-chrono.component.scss',
 })

@@ -120,7 +120,8 @@
     "goTraining": "GO TRAINING",
     "ready": "준비",
     "training": "운동 중",
-    "series": "세트"
+    "series": "세트",
+    "iosSilentWarning": "무음 모드에서는 소리가 비활성화됩니다"
   },
   "days": {
     "mon": "월",

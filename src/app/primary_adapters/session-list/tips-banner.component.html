@@ -15,12 +15,14 @@
 @if (showConfirm()) {
   <div class="review-confirm-popup">
     <span class="review-confirm-title">{{ 'sessionList.reviewConfirmTitle' | translate }}</span>
-    <button class="review-confirm-yes" (click)="onConfirmYes()">
-      {{ 'sessionList.reviewConfirmYes' | translate }}
-    </button>
-    <button class="review-confirm-no" (click)="onConfirmNo()">
-      {{ 'sessionList.reviewConfirmNo' | translate }}
-    </button>
+    <div class="review-confirm-actions">
+      <button class="review-confirm-no" (click)="onConfirmNo()">
+        {{ 'sessionList.reviewConfirmNo' | translate }}
+      </button>
+      <button class="review-confirm-yes" (click)="onConfirmYes()">
+        {{ 'sessionList.reviewConfirmYes' | translate }}
+      </button>
+    </div>
   </div>
 }
 

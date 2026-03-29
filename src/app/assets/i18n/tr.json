@@ -120,7 +120,8 @@
     "goTraining": "ANTRENMANA DÖN",
     "ready": "Hazır",
     "training": "Antrenman",
-    "series": "Set"
+    "series": "Set",
+    "iosSilentWarning": "Telefon sessiz modundayken ses devre dışı"
   },
   "days": {
     "mon": "P",
