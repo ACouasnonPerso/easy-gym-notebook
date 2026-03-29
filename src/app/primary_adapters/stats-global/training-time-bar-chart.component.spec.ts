@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { TrainingTimeBarChartComponent } from './training-time-bar-chart.component';
+import { TrainingTimeBarChartComponent, resolveAutoMode } from './training-time-bar-chart.component';
 
 function makeEntry(date: Date, durationSeconds: number) {
   return { date, durationSeconds };
@@ -179,5 +179,149 @@ describe('TrainingTimeBarChartComponent — regroupement par période', () => {
 
     const bars = fixture.nativeElement.querySelectorAll('[data-testid="bar"]') as NodeListOf<HTMLElement>;
     expect(bars.length).toBe(2);
+  });
+});
+
+describe('resolveAutoMode — sélection automatique du mode de regroupement', () => {
+  function makeDaySessions(count: number): { date: Date; durationSeconds: number }[] {
+    return Array.from({ length: count }, (_, i) => ({
+      date: new Date(2026, 2, i + 1),   // 1 mars, 2 mars, …
+      durationSeconds: 3600,
+    }));
+  }
+
+  it('devrait retourner "day" quand le nombre de sessions distinctes est <= 10', () => {
+    const sessions = makeDaySessions(10);
+    expect(resolveAutoMode(sessions, 'day')).toBe('day');
+  });
+
+  it('devrait passer en mode "week" quand le nombre de jours distincts dépasse 10', () => {
+    // 11 sessions sur 11 jours consécutifs = 11 barres en mode day → bascule sur week
+    const sessions = makeDaySessions(11);
+    expect(resolveAutoMode(sessions, 'day')).toBe('week');
+  });
+
+  it('le composant doit auto-regrouper par semaine quand >10 jours distincts, et rendre <= 10 barres dans le DOM', () => {
+    const fixture = TestBed.configureTestingModule({
+      imports: [TrainingTimeBarChartComponent],
+    }).createComponent(TrainingTimeBarChartComponent);
+
+    // 11 sessions sur 11 jours différents en mode "day" → devrait basculer sur "week"
+    const sessions = Array.from({ length: 11 }, (_, i) => ({
+      date: new Date(2026, 2, i + 1),
+      durationSeconds: 3600,
+    }));
+    fixture.componentRef.setInput('sessions', sessions);
+    fixture.componentRef.setInput('mode', 'day');
+    fixture.detectChanges();
+
+    const bars = fixture.nativeElement.querySelectorAll('[data-testid="bar"]') as NodeListOf<HTMLElement>;
+    expect(bars.length).toBeLessThanOrEqual(10);
+  });
+
+  it('devrait respecter le mode minimum imposé par le parent : mode "month" avec peu de données reste "month"', () => {
+    // Le parent impose 'month' (vue annuelle), même si on n'a que 3 sessions
+    // resolveAutoMode ne doit jamais rétrograder vers 'day' ou 'week'
+    const sessions = makeDaySessions(3);
+    expect(resolveAutoMode(sessions, 'month')).toBe('month');
+  });
+
+  it('devrait passer en mode "month" quand le nombre de semaines distinctes dépasse aussi 10', () => {
+    // 11 sessions réparties sur 11 semaines différentes (une par semaine sur ~3 mois)
+    // → day : 11 barres > 10, week : 11 barres > 10, month : 3 barres <= 10
+    const sessions = Array.from({ length: 11 }, (_, i) => ({
+      date: new Date(2025, 9 + Math.floor(i / 4), 1 + (i % 4) * 7),  // ~1 par semaine, 3 mois
+      durationSeconds: 3600,
+    }));
+    // S'assurer qu'on a bien > 10 semaines distinctes
+    const weekKeys = new Set(sessions.map(s => {
+      const tmp = new Date(s.date);
+      tmp.setHours(0, 0, 0, 0);
+      const day = tmp.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      tmp.setDate(tmp.getDate() + diff);
+      return `${tmp.getFullYear()}-W${tmp.getMonth()}-${tmp.getDate()}`;
+    }));
+    expect(weekKeys.size).toBeGreaterThan(10);
+    expect(resolveAutoMode(sessions, 'day')).toBe('month');
+  });
+});
+
+describe('TrainingTimeBarChartComponent — label de date adapté au mode effectif', () => {
+  let component: TrainingTimeBarChartComponent;
+
+  beforeEach(() => {
+    const fixture = TestBed.configureTestingModule({
+      imports: [TrainingTimeBarChartComponent],
+    }).createComponent(TrainingTimeBarChartComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('mode "day" : doit retourner la date au format "jj/mm" (ex: "29/03")', () => {
+    const date = new Date(2026, 2, 29); // 29 mars 2026
+    expect(component.formatDateLabel(date, 'day')).toBe('29/03');
+  });
+
+  it('mode "week" : doit retourner le numéro de semaine ISO préfixé de "S" (ex: "S13")', () => {
+    // 29 mars 2026 est en semaine ISO 13
+    const date = new Date(2026, 2, 29);
+    expect(component.formatDateLabel(date, 'week')).toBe('S13');
+  });
+
+  it('mode "month" : doit retourner le mois abrégé en français (ex: "Jan", "Mar")', () => {
+    const jan = new Date(2026, 0, 15);
+    const mar = new Date(2026, 2, 15);
+    expect(component.formatDateLabel(jan, 'month')).toBe('Jan');
+    expect(component.formatDateLabel(mar, 'month')).toBe('Mar');
+  });
+
+  it('mode "year" : doit retourner l\'année en 4 chiffres (ex: "2026")', () => {
+    const date = new Date(2026, 5, 1);
+    expect(component.formatDateLabel(date, 'year')).toBe('2026');
+  });
+});
+
+describe('TrainingTimeBarChartComponent — dateLabel dans le DOM reflète le mode effectif', () => {
+  it('mode "week" : le dateLabel affiché doit être un numéro de semaine "Snn"', () => {
+    const fixture = TestBed.configureTestingModule({
+      imports: [TrainingTimeBarChartComponent],
+    }).createComponent(TrainingTimeBarChartComponent);
+
+    // 11 sessions sur 11 jours consécutifs → resolveAutoMode bascule sur "week"
+    const sessions = Array.from({ length: 11 }, (_, i) => ({
+      date: new Date(2026, 2, i + 1),
+      durationSeconds: 3600,
+    }));
+    fixture.componentRef.setInput('sessions', sessions);
+    fixture.componentRef.setInput('mode', 'day');
+    fixture.detectChanges();
+
+    const labels = fixture.nativeElement.querySelectorAll('.bar-label-bottom') as NodeListOf<HTMLElement>;
+    expect(labels.length).toBeGreaterThan(0);
+    Array.from(labels).forEach(label => {
+      expect(label.textContent?.trim()).toMatch(/^S\d+$/);
+    });
+  });
+
+  it('mode "month" : le dateLabel affiché doit être un mois abrégé', () => {
+    const fixture = TestBed.configureTestingModule({
+      imports: [TrainingTimeBarChartComponent],
+    }).createComponent(TrainingTimeBarChartComponent);
+
+    // 1 session par mois sur 3 mois, mode imposé "month"
+    const sessions = [
+      { date: new Date(2026, 0, 15), durationSeconds: 3600 },
+      { date: new Date(2026, 1, 15), durationSeconds: 3600 },
+      { date: new Date(2026, 2, 15), durationSeconds: 3600 },
+    ];
+    fixture.componentRef.setInput('sessions', sessions);
+    fixture.componentRef.setInput('mode', 'month');
+    fixture.detectChanges();
+
+    const labels = fixture.nativeElement.querySelectorAll('.bar-label-bottom') as NodeListOf<HTMLElement>;
+    expect(labels.length).toBe(3);
+    expect(labels[0].textContent?.trim()).toBe('Jan');
+    expect(labels[1].textContent?.trim()).toBe('Fév');
+    expect(labels[2].textContent?.trim()).toBe('Mar');
   });
 });

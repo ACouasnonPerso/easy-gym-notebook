@@ -1,6 +1,6 @@
-<div class="exercise-list">
+<div class="exercise-list" [style.margin-bottom]="isAndroid ? '400px' : null">
   @if (exercises().length === 0) {
-    <div class="exercise-empty" (click)="uiService.openAddExerciseForm()">
+    <div class="exercise-empty" (click)="openAddExercise()">
       <span class="exercise-empty-icon">＋</span>
       <span class="exercise-empty-text">{{ 'exercise.empty' | translate }}</span>
       <span class="exercise-empty-hint">{{ 'exercise.addHint' | translate }}</span>

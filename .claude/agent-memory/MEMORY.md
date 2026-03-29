@@ -9,3 +9,4 @@
 | [user_profile.md](user_profile.md) | user | User preferences and project tech stack |
 | [project_muscle_group_exercise.md](project_muscle_group_exercise.md) | project | muscleGroup is intentionally kept on Exercise — decision confirmed 2026-03-26, tests added to AddExerciseUseCase |
 | [project_cardio_exercise.md](project_cardio_exercise.md) | project | Cardio exercise feature steps 1-7 implemented — models, detector, mapper, use cases, stats service all green |
+| [project_training_time_bar_chart.md](project_training_time_bar_chart.md) | project | Training time bar chart — mode-aware labels (day/week/month/year), BarChartMode includes year, 23 tests green |
