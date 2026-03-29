@@ -25,6 +25,7 @@
     "@capacitor/filesystem": "^8.1.2",
     "@capacitor/haptics": "^8.0.1",
     "@capacitor/ios": "^8.3.0",
+    "@capacitor/keyboard": "^8.0.2",
     "@capacitor/share": "^8.0.1",
     "@ionic/angular": "^8.8.2",
     "@ngx-translate/core": "^17.0.0",
