@@ -182,5 +182,10 @@
     "Traps": "Trapets",
     "Adductors": "Adduktorer",
     "Abductors": "Abduktorer"
+  },
+  "massUnit": {
+    "metric": "Metrisk",
+    "imperial": "Imperial",
+    "us": "US"
   }
 }

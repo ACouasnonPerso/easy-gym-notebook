@@ -182,5 +182,10 @@
     "Traps": "شبه منحرف",
     "Adductors": "مقربات",
     "Abductors": "مبعدات"
+  },
+  "massUnit": {
+    "metric": "متري",
+    "imperial": "إمبريالي",
+    "us": "US"
   }
 }

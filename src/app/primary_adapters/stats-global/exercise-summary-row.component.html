@@ -27,7 +27,7 @@
           </div>
         } @else {
           <div class="h-stat">
-            <span class="h-stat-value orange">{{ maxWeightKg() }} {{ 'common.unitKg' | translate }}</span>
+            <span class="h-stat-value orange">{{ maxWeightKg() | weightDisplay:'kg' }}</span>
             <span class="h-stat-label">{{ 'common.max' | translate }}</span>
           </div>
           <div class="h-stat">

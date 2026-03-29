@@ -5,6 +5,8 @@ import { ExerciseExpandedComponent } from './exercise-expanded.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { HapticService } from '../../core_logic/shared/haptic.service';
 import { muscleGroupChipStyle } from '../../core_logic/shared/muscle-group-colors';
+import { WeightDisplayPipe } from '../../core_logic/mass-unit/weight-display.pipe';
+import { DistanceDisplayPipe } from '../../core_logic/mass-unit/distance-display.pipe';
 
 function formatDurationMinutes(seconds: number): string {
   return Math.floor(seconds / 60).toString();
@@ -20,7 +22,7 @@ function formatBreakDuration(seconds: number): string {
   selector: 'app-exercise-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ExerciseExpandedComponent, NgStyle, TranslateModule],
+  imports: [ExerciseExpandedComponent, NgStyle, TranslateModule, WeightDisplayPipe, DistanceDisplayPipe],
   templateUrl: './exercise-card.component.html',
   styleUrl: './exercise-card.component.scss',
 })

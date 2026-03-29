@@ -53,7 +53,7 @@
     "duplicate": "Duplicate",
     "delete": "Delete",
     "tip": "Long press a session to duplicate it",
-    "reviewTip": "Do you\nlike the app? Please give it 5 stars and leave a review—it really helps us out \uD83D\uDE4F",
+    "reviewTip": "Do you\nlike the app? Please give it 5 stars and leave a review—it really helps us out 🙏",
     "reviewThanks": "Thank you for your review!",
     "reviewConfirmTitle": "Do you enjoy this app?",
     "reviewConfirmYes": "Yes, rate it",
@@ -148,25 +148,25 @@
     "adductors": "adductor,adductors,inner thigh,adduction",
     "abductors": "abductor,abductors,outer thigh,abduction"
   },
-	"englishMuscleDetector": {
-		"chest": "bench press,benchpress,chest press,chest fly,pec deck,chest,pecs,bench,bp",
-		"back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rowing,back,pull",
-		"backHamstrings": "deadlift,dead lift",
-		"shoulders": "shoulder press,overhead press,lateral raise,front raise,shoulder,deltoid,ohp",
-		"biceps": "bicep curl,hammer curl,bicep,biceps, bibi",
-		"triceps": "tricep extension,skull crusher,pushdown,tricep,triceps, tritri",
-		"tricepsChest": "dips",
-		"glutesQuads": "squat,squats,lunge,lunges",
-		"forearms": "wrist curl,forearm,forearms,grip",
-		"abs": "crunch,plank,sit-up,sit up,abs,core,abdominal",
-		"quads": "leg extension,legs extension,leg press,legs press,quadricep,quadriceps,quads",
-		"hamstrings": "leg curl,hamstring,hamstrings",
-		"glutes": "hip thrust,glute bridge,glute,glutes,booty",
-		"calves": "calf raise,calf,calves",
-		"traps": "shrug,trap,traps,trapezius",
-		"adductors": "adductor,adductors,inner thigh,adduction",
-		"abductors": "abductor,abductors,outer thigh,abduction"
-	},
+  "englishMuscleDetector": {
+    "chest": "bench press,benchpress,chest press,chest fly,pec deck,chest,pecs,bench,bp",
+    "back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rowing,back,pull",
+    "backHamstrings": "deadlift,dead lift",
+    "shoulders": "shoulder press,overhead press,lateral raise,front raise,shoulder,deltoid,ohp",
+    "biceps": "bicep curl,hammer curl,bicep,biceps, bibi",
+    "triceps": "tricep extension,skull crusher,pushdown,tricep,triceps, tritri",
+    "tricepsChest": "dips",
+    "glutesQuads": "squat,squats,lunge,lunges",
+    "forearms": "wrist curl,forearm,forearms,grip",
+    "abs": "crunch,plank,sit-up,sit up,abs,core,abdominal",
+    "quads": "leg extension,legs extension,leg press,legs press,quadricep,quadriceps,quads",
+    "hamstrings": "leg curl,hamstring,hamstrings",
+    "glutes": "hip thrust,glute bridge,glute,glutes,booty",
+    "calves": "calf raise,calf,calves",
+    "traps": "shrug,trap,traps,trapezius",
+    "adductors": "adductor,adductors,inner thigh,adduction",
+    "abductors": "abductor,abductors,outer thigh,abduction"
+  },
   "muscleGroups": {
     "Chest": "Chest",
     "Back": "Back",
@@ -182,5 +182,10 @@
     "Traps": "Traps",
     "Adductors": "Adductors",
     "Abductors": "Abductors"
+  },
+  "massUnit": {
+    "metric": "Metric",
+    "imperial": "Imperial",
+    "us": "US"
   }
 }

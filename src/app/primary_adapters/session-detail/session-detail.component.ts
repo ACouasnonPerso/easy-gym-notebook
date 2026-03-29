@@ -14,6 +14,7 @@ import { SetSessionChronoUseCase } from '../../primary_ports/session-chrono/set-
 import { formatDuration, computeVolume } from '../../core_logic/shared/utils';
 import { Exercise } from '../../core_logic/shared/models';
 import { HapticService } from '../../core_logic/shared/haptic.service';
+import { WeightDisplayPipe } from '../../core_logic/mass-unit/weight-display.pipe';
 import { EditDurationPopupComponent } from './edit-duration-popup.component';
 import { EndSessionModalComponent } from './end-session-modal.component';
 import { SessionHeaderComponent } from './session-header.component';
@@ -25,6 +26,7 @@ import { SessionDetailUiService } from './session-detail-ui.service';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SessionHeaderComponent, SessionExercisesListComponent, EditDurationPopupComponent, EndSessionModalComponent],
+  providers: [WeightDisplayPipe],
   templateUrl: './session-detail.component.html',
   styleUrl: './session-detail.component.scss',
 })
@@ -44,6 +46,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private readonly setSessionChronoUseCase = inject(SetSessionChronoUseCase);
   private readonly sessionDetailUiService = inject(SessionDetailUiService);
   private readonly haptic = inject(HapticService);
+  private readonly weightDisplay = inject(WeightDisplayPipe);
 
   readonly session = this.getSessionDetailUseCase.session;
   readonly exercises = this.getSessionDetailUseCase.exercises;
@@ -84,8 +87,8 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   readonly totalWeightFormatted = computed(() => {
     const kg = this.totalWeight();
-    if (kg >= 1000) return (kg / 1000).toFixed(1).replace('.', ',') + ' t';
-    return kg + ' kg';
+    if (kg >= 1000) return this.weightDisplay.transform(kg / 1000, 't');
+    return this.weightDisplay.transform(kg, 'kg');
   });
 
   ngOnInit(): void {

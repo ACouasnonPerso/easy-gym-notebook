@@ -1,17 +1,20 @@
-import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, computed, inject } from '@angular/core';
 import { CardioOccurrence } from '../../core_logic/shared/models';
 import { getLabelStep } from './label-step';
 import { TranslateModule } from '@ngx-translate/core';
+import { DistanceDisplayPipe } from '../../core_logic/mass-unit/distance-display.pipe';
 
 @Component({
   selector: 'app-cardio-distance-chart',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslateModule],
+  providers: [DistanceDisplayPipe],
   templateUrl: './cardio-distance-chart.component.html',
   styleUrl: './cardio-distance-chart.component.scss',
 })
 export class CardioDistanceChartComponent {
+  private readonly distanceDisplay = inject(DistanceDisplayPipe);
   readonly occurrences = input<CardioOccurrence[]>([]);
 
   readonly chartData = computed(() => {
@@ -30,7 +33,7 @@ export class CardioDistanceChartComponent {
     const distancePoints = data.map((o, i) => ({
       x: xCoords[i],
       y: yDist(o.distanceKm as number),
-      label: i % labelStep === 0 ? `${o.distanceKm} km` : '',
+      label: i % labelStep === 0 ? this.distanceDisplay.transform(o.distanceKm as number, 'km') : '',
     }));
     const distancePolyline = n > 1 ? distancePoints.map(p => `${p.x},${p.y}`).join(' ') : '';
     const distanceAreaPoints = n > 1

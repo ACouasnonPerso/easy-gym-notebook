@@ -182,5 +182,10 @@
     "Traps": "ट्रैपेजियस",
     "Adductors": "अपवर्तक",
     "Abductors": "अपकर्षक"
+  },
+  "massUnit": {
+    "metric": "मीट्रिक",
+    "imperial": "इम्पीरियल",
+    "us": "US"
   }
 }

@@ -182,5 +182,10 @@
     "Traps": "승모근",
     "Adductors": "내전근",
     "Abductors": "외전근"
+  },
+  "massUnit": {
+    "metric": "미터법",
+    "imperial": "야드파운드법",
+    "us": "US"
   }
 }

@@ -11,6 +11,7 @@ import { DrumPickerComponent } from '../shared/drum-picker.component';
 import { generateRange } from '../../core_logic/shared/utils';
 import { TranslateModule } from '@ngx-translate/core';
 import { muscleGroupChipStyle } from '../../core_logic/shared/muscle-group-colors';
+import { MassUnitService } from '../../core_logic/mass-unit/mass-unit.service';
 
 function secondsToMmss(s: number): string {
   const m = Math.floor(s / 60);
@@ -49,6 +50,9 @@ export class AddExerciseFormComponent {
   private readonly autocompleteService = inject(AutocompleteService);
   private readonly muscleDetector = inject(MuscleGroupDetectorService);
   private readonly haptic = inject(HapticService);
+  private readonly massUnitService = inject(MassUnitService);
+
+  readonly weightUnit = computed(() => this.massUnitService.activeMassUnit() === 'metric' ? 'kg' : 'lb');
 
   readonly sessionId = input.required<string>();
   readonly exerciseAdded = output<void>();

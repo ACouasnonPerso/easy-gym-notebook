@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, computed, signal, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { Capacitor } from '@capacitor/core';
 import { ExerciseChronoUseCase } from '../../primary_ports/exercise-chrono/exercise-chrono.usecase';
 import { EditDurationPopupComponent } from '../session-detail/edit-duration-popup.component';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
@@ -24,6 +25,7 @@ export class ExerciseChronoComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   protected readonly haptic = inject(HapticService);
 
+  readonly isIos = Capacitor.getPlatform() === 'ios';
   readonly _breakDuration = signal(120);
   readonly hasExercise = signal(false);
   readonly showBreakDurationPopup = signal(false);

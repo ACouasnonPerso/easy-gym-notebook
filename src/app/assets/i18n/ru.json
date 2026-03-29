@@ -182,5 +182,10 @@
     "Traps": "Трапеции",
     "Adductors": "Приводящие",
     "Abductors": "Отводящие"
+  },
+  "massUnit": {
+    "metric": "Метрическая",
+    "imperial": "Имперская",
+    "us": "US"
   }
 }

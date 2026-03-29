@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, input, output, computed, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, computed, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Exercise, PyramidSet } from '../../core_logic/shared/models';
 import { DrumPickerComponent } from '../shared/drum-picker.component';
 import { generateRange } from '../../core_logic/shared/utils';
 import { TranslateModule } from '@ngx-translate/core';
+import { MassUnitService } from '../../core_logic/mass-unit/mass-unit.service';
 
 function secondsToMmss(s: number): string {
   const m = Math.floor(s / 60);
@@ -38,6 +39,9 @@ const KM_VALUES: (number | string)[] = [
   styleUrl: './exercise-expanded.component.scss',
 })
 export class ExerciseExpandedComponent {
+  private readonly massUnitService = inject(MassUnitService);
+  readonly weightUnit = computed(() => this.massUnitService.activeMassUnit() === 'metric' ? 'kg' : 'lb');
+
   readonly exercise = input.required<Exercise>();
   readonly update = output<Partial<Exercise>>();
   readonly validate = output<void>();

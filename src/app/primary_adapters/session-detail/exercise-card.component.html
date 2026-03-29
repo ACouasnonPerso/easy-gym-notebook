@@ -30,16 +30,16 @@
           </div>
           <div class="ex-stat right">
             @if (exercise().distanceKm !== null) {
-              <span class="ex-stat-value blue">{{ exercise().distanceKm }} {{ 'statsExercise.distanceKm' | translate }}</span>
+              <span class="ex-stat-value blue">{{ exercise().distanceKm | distanceDisplay:'km' }}</span>
             } @else {
               <span class="ex-stat-value blue">—</span>
             }
-            <span class="ex-stat-label">{{ 'statsExercise.distanceKm' | translate }}</span>
+            <span class="ex-stat-label">{{ 'common.distance' | translate }}</span>
           </div>
         } @else if (isPyramid()) {
           @if (avgPyramidWeight() !== null && avgPyramidReps() !== null) {
             <div class="ex-stat">
-              <span class="ex-stat-value orange">≈{{ avgPyramidWeight() }} {{ 'common.unitKg' | translate }}</span>
+              <span class="ex-stat-value orange">≈{{ avgPyramidWeight() | weightDisplay:'kg' }}</span>
               <span class="ex-stat-label">{{ 'common.weight' | translate }}</span>
             </div>
             <div class="ex-stat">
@@ -61,7 +61,7 @@
           }
         } @else {
           <div class="ex-stat">
-            <span class="ex-stat-value orange">{{ exercise().weightKg }} {{ 'common.unitKg' | translate }}</span>
+            <span class="ex-stat-value orange">{{ exercise().weightKg | weightDisplay:'kg' }}</span>
             <span class="ex-stat-label">{{ 'common.weight' | translate }}</span>
           </div>
           <div class="ex-stat">

@@ -182,5 +182,10 @@
     "Traps": "Cơ thang",
     "Adductors": "Khép đùi",
     "Abductors": "Dạng đùi"
+  },
+  "massUnit": {
+    "metric": "Hệ mét",
+    "imperial": "Hệ đế quốc",
+    "us": "US"
   }
 }

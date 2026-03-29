@@ -43,7 +43,7 @@
             />
           </div>
           <div class="picker-col">
-            <span class="picker-label">{{ 'statsExercise.distanceKm' | translate }}</span>
+            <span class="picker-label">{{ 'common.distance' | translate }}</span>
             <app-drum-picker
               [values]="kmValues"
               [selectedValue]="exercise().distanceKm ?? '-'"
@@ -67,7 +67,7 @@
                     step="0.5"
                     inputmode="decimal"
                   />
-                  <span class="pyramid-unit">kg</span>
+                  <span class="pyramid-unit">{{ weightUnit() }}</span>
                 </div>
                 <span class="pyramid-sep">×</span>
                 <div class="pyramid-field-group">
@@ -126,7 +126,7 @@
             <app-drum-picker
               [values]="weightValues"
               [selectedValue]="exercise().weightKg"
-              unit="kg"
+              [unit]="weightUnit()"
               (valueChange)="update.emit({ weightKg: +$event })"
             />
           </div>

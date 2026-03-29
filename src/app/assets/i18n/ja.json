@@ -182,5 +182,10 @@
     "Traps": "僧帽筋",
     "Adductors": "内転筋",
     "Abductors": "外転筋"
+  },
+  "massUnit": {
+    "metric": "メートル法",
+    "imperial": "ヤード・ポンド法",
+    "us": "US"
   }
 }

@@ -7,18 +7,23 @@ import { TranslateModule } from '@ngx-translate/core';
 import { muscleGroupChipStyle } from '../../core_logic/shared/muscle-group-colors';
 import { LanguageService } from '../../core_logic/language/language.service';
 import { HapticService } from '../../core_logic/shared/haptic.service';
+import { WeightDisplayPipe } from '../../core_logic/mass-unit/weight-display.pipe';
+import { DistanceDisplayPipe } from '../../core_logic/mass-unit/distance-display.pipe';
 
 @Component({
   selector: 'app-session-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LongPressDirective, NgStyle, TranslateModule],
+  providers: [WeightDisplayPipe, DistanceDisplayPipe],
   templateUrl: './session-card.component.html',
   styleUrl: './session-card.component.scss',
 })
 export class SessionCardComponent {
   private readonly languageService = inject(LanguageService);
   private readonly haptic = inject(HapticService);
+  private readonly weightDisplay = inject(WeightDisplayPipe);
+  private readonly distanceDisplay = inject(DistanceDisplayPipe);
   readonly session = input.required<Session>();
   readonly longPress = output<void>();
   readonly locale = computed(() => this.languageService.activeLang());
@@ -41,8 +46,8 @@ export class SessionCardComponent {
 
   readonly totalWeightFormatted = computed(() => {
     const kg = this.totalWeight();
-    if (kg >= 1000) return (kg / 1000).toFixed(1).replace('.', ',') + ' t';
-    return kg + ' kg';
+    if (kg >= 1000) return this.weightDisplay.transform(kg / 1000, 't');
+    return this.weightDisplay.transform(kg, 'kg');
   });
 
   readonly muscleTags = computed((): MuscleGroup[] => {
@@ -75,7 +80,7 @@ export class SessionCardComponent {
   readonly totalDistanceKmFormatted = computed(() => {
     const km = this.totalDistanceKm();
     if (km === 0) return '_';
-    return km.toFixed(1).replace('.', ',') + ' km';
+    return this.distanceDisplay.transform(km, 'km');
   });
 
   onClick(): void {

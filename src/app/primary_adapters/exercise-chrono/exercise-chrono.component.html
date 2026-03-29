@@ -8,6 +8,9 @@
     (openBreakDurationPopup)="showBreakDurationPopup.set(true)"
     (toggleSound)="exerciseChronoUseCase.toggleSound()"
   />
+  @if (isIos) {
+    <p class="ios-silent-warning">Son désactivé si le téléphone est en mode silence</p>
+  }
   <div class="chrono-body">
     <app-chrono-ring
       [formattedTime]="formattedTime()"

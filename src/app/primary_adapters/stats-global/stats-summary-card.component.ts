@@ -1,13 +1,15 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { MonthSummary } from '../../core_logic/stats-global/stats.service';
 import { formatSummaryDuration } from '../../core_logic/shared/utils';
+import { WeightDisplayPipe } from '../../core_logic/mass-unit/weight-display.pipe';
 
 @Component({
   selector: 'app-stats-summary-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslateModule],
+  providers: [WeightDisplayPipe],
   template: `
     <div class="stats-card">
       <div class="stats-card-title">{{ title() }}</div>
@@ -32,12 +34,13 @@ import { formatSummaryDuration } from '../../core_logic/shared/utils';
   styleUrl: './stats-global.component.scss',
 })
 export class StatsSummaryCardComponent {
+  private readonly weightDisplay = inject(WeightDisplayPipe);
   title = input<string>('');
   summary = input<MonthSummary>({ totalWeightKg: 0, sessionCount: 0, totalDurationSeconds: 0 });
 
   formatWeight(kg: number): string {
-    if (kg >= 1000) return (kg / 1000).toFixed(1).replace('.', ',') + ' t';
-    return Math.round(kg) + ' kg';
+    if (kg >= 1000) return this.weightDisplay.transform(kg / 1000, 't');
+    return this.weightDisplay.transform(Math.round(kg), 'kg');
   }
 
   formatDuration(totalSeconds: number): string {

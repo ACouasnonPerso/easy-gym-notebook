@@ -1,20 +1,22 @@
 import { Component, ChangeDetectionStrategy, output, inject, signal } from '@angular/core';
 import { MassUnitService, MassUnit } from '../../core_logic/mass-unit/mass-unit.service';
+import { TranslateModule } from '@ngx-translate/core';
 
-const MASS_UNIT_LABELS: Record<MassUnit, string> = {
-  metric: 'Métrique',
-  imperial: 'Britanique',
-  us: 'US',
+const MASS_UNIT_KEYS: Record<MassUnit, string> = {
+  metric: 'massUnit.metric',
+  imperial: 'massUnit.imperial',
+  us: 'massUnit.us',
 };
 
 @Component({
   selector: 'app-mass-unit-selector',
   standalone: true,
+  imports: [TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mass-unit-select-container">
       <div class="mass-unit-select-wrapper" (click)="showDropdown.set(!showDropdown())">
-        <span class="mass-unit-label">{{ label() }}</span>
+        <span class="mass-unit-label">{{ unitKey(massUnitService.activeMassUnit()) | translate }}</span>
         <span class="mass-unit-arrow" [class.open]="showDropdown()">▼</span>
       </div>
       @if (showDropdown()) {
@@ -25,7 +27,7 @@ const MASS_UNIT_LABELS: Record<MassUnit, string> = {
               class="mass-unit-dropdown-item"
               [class.selected]="unit === massUnitService.activeMassUnit()"
               (click)="select(unit)"
-            >{{ unitLabel(unit) }}</div>
+            >{{ unitKey(unit) | translate }}</div>
           }
         </div>
       }
@@ -67,13 +69,12 @@ export class MassUnitSelectorComponent {
 
   readonly units: MassUnit[] = ['metric', 'imperial', 'us'];
 
-  readonly label = () => MASS_UNIT_LABELS[this.massUnitService.activeMassUnit()];
-
-  unitLabel(unit: MassUnit): string {
-    return MASS_UNIT_LABELS[unit];
+  unitKey(unit: MassUnit): string {
+    return MASS_UNIT_KEYS[unit];
   }
 
   select(unit: MassUnit): void {
+    this.massUnitService.setMassUnit(unit);
     this.massUnitChange.emit(unit);
     this.showDropdown.set(false);
   }

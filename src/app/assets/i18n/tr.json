@@ -182,5 +182,10 @@
     "Traps": "Trapez",
     "Adductors": "Adduktorlar",
     "Abductors": "Abduktorlar"
+  },
+  "massUnit": {
+    "metric": "Metrik",
+    "imperial": "İmparatorluk",
+    "us": "US"
   }
 }
