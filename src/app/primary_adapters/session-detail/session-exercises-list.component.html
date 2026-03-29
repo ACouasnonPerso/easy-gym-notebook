@@ -21,13 +21,6 @@
   }
 </div>
 
-@if (showAddForm()) {
-  <app-add-exercise-form
-    [sessionId]="sessionId()"
-    (exerciseAdded)="uiService.closeAddExerciseForm()"
-    (cancelled)="uiService.closeAddExerciseForm()"
-  />
-}
 
 @if (showDeleteConfirm()) {
   <app-confirm-dialog

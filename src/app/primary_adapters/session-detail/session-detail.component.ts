@@ -19,13 +19,14 @@ import { EditDurationPopupComponent } from './edit-duration-popup.component';
 import { EndSessionModalComponent } from './end-session-modal.component';
 import { SessionHeaderComponent } from './session-header.component';
 import { SessionExercisesListComponent } from './session-exercises-list.component';
+import { AddExerciseFormComponent } from './add-exercise-form.component';
 import { SessionDetailUiService } from './session-detail-ui.service';
 
 @Component({
   selector: 'app-session-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SessionHeaderComponent, SessionExercisesListComponent, EditDurationPopupComponent, EndSessionModalComponent],
+  imports: [SessionHeaderComponent, SessionExercisesListComponent, EditDurationPopupComponent, EndSessionModalComponent, AddExerciseFormComponent],
   providers: [WeightDisplayPipe],
   templateUrl: './session-detail.component.html',
   styleUrl: './session-detail.component.scss',
@@ -44,7 +45,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   protected readonly getSessionChronoUseCase = inject(GetSessionChronoUseCase);
   private readonly pauseSessionChronoUseCase = inject(PauseSessionChronoUseCase);
   private readonly setSessionChronoUseCase = inject(SetSessionChronoUseCase);
-  private readonly sessionDetailUiService = inject(SessionDetailUiService);
+  readonly sessionDetailUiService = inject(SessionDetailUiService);
   private readonly haptic = inject(HapticService);
   private readonly weightDisplay = inject(WeightDisplayPipe);
 

@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, inject, input, output, signal } fro
 import { Capacitor } from '@capacitor/core';
 import { Exercise } from '../../core_logic/shared/models';
 import { ExerciseCardComponent } from './exercise-card.component';
-import { AddExerciseFormComponent } from './add-exercise-form.component';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
 import { SessionDetailUiService } from './session-detail-ui.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -12,7 +11,7 @@ import { HapticService } from '../../core_logic/shared/haptic.service';
   selector: 'app-session-exercises-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ExerciseCardComponent, AddExerciseFormComponent, ConfirmDialogComponent, TranslateModule],
+  imports: [ExerciseCardComponent, ConfirmDialogComponent, TranslateModule],
   templateUrl: './session-exercises-list.component.html',
   styleUrl: './session-exercises-list.component.scss',
 })

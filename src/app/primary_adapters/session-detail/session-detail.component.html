@@ -1,3 +1,11 @@
+@if (sessionDetailUiService.showAddExerciseForm()) {
+  <app-add-exercise-form
+    [sessionId]="sessionId()"
+    (exerciseAdded)="sessionDetailUiService.closeAddExerciseForm()"
+    (cancelled)="sessionDetailUiService.closeAddExerciseForm()"
+  />
+}
+
 @if (session()) {
 	<app-session-header
 			[session]="session()!"
