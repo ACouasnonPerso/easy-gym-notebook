@@ -500,4 +500,372 @@ describe("StatsService", () => {
 			expect(result[0].maxWeightKg).toBe(120);
 		});
 	});
+
+	describe("setMonth()", () => {
+		it("met à jour selectedMonth avec la nouvelle date", () => {
+			const feb = new Date(2026, 1, 1);
+			service.setMonth(feb);
+			expect(service.selectedMonth().getMonth()).toBe(1);
+			expect(service.selectedMonth().getFullYear()).toBe(2026);
+		});
+
+		it("filtre les sessions selon le nouveau mois sélectionné", () => {
+			const march1 = new Date(2026, 2, 1);
+			const feb1 = new Date(2026, 1, 1);
+			service._allSessions.set([
+				makeSession({ id: "s-march", date: march1, durationSeconds: 0 }),
+				makeSession({ id: "s-feb", date: feb1, durationSeconds: 0 }),
+			]);
+			service._allExercises.set([]);
+
+			service.setMonth(new Date(2026, 2, 1));
+			expect(service.monthSummary().sessionCount).toBe(1);
+
+			service.setMonth(new Date(2026, 1, 1));
+			expect(service.monthSummary().sessionCount).toBe(1);
+		});
+	});
+
+	describe("monthSummary — sessionCount et totalDurationSeconds", () => {
+		it("retourne sessionCount = 0 quand il n'y a aucune session", () => {
+			service._allSessions.set([]);
+			service._allExercises.set([]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			expect(service.monthSummary().sessionCount).toBe(0);
+		});
+
+		it("retourne sessionCount correct pour plusieurs sessions dans le mois", () => {
+			const march1 = new Date(2026, 2, 1);
+			const march15 = new Date(2026, 2, 15);
+			service._allSessions.set([
+				makeSession({ id: "s1", date: march1 }),
+				makeSession({ id: "s2", date: march15 }),
+			]);
+			service._allExercises.set([]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			expect(service.monthSummary().sessionCount).toBe(2);
+		});
+
+		it("additionne totalDurationSeconds de toutes les sessions du mois", () => {
+			const march1 = new Date(2026, 2, 1);
+			const march15 = new Date(2026, 2, 15);
+			service._allSessions.set([
+				makeSession({ id: "s1", date: march1, durationSeconds: 3600 }),
+				makeSession({ id: "s2", date: march15, durationSeconds: 1800 }),
+			]);
+			service._allExercises.set([]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			expect(service.monthSummary().totalDurationSeconds).toBe(5400);
+		});
+
+		it("exclut les exercices non validés du volume total", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ sessionId: "s1", weightKg: 100, sets: 3, reps: 10, status: "validated" }),
+				makeExercise({ id: "ex-2", sessionId: "s1", weightKg: 50, sets: 3, reps: 10, status: "pending" }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			expect(service.monthSummary().totalWeightKg).toBe(100 * 3 * 10);
+		});
+	});
+
+	describe("weeklyAverage", () => {
+		it("divise les totaux du mois par le nombre de semaines", () => {
+			const march1 = new Date(2026, 2, 1); // March 2026 → ceil(31/7) = 5 weeks
+			service._allSessions.set([makeSession({ id: "s1", date: march1, durationSeconds: 5000 })]);
+			service._allExercises.set([
+				makeExercise({ sessionId: "s1", weightKg: 100, sets: 5, reps: 10 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.weeklyAverage();
+			const weeks = Math.ceil(31 / 7); // 5
+			expect(result.avgWeightKg).toBe((100 * 5 * 10) / weeks);
+			expect(result.sessionsPerWeek).toBe(1 / weeks);
+			expect(result.avgDurationSeconds).toBe(5000 / weeks);
+		});
+
+		it("retourne des zéros quand il n'y a aucune session", () => {
+			service._allSessions.set([]);
+			service._allExercises.set([]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.weeklyAverage();
+			expect(result.avgWeightKg).toBe(0);
+			expect(result.sessionsPerWeek).toBe(0);
+			expect(result.avgDurationSeconds).toBe(0);
+		});
+	});
+
+	describe("muscleGroupDetails", () => {
+		it("retourne une map vide si aucun exercice dans le mois", () => {
+			service._allSessions.set([]);
+			service._allExercises.set([]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			expect(service.muscleGroupDetails().size).toBe(0);
+		});
+
+		it("calcule le bon pourcentage pour chaque groupe musculaire", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest }),
+				makeExercise({ id: "ex-2", sessionId: "s1", muscleGroup: MuscleGroup.Chest }),
+				makeExercise({ id: "ex-3", sessionId: "s1", muscleGroup: MuscleGroup.Back }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.muscleGroupDetails();
+			expect(result.get(MuscleGroup.Chest)?.percentage).toBe(67);
+			expect(result.get(MuscleGroup.Back)?.percentage).toBe(33);
+			const total = Array.from(result.values()).reduce((sum, d) => sum + d.percentage, 0);
+			expect(total).toBe(100);
+		});
+
+		it("calcule sessionCount = nombre de sessions distinctes avec ce groupe musculaire", () => {
+			const march1 = new Date(2026, 2, 1);
+			const march10 = new Date(2026, 2, 10);
+			service._allSessions.set([
+				makeSession({ id: "s1", date: march1 }),
+				makeSession({ id: "s2", date: march10 }),
+			]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest }),
+				makeExercise({ id: "ex-2", sessionId: "s2", muscleGroup: MuscleGroup.Chest }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.muscleGroupDetails();
+			expect(result.get(MuscleGroup.Chest)?.sessionCount).toBe(2);
+		});
+
+		it("calcule totalLoadKg = somme des volumes pour ce groupe musculaire", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 80, sets: 3, reps: 10 }),
+				makeExercise({ id: "ex-2", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 60, sets: 4, reps: 8 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.muscleGroupDetails();
+			expect(result.get(MuscleGroup.Chest)?.totalLoadKg).toBe(80 * 3 * 10 + 60 * 4 * 8);
+		});
+
+		it("retourne une map vide si tous les exercices ont muscleGroup null", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: null }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			expect(service.muscleGroupDetails().size).toBe(0);
+		});
+	});
+
+	describe("exerciseSummaries — occurrenceCount, totalVolumeKg, isCardio, totalDistanceKm, muscleGroups", () => {
+		it("compte correctement le nombre d'occurrences d'un exercice", () => {
+			const march1 = new Date(2026, 2, 1);
+			const march8 = new Date(2026, 2, 8);
+			const march15 = new Date(2026, 2, 15);
+			service._allSessions.set([
+				makeSession({ id: "s1", date: march1 }),
+				makeSession({ id: "s2", date: march8 }),
+				makeSession({ id: "s3", date: march15 }),
+			]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", name: "Squat", weightKg: 80, sets: 4, reps: 8 }),
+				makeExercise({ id: "ex-2", sessionId: "s2", name: "Squat", weightKg: 90, sets: 4, reps: 6 }),
+				makeExercise({ id: "ex-3", sessionId: "s3", name: "Squat", weightKg: 100, sets: 3, reps: 5 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.exerciseSummaries();
+			expect(result[0].occurrenceCount).toBe(3);
+		});
+
+		it("calcule totalVolumeKg comme somme de tous les volumes d'un exercice", () => {
+			const march1 = new Date(2026, 2, 1);
+			const march8 = new Date(2026, 2, 8);
+			service._allSessions.set([
+				makeSession({ id: "s1", date: march1 }),
+				makeSession({ id: "s2", date: march8 }),
+			]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", name: "Bench Press", weightKg: 80, sets: 4, reps: 8 }),
+				makeExercise({ id: "ex-2", sessionId: "s2", name: "Bench Press", weightKg: 90, sets: 3, reps: 6 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.exerciseSummaries();
+			expect(result[0].totalVolumeKg).toBe(80 * 4 * 8 + 90 * 3 * 6);
+		});
+
+		it("retourne les résultats triés par totalVolumeKg décroissant", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", name: "Light", weightKg: 10, sets: 1, reps: 10 }),
+				makeExercise({ id: "ex-2", sessionId: "s1", name: "Heavy", weightKg: 100, sets: 5, reps: 10 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.exerciseSummaries();
+			expect(result[0].name).toBe("Heavy");
+			expect(result[1].name).toBe("Light");
+		});
+
+		it("marque isCardio = true pour un exercice cardio", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ sessionId: "s1", name: "Run", isCardio: true, durationSeconds: 1800, distanceKm: 5 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.exerciseSummaries();
+			expect(result[0].isCardio).toBe(true);
+		});
+
+		it("totalDistanceKm est non null quand isCardio et distanceKm > 0", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", name: "Run", isCardio: true, distanceKm: 5 }),
+				makeExercise({ id: "ex-2", sessionId: "s1", name: "Run", isCardio: true, distanceKm: 3 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.exerciseSummaries();
+			expect(result[0].totalDistanceKm).toBe(8);
+		});
+
+		it("totalDistanceKm est null quand l'exercice n'est pas cardio", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ sessionId: "s1", name: "Squat", isCardio: false, distanceKm: null }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.exerciseSummaries();
+			expect(result[0].totalDistanceKm).toBeNull();
+		});
+
+		it("totalDurationSeconds est la somme des durées de toutes les occurrences", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", name: "Run", isCardio: true, durationSeconds: 1800 }),
+				makeExercise({ id: "ex-2", sessionId: "s1", name: "Run", isCardio: true, durationSeconds: 900 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.exerciseSummaries();
+			expect(result[0].totalDurationSeconds).toBe(2700);
+		});
+
+		it("muscleGroups est l'union dédupliquée des muscleGroups de toutes les occurrences", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", name: "Compound", muscleGroups: [MuscleGroup.Chest, MuscleGroup.Triceps] }),
+				makeExercise({ id: "ex-2", sessionId: "s1", name: "Compound", muscleGroups: [MuscleGroup.Chest, MuscleGroup.Shoulders] }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.exerciseSummaries();
+			expect(result[0].muscleGroups).toContain(MuscleGroup.Chest);
+			expect(result[0].muscleGroups).toContain(MuscleGroup.Triceps);
+			expect(result[0].muscleGroups).toContain(MuscleGroup.Shoulders);
+			expect(result[0].muscleGroups.filter(mg => mg === MuscleGroup.Chest).length).toBe(1);
+		});
+
+		it("retourne un tableau vide quand il n'y a pas d'exercices dans le mois", () => {
+			service._allSessions.set([]);
+			service._allExercises.set([]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			expect(service.exerciseSummaries()).toEqual([]);
+		});
+	});
+
+	describe("heatmapData — hasSession et isCurrentMonth", () => {
+		it("hasSession est true pour les jours ayant une session", () => {
+			const march10 = new Date(2026, 2, 10);
+			service._allSessions.set([makeSession({ id: "s1", date: march10 })]);
+			service._allExercises.set([makeExercise({ sessionId: "s1", muscleGroups: [MuscleGroup.Chest] })]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const cell = service.heatmapData().find(c => c.date.getDate() === 10 && c.date.getMonth() === 2)!;
+			expect(cell.hasSession).toBe(true);
+		});
+
+		it("hasSession est false pour les jours sans session", () => {
+			service._allSessions.set([]);
+			service._allExercises.set([]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const cell = service.heatmapData().find(c => c.date.getDate() === 10 && c.date.getMonth() === 2)!;
+			expect(cell.hasSession).toBe(false);
+		});
+
+		it("isCurrentMonth est false pour les jours hors du mois sélectionné", () => {
+			service._allSessions.set([]);
+			service._allExercises.set([]);
+			service.selectedMonth.set(new Date(2026, 2, 1)); // March 2026
+
+			// March 2026 starts on Monday the 2nd; grid may include Feb 23 - March 1
+			const cells = service.heatmapData();
+			const outsideCells = cells.filter(c => c.date.getMonth() !== 2);
+			outsideCells.forEach(c => expect(c.isCurrentMonth).toBe(false));
+		});
+
+		it("isCurrentMonth est true pour tous les jours du mois sélectionné", () => {
+			service._allSessions.set([]);
+			service._allExercises.set([]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const cells = service.heatmapData();
+			const marchCells = cells.filter(c => c.date.getMonth() === 2 && c.date.getFullYear() === 2026);
+			expect(marchCells.length).toBe(31);
+			marchCells.forEach(c => expect(c.isCurrentMonth).toBe(true));
+		});
+	});
+
+	describe("muscleGroupDistribution — cas limites", () => {
+		it("retourne une map vide si aucun exercice dans le mois", () => {
+			service._allSessions.set([]);
+			service._allExercises.set([]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			expect(service.muscleGroupDistribution().size).toBe(0);
+		});
+
+		it("retourne une map vide si tous les exercices ont muscleGroup null", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([makeExercise({ sessionId: "s1", muscleGroup: null })]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			expect(service.muscleGroupDistribution().size).toBe(0);
+		});
+
+		it("retourne 100% pour un seul groupe musculaire", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([makeExercise({ sessionId: "s1", muscleGroup: MuscleGroup.Chest })]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.muscleGroupDistribution();
+			expect(result.get(MuscleGroup.Chest)).toBe(100);
+		});
+	});
 });
