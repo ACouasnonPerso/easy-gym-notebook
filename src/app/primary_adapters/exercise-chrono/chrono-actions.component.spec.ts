@@ -23,24 +23,48 @@ function createComponent(chronoState: string) {
   return { fixture, hapticSpy };
 }
 
-describe('ChronoActionsComponent — haptic feedback sur +15s et +30s', () => {
-  it('cliquer sur +15s appelle hapticService.vibrate()', () => {
+describe('ChronoActionsComponent — haptic feedback sur -10s et +10s', () => {
+  it('cliquer sur -10s appelle hapticService.vibrate()', () => {
     const { fixture, hapticSpy } = createComponent('break');
 
     const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
-    const btn15 = btns.find(b => b.nativeElement.textContent.trim() === '+15s')!;
-    btn15.triggerEventHandler('click', null);
+    const btn = btns.find(b => b.nativeElement.textContent.trim() === '-10s')!;
+    btn.triggerEventHandler('click', null);
 
     expect(hapticSpy.vibrate).toHaveBeenCalledTimes(1);
   });
 
-  it('cliquer sur +30s appelle hapticService.vibrate()', () => {
+  it('cliquer sur +10s appelle hapticService.vibrate()', () => {
     const { fixture, hapticSpy } = createComponent('break');
 
     const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
-    const btn30 = btns.find(b => b.nativeElement.textContent.trim() === '+30s')!;
-    btn30.triggerEventHandler('click', null);
+    const btn = btns.find(b => b.nativeElement.textContent.trim() === '+10s')!;
+    btn.triggerEventHandler('click', null);
 
     expect(hapticSpy.vibrate).toHaveBeenCalledTimes(1);
+  });
+
+  it('cliquer sur -10s émet addTime(-10)', () => {
+    const { fixture } = createComponent('break');
+    let emitted: number | undefined;
+    fixture.componentInstance.addTime.subscribe((v: number) => (emitted = v));
+
+    const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
+    const btn = btns.find(b => b.nativeElement.textContent.trim() === '-10s')!;
+    btn.triggerEventHandler('click', null);
+
+    expect(emitted).toBe(-10);
+  });
+
+  it('cliquer sur +10s émet addTime(10)', () => {
+    const { fixture } = createComponent('break');
+    let emitted: number | undefined;
+    fixture.componentInstance.addTime.subscribe((v: number) => (emitted = v));
+
+    const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
+    const btn = btns.find(b => b.nativeElement.textContent.trim() === '+10s')!;
+    btn.triggerEventHandler('click', null);
+
+    expect(emitted).toBe(10);
   });
 });

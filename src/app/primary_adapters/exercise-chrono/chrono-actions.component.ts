@@ -86,8 +86,8 @@ import { HapticService } from '../../core_logic/shared/haptic.service';
   template: `
     @if (chronoState() === 'break' || chronoState() === 'break_paused') {
       <div class="add-time-actions">
-        <button class="add-time-btn" (click)="onAddTime(15)">+15s</button>
-        <button class="add-time-btn" (click)="onAddTime(30)">+30s</button>
+        <button class="add-time-btn" (click)="onAddTime(-10)">-10s</button>
+        <button class="add-time-btn" (click)="onAddTime(10)">+10s</button>
       </div>
     }
 

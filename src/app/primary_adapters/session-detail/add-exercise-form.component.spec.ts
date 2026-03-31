@@ -236,6 +236,89 @@ describe('AddExerciseFormComponent — onSuggestionSelect', () => {
   });
 });
 
+describe('AddExerciseFormComponent — pyramid pre-fill on activation', () => {
+  let fixture: ComponentFixture<AddExerciseFormComponent>;
+  let component: AddExerciseFormComponent;
+  let autocompleteSpy: jasmine.SpyObj<AutocompleteService>;
+
+  beforeEach(async () => {
+    autocompleteSpy = jasmine.createSpyObj('AutocompleteService', [
+      'getSuggestions',
+      'getDefaultsByExactName',
+      'getLastParams',
+    ]);
+    autocompleteSpy.getSuggestions.and.returnValue(Promise.resolve([]));
+    autocompleteSpy.getDefaultsByExactName.and.returnValue(Promise.resolve(null));
+    autocompleteSpy.getLastParams.and.returnValue(Promise.resolve(null));
+
+    const addUseCaseSpy = jasmine.createSpyObj('AddExerciseUseCase', ['execute']);
+    addUseCaseSpy.execute.and.returnValue(Promise.resolve());
+
+    const exerciseRepoSpy = jasmine.createSpyObj('ExerciseRepository', ['getAll', 'getBySessionId', 'save', 'delete']);
+    exerciseRepoSpy.save.and.returnValue(Promise.resolve());
+    exerciseRepoSpy.getBySessionId.and.returnValue(Promise.resolve([]));
+    exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([]));
+
+    const sessionRepoSpy = jasmine.createSpyObj('SessionRepository', ['getAll', 'getById', 'save', 'delete']);
+    sessionRepoSpy.save.and.returnValue(Promise.resolve());
+    sessionRepoSpy.getAll.and.returnValue(Promise.resolve([]));
+
+    await TestBed.configureTestingModule({
+      imports: [AddExerciseFormComponent],
+      providers: [
+        { provide: AutocompleteService, useValue: autocompleteSpy },
+        { provide: AddExerciseUseCase, useValue: addUseCaseSpy },
+        { provide: EXERCISE_REPOSITORY, useValue: exerciseRepoSpy },
+        { provide: SESSION_REPOSITORY, useValue: sessionRepoSpy },
+        { provide: ANALYTICS_REPOSITORY, useValue: (() => { const s = jasmine.createSpyObj('IAnalyticsRepo', ['trackSessionStarted','trackSessionUpdated','trackSessionCompleted']); s.trackSessionStarted.and.returnValue(Promise.resolve()); s.trackSessionUpdated.and.returnValue(Promise.resolve()); s.trackSessionCompleted.and.returnValue(Promise.resolve()); return s; })() },
+        provideTranslateService({ defaultLanguage: 'fr' }),
+      ],
+    }).overrideComponent(AddExerciseFormComponent, {
+      set: { providers: [] },
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AddExerciseFormComponent);
+    fixture.componentRef.setInput('sessionId', 'session-1');
+    component = fixture.componentInstance;
+    component.isCardio.set(false);
+    component.isPyramid.set(false);
+    component.pyramidSets.set([]);
+    fixture.detectChanges();
+  });
+
+  it('should generate exactly as many pyramid rows as the current sets count when pyramid mode is activated', () => {
+    component.sets.set(5);
+    component.weightKg.set(31);
+
+    component.togglePyramid();
+
+    expect(component.pyramidSets().length).toBe(5);
+  });
+
+  it('should pre-fill every generated pyramid row with the currently selected weight when pyramid mode is activated', () => {
+    component.sets.set(5);
+    component.weightKg.set(31);
+
+    component.togglePyramid();
+
+    const allWeights = component.pyramidSets().map(s => s.weightKg);
+    expect(allWeights).toEqual([31, 31, 31, 31, 31]);
+  });
+
+  it('should not overwrite existing pyramid sets when pyramid mode is re-activated after being deactivated', () => {
+    component.sets.set(5);
+    component.weightKg.set(31);
+    component.pyramidSets.set([{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }]);
+    component.isPyramid.set(true);
+
+    // deactivate then reactivate
+    component.togglePyramid(); // now isPyramid = false
+    component.togglePyramid(); // now isPyramid = true again, sets already exist
+
+    expect(component.pyramidSets()).toEqual([{ weightKg: 60, reps: 12 }, { weightKg: 80, reps: 8 }]);
+  });
+});
+
 describe('AddExerciseFormComponent — cardio layout', () => {
   let fixture: ComponentFixture<AddExerciseFormComponent>;
   let component: AddExerciseFormComponent;

@@ -193,8 +193,8 @@ describe('ExerciseChronoComponent — mise à jour du label après confirmation 
   });
 });
 
-describe('ExerciseChronoComponent — boutons +15s et +30s', () => {
-  it('n\'affiche PAS les boutons +15s et +30s quand l\'état est training_paused', () => {
+describe('ExerciseChronoComponent — boutons -10s et +10s', () => {
+  it('n\'affiche PAS les boutons -10s et +10s quand l\'état est training_paused', () => {
     const { fixture, useCaseSpy } = createComponent({});
     useCaseSpy.chronoState.set('training_paused');
     fixture.detectChanges();
@@ -204,20 +204,20 @@ describe('ExerciseChronoComponent — boutons +15s et +30s', () => {
     expect(btns.length).toBe(0);
   });
 
-  it('affiche les boutons +15s et +30s quand l\'état est break_paused', () => {
+  it('affiche les boutons -10s et +10s quand l\'état est break_paused', () => {
     const { fixture, useCaseSpy } = createComponent({});
     useCaseSpy.chronoState.set('break_paused');
     fixture.detectChanges();
 
     const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
-    const btn15 = btns.find(b => b.nativeElement.textContent.trim() === '+15s');
-    const btn30 = btns.find(b => b.nativeElement.textContent.trim() === '+30s');
+    const btnMinus = btns.find(b => b.nativeElement.textContent.trim() === '-10s');
+    const btnPlus = btns.find(b => b.nativeElement.textContent.trim() === '+10s');
 
-    expect(btn15).not.toBeUndefined();
-    expect(btn30).not.toBeUndefined();
+    expect(btnMinus).not.toBeUndefined();
+    expect(btnPlus).not.toBeUndefined();
   });
 
-  it('n\'affiche pas les boutons +15s et +30s quand l\'état est training', () => {
+  it('n\'affiche pas les boutons -10s et +10s quand l\'état est training', () => {
     const { fixture, useCaseSpy } = createComponent({});
     useCaseSpy.chronoState.set('training');
     fixture.detectChanges();
@@ -227,40 +227,40 @@ describe('ExerciseChronoComponent — boutons +15s et +30s', () => {
     expect(btns.length).toBe(0);
   });
 
-  it('cliquer sur +15s appelle addTime(15)', () => {
+  it('cliquer sur -10s appelle addTime(-10)', () => {
     const { fixture, useCaseSpy } = createComponent({});
     useCaseSpy.chronoState.set('break_paused');
     fixture.detectChanges();
 
     const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
-    const btn15 = btns.find(b => b.nativeElement.textContent.trim() === '+15s')!;
-    btn15.triggerEventHandler('click', null);
+    const btnMinus = btns.find(b => b.nativeElement.textContent.trim() === '-10s')!;
+    btnMinus.triggerEventHandler('click', null);
 
-    expect(useCaseSpy.addTime).toHaveBeenCalledOnceWith(15);
+    expect(useCaseSpy.addTime).toHaveBeenCalledOnceWith(-10);
   });
 
-  it('cliquer sur +30s appelle addTime(30)', () => {
+  it('cliquer sur +10s appelle addTime(10)', () => {
     const { fixture, useCaseSpy } = createComponent({});
     useCaseSpy.chronoState.set('break_paused');
     fixture.detectChanges();
 
     const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
-    const btn30 = btns.find(b => b.nativeElement.textContent.trim() === '+30s')!;
-    btn30.triggerEventHandler('click', null);
+    const btnPlus = btns.find(b => b.nativeElement.textContent.trim() === '+10s')!;
+    btnPlus.triggerEventHandler('click', null);
 
-    expect(useCaseSpy.addTime).toHaveBeenCalledOnceWith(30);
+    expect(useCaseSpy.addTime).toHaveBeenCalledOnceWith(10);
   });
 
-  it('affiche les boutons +15s et +30s quand l\'état est break', () => {
+  it('affiche les boutons -10s et +10s quand l\'état est break', () => {
     const { fixture, useCaseSpy } = createComponent({});
     useCaseSpy.chronoState.set('break');
     fixture.detectChanges();
 
     const btns = fixture.debugElement.queryAll(By.css('.add-time-btn'));
-    const btn15 = btns.find(b => b.nativeElement.textContent.trim() === '+15s');
-    const btn30 = btns.find(b => b.nativeElement.textContent.trim() === '+30s');
+    const btnMinus = btns.find(b => b.nativeElement.textContent.trim() === '-10s');
+    const btnPlus = btns.find(b => b.nativeElement.textContent.trim() === '+10s');
 
-    expect(btn15).not.toBeUndefined();
-    expect(btn30).not.toBeUndefined();
+    expect(btnMinus).not.toBeUndefined();
+    expect(btnPlus).not.toBeUndefined();
   });
 });

@@ -12,12 +12,12 @@ describe('WeightDisplayPipe', () => {
 
   beforeEach(() => {
     localStorage.clear();
+    Object.defineProperty(navigator, 'language', { get: () => 'fr-FR', configurable: true });
     TestBed.configureTestingModule({
       providers: [WeightDisplayPipe, MassUnitService],
     });
     pipe = TestBed.inject(WeightDisplayPipe);
     massUnitService = TestBed.inject(MassUnitService);
-    spyOnProperty(navigator, 'language', 'get').and.returnValue('fr-FR');
   });
 
   describe('système Métrique', () => {

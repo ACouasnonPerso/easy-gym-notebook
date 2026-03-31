@@ -16,7 +16,7 @@ describe('MassUnitService', () => {
 
   describe('état initial', () => {
     it('devrait exposer metric comme unité de masse active par défaut quand la locale est fr-FR', () => {
-      spyOnProperty(navigator, 'language', 'get').and.returnValue('fr-FR');
+      Object.defineProperty(navigator, 'language', { get: () => 'fr-FR', configurable: true });
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({ providers: [MassUnitService] });
       const svc = TestBed.inject(MassUnitService);
@@ -25,7 +25,7 @@ describe('MassUnitService', () => {
     });
 
     it('devrait auto-détecter us quand la locale est en-US et localStorage est vide', () => {
-      spyOnProperty(navigator, 'language', 'get').and.returnValue('en-US');
+      Object.defineProperty(navigator, 'language', { get: () => 'en-US', configurable: true });
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({ providers: [MassUnitService] });
       const svc = TestBed.inject(MassUnitService);
@@ -45,26 +45,26 @@ describe('MassUnitService', () => {
 
   describe('detect()', () => {
     it('devrait retourner metric pour une locale non-US non-GB quand localStorage est vide', () => {
-      spyOnProperty(navigator, 'language', 'get').and.returnValue('fr-FR');
+      Object.defineProperty(navigator, 'language', { get: () => 'fr-FR', configurable: true });
 
       expect(service.detect()).toBe('metric');
     });
 
     it('devrait retourner us pour la locale en-US quand localStorage est vide', () => {
-      spyOnProperty(navigator, 'language', 'get').and.returnValue('en-US');
+      Object.defineProperty(navigator, 'language', { get: () => 'en-US', configurable: true });
 
       expect(service.detect()).toBe('us');
     });
 
     it('devrait retourner imperial pour la locale en-GB quand localStorage est vide', () => {
-      spyOnProperty(navigator, 'language', 'get').and.returnValue('en-GB');
+      Object.defineProperty(navigator, 'language', { get: () => 'en-GB', configurable: true });
 
       expect(service.detect()).toBe('imperial');
     });
 
     it('devrait retourner la valeur stockée dans localStorage si la clé massUnit existe', () => {
       localStorage.setItem('massUnit', 'imperial');
-      spyOnProperty(navigator, 'language', 'get').and.returnValue('en-US');
+      Object.defineProperty(navigator, 'language', { get: () => 'en-US', configurable: true });
 
       expect(service.detect()).toBe('imperial');
     });

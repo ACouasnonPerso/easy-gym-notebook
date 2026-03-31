@@ -2,10 +2,12 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
+  OnDestroy,
   inject,
   signal,
   computed,
 } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { GetGlobalStatsUseCase } from '../../primary_ports/stats-global/get-global-stats.usecase';
 import { SelectMonthUseCase } from '../../primary_ports/stats-global/select-month.usecase';
@@ -38,7 +40,7 @@ import { StatsImportExportCardComponent } from './stats-import-export-card.compo
   templateUrl: './stats-global.component.html',
   styleUrl: './stats-global.component.scss',
 })
-export class StatsGlobalComponent implements OnInit {
+export class StatsGlobalComponent implements OnInit, OnDestroy {
   protected readonly getGlobalStatsUseCase = inject(GetGlobalStatsUseCase);
   private readonly selectMonthUseCase = inject(SelectMonthUseCase);
   private readonly mergeExercisesUseCase = inject(MergeExercisesUseCase);
@@ -47,6 +49,7 @@ export class StatsGlobalComponent implements OnInit {
 
   readonly months = signal<{ label: string; value: Date | null; type: 'month' | 'current-year' | 'total' | 'current-week' }[]>([]);
   readonly selectedMonthIndex = signal<number>(0);
+  private langChangeSub?: Subscription;
 
   readonly isCurrentMonth = computed(() => this.selectedMonthIndex() === 3);
 
@@ -83,6 +86,13 @@ export class StatsGlobalComponent implements OnInit {
     this.months.set(this.generateMonths());
     this.selectedMonthIndex.set(3);
     this.getGlobalStatsUseCase.execute();
+    this.langChangeSub = this.translate.onLangChange.subscribe(() => {
+      this.months.set(this.generateMonths());
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSub?.unsubscribe();
   }
 
   onMonthChange(idx: number): void {
@@ -119,7 +129,7 @@ export class StatsGlobalComponent implements OnInit {
     months.push({ label: this.translate.instant('statsGlobal.total'), value: null, type: 'total' });
     months.push({ label: this.translate.instant('statsGlobal.thisWeek'), value: null, type: 'current-week' });
     const now = new Date();
-    const locale = this.translate.currentLang === 'en' ? 'en-US' : 'fr-FR';
+    const locale = this.translate.currentLang;
     for (let i = 0; i < 13; i++) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const label = d.toLocaleDateString(locale, { month: 'long', year: 'numeric' });

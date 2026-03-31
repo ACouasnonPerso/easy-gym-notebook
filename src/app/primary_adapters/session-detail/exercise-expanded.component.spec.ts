@@ -26,6 +26,40 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
   };
 }
 
+describe('ExerciseExpandedComponent — togglePyramid pre-fill', () => {
+  let fixture: ComponentFixture<ExerciseExpandedComponent>;
+  let component: ExerciseExpandedComponent;
+  let massUnitService: MassUnitService;
+
+  beforeEach(async () => {
+    localStorage.clear();
+
+    await TestBed.configureTestingModule({
+      imports: [ExerciseExpandedComponent],
+      providers: [
+        MassUnitService,
+        provideTranslateService({ defaultLanguage: 'fr' }),
+      ],
+    }).compileComponents();
+
+    massUnitService = TestBed.inject(MassUnitService);
+    massUnitService.setMassUnit('metric');
+  });
+
+  it('should generate as many pyramid sets as the exercise sets count, each pre-filled with current weight', () => {
+    fixture = TestBed.createComponent(ExerciseExpandedComponent);
+    fixture.componentRef.setInput('exercise', makeExercise({ weightKg: 31, sets: 5, pyramidSets: [] }));
+    fixture.detectChanges();
+    component = fixture.componentInstance;
+
+    component.togglePyramid();
+
+    const sets = component.effectivePyramidSets();
+    expect(sets.length).toBe(5);
+    sets.forEach(s => expect(s.weightKg).toBe(31));
+  });
+});
+
 describe('ExerciseExpandedComponent — weight unit conversion', () => {
   let fixture: ComponentFixture<ExerciseExpandedComponent>;
   let component: ExerciseExpandedComponent;

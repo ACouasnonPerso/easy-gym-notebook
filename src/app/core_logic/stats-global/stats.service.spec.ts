@@ -343,6 +343,70 @@ describe('StatsService', () => {
     });
   });
 
+  describe('muscleGroupDistribution — percentage rounding', () => {
+    it('should make percentages sum to exactly 100 when three muscle groups have equal counts (33.33% each)', () => {
+      const march1 = new Date(2026, 2, 1);
+      service._allSessions.set([makeSession({ id: 's1', date: march1 })]);
+      service._allExercises.set([
+        makeExercise({ id: 'ex-1', sessionId: 's1', muscleGroup: MuscleGroup.Chest }),
+        makeExercise({ id: 'ex-2', sessionId: 's1', muscleGroup: MuscleGroup.Back }),
+        makeExercise({ id: 'ex-3', sessionId: 's1', muscleGroup: MuscleGroup.Quads }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result = service.muscleGroupDistribution();
+      const total = Array.from(result.values()).reduce((sum, pct) => sum + pct, 0);
+
+      expect(total).toBe(100);
+    });
+
+    it('should make percentages sum to exactly 100 when seven muscle groups have equal counts (14.28% each)', () => {
+      const march1 = new Date(2026, 2, 1);
+      service._allSessions.set([makeSession({ id: 's1', date: march1 })]);
+      const muscleGroups = [
+        MuscleGroup.Chest, MuscleGroup.Back, MuscleGroup.Shoulders,
+        MuscleGroup.Biceps, MuscleGroup.Triceps, MuscleGroup.Quads, MuscleGroup.Abs,
+      ];
+      service._allExercises.set(
+        muscleGroups.map((mg, i) =>
+          makeExercise({ id: `ex-${i + 1}`, sessionId: 's1', muscleGroup: mg })
+        )
+      );
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result = service.muscleGroupDistribution();
+      const total = Array.from(result.values()).reduce((sum, pct) => sum + pct, 0);
+
+      expect(total).toBe(100);
+    });
+
+    it('should assign each segment its exact integer percentage when the distribution divides evenly (20%+20%+60%)', () => {
+      const march1 = new Date(2026, 2, 1);
+      service._allSessions.set([makeSession({ id: 's1', date: march1 })]);
+      service._allExercises.set([
+        makeExercise({ id: 'ex-1', sessionId: 's1', muscleGroup: MuscleGroup.Chest }),
+        makeExercise({ id: 'ex-2', sessionId: 's1', muscleGroup: MuscleGroup.Chest }),
+        makeExercise({ id: 'ex-3', sessionId: 's1', muscleGroup: MuscleGroup.Back }),
+        makeExercise({ id: 'ex-4', sessionId: 's1', muscleGroup: MuscleGroup.Back }),
+        makeExercise({ id: 'ex-5', sessionId: 's1', muscleGroup: MuscleGroup.Quads }),
+        makeExercise({ id: 'ex-6', sessionId: 's1', muscleGroup: MuscleGroup.Quads }),
+        makeExercise({ id: 'ex-7', sessionId: 's1', muscleGroup: MuscleGroup.Quads }),
+        makeExercise({ id: 'ex-8', sessionId: 's1', muscleGroup: MuscleGroup.Quads }),
+        makeExercise({ id: 'ex-9', sessionId: 's1', muscleGroup: MuscleGroup.Quads }),
+        makeExercise({ id: 'ex-10', sessionId: 's1', muscleGroup: MuscleGroup.Quads }),
+      ]);
+      service.selectedMonth.set(new Date(2026, 2, 1));
+
+      const result = service.muscleGroupDistribution();
+
+      expect(result.get(MuscleGroup.Chest)).toBe(20);
+      expect(result.get(MuscleGroup.Back)).toBe(20);
+      expect(result.get(MuscleGroup.Quads)).toBe(60);
+      const total = Array.from(result.values()).reduce((sum, pct) => sum + pct, 0);
+      expect(total).toBe(100);
+    });
+  });
+
   describe('exerciseSummaries — maxWeightKg', () => {
     it('should use weightKg for a standard exercise', () => {
       const march1 = new Date(2026, 2, 1);

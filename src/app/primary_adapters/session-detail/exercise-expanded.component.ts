@@ -79,7 +79,10 @@ export class ExerciseExpandedComponent {
   togglePyramid(): void {
     const next = !this.isPyramidLocal();
     if (next && (this.exercise().pyramidSets ?? []).length === 0) {
-      this.pyramidSetsLocal.set([{ weightKg: this.exercise().weightKg, reps: this.exercise().reps }]);
+      const count = this.exercise().sets;
+      this.pyramidSetsLocal.set(
+        Array.from({ length: count }, () => ({ weightKg: this.exercise().weightKg, reps: this.exercise().reps }))
+      );
       this.update.emit({ isPyramid: true, pyramidSets: this.pyramidSetsLocal()! });
     } else {
       this.pyramidSetsLocal.set(null);

@@ -28,6 +28,7 @@ Pyramid mode feature fully implemented and all 24 tests green as of 2026-03-27.
 3. `autocomplete.service.spec.ts` — `getLastParams — pyramid fields` (2 tests): standard params, pyramid params
 4. `stats.service.spec.ts` — `monthSummary — pyramid volume` (4 tests): all standard, all pyramid, mixed, weekly pyramid
 5. `add-exercise-form.component.spec.ts` — `pyramid toggle` (7 tests): hide for cardio, show for strength, activate/deactivate toggle, block empty submit, include in submitted data, restore on autocomplete
+6. `add-exercise-form.component.spec.ts` — `pyramid pre-fill on activation` (3 tests): row count matches sets, every row pre-filled with current weightKg, no overwrite when sets already exist
 6. `exercise-card.component.spec.ts` — `pyramid compact display` (3 tests): standard (no ≈), pyramid (≈ + avg), empty pyramid (—)
 
 ## CSS selectors used in tests

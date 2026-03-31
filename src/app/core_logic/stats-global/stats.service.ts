@@ -171,9 +171,26 @@ export class StatsService {
     if (counts.size === 0) return new Map();
 
     const total = Array.from(counts.values()).reduce((sum, n) => sum + n, 0);
+
+    // Largest Remainder Method: floor each percentage then distribute
+    // the remaining 1% slots to groups with the largest fractional parts,
+    // guaranteeing the sum is exactly 100.
+    const entries = Array.from(counts.entries()).map(([group, count]) => {
+      const exact = (count / total) * 100;
+      return { group, floor: Math.floor(exact), remainder: exact - Math.floor(exact) };
+    });
+
+    const allocated = entries.reduce((sum, e) => sum + e.floor, 0);
+    const deficit = 100 - allocated;
+
+    entries
+      .sort((a, b) => b.remainder - a.remainder)
+      .slice(0, deficit)
+      .forEach(e => e.floor++);
+
     const percentages = new Map<MuscleGroup, number>();
-    for (const [group, count] of counts)
-      percentages.set(group, Math.round((count / total) * 100));
+    for (const { group, floor } of entries)
+      percentages.set(group, floor);
 
     return percentages;
   });
