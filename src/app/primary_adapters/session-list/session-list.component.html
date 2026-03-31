@@ -1,45 +1,48 @@
 <div class="page">
-  <div class="page-header">
-    <div class="page-title">{{ 'sessionList.title' | translate }}</div>
-    <div class="header-selectors">
-      <app-mass-unit-selector (massUnitChange)="changeMassUnit($event)" />
-      <app-language-selector [langs]="['fr', 'en', 'es', 'pt', 'de', 'it', 'ko', 'ja', 'nl', 'ar', 'hi', 'pl', 'sv', 'tr', 'vi']" (langChange)="changeLanguage($event)" />
-    </div>
-  </div>
+	<div class="page-header">
+		<div class="page-title">{{ "sessionList.title" | translate }}</div>
+		<div class="header-selectors">
+			<app-mass-unit-selector (massUnitChange)="changeMassUnit($event)" />
+			<app-language-selector
+				[langs]="['fr', 'en', 'es', 'pt', 'de', 'it', 'ko', 'ja', 'nl', 'ar', 'hi', 'pl', 'sv', 'tr', 'vi']"
+				(langChange)="changeLanguage($event)"
+			/>
+		</div>
+	</div>
 
-  @if (sessions().length === 0) {
-    <p class="empty">{{ 'sessionList.empty' | translate }}</p>
-  }
+	@if (sessions().length === 0) {
+		<p class="empty">{{ "sessionList.empty" | translate }}</p>
+	}
 
-  <div class="session-list">
-    @for (session of visibleSessions(); track session.id) {
-      <app-session-card
-        [session]="session"
-        (longPress)="onLongPress(session)"
-        (click)="navigateToSession(session.id)"
-      />
-    }
-  </div>
+	<div class="session-list">
+		@for (session of visibleSessions(); track session.id) {
+			<app-session-card
+				[session]="session"
+				(longPress)="onLongPress(session)"
+				(click)="navigateToSession(session.id)"
+			/>
+		}
+	</div>
 
-  @if (hasMore()) {
-    <div appScrollSentinel (visible)="loadMore()"></div>
-  }
+	@if (hasMore()) {
+		<div appScrollSentinel (visible)="loadMore()"></div>
+	}
 
-  @if (showContextMenu()) {
-    <app-context-menu
-      [options]="contextMenuOptions"
-      (selected)="onContextMenuSelected($event)"
-      (closed)="showContextMenu.set(false)"
-    />
-  }
+	@if (showContextMenu()) {
+		<app-context-menu
+			[options]="contextMenuOptions"
+			(selected)="onContextMenuSelected($event)"
+			(closed)="showContextMenu.set(false)"
+		/>
+	}
 
-  @if (showConfirm()) {
-    <app-confirm-dialog
-      [message]="'sessionList.deleteConfirm' | translate"
-      (confirmed)="confirmDelete()"
-      (cancelled)="showConfirm.set(false)"
-    />
-  }
+	@if (showConfirm()) {
+		<app-confirm-dialog
+			[message]="'sessionList.deleteConfirm' | translate"
+			(confirmed)="confirmDelete()"
+			(cancelled)="showConfirm.set(false)"
+		/>
+	}
 </div>
 
 <app-tips-banner [sessionCount]="sessions().length" />

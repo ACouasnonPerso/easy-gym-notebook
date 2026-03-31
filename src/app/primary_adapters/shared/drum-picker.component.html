@@ -1,21 +1,15 @@
-
-    <div class="drum-wrapper">
-      <div
-        #scrollContainer
-        class="drum-scroll"
-        (scroll)="onScroll($event)"
-      >
-        @for (_ of phantoms; track $index) {
-          <div class="drum-item phantom"></div>
-        }
-        @for (value of values(); track value) {
-          <div
-            class="drum-item"
-            [class.active]="value === selectedValue()"
-          >{{ value }}{{ unit() ? ' ' + unit() : '' }}</div>
-        }
-        @for (_ of phantoms; track $index) {
-          <div class="drum-item phantom"></div>
-        }
-      </div>
-    </div>
+<div class="drum-wrapper">
+	<div #scrollContainer class="drum-scroll" (scroll)="onScroll($event)">
+		@for (_ of phantoms; track $index) {
+			<div class="drum-item phantom"></div>
+		}
+		@for (value of values(); track value) {
+			<div class="drum-item" [class.active]="value === selectedValue()">
+				{{ value }}{{ unit() ? " " + unit() : "" }}
+			</div>
+		}
+		@for (_ of phantoms; track $index) {
+			<div class="drum-item phantom"></div>
+		}
+	</div>
+</div>

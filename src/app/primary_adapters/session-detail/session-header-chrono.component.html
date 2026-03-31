@@ -1,14 +1,14 @@
 <div class="timer-block">
-  <div class="timer-big" (click)="durationClick.emit()">{{ durationLabel() }}</div>
-  <div class="timer-actions">
-    @if (chronoStatus() === 'running') {
-      <button class="timer-btn" (click)="pause.emit()">{{ 'common.break' | translate }}</button>
-      <button class="timer-btn end" (click)="onEndSession()">{{ 'common.end' | translate }}</button>
-    } @else if (chronoStatus() === 'paused') {
-      <button class="timer-btn" (click)="resume.emit()">{{ 'common.resume' | translate }}</button>
-    } @else if (chronoStatus() === 'ended') {
-      <button class="timer-btn" (click)="resume.emit()">{{ 'common.resume' | translate }}</button>
-      <button class="timer-btn" (click)="durationClick.emit()">{{ 'common.edit' | translate }}</button>
-    }
-  </div>
+	<div class="timer-big" (click)="durationClick.emit()">{{ durationLabel() }}</div>
+	<div class="timer-actions">
+		@if (chronoStatus() === "running") {
+			<button class="timer-btn" (click)="pause.emit()">{{ "common.break" | translate }}</button>
+			<button class="timer-btn end" (click)="onEndSession()">{{ "common.end" | translate }}</button>
+		} @else if (chronoStatus() === "paused") {
+			<button class="timer-btn" (click)="resume.emit()">{{ "common.resume" | translate }}</button>
+		} @else if (chronoStatus() === "ended") {
+			<button class="timer-btn" (click)="resume.emit()">{{ "common.resume" | translate }}</button>
+			<button class="timer-btn" (click)="durationClick.emit()">{{ "common.edit" | translate }}</button>
+		}
+	</div>
 </div>

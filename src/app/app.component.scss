@@ -1,2 +1,10 @@
-:host { display: flex; flex-direction: column; height: 100dvh; background: var(--bg); }
-router-outlet + * { flex: 1; overflow-y: auto; }
+:host {
+	display: flex;
+	flex-direction: column;
+	height: 100dvh;
+	background: var(--bg);
+}
+router-outlet + * {
+	flex: 1;
+	overflow-y: auto;
+}

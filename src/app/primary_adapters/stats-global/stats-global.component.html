@@ -1,50 +1,52 @@
-
 <div class="page">
+	<!-- Top bar: version + month selector -->
+	<app-stats-month-selector
+		[months]="months()"
+		[selectedMonthIndex]="selectedMonthIndex()"
+		(monthChange)="onMonthChange($event)"
+	/>
 
-  <!-- Top bar: version + month selector -->
-  <app-stats-month-selector
-    [months]="months()"
-    [selectedMonthIndex]="selectedMonthIndex()"
-    (monthChange)="onMonthChange($event)"
-  />
+	<!-- Heatmap -->
+	@if (showHeatmap()) {
+		<app-stats-heatmap-card [data]="getGlobalStatsUseCase.heatmapData()" />
+	}
 
-  <!-- Heatmap -->
-  @if (showHeatmap()) {
-    <app-stats-heatmap-card [data]="getGlobalStatsUseCase.heatmapData()" />
-  }
+	<!-- Worked muscles -->
+	<app-stats-muscle-donut-card [distribution]="getGlobalStatsUseCase.muscleGroupDistribution()" />
 
-  <!-- Worked muscles -->
-  <app-stats-muscle-donut-card [distribution]="getGlobalStatsUseCase.muscleGroupDistribution()" />
+	<!-- Week summary -->
+	@if (isCurrentMonth() && !weekSameAsMonth()) {
+		<app-stats-summary-card
+			[title]="'statsGlobal.weekSummary' | translate"
+			[summary]="getGlobalStatsUseCase.weekSummary()"
+		/>
+	}
 
-  <!-- Week summary -->
-  @if (isCurrentMonth() && !weekSameAsMonth()) {
-    <app-stats-summary-card
-      [title]="'statsGlobal.weekSummary' | translate"
-      [summary]="getGlobalStatsUseCase.weekSummary()"
-    />
-  }
+	<!-- Summary (title adapts to selected view: month / year / total / week) -->
+	<app-stats-summary-card
+		[title]="summaryTitle() | translate"
+		[summary]="
+			selectedViewType() === 'current-week' ? getGlobalStatsUseCase.weekSummary() : getGlobalStatsUseCase.monthSummary()
+		"
+	/>
 
-  <!-- Summary (title adapts to selected view: month / year / total / week) -->
-  <app-stats-summary-card
-    [title]="summaryTitle() | translate"
-    [summary]="selectedViewType() === 'current-week' ? getGlobalStatsUseCase.weekSummary() : getGlobalStatsUseCase.monthSummary()"
-  />
+	<!-- Training time bar chart -->
+	@if (selectedViewType() !== "current-week" && getGlobalStatsUseCase.sessionDurationsInMonth().length > 0) {
+		<app-stats-training-time-card
+			[sessions]="getGlobalStatsUseCase.sessionDurationsInMonth()"
+			[mode]="barChartMode()"
+		/>
+	}
 
-  <!-- Training time bar chart -->
-  @if (selectedViewType() !== 'current-week' && getGlobalStatsUseCase.sessionDurationsInMonth().length > 0) {
-    <app-stats-training-time-card [sessions]="getGlobalStatsUseCase.sessionDurationsInMonth()" [mode]="barChartMode()" />
-  }
+	<!-- Exercise list -->
+	@if (selectedViewType() !== "current-week" && getGlobalStatsUseCase.exerciseSummaries().length > 0) {
+		<app-stats-exercise-list-card
+			[exercises]="getGlobalStatsUseCase.exerciseSummaries()"
+			(exerciseSelected)="navigateToExerciseStats($event)"
+			(mergeSubmit)="onMergeSubmit($event)"
+		/>
+	}
 
-  <!-- Exercise list -->
-  @if (selectedViewType() !== 'current-week' && getGlobalStatsUseCase.exerciseSummaries().length > 0) {
-    <app-stats-exercise-list-card
-      [exercises]="getGlobalStatsUseCase.exerciseSummaries()"
-      (exerciseSelected)="navigateToExerciseStats($event)"
-      (mergeSubmit)="onMergeSubmit($event)"
-    />
-  }
-
-  <!-- Import / Export card -->
-  <app-stats-import-export-card (importConfirmed)="onDataImported()" />
-
+	<!-- Import / Export card -->
+	<app-stats-import-export-card (importConfirmed)="onDataImported()" />
 </div>

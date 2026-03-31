@@ -1,55 +1,57 @@
 @if (isCardio()) {
-  @if (cardioOccurrences().length === 0) {
-    <p class="empty">{{ 'statsExercise.empty' | translate }}</p>
-  } @else {
-    @for (o of cardioOccurrences(); track o.date) {
-      <div class="history-card">
-        <div class="history-header">
-          <span class="history-date">{{ formatDate(o.date) }}</span>
-        </div>
-        <div class="history-stats">
-          <div class="h-stat">
-            <span class="h-stat-value orange">{{ (o.durationSeconds / 60) | number:'1.0-0' }} {{ 'common.unitMin' | translate }}</span>
-            <span class="h-stat-label">{{ 'common.duration' | translate }}</span>
-          </div>
-          @if (o.distanceKm) {
-            <div class="h-stat right">
-              <span class="h-stat-value">{{ o.distanceKm | distanceDisplay:'km' }}</span>
-              <span class="h-stat-label">{{ 'common.distance' | translate }}</span>
-            </div>
-          }
-        </div>
-      </div>
-    }
-  }
+	@if (cardioOccurrences().length === 0) {
+		<p class="empty">{{ "statsExercise.empty" | translate }}</p>
+	} @else {
+		@for (o of cardioOccurrences(); track o.date) {
+			<div class="history-card">
+				<div class="history-header">
+					<span class="history-date">{{ formatDate(o.date) }}</span>
+				</div>
+				<div class="history-stats">
+					<div class="h-stat">
+						<span class="h-stat-value orange"
+							>{{ o.durationSeconds / 60 | number: "1.0-0" }} {{ "common.unitMin" | translate }}</span
+						>
+						<span class="h-stat-label">{{ "common.duration" | translate }}</span>
+					</div>
+					@if (o.distanceKm) {
+						<div class="h-stat right">
+							<span class="h-stat-value">{{ o.distanceKm | distanceDisplay: "km" }}</span>
+							<span class="h-stat-label">{{ "common.distance" | translate }}</span>
+						</div>
+					}
+				</div>
+			</div>
+		}
+	}
 } @else {
-  @if (occurrences().length === 0) {
-    <p class="empty">{{ 'statsExercise.empty' | translate }}</p>
-  } @else {
-    @for (o of occurrences(); track o.exerciseId) {
-      <div class="history-card">
-        <div class="history-header">
-          <span class="history-date">{{ formatDate(o.date) }}</span>
-        </div>
-        <div class="history-stats">
-          <div class="h-stat">
-            <span class="h-stat-value orange">{{ o.weightKg | weightDisplay:'kg' }}</span>
-            <span class="h-stat-label">{{ 'common.weight' | translate }}</span>
-          </div>
-          <div class="h-stat">
-            <span class="h-stat-value">{{ o.sets }}</span>
-            <span class="h-stat-label">{{ 'common.sets' | translate }}</span>
-          </div>
-          <div class="h-stat">
-            <span class="h-stat-value">{{ o.reps }}</span>
-            <span class="h-stat-label">{{ 'common.reps' | translate }}</span>
-          </div>
-          <div class="h-stat right">
-            <span class="h-stat-value">{{ o.breakDurationSeconds }}{{ 'common.unitSec' | translate }}</span>
-            <span class="h-stat-label">{{ 'common.break' | translate }}</span>
-          </div>
-        </div>
-      </div>
-    }
-  }
+	@if (occurrences().length === 0) {
+		<p class="empty">{{ "statsExercise.empty" | translate }}</p>
+	} @else {
+		@for (o of occurrences(); track o.exerciseId) {
+			<div class="history-card">
+				<div class="history-header">
+					<span class="history-date">{{ formatDate(o.date) }}</span>
+				</div>
+				<div class="history-stats">
+					<div class="h-stat">
+						<span class="h-stat-value orange">{{ o.weightKg | weightDisplay: "kg" }}</span>
+						<span class="h-stat-label">{{ "common.weight" | translate }}</span>
+					</div>
+					<div class="h-stat">
+						<span class="h-stat-value">{{ o.sets }}</span>
+						<span class="h-stat-label">{{ "common.sets" | translate }}</span>
+					</div>
+					<div class="h-stat">
+						<span class="h-stat-value">{{ o.reps }}</span>
+						<span class="h-stat-label">{{ "common.reps" | translate }}</span>
+					</div>
+					<div class="h-stat right">
+						<span class="h-stat-value">{{ o.breakDurationSeconds }}{{ "common.unitSec" | translate }}</span>
+						<span class="h-stat-label">{{ "common.break" | translate }}</span>
+					</div>
+				</div>
+			</div>
+		}
+	}
 }

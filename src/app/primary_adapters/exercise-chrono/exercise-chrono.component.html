@@ -1,41 +1,41 @@
 <div class="page">
-  <app-chrono-header
-    [hasExercise]="hasExercise()"
-    [seriesCount]="seriesCount()"
-    [formattedBreakDuration]="formattedBreakDuration()"
-    [soundEnabled]="soundEnabled()"
-    (back)="haptic.vibrate(); location.back()"
-    (openBreakDurationPopup)="showBreakDurationPopup.set(true)"
-    (toggleSound)="exerciseChronoUseCase.toggleSound()"
-  />
-  @if (isIos) {
-    <p class="ios-silent-warning">{{ 'chrono.iosSilentWarning' | translate }}</p>
-  }
-  <div class="chrono-body">
-    <app-chrono-ring
-      [formattedTime]="formattedTime()"
-      [statusLabel]="statusLabel()"
-      [ringColor]="ringColor()"
-      [ringOffset]="ringOffset()"
-      [isBlinking]="isBlinking()"
-    />
-    <app-chrono-actions
-      [chronoState]="chronoState()"
-      (start)="haptic.vibrate(); exerciseChronoUseCase.start()"
-      (pause)="haptic.vibrate(); exerciseChronoUseCase.pause()"
-      (resume)="haptic.vibrate(); exerciseChronoUseCase.resume()"
-      (reset)="haptic.vibrate(); exerciseChronoUseCase.reset()"
-      (goBreak)="haptic.vibrate(); exerciseChronoUseCase.goBreak()"
-      (goTraining)="haptic.vibrate(); exerciseChronoUseCase.goTraining()"
-      (addTime)="exerciseChronoUseCase.addTime($event)"
-    />
-  </div>
+	<app-chrono-header
+		[hasExercise]="hasExercise()"
+		[seriesCount]="seriesCount()"
+		[formattedBreakDuration]="formattedBreakDuration()"
+		[soundEnabled]="soundEnabled()"
+		(back)="haptic.vibrate(); location.back()"
+		(openBreakDurationPopup)="showBreakDurationPopup.set(true)"
+		(toggleSound)="exerciseChronoUseCase.toggleSound()"
+	/>
+	@if (isIos) {
+		<p class="ios-silent-warning">{{ "chrono.iosSilentWarning" | translate }}</p>
+	}
+	<div class="chrono-body">
+		<app-chrono-ring
+			[formattedTime]="formattedTime()"
+			[statusLabel]="statusLabel()"
+			[ringColor]="ringColor()"
+			[ringOffset]="ringOffset()"
+			[isBlinking]="isBlinking()"
+		/>
+		<app-chrono-actions
+			[chronoState]="chronoState()"
+			(start)="haptic.vibrate(); exerciseChronoUseCase.start()"
+			(pause)="haptic.vibrate(); exerciseChronoUseCase.pause()"
+			(resume)="haptic.vibrate(); exerciseChronoUseCase.resume()"
+			(reset)="haptic.vibrate(); exerciseChronoUseCase.reset()"
+			(goBreak)="haptic.vibrate(); exerciseChronoUseCase.goBreak()"
+			(goTraining)="haptic.vibrate(); exerciseChronoUseCase.goTraining()"
+			(addTime)="exerciseChronoUseCase.addTime($event)"
+		/>
+	</div>
 </div>
 
 @if (showBreakDurationPopup()) {
-  <app-edit-duration-popup
-    [initialSeconds]="_breakDuration()"
-    (confirmed)="onBreakDurationConfirmed($event)"
-    (cancelled)="showBreakDurationPopup.set(false)"
-  />
+	<app-edit-duration-popup
+		[initialSeconds]="_breakDuration()"
+		(confirmed)="onBreakDurationConfirmed($event)"
+		(cancelled)="showBreakDurationPopup.set(false)"
+	/>
 }

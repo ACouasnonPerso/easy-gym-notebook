@@ -1,53 +1,41 @@
 <div class="chart-card">
-  @if (isCardio()) {
-    <div class="chart-tabs">
-      <button
-        class="tab-btn"
-        [class.active]="selectedChart() === 'volume'"
-        (click)="chartSelect.emit('volume')"
-      >{{ 'common.duration' | translate }}</button>
-      <button
-        class="tab-btn"
-        [class.active]="selectedChart() === 'weight'"
-        (click)="chartSelect.emit('weight')"
-      >{{ 'common.distance' | translate }}</button>
-      <button
-        class="tab-btn"
-        [class.active]="selectedChart() === 'pace'"
-        (click)="chartSelect.emit('pace')"
-      >{{ 'statsExercise.pace' | translate }}</button>
-      <button
-        class="tab-btn"
-        [class.active]="selectedChart() === 'speed'"
-        (click)="chartSelect.emit('speed')"
-      >{{ 'statsExercise.speed' | translate }}</button>
-    </div>
-    @if (selectedChart() === 'volume') {
-      <app-cardio-time-chart [occurrences]="cardioOccurrences()" />
-    } @else if (selectedChart() === 'weight') {
-      <app-cardio-distance-chart [occurrences]="cardioOccurrences()" />
-    } @else if (selectedChart() === 'pace') {
-      <app-cardio-pace-chart [occurrences]="cardioOccurrences()" />
-    } @else {
-      <app-cardio-speed-chart [occurrences]="cardioOccurrences()" />
-    }
-  } @else {
-    <div class="chart-tabs">
-      <button
-        class="tab-btn"
-        [class.active]="selectedChart() === 'volume'"
-        (click)="chartSelect.emit('volume')"
-      >{{ 'common.volume' | translate }}</button>
-      <button
-        class="tab-btn"
-        [class.active]="selectedChart() === 'weight'"
-        (click)="chartSelect.emit('weight')"
-      >{{ 'common.weight' | translate }}</button>
-    </div>
-    @if (selectedChart() === 'volume') {
-      <app-volume-line-chart [occurrences]="occurrences()" />
-    } @else {
-      <app-weight-line-chart [occurrences]="occurrences()" />
-    }
-  }
+	@if (isCardio()) {
+		<div class="chart-tabs">
+			<button class="tab-btn" [class.active]="selectedChart() === 'volume'" (click)="chartSelect.emit('volume')">
+				{{ "common.duration" | translate }}
+			</button>
+			<button class="tab-btn" [class.active]="selectedChart() === 'weight'" (click)="chartSelect.emit('weight')">
+				{{ "common.distance" | translate }}
+			</button>
+			<button class="tab-btn" [class.active]="selectedChart() === 'pace'" (click)="chartSelect.emit('pace')">
+				{{ "statsExercise.pace" | translate }}
+			</button>
+			<button class="tab-btn" [class.active]="selectedChart() === 'speed'" (click)="chartSelect.emit('speed')">
+				{{ "statsExercise.speed" | translate }}
+			</button>
+		</div>
+		@if (selectedChart() === "volume") {
+			<app-cardio-time-chart [occurrences]="cardioOccurrences()" />
+		} @else if (selectedChart() === "weight") {
+			<app-cardio-distance-chart [occurrences]="cardioOccurrences()" />
+		} @else if (selectedChart() === "pace") {
+			<app-cardio-pace-chart [occurrences]="cardioOccurrences()" />
+		} @else {
+			<app-cardio-speed-chart [occurrences]="cardioOccurrences()" />
+		}
+	} @else {
+		<div class="chart-tabs">
+			<button class="tab-btn" [class.active]="selectedChart() === 'volume'" (click)="chartSelect.emit('volume')">
+				{{ "common.volume" | translate }}
+			</button>
+			<button class="tab-btn" [class.active]="selectedChart() === 'weight'" (click)="chartSelect.emit('weight')">
+				{{ "common.weight" | translate }}
+			</button>
+		</div>
+		@if (selectedChart() === "volume") {
+			<app-volume-line-chart [occurrences]="occurrences()" />
+		} @else {
+			<app-weight-line-chart [occurrences]="occurrences()" />
+		}
+	}
 </div>

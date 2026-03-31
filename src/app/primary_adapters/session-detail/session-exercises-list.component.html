@@ -1,31 +1,30 @@
 <div class="exercise-list" [style.margin-bottom]="isAndroid ? '400px' : null">
-  @if (exercises().length === 0) {
-    <div class="exercise-empty" (click)="openAddExercise()">
-      <span class="exercise-empty-icon">＋</span>
-      <span class="exercise-empty-text">{{ 'exercise.empty' | translate }}</span>
-      <span class="exercise-empty-hint">{{ 'exercise.addHint' | translate }}</span>
-    </div>
-  }
-  @for (exercise of exercises(); track exercise.id) {
-    <app-exercise-card
-      [exercise]="exercise"
-      [isExpanded]="expandedExerciseId() === exercise.id"
-      (toggleExpand)="toggleExpand(exercise.id)"
-      (exerciseUpdate)="exerciseUpdate.emit({ exercise, changes: $event })"
-      (exerciseValidate)="exerciseValidate.emit(exercise.id)"
-      (exerciseCancel)="exerciseCancel.emit(exercise.id)"
-      (exerciseDelete)="onDeleteRequest(exercise.id)"
-      (openChrono)="openChrono.emit(exercise)"
-      (openStats)="openStats.emit(exercise)"
-    />
-  }
+	@if (exercises().length === 0) {
+		<div class="exercise-empty" (click)="openAddExercise()">
+			<span class="exercise-empty-icon">＋</span>
+			<span class="exercise-empty-text">{{ "exercise.empty" | translate }}</span>
+			<span class="exercise-empty-hint">{{ "exercise.addHint" | translate }}</span>
+		</div>
+	}
+	@for (exercise of exercises(); track exercise.id) {
+		<app-exercise-card
+			[exercise]="exercise"
+			[isExpanded]="expandedExerciseId() === exercise.id"
+			(toggleExpand)="toggleExpand(exercise.id)"
+			(exerciseUpdate)="exerciseUpdate.emit({ exercise, changes: $event })"
+			(exerciseValidate)="exerciseValidate.emit(exercise.id)"
+			(exerciseCancel)="exerciseCancel.emit(exercise.id)"
+			(exerciseDelete)="onDeleteRequest(exercise.id)"
+			(openChrono)="openChrono.emit(exercise)"
+			(openStats)="openStats.emit(exercise)"
+		/>
+	}
 </div>
 
-
 @if (showDeleteConfirm()) {
-  <app-confirm-dialog
-    [message]="'exercise.deleteConfirm' | translate"
-    (confirmed)="onDeleteConfirmed()"
-    (cancelled)="showDeleteConfirm.set(false)"
-  />
+	<app-confirm-dialog
+		[message]="'exercise.deleteConfirm' | translate"
+		(confirmed)="onDeleteConfirmed()"
+		(cancelled)="showDeleteConfirm.set(false)"
+	/>
 }

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class AppVersionService {
-  readonly version = '1.0.0';
+	readonly version = "1.0.0";
 }

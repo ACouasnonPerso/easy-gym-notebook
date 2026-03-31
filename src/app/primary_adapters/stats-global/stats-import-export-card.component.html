@@ -1,54 +1,63 @@
 <div class="stats-card import-card">
-  <div class="stats-card-title">{{ 'import.cardTitle' | translate }}</div>
-  <div class="divider"></div>
-  <div style="height:14px"></div>
-  <input
-    #fileInput
-    type="file"
-    accept=".json"
-    style="display:none"
-    (change)="onFileSelected($event)"
-    aria-hidden="true"
-  />
-  <button
-    class="import-btn"
-    (click)="exportData()"
-  >
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <path d="M7 9V1M4 4l3-3 3 3M2 11h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    {{ 'import.exportJson' | translate }}
-  </button>
-  <div style="height:10px"></div>
-  <button
-    class="import-btn"
-    [class.import-btn--pending]="importDataUseCase.importPending()"
-    [disabled]="importDataUseCase.importPending()"
-    (click)="triggerFileInput()"
-  >
-    @if (importDataUseCase.importPending()) {
-      <span class="import-btn__spinner" aria-hidden="true"></span>
-    } @else {
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-        <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    }
-    {{ 'import.importJson' | translate }}
-  </button>
+	<div class="stats-card-title">{{ "import.cardTitle" | translate }}</div>
+	<div class="divider"></div>
+	<div style="height: 14px"></div>
+	<input
+		#fileInput
+		type="file"
+		accept=".json"
+		style="display: none"
+		(change)="onFileSelected($event)"
+		aria-hidden="true"
+	/>
+	<button class="import-btn" (click)="exportData()">
+		<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+			<path
+				d="M7 9V1M4 4l3-3 3 3M2 11h10"
+				stroke="currentColor"
+				stroke-width="1.6"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			/>
+		</svg>
+		{{ "import.exportJson" | translate }}
+	</button>
+	<div style="height: 10px"></div>
+	<button
+		class="import-btn"
+		[class.import-btn--pending]="importDataUseCase.importPending()"
+		[disabled]="importDataUseCase.importPending()"
+		(click)="triggerFileInput()"
+	>
+		@if (importDataUseCase.importPending()) {
+			<span class="import-btn__spinner" aria-hidden="true"></span>
+		} @else {
+			<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+				<path
+					d="M7 1v8M4 6l3 3 3-3M2 11h10"
+					stroke="currentColor"
+					stroke-width="1.6"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				/>
+			</svg>
+		}
+		{{ "import.importJson" | translate }}
+	</button>
 </div>
 
 @if (showImportModal()) {
-  <app-import-confirm-modal
-    [sessionCount]="importSessionCount()"
-    [exerciseCount]="importExerciseCount()"
-    (confirmed)="onImportConfirmed()"
-    (cancelled)="onImportCancelled()"
-  />
+	<app-import-confirm-modal
+		[sessionCount]="importSessionCount()"
+		[exerciseCount]="importExerciseCount()"
+		(confirmed)="onImportConfirmed()"
+		(cancelled)="onImportCancelled()"
+	/>
 }
 
 <app-toast
-  [message]="toastMessage()"
-  [type]="toastType()"
-  [visible]="toastVisible()"
-  (dismissed)="onToastDismissed()"
+	[message]="toastMessage()"
+	[type]="toastType()"
+	[visible]="toastVisible()"
+	(dismissed)="onToastDismissed()"
 />

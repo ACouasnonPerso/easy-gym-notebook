@@ -1,18 +1,16 @@
 <div class="lang-select-container">
-  <div class="lang-select-wrapper" (click)="showDropdown.set(!showDropdown())">
-    <span class="lang-label">{{ languageService.activeLang().toUpperCase() }}</span>
-    <span class="lang-arrow" [class.open]="showDropdown()">▼</span>
-  </div>
-  @if (showDropdown()) {
-    <div class="dropdown-backdrop" (click)="showDropdown.set(false)"></div>
-    <div class="dropdown-list">
-      @for (lang of langs(); track lang) {
-        <div
-          class="dropdown-item"
-          [class.selected]="lang === languageService.activeLang()"
-          (click)="selectLang(lang)"
-        >{{ lang.toUpperCase() }}</div>
-      }
-    </div>
-  }
+	<div class="lang-select-wrapper" (click)="showDropdown.set(!showDropdown())">
+		<span class="lang-label">{{ languageService.activeLang().toUpperCase() }}</span>
+		<span class="lang-arrow" [class.open]="showDropdown()">▼</span>
+	</div>
+	@if (showDropdown()) {
+		<div class="dropdown-backdrop" (click)="showDropdown.set(false)"></div>
+		<div class="dropdown-list">
+			@for (lang of langs(); track lang) {
+				<div class="dropdown-item" [class.selected]="lang === languageService.activeLang()" (click)="selectLang(lang)">
+					{{ lang.toUpperCase() }}
+				</div>
+			}
+		</div>
+	}
 </div>

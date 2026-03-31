@@ -1,21 +1,20 @@
-
 <div class="popup-backdrop" (click)="onCancel()">
-  <div class="popup" (click)="$event.stopPropagation()">
-    <div class="popup-title">{{ 'import.confirmTitle' | translate }}</div>
-    <div class="popup-body">
-      <span class="import-count-line">
-        <strong>{{ sessionCount() }}</strong> {{ 'import.sessions' | translate }}
-        &amp;
-        <strong>{{ exerciseCount() }}</strong> {{ 'import.exercises' | translate }}
-      </span>
-    </div>
-    <div class="popup-actions">
-      <button class="popup-cancel-btn" data-testid="cancel-btn" (click)="onCancel()">
-        {{ 'common.cancel' | translate }}
-      </button>
-      <button class="popup-ok-btn" data-testid="confirm-btn" (click)="onConfirm()">
-        {{ 'common.confirm' | translate }}
-      </button>
-    </div>
-  </div>
+	<div class="popup" (click)="$event.stopPropagation()">
+		<div class="popup-title">{{ "import.confirmTitle" | translate }}</div>
+		<div class="popup-body">
+			<span class="import-count-line">
+				<strong>{{ sessionCount() }}</strong> {{ "import.sessions" | translate }}
+				&amp;
+				<strong>{{ exerciseCount() }}</strong> {{ "import.exercises" | translate }}
+			</span>
+		</div>
+		<div class="popup-actions">
+			<button class="popup-cancel-btn" data-testid="cancel-btn" (click)="onCancel()">
+				{{ "common.cancel" | translate }}
+			</button>
+			<button class="popup-ok-btn" data-testid="confirm-btn" (click)="onConfirm()">
+				{{ "common.confirm" | translate }}
+			</button>
+		</div>
+	</div>
 </div>

@@ -1,11 +1,11 @@
-import { Injectable, inject } from '@angular/core';
-import { SessionService } from '../../core_logic/session/session.service';
+import { Injectable, inject } from "@angular/core";
+import { SessionService } from "../../core_logic/session/session.service";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class UpdateSessionDateUseCase {
-  private readonly sessionService = inject(SessionService);
+	private readonly sessionService = inject(SessionService);
 
-  execute(date: Date): void {
-    this.sessionService.updateCurrentSession({ date });
-  }
+	execute(date: Date): void {
+		this.sessionService.updateCurrentSession({ date });
+	}
 }

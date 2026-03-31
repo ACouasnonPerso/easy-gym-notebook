@@ -1,98 +1,121 @@
-
-    .exercise-card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 14px 16px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: border-color 0.15s, transform 0.15s;
-      position: relative;
-      overflow: hidden;
-      user-select: none;
-    }
-    .exercise-card::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: var(--orange);
-      border-radius: 3px 0 0 3px;
-    }
-    .exercise-card.validated::before { background: var(--green); }
-    .exercise-card:hover { border-color: var(--orange); transform: translateY(-1px); }
-    .exercise-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .status-checkbox {
-      flex-shrink: 0;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 1.5px solid var(--orange);
-      background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--card);
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
-      padding: 0;
-    }
-    .status-checkbox:hover {
-      background: var(--orange-dim);
-      box-shadow: 0 0 0 3px rgba(245,166,35,0.12);
-    }
-    .status-checkbox--validated {
-      background: var(--green);
-      border-color: var(--green);
-      color: #0c0c14;
-    }
-    .status-checkbox--validated:hover {
-      background: rgba(34,197,94,0.8);
-      border-color: rgba(34,197,94,0.8);
-      box-shadow: 0 0 0 3px rgba(34,197,94,0.12);
-    }
-    .exercise-name {
-      flex: 1;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .tag {
-      display: inline-block;
-      font-size: 9px;
-      font-weight: 700;
-      font-family: 'Space Grotesk', sans-serif;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 20px;
-    }
-    .exercise-stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 4px;
-    }
-    .ex-stat { display: flex; flex-direction: column; gap: 2px; }
-    .ex-stat.right { text-align: right; }
-    .ex-stat-value {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .ex-stat-value.orange { color: var(--orange); }
-    .ex-stat-value.blue { color: var(--blue); }
-    .ex-stat-value.pyramid-sets-count { color: var(--sub); }
-    .ex-stat-label {
-      font-size: 8px;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
+.exercise-card {
+	background: var(--card);
+	border-radius: 16px;
+	padding: 14px 16px;
+	border: 1px solid var(--border);
+	cursor: pointer;
+	transition:
+		border-color 0.15s,
+		transform 0.15s;
+	position: relative;
+	overflow: hidden;
+	user-select: none;
+}
+.exercise-card::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 3px;
+	background: var(--orange);
+	border-radius: 3px 0 0 3px;
+}
+.exercise-card.validated::before {
+	background: var(--green);
+}
+.exercise-card:hover {
+	border-color: var(--orange);
+	transform: translateY(-1px);
+}
+.exercise-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 10px;
+}
+.status-checkbox {
+	flex-shrink: 0;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	border: 1.5px solid var(--orange);
+	background: transparent;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--card);
+	cursor: pointer;
+	transition:
+		background 0.15s,
+		border-color 0.15s,
+		box-shadow 0.15s;
+	padding: 0;
+}
+.status-checkbox:hover {
+	background: var(--orange-dim);
+	box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.12);
+}
+.status-checkbox--validated {
+	background: var(--green);
+	border-color: var(--green);
+	color: #0c0c14;
+}
+.status-checkbox--validated:hover {
+	background: rgba(34, 197, 94, 0.8);
+	border-color: rgba(34, 197, 94, 0.8);
+	box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+}
+.exercise-name {
+	flex: 1;
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--text);
+}
+.tag {
+	display: inline-block;
+	font-size: 9px;
+	font-weight: 700;
+	font-family: "Space Grotesk", sans-serif;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	padding: 3px 9px;
+	border-radius: 20px;
+}
+.exercise-stats {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 4px;
+}
+.ex-stat {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.ex-stat.right {
+	text-align: right;
+}
+.ex-stat-value {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--text);
+}
+.ex-stat-value.orange {
+	color: var(--orange);
+}
+.ex-stat-value.blue {
+	color: var(--blue);
+}
+.ex-stat-value.pyramid-sets-count {
+	color: var(--sub);
+}
+.ex-stat-label {
+	font-size: 8px;
+	font-weight: 600;
+	color: var(--muted);
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}

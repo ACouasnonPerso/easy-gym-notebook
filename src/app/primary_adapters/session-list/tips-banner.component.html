@@ -1,34 +1,34 @@
 @if (showOnboarding()) {
-  <div class="tips-banner">
-    <span class="tips-icon">💡</span>
-    <span class="tips-text">{{ 'sessionList.tip' | translate }}</span>
-  </div>
+	<div class="tips-banner">
+		<span class="tips-icon">💡</span>
+		<span class="tips-text">{{ "sessionList.tip" | translate }}</span>
+	</div>
 }
 
 @if (showReview()) {
-  <button class="tips-banner tips-banner--clickable" (click)="onReviewClick()">
-    <span class="tips-icon">⭐</span>
-    <span class="tips-text">{{ 'sessionList.reviewTip' | translate }}</span>
-  </button>
+	<button class="tips-banner tips-banner--clickable" (click)="onReviewClick()">
+		<span class="tips-icon">⭐</span>
+		<span class="tips-text">{{ "sessionList.reviewTip" | translate }}</span>
+	</button>
 }
 
 @if (showConfirm()) {
-  <div class="review-confirm-popup">
-    <span class="review-confirm-title">{{ 'sessionList.reviewConfirmTitle' | translate }}</span>
-    <div class="review-confirm-actions">
-      <button class="review-confirm-no" (click)="onConfirmNo()">
-        {{ 'sessionList.reviewConfirmNo' | translate }}
-      </button>
-      <button class="review-confirm-yes" (click)="onConfirmYes()">
-        {{ 'sessionList.reviewConfirmYes' | translate }}
-      </button>
-    </div>
-  </div>
+	<div class="review-confirm-popup">
+		<span class="review-confirm-title">{{ "sessionList.reviewConfirmTitle" | translate }}</span>
+		<div class="review-confirm-actions">
+			<button class="review-confirm-no" (click)="onConfirmNo()">
+				{{ "sessionList.reviewConfirmNo" | translate }}
+			</button>
+			<button class="review-confirm-yes" (click)="onConfirmYes()">
+				{{ "sessionList.reviewConfirmYes" | translate }}
+			</button>
+		</div>
+	</div>
 }
 
 @if (showThanks()) {
-  <div class="tips-banner">
-    <span class="tips-icon">🙏</span>
-    <span class="tips-text">{{ 'sessionList.reviewThanks' | translate }}</span>
-  </div>
+	<div class="tips-banner">
+		<span class="tips-icon">🙏</span>
+		<span class="tips-text">{{ "sessionList.reviewThanks" | translate }}</span>
+	</div>
 }

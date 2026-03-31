@@ -1,19 +1,19 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from "@angular/core";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class SessionDetailUiService {
-  readonly showAddExerciseForm = signal(false);
-  readonly currentSessionId = signal<string | null>(null);
+	readonly showAddExerciseForm = signal(false);
+	readonly currentSessionId = signal<string | null>(null);
 
-  setCurrentSessionId(id: string): void {
-    this.currentSessionId.set(id);
-  }
+	setCurrentSessionId(id: string): void {
+		this.currentSessionId.set(id);
+	}
 
-  openAddExerciseForm(): void {
-    this.showAddExerciseForm.set(true);
-  }
+	openAddExerciseForm(): void {
+		this.showAddExerciseForm.set(true);
+	}
 
-  closeAddExerciseForm(): void {
-    this.showAddExerciseForm.set(false);
-  }
+	closeAddExerciseForm(): void {
+		this.showAddExerciseForm.set(false);
+	}
 }

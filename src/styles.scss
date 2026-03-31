@@ -1,54 +1,58 @@
 :root {
-  --bg: #0c0c14;
-  --card: #16161f;
-  --card2: #1e1e2a;
-  --border: #2a2a38;
-  --orange: #f5a623;
-  --orange-dim: rgba(245,166,35,0.15);
-  --green: #22c55e;
-  --green-dim: rgba(34,197,94,0.15);
-  --blue: #3b82f6;
-  --blue-dim: rgba(59,130,246,0.15);
-  --red: #ef4444;
-  --text: #f0f0f8;
-  --muted: #6b6b80;
-  --sub: #9999aa;
+	--bg: #0c0c14;
+	--card: #16161f;
+	--card2: #1e1e2a;
+	--border: #2a2a38;
+	--orange: #f5a623;
+	--orange-dim: rgba(245, 166, 35, 0.15);
+	--green: #22c55e;
+	--green-dim: rgba(34, 197, 94, 0.15);
+	--blue: #3b82f6;
+	--blue-dim: rgba(59, 130, 246, 0.15);
+	--red: #ef4444;
+	--text: #f0f0f8;
+	--muted: #6b6b80;
+	--sub: #9999aa;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
 
 /* Scrollbar custom — discret, fin, arrondi, thème sombre */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(153, 153, 170, 0.25) transparent;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(153, 153, 170, 0.25) transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+	width: 4px;
+	height: 4px;
 }
 
 *::-webkit-scrollbar-track {
-  background: transparent;
+	background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(153, 153, 170, 0.25);
-  border-radius: 999px;
+	background: rgba(153, 153, 170, 0.25);
+	border-radius: 999px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(153, 153, 170, 0.45);
+	background: rgba(153, 153, 170, 0.45);
 }
 
 *::-webkit-scrollbar-corner {
-  background: transparent;
+	background: transparent;
 }
 
 body {
-  background: var(--bg);
-  font-family: 'DM Sans', sans-serif;
-  color: var(--text);
-  min-height: 100dvh;
+	background: var(--bg);
+	font-family: "DM Sans", sans-serif;
+	color: var(--text);
+	min-height: 100dvh;
 	padding-top: 40px;
 }

@@ -1,50 +1,50 @@
 @if (sessionDetailUiService.showAddExerciseForm()) {
-  <app-add-exercise-form
-    [sessionId]="sessionId()"
-    (exerciseAdded)="sessionDetailUiService.closeAddExerciseForm()"
-    (cancelled)="sessionDetailUiService.closeAddExerciseForm()"
-  />
+	<app-add-exercise-form
+		[sessionId]="sessionId()"
+		(exerciseAdded)="sessionDetailUiService.closeAddExerciseForm()"
+		(cancelled)="sessionDetailUiService.closeAddExerciseForm()"
+	/>
 }
 
 @if (session()) {
 	<app-session-header
-			[session]="session()!"
-			[durationLabel]="durationLabel()"
-			[chronoStatus]="chronoStatus()"
-			[totalWeightFormatted]="totalWeightFormatted()"
-			(goBack)="goBack()"
-			(dateChange)="onDateChange($event)"
-			(durationClick)="onDurationClick()"
-			(endSession)="onEndSession()"
-			(pause)="onPause()"
-			(resume)="onResume()"
+		[session]="session()!"
+		[durationLabel]="durationLabel()"
+		[chronoStatus]="chronoStatus()"
+		[totalWeightFormatted]="totalWeightFormatted()"
+		(goBack)="goBack()"
+		(dateChange)="onDateChange($event)"
+		(durationClick)="onDurationClick()"
+		(endSession)="onEndSession()"
+		(pause)="onPause()"
+		(resume)="onResume()"
 	/>
 }
 
 <div class="page">
-  <app-session-exercises-list
-    [exercises]="exercises()"
-    [sessionId]="sessionId()"
-    (exerciseValidate)="onExerciseValidate($event)"
-    (exerciseCancel)="onExerciseCancel($event)"
-    (exerciseUpdate)="onExerciseUpdate($event.exercise, $event.changes)"
-    (exerciseDelete)="onExerciseDelete($event)"
-    (openChrono)="navigateToExerciseChrono($event)"
-    (openStats)="navigateToStats($event)"
-  />
+	<app-session-exercises-list
+		[exercises]="exercises()"
+		[sessionId]="sessionId()"
+		(exerciseValidate)="onExerciseValidate($event)"
+		(exerciseCancel)="onExerciseCancel($event)"
+		(exerciseUpdate)="onExerciseUpdate($event.exercise, $event.changes)"
+		(exerciseDelete)="onExerciseDelete($event)"
+		(openChrono)="navigateToExerciseChrono($event)"
+		(openStats)="navigateToStats($event)"
+	/>
 </div>
 
 @if (endSessionUseCase.showManualOverride()) {
-  <app-end-session-modal
-    (confirmed)="onEndSessionConfirmed()"
-    (cancelled)="endSessionUseCase.showManualOverride.set(false)"
-  />
+	<app-end-session-modal
+		(confirmed)="onEndSessionConfirmed()"
+		(cancelled)="endSessionUseCase.showManualOverride.set(false)"
+	/>
 }
 
 @if (showDurationPicker()) {
-  <app-edit-duration-popup
-    [initialSeconds]="session()?.status === 'active' ? currentElapsedSeconds() : (session()?.durationSeconds ?? 0)"
-    (confirmed)="onDurationConfirmed($event)"
-    (cancelled)="showDurationPicker.set(false)"
-  />
+	<app-edit-duration-popup
+		[initialSeconds]="session()?.status === 'active' ? currentElapsedSeconds() : (session()?.durationSeconds ?? 0)"
+		(confirmed)="onDurationConfirmed($event)"
+		(cancelled)="showDurationPicker.set(false)"
+	/>
 }

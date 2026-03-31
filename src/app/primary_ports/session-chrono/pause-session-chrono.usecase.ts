@@ -1,31 +1,31 @@
-import { Injectable, inject } from '@angular/core';
-import { SessionChronoService } from '../../core_logic/chrono/session-chrono.service';
+import { Injectable, inject } from "@angular/core";
+import { SessionChronoService } from "../../core_logic/chrono/session-chrono.service";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class PauseSessionChronoUseCase {
-  private readonly sessionChronoService = inject(SessionChronoService);
+	private readonly sessionChronoService = inject(SessionChronoService);
 
-  pause(): void {
-    this.sessionChronoService.pause();
-  }
+	pause(): void {
+		this.sessionChronoService.pause();
+	}
 
-  resumeSession(): void {
-    this.sessionChronoService.resumeSession();
-  }
+	resumeSession(): void {
+		this.sessionChronoService.resumeSession();
+	}
 
-  restartSession(): void {
-    this.sessionChronoService.start();
-  }
+	restartSession(): void {
+		this.sessionChronoService.start();
+	}
 
-  pauseForSession(sessionId: string): void {
-    this.sessionChronoService.pauseForSession(sessionId);
-  }
+	pauseForSession(sessionId: string): void {
+		this.sessionChronoService.pauseForSession(sessionId);
+	}
 
-  resumeForSession(sessionId: string): void {
-    this.sessionChronoService.resumeForSession(sessionId);
-  }
+	resumeForSession(sessionId: string): void {
+		this.sessionChronoService.resumeForSession(sessionId);
+	}
 
-  startForSession(sessionId: string): void {
-    this.sessionChronoService.startForSession(sessionId);
-  }
+	startForSession(sessionId: string): void {
+		this.sessionChronoService.startForSession(sessionId);
+	}
 }

@@ -1,92 +1,97 @@
-
-    <div class="exercise-card" [class.validated]="isValidated()" (click)="onCardClick()">
-      <div class="exercise-header">
-        <button
-          class="status-checkbox"
-          [class.status-checkbox--validated]="isValidated()"
-          [attr.aria-label]="isValidated() ? ('exercise.cancelAria' | translate) : ('exercise.validateAria' | translate)"
-          (click)="$event.stopPropagation(); onCheckboxClick()"
-        >
-          @if (isValidated()) {
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <polyline points="1.5,5 4,7.5 8.5,2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          }
-        </button>
-        <span class="exercise-name">{{ exercise().name }}</span>
-        @if (isCardio()) {
-          <span class="tag" [ngStyle]="tagStyle('Cardio')">{{ 'common.cardio' | translate }}</span>
-        } @else {
-          @for (group of exercise().muscleGroups; track group) {
-            <span class="tag" [ngStyle]="tagStyle(group)">{{ 'muscleGroups.' + group | translate }}</span>
-          }
-        }
-      </div>
-      <div class="exercise-stats">
-        @if (isCardio()) {
-          <div class="ex-stat">
-            <span class="ex-stat-value orange">{{ durationMinutes() }} {{ 'common.unitMin' | translate }}</span>
-            <span class="ex-stat-label">{{ 'common.duration' | translate }}</span>
-          </div>
-          <div class="ex-stat right">
-            @if (exercise().distanceKm !== null) {
-              <span class="ex-stat-value blue">{{ exercise().distanceKm | distanceDisplay:'km' }}</span>
-            } @else {
-              <span class="ex-stat-value blue">—</span>
-            }
-            <span class="ex-stat-label">{{ 'common.distance' | translate }}</span>
-          </div>
-        } @else if (isPyramid()) {
-          @if (avgPyramidWeight() !== null && avgPyramidReps() !== null) {
-            <div class="ex-stat">
-              <span class="ex-stat-value orange">≈{{ avgPyramidWeight() | weightDisplay:'kg' }}</span>
-              <span class="ex-stat-label">{{ 'common.weight' | translate }}</span>
-            </div>
-            <div class="ex-stat">
-              <span class="ex-stat-value pyramid-sets-count">{{ exercise().pyramidSets.length }}</span>
-              <span class="ex-stat-label">{{ 'common.sets' | translate }}</span>
-            </div>
-            <div class="ex-stat">
-              <span class="ex-stat-value blue">{{ breakLabel() }}</span>
-              <span class="ex-stat-label">{{ 'common.break' | translate }}</span>
-            </div>
-            <div class="ex-stat right">
-              <span class="ex-stat-value">≈{{ avgPyramidReps() }}</span>
-              <span class="ex-stat-label">{{ 'common.reps' | translate }}</span>
-            </div>
-          } @else {
-            <div class="ex-stat">
-              <span class="ex-stat-value">—</span>
-            </div>
-          }
-        } @else {
-          <div class="ex-stat">
-            <span class="ex-stat-value orange">{{ exercise().weightKg | weightDisplay:'kg' }}</span>
-            <span class="ex-stat-label">{{ 'common.weight' | translate }}</span>
-          </div>
-          <div class="ex-stat">
-            <span class="ex-stat-value">{{ exercise().sets }}</span>
-            <span class="ex-stat-label">{{ 'common.sets' | translate }}</span>
-          </div>
-          <div class="ex-stat">
-            <span class="ex-stat-value blue">{{ breakLabel() }}</span>
-            <span class="ex-stat-label">{{ 'common.break' | translate }}</span>
-          </div>
-          <div class="ex-stat right">
-            <span class="ex-stat-value">{{ exercise().reps }}</span>
-            <span class="ex-stat-label">{{ 'common.reps' | translate }}</span>
-          </div>
-        }
-      </div>
-    </div>
-    @if (isExpanded()) {
-      <app-exercise-expanded
-        [exercise]="exercise()"
-        (update)="exerciseUpdate.emit($event)"
-        (validate)="exerciseValidate.emit()"
-        (cancel)="exerciseCancel.emit()"
-        (delete)="exerciseDelete.emit()"
-        (openChrono)="openChrono.emit()"
-        (openStats)="openStats.emit()"
-      />
-    }
+<div class="exercise-card" [class.validated]="isValidated()" (click)="onCardClick()">
+	<div class="exercise-header">
+		<button
+			class="status-checkbox"
+			[class.status-checkbox--validated]="isValidated()"
+			[attr.aria-label]="isValidated() ? ('exercise.cancelAria' | translate) : ('exercise.validateAria' | translate)"
+			(click)="$event.stopPropagation(); onCheckboxClick()"
+		>
+			@if (isValidated()) {
+				<svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+					<polyline
+						points="1.5,5 4,7.5 8.5,2.5"
+						stroke="currentColor"
+						stroke-width="1.8"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+				</svg>
+			}
+		</button>
+		<span class="exercise-name">{{ exercise().name }}</span>
+		@if (isCardio()) {
+			<span class="tag" [ngStyle]="tagStyle('Cardio')">{{ "common.cardio" | translate }}</span>
+		} @else {
+			@for (group of exercise().muscleGroups; track group) {
+				<span class="tag" [ngStyle]="tagStyle(group)">{{ "muscleGroups." + group | translate }}</span>
+			}
+		}
+	</div>
+	<div class="exercise-stats">
+		@if (isCardio()) {
+			<div class="ex-stat">
+				<span class="ex-stat-value orange">{{ durationMinutes() }} {{ "common.unitMin" | translate }}</span>
+				<span class="ex-stat-label">{{ "common.duration" | translate }}</span>
+			</div>
+			<div class="ex-stat right">
+				@if (exercise().distanceKm !== null) {
+					<span class="ex-stat-value blue">{{ exercise().distanceKm | distanceDisplay: "km" }}</span>
+				} @else {
+					<span class="ex-stat-value blue">—</span>
+				}
+				<span class="ex-stat-label">{{ "common.distance" | translate }}</span>
+			</div>
+		} @else if (isPyramid()) {
+			@if (avgPyramidWeight() !== null && avgPyramidReps() !== null) {
+				<div class="ex-stat">
+					<span class="ex-stat-value orange">≈{{ avgPyramidWeight() | weightDisplay: "kg" }}</span>
+					<span class="ex-stat-label">{{ "common.weight" | translate }}</span>
+				</div>
+				<div class="ex-stat">
+					<span class="ex-stat-value pyramid-sets-count">{{ exercise().pyramidSets.length }}</span>
+					<span class="ex-stat-label">{{ "common.sets" | translate }}</span>
+				</div>
+				<div class="ex-stat">
+					<span class="ex-stat-value blue">{{ breakLabel() }}</span>
+					<span class="ex-stat-label">{{ "common.break" | translate }}</span>
+				</div>
+				<div class="ex-stat right">
+					<span class="ex-stat-value">≈{{ avgPyramidReps() }}</span>
+					<span class="ex-stat-label">{{ "common.reps" | translate }}</span>
+				</div>
+			} @else {
+				<div class="ex-stat">
+					<span class="ex-stat-value">—</span>
+				</div>
+			}
+		} @else {
+			<div class="ex-stat">
+				<span class="ex-stat-value orange">{{ exercise().weightKg | weightDisplay: "kg" }}</span>
+				<span class="ex-stat-label">{{ "common.weight" | translate }}</span>
+			</div>
+			<div class="ex-stat">
+				<span class="ex-stat-value">{{ exercise().sets }}</span>
+				<span class="ex-stat-label">{{ "common.sets" | translate }}</span>
+			</div>
+			<div class="ex-stat">
+				<span class="ex-stat-value blue">{{ breakLabel() }}</span>
+				<span class="ex-stat-label">{{ "common.break" | translate }}</span>
+			</div>
+			<div class="ex-stat right">
+				<span class="ex-stat-value">{{ exercise().reps }}</span>
+				<span class="ex-stat-label">{{ "common.reps" | translate }}</span>
+			</div>
+		}
+	</div>
+</div>
+@if (isExpanded()) {
+	<app-exercise-expanded
+		[exercise]="exercise()"
+		(update)="exerciseUpdate.emit($event)"
+		(validate)="exerciseValidate.emit()"
+		(cancel)="exerciseCancel.emit()"
+		(delete)="exerciseDelete.emit()"
+		(openChrono)="openChrono.emit()"
+		(openStats)="openStats.emit()"
+	/>
+}

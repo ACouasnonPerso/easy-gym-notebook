@@ -1,31 +1,26 @@
+<div class="heatmap-wrapper">
+	<div class="heatmap">
+		<!-- Header row -->
+		<div></div>
+		<div class="hm-day-label">{{ "days.mon" | translate }}</div>
+		<div class="hm-day-label">{{ "days.tue" | translate }}</div>
+		<div class="hm-day-label">{{ "days.wed" | translate }}</div>
+		<div class="hm-day-label">{{ "days.thu" | translate }}</div>
+		<div class="hm-day-label">{{ "days.fri" | translate }}</div>
+		<div class="hm-day-label">{{ "days.sat" | translate }}</div>
+		<div class="hm-day-label">{{ "days.sun" | translate }}</div>
 
-    <div class="heatmap-wrapper">
-      <div class="heatmap">
-        <!-- Header row -->
-        <div></div>
-        <div class="hm-day-label">{{ 'days.mon' | translate }}</div>
-        <div class="hm-day-label">{{ 'days.tue' | translate }}</div>
-        <div class="hm-day-label">{{ 'days.wed' | translate }}</div>
-        <div class="hm-day-label">{{ 'days.thu' | translate }}</div>
-        <div class="hm-day-label">{{ 'days.fri' | translate }}</div>
-        <div class="hm-day-label">{{ 'days.sat' | translate }}</div>
-        <div class="hm-day-label">{{ 'days.sun' | translate }}</div>
+		@for (week of weeks(); track $index) {
+			<div class="hm-week-label">{{ "common.weekShort" | translate }}{{ $index + 1 }}</div>
+			@for (cell of week; track cell.date.toISOString()) {
+				<div [class]="getCellClass(cell)" [class.selected]="selectedCell() === cell" (click)="onCellClick(cell)"></div>
+			}
+		}
+	</div>
 
-        @for (week of weeks(); track $index) {
-          <div class="hm-week-label">{{ 'common.weekShort' | translate }}{{ $index + 1 }}</div>
-          @for (cell of week; track cell.date.toISOString()) {
-            <div
-              [class]="getCellClass(cell)"
-              [class.selected]="selectedCell() === cell"
-              (click)="onCellClick(cell)"
-            ></div>
-          }
-        }
-      </div>
-
-      @if (selectedCell(); as cell) {
-        <div class="hm-popover" data-testid="heatmap-popover">
-          <span class="hm-popover-label">{{ formatPopoverLabel(cell) }}</span>
-        </div>
-      }
-    </div>
+	@if (selectedCell(); as cell) {
+		<div class="hm-popover" data-testid="heatmap-popover">
+			<span class="hm-popover-label">{{ formatPopoverLabel(cell) }}</span>
+		</div>
+	}
+</div>

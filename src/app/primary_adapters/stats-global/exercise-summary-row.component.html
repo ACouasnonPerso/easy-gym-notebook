@@ -1,43 +1,43 @@
-    <div class="history-card" (click)="selected.emit(exerciseName())">
-      <div class="history-header">
-        <span class="exercise-name">{{ exerciseName() }}</span>
-        <div class="tag-list">
-          @if (isCardio()) {
-            <span class="muscle-tag cardio-tag">{{ 'common.cardio' | translate }}</span>
-          } @else {
-            @for (muscle of muscleGroups(); track muscle) {
-              <span class="muscle-tag" [ngStyle]="tagStyle(muscle)">{{ 'muscleGroups.' + muscle | translate }}</span>
-            }
-          }
-        </div>
-      </div>
-      <div class="history-stats">
-        @if (isCardio()) {
-          <div class="h-stat">
-            <span class="h-stat-value orange">{{ formatDuration(totalDurationSeconds()) }}</span>
-            <span class="h-stat-label">{{ 'common.duration' | translate }}</span>
-          </div>
-          <div class="h-stat">
-            <span class="h-stat-value">{{ formatDistance(totalDistanceKm()) }}</span>
-            <span class="h-stat-label">{{ 'common.distance' | translate }}</span>
-          </div>
-          <div class="h-stat right">
-            <span class="h-stat-value">{{ occurrenceCount() }}x</span>
-            <span class="h-stat-label">{{ 'common.sessions' | translate }}</span>
-          </div>
-        } @else {
-          <div class="h-stat">
-            <span class="h-stat-value orange">{{ maxWeightKg() | weightDisplay:'kg' }}</span>
-            <span class="h-stat-label">{{ 'common.max' | translate }}</span>
-          </div>
-          <div class="h-stat">
-            <span class="h-stat-value">{{ formatVolume(totalVolumeKg()) }}</span>
-            <span class="h-stat-label">{{ 'common.volume' | translate }}</span>
-          </div>
-          <div class="h-stat right">
-            <span class="h-stat-value">{{ occurrenceCount() }}x</span>
-            <span class="h-stat-label">{{ 'common.sessions' | translate }}</span>
-          </div>
-        }
-      </div>
-    </div>
+<div class="history-card" (click)="selected.emit(exerciseName())">
+	<div class="history-header">
+		<span class="exercise-name">{{ exerciseName() }}</span>
+		<div class="tag-list">
+			@if (isCardio()) {
+				<span class="muscle-tag cardio-tag">{{ "common.cardio" | translate }}</span>
+			} @else {
+				@for (muscle of muscleGroups(); track muscle) {
+					<span class="muscle-tag" [ngStyle]="tagStyle(muscle)">{{ "muscleGroups." + muscle | translate }}</span>
+				}
+			}
+		</div>
+	</div>
+	<div class="history-stats">
+		@if (isCardio()) {
+			<div class="h-stat">
+				<span class="h-stat-value orange">{{ formatDuration(totalDurationSeconds()) }}</span>
+				<span class="h-stat-label">{{ "common.duration" | translate }}</span>
+			</div>
+			<div class="h-stat">
+				<span class="h-stat-value">{{ formatDistance(totalDistanceKm()) }}</span>
+				<span class="h-stat-label">{{ "common.distance" | translate }}</span>
+			</div>
+			<div class="h-stat right">
+				<span class="h-stat-value">{{ occurrenceCount() }}x</span>
+				<span class="h-stat-label">{{ "common.sessions" | translate }}</span>
+			</div>
+		} @else {
+			<div class="h-stat">
+				<span class="h-stat-value orange">{{ maxWeightKg() | weightDisplay: "kg" }}</span>
+				<span class="h-stat-label">{{ "common.max" | translate }}</span>
+			</div>
+			<div class="h-stat">
+				<span class="h-stat-value">{{ formatVolume(totalVolumeKg()) }}</span>
+				<span class="h-stat-label">{{ "common.volume" | translate }}</span>
+			</div>
+			<div class="h-stat right">
+				<span class="h-stat-value">{{ occurrenceCount() }}x</span>
+				<span class="h-stat-label">{{ "common.sessions" | translate }}</span>
+			</div>
+		}
+	</div>
+</div>

@@ -1,22 +1,22 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from "@angular/core";
 
-export type ChartType = 'volume' | 'weight' | 'pace' | 'speed';
+export type ChartType = "volume" | "weight" | "pace" | "speed";
 
-const STORAGE_KEY = 'chart-selection';
+const STORAGE_KEY = "chart-selection";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class ChartSelectionService {
-  private readonly _selectedChart = signal<ChartType>(this.loadFromStorage());
-  readonly selectedChart = this._selectedChart.asReadonly();
+	private readonly _selectedChart = signal<ChartType>(this.loadFromStorage());
+	readonly selectedChart = this._selectedChart.asReadonly();
 
-  select(chart: ChartType): void {
-    this._selectedChart.set(chart);
-    localStorage.setItem(STORAGE_KEY, chart);
-  }
+	select(chart: ChartType): void {
+		this._selectedChart.set(chart);
+		localStorage.setItem(STORAGE_KEY, chart);
+	}
 
-  private loadFromStorage(): ChartType {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === 'weight' || stored === 'pace' || stored === 'speed') return stored;
-    return 'volume';
-  }
+	private loadFromStorage(): ChartType {
+		const stored = localStorage.getItem(STORAGE_KEY);
+		if (stored === "weight" || stored === "pace" || stored === "speed") return stored;
+		return "volume";
+	}
 }

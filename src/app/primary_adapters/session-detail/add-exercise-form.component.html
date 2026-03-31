@@ -1,194 +1,189 @@
+<div class="overlay" (click)="cancelled.emit()">
+	<div class="form-card" (click)="$event.stopPropagation()" [style.padding-bottom]="isAndroid ? '300px' : null">
+		<h2 class="form-title">{{ "exercise.new" | translate }}</h2>
 
-    <div class="overlay" (click)="cancelled.emit()">
-      <div class="form-card" (click)="$event.stopPropagation()" [style.padding-bottom]="isAndroid ? '300px' : null">
-        <h2 class="form-title">{{ 'exercise.new' | translate }}</h2>
+		<div class="name-field">
+			<div class="name-field-top">
+				<label class="field-label">{{ "common.name" | translate }}</label>
+				@if (!isCardio()) {
+					<label class="pyramid-toggle" [class.pyramid-toggle--active]="isPyramid()">
+						<svg width="10" height="10" viewBox="0 0 11 11" fill="none" class="pyramid-toggle__icon">
+							<polygon
+								points="5.5,1 10,10 1,10"
+								stroke="currentColor"
+								stroke-width="1.5"
+								stroke-linejoin="round"
+								fill="none"
+							/>
+						</svg>
+						<span class="pyramid-toggle__label">{{ "exercise.pyramid" | translate }}</span>
+						<input
+							type="checkbox"
+							class="pyramid-toggle__input"
+							[checked]="isPyramid()"
+							(change)="togglePyramid()"
+							aria-label="Exercice en pyramide"
+						/>
+						<span class="pyramid-toggle__track">
+							<span class="pyramid-toggle__thumb"></span>
+						</span>
+					</label>
+				}
+			</div>
+			<input
+				type="text"
+				[value]="name()"
+				(input)="onNameInput($event)"
+				[placeholder]="'exercise.namePlaceholder' | translate"
+				class="input"
+			/>
+			@if (suggestions().length > 0) {
+				<div class="suggestions">
+					@for (suggestion of suggestions(); track suggestion) {
+						<button type="button" class="suggestion-item" (click)="onSuggestionSelect(suggestion)">
+							{{ suggestion }}
+						</button>
+					}
+				</div>
+			}
+			@if (detectedGroups().length > 0 || isCardio()) {
+				<div class="detected-tags">
+					@for (group of detectedGroups(); track group) {
+						<span class="detected-group" [ngStyle]="tagStyle(group)">{{ "muscleGroups." + group | translate }}</span>
+					}
+					@if (isCardio()) {
+						<span class="detected-cardio">{{ "common.cardio" | translate }}</span>
+					}
+				</div>
+			}
+		</div>
 
-        <div class="name-field">
-          <div class="name-field-top">
-            <label class="field-label">{{ 'common.name' | translate }}</label>
-            @if (!isCardio()) {
-              <label class="pyramid-toggle" [class.pyramid-toggle--active]="isPyramid()">
-                <svg width="10" height="10" viewBox="0 0 11 11" fill="none" class="pyramid-toggle__icon">
-                  <polygon points="5.5,1 10,10 1,10" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
-                </svg>
-                <span class="pyramid-toggle__label">{{ 'exercise.pyramid' | translate }}</span>
-                <input
-                  type="checkbox"
-                  class="pyramid-toggle__input"
-                  [checked]="isPyramid()"
-                  (change)="togglePyramid()"
-                  aria-label="Exercice en pyramide"
-                />
-                <span class="pyramid-toggle__track">
-                  <span class="pyramid-toggle__thumb"></span>
-                </span>
-              </label>
-            }
-          </div>
-          <input
-            type="text"
-            [value]="name()"
-            (input)="onNameInput($event)"
-            [placeholder]="'exercise.namePlaceholder' | translate"
-            class="input"
-          />
-          @if (suggestions().length > 0) {
-            <div class="suggestions">
-              @for (suggestion of suggestions(); track suggestion) {
-                <button type="button" class="suggestion-item" (click)="onSuggestionSelect(suggestion)">
-                  {{ suggestion }}
-                </button>
-              }
-            </div>
-          }
-          @if (detectedGroups().length > 0 || isCardio()) {
-            <div class="detected-tags">
-              @for (group of detectedGroups(); track group) {
-                <span class="detected-group" [ngStyle]="tagStyle(group)">{{ 'muscleGroups.' + group | translate }}</span>
-              }
-              @if (isCardio()) {
-                <span class="detected-cardio">{{ 'common.cardio' | translate }}</span>
-              }
-            </div>
-          }
-        </div>
+		@if (isCardio()) {
+			<div class="pickers-row">
+				<div class="picker-col">
+					<span class="picker-label">{{ "common.hours" | translate }}</span>
+					<app-drum-picker
+						[values]="hoursValues"
+						[selectedValue]="durationHours()"
+						(valueChange)="durationHours.set(+$event)"
+					/>
+				</div>
+				<div class="picker-col">
+					<span class="picker-label">{{ "common.minutes" | translate }}</span>
+					<app-drum-picker
+						[values]="minutesValues"
+						[selectedValue]="durationMinutes()"
+						(valueChange)="durationMinutes.set(+$event)"
+					/>
+				</div>
+				<div class="picker-col">
+					<span class="picker-label">{{ "common.distance" | translate }}</span>
+					<app-drum-picker
+						[values]="kmValues"
+						[selectedValue]="distanceKm() ?? '-'"
+						(valueChange)="setDistanceKm($event)"
+					/>
+				</div>
+			</div>
+		} @else if (isPyramid()) {
+			<div class="pyramid-section">
+				<div class="pyramid-sets-list">
+					@for (set of pyramidSets(); track $index) {
+						<div class="pyramid-row">
+							<span class="pyramid-row-num">{{ $index + 1 }}</span>
+							<div class="pyramid-field-group">
+								<input
+									type="number"
+									class="pyramid-input"
+									[value]="set.weightKg"
+									(change)="updatePyramidSet($index, 'weightKg', +$any($event.target).value)"
+									min="0"
+									step="0.5"
+									inputmode="decimal"
+								/>
+								<span class="pyramid-unit">{{ weightUnit() }}</span>
+							</div>
+							<span class="pyramid-sep">×</span>
+							<div class="pyramid-field-group">
+								<input
+									type="number"
+									class="pyramid-input pyramid-input--reps"
+									[value]="set.reps"
+									(change)="updatePyramidSet($index, 'reps', +$any($event.target).value)"
+									min="1"
+									step="1"
+									inputmode="numeric"
+								/>
+								<span class="pyramid-unit">{{ "common.reps" | translate }}</span>
+							</div>
+							<button type="button" class="pyramid-delete" (click)="removePyramidSet($index)" aria-label="Remove set">
+								<svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+									<line x1="2" y1="2" x2="10" y2="10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+									<line x1="10" y1="2" x2="2" y2="10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+								</svg>
+							</button>
+						</div>
+					}
+					<button type="button" class="pyramid-add-row" (click)="addPyramidSet()">
+						<svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+							<line x1="6" y1="1" x2="6" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+							<line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+						</svg>
+						{{ "exercise.addSet" | translate }}
+					</button>
+				</div>
+				<div class="pyramid-break-inline">
+					<span class="pyramid-break-inline__label">{{ "common.rest" | translate }}</span>
+					<div class="pyramid-field-group pyramid-break-inline__field">
+						<input
+							type="number"
+							class="pyramid-input"
+							[value]="breakDurationSeconds()"
+							(change)="breakDurationSeconds.set(+$any($event.target).value)"
+							min="0"
+							step="5"
+							inputmode="numeric"
+						/>
+						<span class="pyramid-unit">s</span>
+					</div>
+				</div>
+			</div>
+		} @else {
+			<div class="standard-pickers pickers-row">
+				<div class="picker-col">
+					<span class="picker-label">{{ "common.weight" | translate }}</span>
+					<app-drum-picker
+						[values]="weightValues"
+						[selectedValue]="weightKg()"
+						[unit]="weightUnit()"
+						(valueChange)="weightKg.set(+$event)"
+					/>
+				</div>
+				<div class="picker-col">
+					<span class="picker-label">{{ "common.sets" | translate }}</span>
+					<app-drum-picker [values]="setsValues" [selectedValue]="sets()" (valueChange)="sets.set(+$event)" />
+				</div>
+				<div class="picker-col">
+					<span class="picker-label">{{ "common.reps" | translate }}</span>
+					<app-drum-picker [values]="repsValues" [selectedValue]="reps()" (valueChange)="reps.set(+$event)" />
+				</div>
+				<div class="picker-col">
+					<span class="picker-label">{{ "common.rest" | translate }}</span>
+					<app-drum-picker
+						style="min-width: 90px !important"
+						[values]="breakValues"
+						[selectedValue]="breakSelectedValue()"
+						(valueChange)="setBreakFromMmss($event)"
+					/>
+				</div>
+			</div>
+		}
 
-        @if (isCardio()) {
-          <div class="pickers-row">
-            <div class="picker-col">
-              <span class="picker-label">{{ 'common.hours' | translate }}</span>
-              <app-drum-picker
-                [values]="hoursValues"
-                [selectedValue]="durationHours()"
-                (valueChange)="durationHours.set(+$event)"
-              />
-            </div>
-            <div class="picker-col">
-              <span class="picker-label">{{ 'common.minutes' | translate }}</span>
-              <app-drum-picker
-                [values]="minutesValues"
-                [selectedValue]="durationMinutes()"
-                (valueChange)="durationMinutes.set(+$event)"
-              />
-            </div>
-            <div class="picker-col">
-              <span class="picker-label">{{ 'common.distance' | translate }}</span>
-              <app-drum-picker
-                [values]="kmValues"
-                [selectedValue]="distanceKm() ?? '-'"
-                (valueChange)="setDistanceKm($event)"
-              />
-            </div>
-          </div>
-        } @else if (isPyramid()) {
-          <div class="pyramid-section">
-            <div class="pyramid-sets-list">
-              @for (set of pyramidSets(); track $index) {
-                <div class="pyramid-row">
-                  <span class="pyramid-row-num">{{ $index + 1 }}</span>
-                  <div class="pyramid-field-group">
-                    <input
-                      type="number"
-                      class="pyramid-input"
-                      [value]="set.weightKg"
-                      (change)="updatePyramidSet($index, 'weightKg', +$any($event.target).value)"
-                      min="0"
-                      step="0.5"
-                      inputmode="decimal"
-                    />
-                    <span class="pyramid-unit">{{ weightUnit() }}</span>
-                  </div>
-                  <span class="pyramid-sep">×</span>
-                  <div class="pyramid-field-group">
-                    <input
-                      type="number"
-                      class="pyramid-input pyramid-input--reps"
-                      [value]="set.reps"
-                      (change)="updatePyramidSet($index, 'reps', +$any($event.target).value)"
-                      min="1"
-                      step="1"
-                      inputmode="numeric"
-                    />
-                    <span class="pyramid-unit">{{ 'common.reps' | translate }}</span>
-                  </div>
-                  <button
-                    type="button"
-                    class="pyramid-delete"
-                    (click)="removePyramidSet($index)"
-                    aria-label="Remove set"
-                  >
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <line x1="2" y1="2" x2="10" y2="10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                      <line x1="10" y1="2" x2="2" y2="10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    </svg>
-                  </button>
-                </div>
-              }
-              <button type="button" class="pyramid-add-row" (click)="addPyramidSet()">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <line x1="6" y1="1" x2="6" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                </svg>
-                {{ 'exercise.addSet' | translate }}
-              </button>
-            </div>
-            <div class="pyramid-break-inline">
-              <span class="pyramid-break-inline__label">{{ 'common.rest' | translate }}</span>
-              <div class="pyramid-field-group pyramid-break-inline__field">
-                <input
-                  type="number"
-                  class="pyramid-input"
-                  [value]="breakDurationSeconds()"
-                  (change)="breakDurationSeconds.set(+$any($event.target).value)"
-                  min="0"
-                  step="5"
-                  inputmode="numeric"
-                />
-                <span class="pyramid-unit">s</span>
-              </div>
-            </div>
-          </div>
-        } @else {
-          <div class="standard-pickers pickers-row">
-            <div class="picker-col">
-              <span class="picker-label">{{ 'common.weight' | translate }}</span>
-              <app-drum-picker
-                [values]="weightValues"
-                [selectedValue]="weightKg()"
-                [unit]="weightUnit()"
-                (valueChange)="weightKg.set(+$event)"
-              />
-            </div>
-            <div class="picker-col">
-              <span class="picker-label">{{ 'common.sets' | translate }}</span>
-              <app-drum-picker
-                [values]="setsValues"
-                [selectedValue]="sets()"
-                (valueChange)="sets.set(+$event)"
-              />
-            </div>
-            <div class="picker-col">
-              <span class="picker-label">{{ 'common.reps' | translate }}</span>
-              <app-drum-picker
-                [values]="repsValues"
-                [selectedValue]="reps()"
-                (valueChange)="reps.set(+$event)"
-              />
-            </div>
-            <div class="picker-col">
-              <span class="picker-label">{{ 'common.rest' | translate }}</span>
-              <app-drum-picker  style="min-width: 90px !important"
-                [values]="breakValues"
-                [selectedValue]="breakSelectedValue()"
-                (valueChange)="setBreakFromMmss($event)"
-              />
-            </div>
-          </div>
-        }
-
-        <div class="actions">
-          <button class="btn-cancel" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
-          <button class="btn-submit" [disabled]="isSubmitDisabled()" (click)="onSubmit()">{{ 'common.add' | translate }}</button>
-        </div>
-      </div>
-    </div>
+		<div class="actions">
+			<button class="btn-cancel" (click)="cancelled.emit()">{{ "common.cancel" | translate }}</button>
+			<button class="btn-submit" [disabled]="isSubmitDisabled()" (click)="onSubmit()">
+				{{ "common.add" | translate }}
+			</button>
+		</div>
+	</div>
+</div>

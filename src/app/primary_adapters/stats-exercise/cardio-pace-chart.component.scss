@@ -1,7 +1,11 @@
-:host { display: block; }
-.chart-svg { overflow: visible; }
+:host {
+	display: block;
+}
+.chart-svg {
+	overflow: visible;
+}
 .empty-chart {
-  text-align: center;
-  color: var(--muted);
-  padding: 32px 0;
+	text-align: center;
+	color: var(--muted);
+	padding: 32px 0;
 }
