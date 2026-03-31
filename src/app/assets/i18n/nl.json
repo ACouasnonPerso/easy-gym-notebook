@@ -149,11 +149,12 @@
 		"calves": "kuitheffing,kuit,kuiten,calves",
 		"traps": "schouderophalen,shrug,trapezius,traps",
 		"adductors": "adductoren,adductor,binnendij,adductie",
-		"abductors": "abductoren,abductor,buitendij,abductie"
+		"abductors": "abductoren,abductor,buitendij,abductie",
+		"lowerBack": "onderrug,lende,lower back,lumbar"
 	},
 	"englishMuscleDetector": {
 		"chest": "bench press,benchpress,chest press,chest fly,pec deck,chest,pecs,bench,bp",
-		"back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rowing,back,pull",
+		"back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rowing,back,pull,lats",
 		"backHamstrings": "deadlift,dead lift",
 		"shoulders": "shoulder press,overhead press,lateral raise,front raise,shoulder,deltoid,ohp",
 		"biceps": "bicep curl,hammer curl,bicep,biceps, bibi",
@@ -168,7 +169,8 @@
 		"calves": "calf raise,calf,calves",
 		"traps": "shrug,trap,traps,trapezius",
 		"adductors": "adductor,adductors,inner thigh,adduction",
-		"abductors": "abductor,abductors,outer thigh,abduction"
+		"abductors": "abductor,abductors,outer thigh,abduction",
+		"lowerBack": "lower back,lumbar,lumbar extension,back extension"
 	},
 	"muscleGroups": {
 		"Chest": "Borst",
@@ -184,7 +186,8 @@
 		"Calves": "Kuiten",
 		"Traps": "Trapezius",
 		"Adductors": "Adductoren",
-		"Abductors": "Abductoren"
+		"Abductors": "Abductoren",
+		"LowerBack": "Onderrug"
 	},
 	"massUnit": {
 		"metric": "Metrisch",

@@ -1,7 +1,9 @@
-import { Component, ChangeDetectionStrategy, input, computed } from "@angular/core";
+import { Component, ChangeDetectionStrategy, input, computed, signal, inject } from "@angular/core";
 import { MuscleGroup } from "../../core_logic/shared/models";
 import { TranslateModule } from "@ngx-translate/core";
 import { MUSCLE_GROUP_COLORS } from "../../core_logic/shared/muscle-group-colors";
+import { MuscleGroupDetail } from "../../core_logic/stats-global/stats.service";
+import { WeightDisplayPipe } from "../../core_logic/mass-unit/weight-display.pipe";
 
 const RADIUS = 55;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -18,12 +20,27 @@ interface DonutSegment {
 	selector: "app-donut-chart",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [TranslateModule],
+	imports: [TranslateModule, WeightDisplayPipe],
+	providers: [WeightDisplayPipe],
 	templateUrl: "./donut-chart.component.html",
 	styleUrl: "./donut-chart.component.scss",
 })
 export class DonutChartComponent {
 	distribution = input<Map<MuscleGroup, number>>(new Map());
+	details = input<Map<MuscleGroup, MuscleGroupDetail>>(new Map());
+
+	private readonly weightDisplay = inject(WeightDisplayPipe);
+
+	readonly selectedGroup = signal<MuscleGroup | null>(null);
+
+	formatLoad(kg: number): string {
+		if (kg >= 1000) return this.weightDisplay.transform(kg / 1000, "t");
+		return this.weightDisplay.transform(Math.round(kg), "kg");
+	}
+
+	onSegmentClick(group: MuscleGroup): void {
+		this.selectedGroup.update((current) => (current === group ? null : group));
+	}
 
 	readonly radius = RADIUS;
 	readonly circumference = CIRCUMFERENCE;

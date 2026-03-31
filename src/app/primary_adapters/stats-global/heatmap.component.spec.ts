@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { provideTranslateService } from "@ngx-translate/core";
+import { provideTranslateService, TranslateService } from "@ngx-translate/core";
 import { HeatmapComponent, HeatmapCell } from "./heatmap.component";
 
 function makeToday(): Date {
@@ -97,8 +97,13 @@ describe("HeatmapComponent — popover au clic", () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HeatmapComponent],
-			providers: [provideTranslateService()],
+			providers: [provideTranslateService({ defaultLanguage: "fr" })],
 		});
+		const translate = TestBed.inject(TranslateService);
+		translate.setTranslation("fr", {
+			muscleGroups: { Chest: "Chest", Biceps: "Biceps", Back: "Back", Shoulders: "Shoulders" },
+		});
+		translate.use("fr");
 		const fixture = TestBed.createComponent(HeatmapComponent);
 		component = fixture.componentInstance;
 	});

@@ -149,11 +149,12 @@
 		"calves": "น่อง,calf",
 		"traps": "แทร็ป,บ่า,ชรัก,shrug",
 		"adductors": "แอดดัคเตอร์,ต้นขาด้านใน",
-		"abductors": "แอบดัคเตอร์,ต้นขาด้านนอก"
+		"abductors": "แอบดัคเตอร์,ต้นขาด้านนอก",
+		"lowerBack": "หลังส่วนล่าง,lower back,lumbar"
 	},
 	"englishMuscleDetector": {
 		"chest": "bench press,benchpress,chest press,chest fly,pec deck,chest,pecs,bench,bp",
-		"back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rowing,back,pull",
+		"back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rowing,back,pull,lats",
 		"backHamstrings": "deadlift,dead lift",
 		"shoulders": "shoulder press,overhead press,lateral raise,front raise,shoulder,deltoid,ohp",
 		"biceps": "bicep curl,hammer curl,bicep,biceps, bibi",
@@ -168,7 +169,8 @@
 		"calves": "calf raise,calf,calves",
 		"traps": "shrug,trap,traps,trapezius",
 		"adductors": "adductor,adductors,inner thigh,adduction",
-		"abductors": "abductor,abductors,outer thigh,abduction"
+		"abductors": "abductor,abductors,outer thigh,abduction",
+		"lowerBack": "lower back,lumbar,lumbar extension,back extension"
 	},
 	"muscleGroups": {
 		"Chest": "อก",
@@ -184,7 +186,8 @@
 		"Calves": "น่อง",
 		"Traps": "บ่า",
 		"Adductors": "กล้ามเนื้อดึงเข้า",
-		"Abductors": "กล้ามเนื้อดึงออก"
+		"Abductors": "กล้ามเนื้อดึงออก",
+		"LowerBack": "หลังส่วนล่าง"
 	},
 	"massUnit": {
 		"metric": "เมตริก",

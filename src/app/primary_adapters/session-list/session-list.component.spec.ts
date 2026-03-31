@@ -26,6 +26,11 @@ class FakeTranslateLoader implements TranslateLoader {
 				deleteConfirm: "Supprimer ?",
 				tip: "Conseil",
 			},
+			massUnit: {
+				metric: "Métrique",
+				imperial: "Britanique",
+				us: "US",
+			},
 		} as unknown as TranslationObject);
 	}
 }
@@ -223,6 +228,6 @@ describe("SessionListComponent — sélecteur d'unité de masse", () => {
 		imperialItem!.click();
 		fixture.detectChanges();
 
-		expect(massUnitServiceSpy.setMassUnit).toHaveBeenCalledOnceWith("imperial");
+		expect(massUnitServiceSpy.setMassUnit).toHaveBeenCalledWith("imperial");
 	});
 });

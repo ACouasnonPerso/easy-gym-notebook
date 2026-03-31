@@ -43,3 +43,30 @@
 	color: var(--text);
 	margin-left: auto;
 }
+.dc-popover {
+	margin-top: 10px;
+	background: var(--card2);
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	padding: 9px 14px;
+	display: inline-block;
+}
+.dc-popover-label {
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--text);
+	display: block;
+	margin-bottom: 4px;
+}
+.dc-popover-stats {
+	display: flex;
+	gap: 12px;
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	color: var(--sub);
+}
+.legend-item.selected .legend-text {
+	color: var(--text);
+	font-weight: 700;
+}

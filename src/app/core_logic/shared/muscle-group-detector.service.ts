@@ -20,6 +20,7 @@ const MUSCLE_GROUP_KEYS: { key: string; groups: MuscleGroup[] }[] = [
 	{ key: "traps", groups: [MuscleGroup.Traps] },
 	{ key: "adductors", groups: [MuscleGroup.Adductors] },
 	{ key: "abductors", groups: [MuscleGroup.Abductors] },
+	{ key: "lowerBack", groups: [MuscleGroup.LowerBack] },
 ];
 
 function normalize(text: string): string {

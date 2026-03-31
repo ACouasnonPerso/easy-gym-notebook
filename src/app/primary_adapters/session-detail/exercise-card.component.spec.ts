@@ -1,9 +1,13 @@
 import { TestBed } from "@angular/core/testing";
 import { Component, input, output } from "@angular/core";
 import { NgStyle } from "@angular/common";
-import { provideTranslateService, TranslateModule } from "@ngx-translate/core";
+import { provideTranslateService, TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ExerciseCardComponent } from "./exercise-card.component";
 import { MuscleGroup, Exercise } from "../../core_logic/shared/models";
+import { WeightDisplayPipe } from "../../core_logic/mass-unit/weight-display.pipe";
+import { DistanceDisplayPipe } from "../../core_logic/mass-unit/distance-display.pipe";
+import { MassUnitService } from "../../core_logic/mass-unit/mass-unit.service";
+import { signal } from "@angular/core";
 
 @Component({ selector: "app-exercise-expanded", standalone: true, template: "" })
 class FakeExerciseExpandedComponent {
@@ -40,12 +44,36 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 async function setup(exercise: Exercise) {
 	await TestBed.configureTestingModule({
 		imports: [ExerciseCardComponent],
-		providers: [provideTranslateService({ defaultLanguage: "fr" })],
+		providers: [
+			provideTranslateService({ defaultLanguage: "fr" }),
+			{ provide: MassUnitService, useValue: { activeMassUnit: signal<"metric" | "imperial" | "us">("metric") } },
+		],
 	})
 		.overrideComponent(ExerciseCardComponent, {
-			set: { imports: [FakeExerciseExpandedComponent, NgStyle, TranslateModule] },
+			set: { imports: [FakeExerciseExpandedComponent, NgStyle, TranslateModule, WeightDisplayPipe, DistanceDisplayPipe] },
 		})
 		.compileComponents();
+
+	const translate = TestBed.inject(TranslateService);
+	translate.setTranslation("fr", {
+		muscleGroups: {
+			Chest: "Chest",
+			Back: "Back",
+			Shoulders: "Shoulders",
+			Biceps: "Biceps",
+			Triceps: "Triceps",
+			Forearms: "Forearms",
+			Abs: "Abs",
+			Quads: "Quads",
+			Hamstrings: "Hamstrings",
+			Glutes: "Glutes",
+			Calves: "Calves",
+			Traps: "Traps",
+			Adductors: "Adductors",
+			Abductors: "Abductors",
+		},
+	});
+	translate.use("fr");
 
 	const fixture = TestBed.createComponent(ExerciseCardComponent);
 	fixture.componentRef.setInput("exercise", exercise);

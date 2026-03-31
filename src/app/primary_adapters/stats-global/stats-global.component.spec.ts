@@ -10,6 +10,21 @@ import { SelectMonthUseCase } from "../../primary_ports/stats-global/select-mont
 import { MergeExercisesUseCase } from "../../primary_ports/stats-global/merge-exercises.usecase";
 import { ImportDataUseCase } from "../../primary_ports/stats-global/import-data.usecase";
 import { Router } from "@angular/router";
+import { SESSION_REPOSITORY } from "../../secondary_ports/session/session.repository.interface";
+import { EXERCISE_REPOSITORY } from "../../secondary_ports/exercise/exercise.repository.interface";
+
+function makeRepoProviders() {
+	return [
+		{
+			provide: SESSION_REPOSITORY,
+			useValue: { getAll: jasmine.createSpy("getAll").and.returnValue(Promise.resolve([])) },
+		},
+		{
+			provide: EXERCISE_REPOSITORY,
+			useValue: { getAll: jasmine.createSpy("getAll").and.returnValue(Promise.resolve([])) },
+		},
+	];
+}
 
 const FR_TRANSLATIONS = {
 	statsGlobal: {
@@ -61,6 +76,7 @@ function makeGetGlobalStatsUseCaseSpy() {
 		weekSummary: signal({ totalWeightKg: 0, sessionCount: 0, totalDurationSeconds: 0 }),
 		weeklyAverage: signal({ avgWeightKg: 0, sessionsPerWeek: 0, avgDurationSeconds: 0 }),
 		muscleGroupDistribution: signal([]),
+		muscleGroupDetails: signal(new Map()),
 		exerciseSummaries: signal([]),
 		sessionDurationsInMonth: signal([] as { date: Date; durationSeconds: number }[]),
 		selectedMonth: signal(new Date()),
@@ -120,6 +136,7 @@ describe("StatsGlobalComponent — formatDuration", () => {
 				{ provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
 				{ provide: Router, useValue: routerSpy },
 				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
 			],
 		});
 
@@ -161,6 +178,7 @@ describe("StatsGlobalComponent — sélecteur de vue (année en cours et total)"
 				{ provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
 				{ provide: Router, useValue: routerSpy },
 				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
 			],
 		});
 
@@ -169,8 +187,8 @@ describe("StatsGlobalComponent — sélecteur de vue (année en cours et total)"
 		fixture.detectChanges();
 	});
 
-	it("devrait afficher la heatmap quand un mois normal est sélectionné (index 2)", () => {
-		fixture.componentInstance.selectedMonthIndex.set(2);
+	it("devrait afficher la heatmap quand un mois normal est sélectionné (index 3)", () => {
+		fixture.componentInstance.selectedMonthIndex.set(3);
 		fixture.detectChanges();
 
 		const el: HTMLElement = fixture.nativeElement;
@@ -226,6 +244,7 @@ describe("StatsGlobalComponent — résumé de la semaine", () => {
 				{ provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
 				{ provide: Router, useValue: routerSpy },
 				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
 			],
 		});
 
@@ -237,7 +256,7 @@ describe("StatsGlobalComponent — résumé de la semaine", () => {
 	}
 
 	it("devrait afficher le résumé de la semaine quand le mois courant est sélectionné", () => {
-		setup(2);
+		setup(3);
 
 		const el: HTMLElement = fixture.nativeElement;
 		const titles = Array.from(el.querySelectorAll(".stats-card-title"));
@@ -247,7 +266,7 @@ describe("StatsGlobalComponent — résumé de la semaine", () => {
 	});
 
 	it("devrait masquer le résumé de la semaine quand un mois passé est sélectionné", () => {
-		setup(3);
+		setup(4);
 
 		const el: HTMLElement = fixture.nativeElement;
 		const titles = Array.from(el.querySelectorAll(".stats-card-title"));
@@ -283,6 +302,7 @@ describe("StatsGlobalComponent — merge d'exercices", () => {
 				{ provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
 				{ provide: Router, useValue: routerSpy },
 				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
 			],
 		});
 
@@ -372,6 +392,7 @@ describe("StatsGlobalComponent — titre du récap (summaryTitle)", () => {
 				{ provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
 				{ provide: Router, useValue: routerSpy },
 				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
 			],
 		});
 
@@ -381,7 +402,7 @@ describe("StatsGlobalComponent — titre du récap (summaryTitle)", () => {
 	});
 
 	it("devrait retourner 'statsGlobal.monthSummary' quand un mois normal est sélectionné", () => {
-		component.selectedMonthIndex.set(2); // index 2 = premier mois normal
+		component.selectedMonthIndex.set(3); // index 3 = premier mois normal (0=year, 1=total, 2=week)
 		expect(component.summaryTitle()).toBe("statsGlobal.monthSummary");
 	});
 
@@ -411,6 +432,7 @@ describe("StatsGlobalComponent — titre du récap dans le DOM", () => {
 				{ provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
 				{ provide: Router, useValue: routerSpy },
 				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
 			],
 		});
 
@@ -447,6 +469,7 @@ describe("StatsGlobalComponent — graphique de durée des séances", () => {
 				},
 				{ provide: Router, useValue: { navigate: jasmine.createSpy("navigate") } },
 				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
 			],
 		});
 		setupI18n();
@@ -474,6 +497,7 @@ describe("StatsGlobalComponent — graphique de durée des séances", () => {
 				},
 				{ provide: Router, useValue: { navigate: jasmine.createSpy("navigate") } },
 				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
 			],
 		});
 		setupI18n();

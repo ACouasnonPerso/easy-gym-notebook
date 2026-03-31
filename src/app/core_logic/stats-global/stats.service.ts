@@ -4,6 +4,12 @@ import { SESSION_REPOSITORY } from "../../secondary_ports/session/session.reposi
 import { EXERCISE_REPOSITORY } from "../../secondary_ports/exercise/exercise.repository.interface";
 import { computeVolume } from "../shared/utils";
 
+export interface MuscleGroupDetail {
+	percentage: number;
+	sessionCount: number;
+	totalLoadKg: number;
+}
+
 export interface HeatmapCell {
 	date: Date;
 	hasSession: boolean;
@@ -189,6 +195,55 @@ export class StatsService {
 		for (const { group, floor } of entries) percentages.set(group, floor);
 
 		return percentages;
+	});
+
+	readonly muscleGroupDetails = computed((): Map<MuscleGroup, MuscleGroupDetail> => {
+		const exercises = this._exercisesInMonth();
+		if (exercises.length === 0) return new Map();
+
+		const counts = new Map<MuscleGroup, number>();
+		for (const e of exercises) {
+			if (e.muscleGroup === null) continue;
+			counts.set(e.muscleGroup, (counts.get(e.muscleGroup) ?? 0) + 1);
+		}
+		if (counts.size === 0) return new Map();
+
+		const total = Array.from(counts.values()).reduce((sum, n) => sum + n, 0);
+
+		const entries = Array.from(counts.entries()).map(([group, count]) => {
+			const exact = (count / total) * 100;
+			return { group, floor: Math.floor(exact), remainder: exact - Math.floor(exact) };
+		});
+
+		const allocated = entries.reduce((sum, e) => sum + e.floor, 0);
+		const deficit = 100 - allocated;
+		entries
+			.sort((a, b) => b.remainder - a.remainder)
+			.slice(0, deficit)
+			.forEach((e) => e.floor++);
+
+		const sessionIds = new Set(this._sessionsInMonth().map((s) => s.id));
+
+		const sessionCountByGroup = new Map<MuscleGroup, Set<string>>();
+		const totalLoadByGroup = new Map<MuscleGroup, number>();
+
+		for (const e of exercises) {
+			if (e.muscleGroup === null) continue;
+			if (!sessionCountByGroup.has(e.muscleGroup)) sessionCountByGroup.set(e.muscleGroup, new Set());
+			sessionCountByGroup.get(e.muscleGroup)!.add(e.sessionId);
+			totalLoadByGroup.set(e.muscleGroup, (totalLoadByGroup.get(e.muscleGroup) ?? 0) + computeVolume(e));
+		}
+
+		const result = new Map<MuscleGroup, MuscleGroupDetail>();
+		for (const { group, floor } of entries) {
+			result.set(group, {
+				percentage: floor,
+				sessionCount: sessionCountByGroup.get(group)?.size ?? 0,
+				totalLoadKg: totalLoadByGroup.get(group) ?? 0,
+			});
+		}
+
+		return result;
 	});
 
 	readonly weekSummary = computed((): MonthSummary => {

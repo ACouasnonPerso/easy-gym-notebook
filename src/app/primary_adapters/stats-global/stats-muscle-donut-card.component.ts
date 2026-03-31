@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, input } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { DonutChartComponent } from "./donut-chart.component";
 import { MuscleGroup } from "../../core_logic/shared/models";
+import { MuscleGroupDetail } from "../../core_logic/stats-global/stats.service";
 
 @Component({
 	selector: "app-stats-muscle-donut-card",
@@ -14,7 +15,7 @@ import { MuscleGroup } from "../../core_logic/shared/models";
 				<div class="stats-card-title">{{ "statsGlobal.workedMuscles" | translate }}</div>
 				<div class="divider"></div>
 				<div style="height:12px"></div>
-				<app-donut-chart [distribution]="distribution()" />
+				<app-donut-chart [distribution]="distribution()" [details]="details()" />
 			</div>
 		}
 	`,
@@ -22,4 +23,5 @@ import { MuscleGroup } from "../../core_logic/shared/models";
 })
 export class StatsMuscleDonutCardComponent {
 	distribution = input<Map<MuscleGroup, number>>(new Map());
+	details = input<Map<MuscleGroup, MuscleGroupDetail>>(new Map());
 }

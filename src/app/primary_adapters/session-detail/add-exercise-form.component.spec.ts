@@ -102,7 +102,7 @@ describe("AddExerciseFormComponent — pyramid toggle", () => {
 		toggleBtn.click();
 		fixture.detectChanges();
 
-		expect(el.querySelector(".pyramid-sets")).not.toBeNull();
+		expect(el.querySelector(".pyramid-section")).not.toBeNull();
 		expect(el.querySelector(".standard-pickers")).toBeNull();
 	});
 

@@ -21,6 +21,7 @@ export const MUSCLE_GROUP_COLORS: Record<MuscleGroup, MuscleGroupColor> = {
 	[MuscleGroup.Traps]: { color: "#ff9800", bg: "rgba(255,152,0,0.15)", border: "rgba(255,152,0,0.3)" },
 	[MuscleGroup.Adductors]: { color: "#ec407a", bg: "rgba(236,64,122,0.15)", border: "rgba(236,64,122,0.3)" },
 	[MuscleGroup.Abductors]: { color: "#ab47bc", bg: "rgba(171,71,188,0.15)", border: "rgba(171,71,188,0.3)" },
+	[MuscleGroup.LowerBack]: { color: "#795548", bg: "rgba(121,85,72,0.15)", border: "rgba(121,85,72,0.3)" },
 };
 
 export function muscleGroupChipStyle(muscle: MuscleGroup): Record<string, string> {

@@ -4,6 +4,7 @@ import { Observable, of } from "rxjs";
 import { SessionCardComponent } from "./session-card.component";
 import { Session, Exercise, MuscleGroup } from "../../core_logic/shared/models";
 import { LanguageService } from "../../core_logic/language/language.service";
+import { MassUnitService } from "../../core_logic/mass-unit/mass-unit.service";
 import { signal } from "@angular/core";
 
 class FakeTranslateLoader implements TranslateLoader {
@@ -65,7 +66,10 @@ function makeSession(exercises: Exercise[] = []): Session {
 function setupFixture(session: Session): ComponentFixture<SessionCardComponent> {
 	TestBed.configureTestingModule({
 		imports: [SessionCardComponent, translateModuleConfig],
-		providers: [{ provide: LanguageService, useValue: makeLanguageServiceStub() }],
+		providers: [
+			{ provide: LanguageService, useValue: makeLanguageServiceStub() },
+			{ provide: MassUnitService, useValue: { activeMassUnit: signal<"metric" | "imperial" | "us">("metric") } },
+		],
 	});
 
 	const translate = TestBed.inject(TranslateService);
@@ -125,7 +129,7 @@ describe("SessionCardComponent", () => {
 		it("retourne la distance formatée quand la distance est non nulle", () => {
 			const exercises = [makeExercise({ id: "ex1", isCardio: true, distanceKm: 5, status: "validated" })];
 			const fixture = setupFixture(makeSession(exercises));
-			expect(fixture.componentInstance.totalDistanceKmFormatted()).toBe("5,0 km");
+			expect(fixture.componentInstance.totalDistanceKmFormatted()).toBe("5 km");
 		});
 	});
 

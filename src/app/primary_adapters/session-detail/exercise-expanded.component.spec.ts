@@ -69,7 +69,6 @@ describe("ExerciseExpandedComponent — weight unit conversion", () => {
 
 	beforeEach(async () => {
 		localStorage.clear();
-		spyOnProperty(navigator, "language", "get").and.returnValue("fr-FR");
 
 		await TestBed.configureTestingModule({
 			imports: [ExerciseExpandedComponent],

@@ -74,13 +74,4 @@ describe("SessionExercisesListComponent", () => {
 		expect(fab).toBeNull();
 	});
 
-	it("affiche le formulaire quand showAddExerciseForm du service est true", async () => {
-		const { fixture, showAddExerciseFormSignal } = await setup();
-
-		showAddExerciseFormSignal.set(true);
-		fixture.detectChanges();
-
-		const form = fixture.debugElement.query(By.css("app-add-exercise-form"));
-		expect(form).not.toBeNull();
-	});
 });

@@ -78,9 +78,9 @@ describe("MassUnitService", () => {
 		});
 
 		it("devrait persister la valeur dans localStorage sous la clé massUnit", () => {
-			service.setMassUnit("us");
+			service.setMassUnit("imperial");
 
-			expect(localStorage.getItem("massUnit")).toBe("us");
+			expect(localStorage.getItem("massUnit")).toBe("imperial");
 		});
 
 		it("ne devrait pas écrire dans localStorage si l'unité est déjà active", () => {

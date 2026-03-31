@@ -146,11 +146,12 @@
     "calves": "panturrilha,gêmeos,gemeos,calf",
     "traps": "encolhimento,trapézio,trapezio,shrug",
     "adductors": "adutor,adutores,adução,aducao",
-    "abductors": "abdutor,abdutores,abdução,abducao"
+    "abductors": "abdutor,abdutores,abdução,abducao",
+    "lowerBack": "lombar,parte inferior das costas,lower back,lumbar"
   },
   "englishMuscleDetector": {
     "chest": "bench press,benchpress,chest press,chest fly,pec deck,chest,pecs,bench,bp",
-    "back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rowing,back,pull",
+    "back": "lat pulldown,pull-up,chin-up,pull up,chin up,row,rowing,back,pull,lats",
     "backHamstrings": "deadlift,dead lift",
     "shoulders": "shoulder press,overhead press,lateral raise,front raise,shoulder,deltoid,ohp",
     "biceps": "bicep curl,hammer curl,bicep,biceps, bibi",
@@ -165,7 +166,8 @@
     "calves": "calf raise,calf,calves",
     "traps": "shrug,trap,traps,trapezius",
     "adductors": "adductor,adductors,inner thigh,adduction",
-    "abductors": "abductor,abductors,outer thigh,abduction"
+    "abductors": "abductor,abductors,outer thigh,abduction",
+    "lowerBack": "lower back,lumbar,lumbar extension,back extension"
   },
   "muscleGroups": {
     "Chest": "Peito",
@@ -181,6 +183,7 @@
     "Calves": "Panturrilhas",
     "Traps": "Trapezios",
     "Adductors": "Adutores",
-    "Abductors": "Abdutores"
+    "Abductors": "Abdutores",
+    "LowerBack": "Lombar"
   }
 }

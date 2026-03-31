@@ -10,6 +10,7 @@ export class GetGlobalStatsUseCase {
 	readonly weekSummary = this.statsService.weekSummary;
 	readonly weeklyAverage = this.statsService.weeklyAverage;
 	readonly muscleGroupDistribution = this.statsService.muscleGroupDistribution;
+	readonly muscleGroupDetails = this.statsService.muscleGroupDetails;
 	readonly exerciseSummaries = this.statsService.exerciseSummaries;
 	readonly sessionDurationsInMonth = this.statsService.sessionDurationsInMonth;
 	readonly selectedMonth = this.statsService.selectedMonth;

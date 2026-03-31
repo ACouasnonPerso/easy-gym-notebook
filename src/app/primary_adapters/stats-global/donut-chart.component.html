@@ -16,16 +16,19 @@
 						[attr.r]="radius"
 						fill="none"
 						[attr.stroke]="segment.color"
-						stroke-width="28"
+						[attr.stroke-width]="selectedGroup() === segment.group ? 34 : 28"
+						[attr.opacity]="selectedGroup() !== null && selectedGroup() !== segment.group ? 0.35 : 1"
 						[attr.stroke-dasharray]="segment.dashLen + ' ' + circumference"
 						[attr.stroke-dashoffset]="segment.dashOffset"
+						(click)="onSegmentClick(segment.group)"
+						style="cursor: pointer"
 					/>
 				}
 			</g>
 		</svg>
 		<div class="pie-legend">
 			@for (segment of segments(); track segment.group) {
-				<div class="legend-item">
+				<div class="legend-item" [class.selected]="selectedGroup() === segment.group" (click)="onSegmentClick(segment.group)" style="cursor: pointer">
 					<div class="legend-dot" [style.background]="segment.color"></div>
 					<span class="legend-text">{{ segment.group }}</span>
 					<span class="legend-pct">{{ segment.percentage }}%</span>
@@ -33,4 +36,15 @@
 			}
 		</div>
 	</div>
+
+	@if (selectedGroup(); as group) {
+		<div class="dc-popover" data-testid="donut-popover">
+			<span class="dc-popover-label">{{ 'muscleGroups.' + group | translate }}</span>
+			<div class="dc-popover-stats">
+				<span>{{ details().get(group)?.percentage }}%</span>
+				<span>{{ details().get(group)?.sessionCount }} {{ 'common.sessions' | translate }}</span>
+				<span>{{ formatLoad(details().get(group)?.totalLoadKg ?? 0) }}</span>
+			</div>
+		</div>
+	}
 }

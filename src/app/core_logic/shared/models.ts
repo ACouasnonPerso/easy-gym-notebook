@@ -13,6 +13,7 @@ export enum MuscleGroup {
 	Traps = "Traps",
 	Adductors = "Adductors",
 	Abductors = "Abductors",
+	LowerBack = "LowerBack",
 }
 
 export type SessionStatus = "active" | "completed";
