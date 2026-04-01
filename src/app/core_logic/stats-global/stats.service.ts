@@ -64,6 +64,8 @@ function getSundayOfWeek(date: Date): Date {
 	return d;
 }
 
+export type StatsViewType = "month" | "current-year" | "total" | "current-week";
+
 @Injectable({ providedIn: "root" })
 export class StatsService {
 	private readonly sessionRepo = inject(SESSION_REPOSITORY);
@@ -72,6 +74,7 @@ export class StatsService {
 	readonly _allSessions = signal<Session[]>([]);
 	readonly _allExercises = signal<Exercise[]>([]);
 	readonly selectedMonth = signal<Date>(new Date());
+	readonly viewType = signal<StatsViewType>("month");
 
 	async load(): Promise<void> {
 		const [sessions, exercises] = await Promise.all([this.sessionRepo.getAll(), this.exerciseRepo.getAll()]);
@@ -81,9 +84,32 @@ export class StatsService {
 
 	setMonth(month: Date): void {
 		this.selectedMonth.set(month);
+		this.viewType.set("month");
+	}
+
+	setViewType(type: StatsViewType): void {
+		this.viewType.set(type);
 	}
 
 	private readonly _sessionsInMonth = computed(() => {
+		const type = this.viewType();
+		if (type === "total") {
+			return this._allSessions();
+		}
+		if (type === "current-year") {
+			const year = new Date().getFullYear();
+			return this._allSessions().filter((s) => s.date.getFullYear() === year);
+		}
+		if (type === "current-week") {
+			const today = new Date();
+			const weekStart = getMondayOfWeek(today);
+			const weekEnd = getSundayOfWeek(today);
+			return this._allSessions().filter((s) => {
+				const d = new Date(s.date);
+				d.setHours(0, 0, 0, 0);
+				return d >= weekStart && d <= weekEnd;
+			});
+		}
 		const m = this.selectedMonth();
 		return this._allSessions().filter(
 			(s) => s.date.getFullYear() === m.getFullYear() && s.date.getMonth() === m.getMonth()

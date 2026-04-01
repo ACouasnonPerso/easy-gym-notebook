@@ -39,7 +39,7 @@
 	}
 
 	<!-- Exercise list -->
-	@if (selectedViewType() !== "current-week" && getGlobalStatsUseCase.exerciseSummaries().length > 0) {
+	@if (getGlobalStatsUseCase.exerciseSummaries().length > 0) {
 		<app-stats-exercise-list-card
 			[exercises]="getGlobalStatsUseCase.exerciseSummaries()"
 			(exerciseSelected)="navigateToExerciseStats($event)"

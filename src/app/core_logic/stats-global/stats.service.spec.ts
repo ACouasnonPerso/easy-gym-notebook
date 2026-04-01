@@ -868,4 +868,159 @@ describe("StatsService", () => {
 			expect(result.get(MuscleGroup.Chest)).toBe(100);
 		});
 	});
+
+	describe("setViewType() + exerciseSummaries — filtrage par type de durée", () => {
+		it("should include exercises from all months when viewType is 'total'", async () => {
+			const jan = new Date(2026, 0, 10);
+			const march = new Date(2026, 2, 10);
+			service._allSessions.set([
+				makeSession({ id: "s-jan", date: jan }),
+				makeSession({ id: "s-march", date: march }),
+			]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-jan", sessionId: "s-jan", name: "Squat" }),
+				makeExercise({ id: "ex-march", sessionId: "s-march", name: "Développé couché" }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+			service.setViewType("total");
+
+			const summaries = service.exerciseSummaries();
+
+			expect(summaries.length).toBe(2);
+			expect(summaries.map((s) => s.name)).toContain("Squat");
+			expect(summaries.map((s) => s.name)).toContain("Développé couché");
+		});
+
+		it("should include only exercises from the current year when viewType is 'current-year'", async () => {
+			const lastYear = new Date(2025, 5, 15);
+			const thisYear = new Date(2026, 2, 10);
+			service._allSessions.set([
+				makeSession({ id: "s-lastyear", date: lastYear }),
+				makeSession({ id: "s-thisyear", date: thisYear }),
+			]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-lastyear", sessionId: "s-lastyear", name: "Squat" }),
+				makeExercise({ id: "ex-thisyear", sessionId: "s-thisyear", name: "Développé couché" }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+			service.setViewType("current-year");
+
+			const summaries = service.exerciseSummaries();
+
+			expect(summaries.length).toBe(1);
+			expect(summaries[0].name).toBe("Développé couché");
+		});
+
+		it("should filter by selected month when viewType is 'month' (existing behaviour preserved)", async () => {
+			const jan = new Date(2026, 0, 10);
+			const march = new Date(2026, 2, 10);
+			service._allSessions.set([
+				makeSession({ id: "s-jan", date: jan }),
+				makeSession({ id: "s-march", date: march }),
+			]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-jan", sessionId: "s-jan", name: "Squat" }),
+				makeExercise({ id: "ex-march", sessionId: "s-march", name: "Développé couché" }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+			service.setViewType("month");
+
+			const summaries = service.exerciseSummaries();
+
+			expect(summaries.length).toBe(1);
+			expect(summaries[0].name).toBe("Développé couché");
+		});
+
+		it("should include exercises from all months in monthSummary when viewType is 'total'", async () => {
+			const jan = new Date(2026, 0, 10);
+			const march = new Date(2026, 2, 10);
+			service._allSessions.set([
+				makeSession({ id: "s-jan", date: jan, durationSeconds: 1800 }),
+				makeSession({ id: "s-march", date: march, durationSeconds: 3600 }),
+			]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-jan", sessionId: "s-jan", weightKg: 50, sets: 3, reps: 10 }),
+				makeExercise({ id: "ex-march", sessionId: "s-march", weightKg: 80, sets: 4, reps: 8 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+			service.setViewType("total");
+
+			const summary = service.monthSummary();
+
+			expect(summary.sessionCount).toBe(2);
+			expect(summary.totalDurationSeconds).toBe(1800 + 3600);
+		});
+
+		it("should include only current-year sessions in monthSummary when viewType is 'current-year'", async () => {
+			const lastYear = new Date(2025, 5, 15);
+			const thisYear = new Date(2026, 2, 10);
+			service._allSessions.set([
+				makeSession({ id: "s-lastyear", date: lastYear, durationSeconds: 1800 }),
+				makeSession({ id: "s-thisyear", date: thisYear, durationSeconds: 3600 }),
+			]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-lastyear", sessionId: "s-lastyear" }),
+				makeExercise({ id: "ex-thisyear", sessionId: "s-thisyear" }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+			service.setViewType("current-year");
+
+			const summary = service.monthSummary();
+
+			expect(summary.sessionCount).toBe(1);
+			expect(summary.totalDurationSeconds).toBe(3600);
+		});
+
+		it("should include only current-week sessions in monthSummary when viewType is 'current-week'", () => {
+			const monday = getMondayOfCurrentWeek(); // Mon 30 Mar 2026
+			const thisWeek = new Date(monday);
+
+			const lastWeekMonday = new Date(monday);
+			lastWeekMonday.setDate(monday.getDate() - 7); // Mon 23 Mar — same month, previous week
+
+			service._allSessions.set([
+				makeSession({ id: "s-thisweek", date: thisWeek, durationSeconds: 3600 }),
+				makeSession({ id: "s-lastweek", date: lastWeekMonday, durationSeconds: 1800 }),
+			]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-thisweek", sessionId: "s-thisweek" }),
+				makeExercise({ id: "ex-lastweek", sessionId: "s-lastweek" }),
+			]);
+			service.selectedMonth.set(new Date(monday.getFullYear(), monday.getMonth(), 1));
+			service.setViewType("current-week");
+
+			const summary = service.monthSummary();
+
+			expect(summary.sessionCount).toBe(1);
+			expect(summary.totalDurationSeconds).toBe(3600);
+		});
+
+		it("should include only exercises from the current ISO week when viewType is 'current-week'", () => {
+			// Place both sessions in the same calendar month so the month filter cannot distinguish them.
+			// Current week: Mon 30 Mar – Sun 5 Apr 2026. Both dates are in March or April.
+			// We use Monday (30 Mar) as the in-week date and a prior Monday (23 Mar) as the out-of-week date.
+			// Both are in the same month (March) so a plain month filter would return both.
+			const monday = getMondayOfCurrentWeek(); // Mon 30 Mar 2026
+			const thisWeek = new Date(monday); // still 30 Mar — in current week
+
+			const lastWeekMonday = new Date(monday);
+			lastWeekMonday.setDate(monday.getDate() - 7); // Mon 23 Mar — same month, previous week
+
+			service._allSessions.set([
+				makeSession({ id: "s-thisweek", date: thisWeek }),
+				makeSession({ id: "s-lastweek", date: lastWeekMonday }),
+			]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-thisweek", sessionId: "s-thisweek", name: "Développé couché" }),
+				makeExercise({ id: "ex-lastweek", sessionId: "s-lastweek", name: "Squat" }),
+			]);
+			service.selectedMonth.set(new Date(monday.getFullYear(), monday.getMonth(), 1));
+			service.setViewType("current-week");
+
+			const summaries = service.exerciseSummaries();
+
+			expect(summaries.length).toBe(1);
+			expect(summaries[0].name).toBe("Développé couché");
+		});
+	});
 });
