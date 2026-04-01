@@ -1,0 +1,9 @@
+<button
+	class="sound-btn"
+	[ngClass]="{ muted: !soundEnabled() }"
+	(click)="toggleSound.emit()"
+	[attr.aria-label]="soundEnabled() ? 'Désactiver le son' : 'Activer le son'"
+	[title]="soundEnabled() ? 'Désactiver le son' : 'Activer le son'"
+>
+	{{ soundEnabled() ? "🔊" : "🔇" }}
+</button>

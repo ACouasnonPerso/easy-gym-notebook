@@ -32,7 +32,7 @@ export class ExerciseChronoComponent implements OnInit {
 	protected readonly haptic = inject(HapticService);
 
 	readonly isIos = Capacitor.getPlatform() === "ios";
-	readonly _breakDuration = signal(120);
+	readonly _breakDuration = signal(60);
 	readonly hasExercise = signal(false);
 	readonly showBreakDurationPopup = signal(false);
 
@@ -85,7 +85,7 @@ export class ExerciseChronoComponent implements OnInit {
 		const raw = this.route.snapshot.queryParams["breakDuration"];
 		const parsed = parseInt(raw, 10);
 		const hasParam = raw !== undefined && raw !== null && !isNaN(parsed);
-		const n = hasParam ? parsed : 120;
+		const n = hasParam ? parsed : 60;
 		this._breakDuration.set(n);
 		this.hasExercise.set(hasParam);
 		this.exerciseChronoUseCase.initWithBreakDuration(n);

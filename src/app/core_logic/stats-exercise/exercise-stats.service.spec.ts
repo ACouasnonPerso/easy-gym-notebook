@@ -57,6 +57,121 @@ describe("ExerciseStatsService", () => {
 		service = TestBed.inject(ExerciseStatsService);
 	});
 
+	describe("pyramid occurrences", () => {
+		it("pour un exercice normal (non-pyramide), weightKg et volumeKg doivent utiliser la formule standard", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				id: "ex-1",
+				sessionId: "session-1",
+				name: "Squat",
+				isCardio: false,
+				isPyramid: false,
+				weightKg: 80,
+				sets: 4,
+				reps: 5,
+				pyramidSets: [],
+				status: "validated",
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Squat");
+
+			expect(service.occurrences()[0].weightKg).toBe(80);
+			// 80 × 4 × 5 = 1600
+			expect(service.occurrences()[0].volumeKg).toBe(1600);
+		});
+
+		it("pour un exercice pyramide avec 2 séries, weightKg doit être la moyenne des poids", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				id: "ex-1",
+				sessionId: "session-1",
+				name: "Squat",
+				isCardio: false,
+				isPyramid: true,
+				pyramidSets: [
+					{ weightKg: 80, reps: 5 },
+					{ weightKg: 100, reps: 3 },
+				],
+				status: "validated",
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Squat");
+
+			expect(service.occurrences()[0].weightKg).toBe(90);
+		});
+
+		it("pour un exercice pyramide avec 2 séries, volumeKg doit être la somme de (reps_i × poids_i)", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				id: "ex-1",
+				sessionId: "session-1",
+				name: "Squat",
+				isCardio: false,
+				isPyramid: true,
+				pyramidSets: [
+					{ weightKg: 80, reps: 5 },
+					{ weightKg: 100, reps: 3 },
+				],
+				status: "validated",
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Squat");
+
+			// (5 × 80) + (3 × 100) = 400 + 300 = 700
+			expect(service.occurrences()[0].volumeKg).toBe(700);
+		});
+
+		it("pour un exercice pyramide avec 1 série, volumeKg doit être reps × poids de cette série", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				id: "ex-1",
+				sessionId: "session-1",
+				name: "Squat",
+				isCardio: false,
+				isPyramid: true,
+				pyramidSets: [{ weightKg: 80, reps: 5 }],
+				status: "validated",
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Squat");
+
+			// 5 × 80 = 400
+			expect(service.occurrences()[0].volumeKg).toBe(400);
+		});
+
+		it("pour un exercice pyramide avec 1 série, weightKg doit être le poids de cette série", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				id: "ex-1",
+				sessionId: "session-1",
+				name: "Squat",
+				isCardio: false,
+				isPyramid: true,
+				pyramidSets: [{ weightKg: 90, reps: 5 }],
+				status: "validated",
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Squat");
+
+			expect(service.occurrences()[0].weightKg).toBe(90);
+		});
+	});
+
 	describe("cardio occurrences", () => {
 		it("should populate cardioOccurrences and leave occurrences empty for a cardio exercise", async () => {
 			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });

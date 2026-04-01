@@ -1,0 +1,5 @@
+@if (!hasExercise()) {
+    <span class="break-duration-label" (click)="openBreakDurationPopup.emit()">
+        {{ formattedBreakDuration() }} {{ "common.rest" | translate }}
+    </span>
+}

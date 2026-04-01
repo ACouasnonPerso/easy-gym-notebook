@@ -1,0 +1,61 @@
+.series-badge-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 6px;
+}
+
+.series-badge {
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 12px;
+	font-weight: 700;
+	corner-shape: squircle;
+	color: #22c55e;
+	width: 135px;
+	background: rgba(34, 197, 94, 0.15);
+	border: 1px solid rgba(34, 197, 94, 0.3);
+	border-radius: 16px;
+	padding: 4px 10px;
+	letter-spacing: 0.5px;
+	text-align: center;
+}
+
+.series-controls {
+	display: flex;
+	gap: 6px;
+}
+
+.series-decrement-btn,
+.series-increment-btn {
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+	border-radius: 16px;
+	corner-shape: squircle;
+	padding: 8px 12px;
+	min-width: 44px;
+	min-height: 30px;
+	cursor: pointer;
+	touch-action: manipulation;
+	flex: 1;
+}
+
+.series-decrement-btn {
+	color: #6b7280;
+	background: rgba(107, 114, 128, 0.15);
+	border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+.series-decrement-btn:active {
+	background: rgba(107, 114, 128, 0.3);
+}
+
+.series-increment-btn {
+	color: #6b7280;
+	background: rgba(107, 114, 128, 0.15);
+	border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+.series-increment-btn:active {
+	background: rgba(107, 114, 128, 0.3);
+}

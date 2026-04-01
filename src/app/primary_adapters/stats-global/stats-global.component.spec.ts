@@ -7,6 +7,7 @@ import { StatsGlobalComponent } from "./stats-global.component";
 import { StatsExerciseListCardComponent } from "./stats-exercise-list-card.component";
 import { GetGlobalStatsUseCase } from "../../primary_ports/stats-global/get-global-stats.usecase";
 import { SelectMonthUseCase } from "../../primary_ports/stats-global/select-month.usecase";
+import { SelectViewTypeUseCase } from "../../primary_ports/stats-global/select-view-type.usecase";
 import { MergeExercisesUseCase } from "../../primary_ports/stats-global/merge-exercises.usecase";
 import { ImportDataUseCase } from "../../primary_ports/stats-global/import-data.usecase";
 import { Router } from "@angular/router";
@@ -375,6 +376,42 @@ describe("StatsGlobalComponent — merge d'exercices", () => {
 	});
 });
 
+describe("StatsGlobalComponent — sélecteur de vue (cette semaine)", () => {
+	let component: StatsGlobalComponent;
+	let selectViewTypeUseCaseSpy: { execute: jasmine.Spy };
+
+	beforeEach(() => {
+		const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+		const selectMonthUseCaseSpy = { execute: jasmine.createSpy("execute") };
+		selectViewTypeUseCaseSpy = { execute: jasmine.createSpy("execute") };
+		const mergeUseCaseSpy = makeMergeExercisesUseCaseSpy();
+		const routerSpy = { navigate: jasmine.createSpy("navigate") };
+
+		TestBed.configureTestingModule({
+			imports: [StatsGlobalComponent, translateModuleConfig],
+			providers: [
+				{ provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+				{ provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
+				{ provide: SelectViewTypeUseCase, useValue: selectViewTypeUseCaseSpy },
+				{ provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
+				{ provide: Router, useValue: routerSpy },
+				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
+			],
+		});
+
+		setupI18n();
+		component = TestBed.createComponent(StatsGlobalComponent).componentInstance;
+		component.ngOnInit();
+	});
+
+	it("devrait appeler selectViewTypeUseCase.execute('current-week') quand 'cette semaine' est sélectionné (index 2)", () => {
+		component.onMonthChange(2); // index 2 = "cette semaine"
+
+		expect(selectViewTypeUseCaseSpy.execute).toHaveBeenCalledWith("current-week");
+	});
+});
+
 describe("StatsGlobalComponent — titre du récap (summaryTitle)", () => {
 	let component: StatsGlobalComponent;
 
@@ -450,6 +487,43 @@ describe("StatsGlobalComponent — titre du récap dans le DOM", () => {
 		const titles = Array.from(el.querySelectorAll(".stats-card-title"));
 		const summaryTitle = titles.find((t) => t.textContent?.trim() === "Recap total");
 		expect(summaryTitle).toBeTruthy();
+	});
+});
+
+describe("StatsGlobalComponent — liste des exercices (current-week)", () => {
+	function setupWithCurrentWeekAndExercises() {
+		const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+		statsUseCaseSpy.exerciseSummaries = signal([
+			{ name: "Squat", maxWeightKg: 100, totalVolumeKg: 3200, occurrenceCount: 3 },
+		]) as any;
+
+		TestBed.configureTestingModule({
+			imports: [StatsGlobalComponent, translateModuleConfig],
+			providers: [
+				{ provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+				{ provide: SelectMonthUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: SelectViewTypeUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: MergeExercisesUseCase, useValue: makeMergeExercisesUseCaseSpy() },
+				{ provide: Router, useValue: { navigate: jasmine.createSpy("navigate") } },
+				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
+			],
+		});
+
+		setupI18n();
+		const fixture = TestBed.createComponent(StatsGlobalComponent);
+		fixture.detectChanges();
+		// index 2 = "current-week" (after current-year at 0, total at 1)
+		fixture.componentInstance.selectedMonthIndex.set(2);
+		fixture.detectChanges();
+		return fixture;
+	}
+
+	it("devrait afficher la carte des exercices quand 'cette semaine' est sélectionné et qu'il y a des exercices", () => {
+		const fixture = setupWithCurrentWeekAndExercises();
+		const el: HTMLElement = fixture.nativeElement;
+		const card = el.querySelector("app-stats-exercise-list-card");
+		expect(card).toBeTruthy();
 	});
 });
 

@@ -281,4 +281,261 @@ describe("ExerciseChronoService", () => {
 			expect(service.timeSeconds()).toBe(before + 15);
 		});
 	});
+
+	describe("toggleSound()", () => {
+		it("désactive le son quand initialement activé", () => {
+			expect(service.soundEnabled()).toBe(true);
+			service.toggleSound();
+			expect(service.soundEnabled()).toBe(false);
+		});
+
+		it("réactive le son après deux appels successifs", () => {
+			service.toggleSound();
+			service.toggleSound();
+			expect(service.soundEnabled()).toBe(true);
+		});
+	});
+
+	describe("mode computed", () => {
+		it("retourne 'exercise' à l'état initial", () => {
+			expect(service.mode()).toBe("exercise");
+		});
+
+		it("retourne 'exercise' pendant l'entraînement", () => {
+			service.init(60);
+			service.start();
+			expect(service.mode()).toBe("exercise");
+		});
+
+		it("retourne 'exercise' en training_paused", () => {
+			service.init(60);
+			service.start();
+			service.pause();
+			expect(service.mode()).toBe("exercise");
+		});
+
+		it("retourne 'pause' pendant la pause", () => {
+			service.init(60);
+			service.start();
+			service.goBreak();
+			expect(service.mode()).toBe("pause");
+		});
+
+		it("retourne 'pause' en break_paused", () => {
+			service.init(60);
+			service.start();
+			service.goBreak();
+			service.pause();
+			expect(service.mode()).toBe("pause");
+		});
+	});
+
+	describe("start() garde", () => {
+		it("est sans effet quand l'état n'est pas initial", () => {
+			service.init(60);
+			service.start();
+			const count = service.seriesCount();
+			service.start();
+			expect(service.seriesCount()).toBe(count);
+			expect(service.chronoState()).toBe("training");
+		});
+
+		it("réinitialise timeSeconds à 0 au démarrage", () => {
+			service.init(60);
+			service.start();
+			expect(service.timeSeconds()).toBe(0);
+		});
+	});
+
+	describe("pause() sans effet", () => {
+		it("ne fait rien depuis l'état initial", () => {
+			service.init(60);
+			service.pause();
+			expect(service.chronoState()).toBe("initial");
+		});
+
+		it("ne fait rien depuis training_paused", () => {
+			service.init(60);
+			service.start();
+			service.pause();
+			service.pause();
+			expect(service.chronoState()).toBe("training_paused");
+		});
+	});
+
+	describe("resume() sans effet", () => {
+		it("ne fait rien depuis training", () => {
+			service.init(60);
+			service.start();
+			service.resume();
+			expect(service.chronoState()).toBe("training");
+		});
+
+		it("ne fait rien depuis break", () => {
+			service.init(60);
+			service.start();
+			service.goBreak();
+			service.resume();
+			expect(service.chronoState()).toBe("break");
+		});
+	});
+
+	describe("reset() sans effet", () => {
+		it("ne fait rien depuis training", () => {
+			service.init(60);
+			service.start();
+			jasmine.clock().tick(5000);
+			service.reset();
+			expect(service.chronoState()).toBe("training");
+		});
+
+		it("ne fait rien depuis break", () => {
+			service.init(60);
+			service.start();
+			service.goBreak();
+			service.reset();
+			expect(service.chronoState()).toBe("break");
+		});
+	});
+
+	describe("progression du timer", () => {
+		it("incrémente timeSeconds chaque seconde pendant l'entraînement", () => {
+			service.init(60);
+			service.start();
+			jasmine.clock().tick(3000);
+			expect(service.timeSeconds()).toBe(3);
+		});
+
+		it("décrémente timeSeconds pendant le décompte de pause", () => {
+			service.init(30);
+			service.start();
+			service.goBreak();
+			expect(service.timeSeconds()).toBe(30);
+			jasmine.clock().tick(10000);
+			expect(service.timeSeconds()).toBe(20);
+		});
+
+		it("démarre de 0 après goTraining()", () => {
+			service.init(60);
+			service.start();
+			service.goBreak();
+			jasmine.clock().tick(5000);
+			service.goTraining();
+			expect(service.timeSeconds()).toBe(0);
+		});
+	});
+
+	describe("updateBreakDuration() depuis break_paused", () => {
+		it("met à jour timeSeconds quand l'état est break_paused", () => {
+			service.init(60);
+			service.start();
+			service.goBreak();
+			service.pause();
+			service.updateBreakDuration(120);
+			expect(service.timeSeconds()).toBe(120);
+			expect(service.chronoState()).toBe("break_paused");
+		});
+	});
+
+	describe("addTime() en break actif", () => {
+		it("incrémente timeSeconds quand l'état est break", () => {
+			service.init(60);
+			service.start();
+			service.goBreak();
+			const before = service.timeSeconds();
+			service.addTime(30);
+			expect(service.timeSeconds()).toBe(before + 30);
+		});
+
+		it("sans effet quand l'état est initial", () => {
+			service.init(60);
+			service.addTime(30);
+			expect(service.timeSeconds()).toBe(0);
+		});
+	});
+
+	describe("persist() et restoreFromPersist()", () => {
+		it("persist() écrit l'état dans localStorage", () => {
+			service.init(60);
+			service.start();
+			const raw = localStorage.getItem("egn_exercise_chrono");
+			expect(raw).not.toBeNull();
+			const data = JSON.parse(raw!);
+			expect(data.state).toBe("training");
+			expect(data.breakDuration).toBe(60);
+		});
+
+		it("persist() écrit l'état break dans localStorage", () => {
+			service.init(90);
+			service.start();
+			service.goBreak();
+			const raw = localStorage.getItem("egn_exercise_chrono");
+			const data = JSON.parse(raw!);
+			expect(data.state).toBe("break");
+			expect(data.breakDuration).toBe(90);
+		});
+
+		it("restoreFromPersist() restaure training_paused avec timeAtStart correct", () => {
+			localStorage.setItem(
+				"egn_exercise_chrono",
+				JSON.stringify({ breakDuration: 60, timerStartedAtMs: 0, timeAtStart: 15, state: "training_paused" })
+			);
+			service.restoreFromPersist();
+			expect(service.chronoState()).toBe("training_paused");
+			expect(service.timeSeconds()).toBe(15);
+		});
+
+		it("restoreFromPersist() restaure break_paused avec timeAtStart correct", () => {
+			localStorage.setItem(
+				"egn_exercise_chrono",
+				JSON.stringify({ breakDuration: 60, timerStartedAtMs: 0, timeAtStart: 45, state: "break_paused" })
+			);
+			service.restoreFromPersist();
+			expect(service.chronoState()).toBe("break_paused");
+			expect(service.timeSeconds()).toBe(45);
+		});
+
+		it("restoreFromPersist() reprend l'entraînement en tenant compte du temps écoulé", () => {
+			// mockDate is at epoch 0; timerStartedAtMs 5 seconds ago = -5000
+			jasmine.clock().mockDate(new Date(10000));
+			localStorage.setItem(
+				"egn_exercise_chrono",
+				JSON.stringify({ breakDuration: 60, timerStartedAtMs: 0, timeAtStart: 5, state: "training" })
+			);
+			service.restoreFromPersist();
+			// elapsed = floor((10000 - 0) / 1000) = 10; timeSeconds = 5 + 10 = 15
+			expect(service.chronoState()).toBe("training");
+			expect(service.timeSeconds()).toBe(15);
+		});
+
+		it("restoreFromPersist() reprend le décompte si la pause n'est pas terminée", () => {
+			jasmine.clock().mockDate(new Date(5000));
+			localStorage.setItem(
+				"egn_exercise_chrono",
+				JSON.stringify({ breakDuration: 60, timerStartedAtMs: 0, timeAtStart: 60, state: "break" })
+			);
+			service.restoreFromPersist();
+			// elapsed = 5, remaining = 60 - 5 = 55
+			expect(service.chronoState()).toBe("break");
+			expect(service.timeSeconds()).toBe(55);
+		});
+
+		it("restoreFromPersist() passe en training si la pause est déjà terminée", () => {
+			jasmine.clock().mockDate(new Date(70000));
+			localStorage.setItem(
+				"egn_exercise_chrono",
+				JSON.stringify({ breakDuration: 60, timerStartedAtMs: 0, timeAtStart: 60, state: "break" })
+			);
+			service.restoreFromPersist();
+			// elapsed = 70, remaining = max(0, 60 - 70) = 0 → auto-transition
+			expect(service.chronoState()).toBe("training");
+			expect(service.timeSeconds()).toBe(0);
+		});
+
+		it("restoreFromPersist() ne fait rien si localStorage est vide", () => {
+			localStorage.clear();
+			service.restoreFromPersist();
+			expect(service.chronoState()).toBe("initial");
+		});
+	});
 });

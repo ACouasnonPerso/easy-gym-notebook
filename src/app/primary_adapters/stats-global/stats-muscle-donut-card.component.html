@@ -1,0 +1,8 @@
+@if (distribution().size > 0) {
+	<div class="stats-card">
+		<div class="stats-card-title">{{ "statsGlobal.workedMuscles" | translate }}</div>
+		<div class="divider"></div>
+		<div style="height:12px"></div>
+		<app-donut-chart [distribution]="distribution()" [details]="details()" />
+	</div>
+}

@@ -7,14 +7,7 @@ import { HeatmapComponent, HeatmapCell } from "./heatmap.component";
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [HeatmapComponent, TranslateModule],
-	template: `
-		<div class="stats-card">
-			<div class="stats-card-title">{{ "statsGlobal.trainingRecurrences" | translate }}</div>
-			<div class="divider"></div>
-			<div style="height:12px"></div>
-			<app-heatmap [data]="data()" />
-		</div>
-	`,
+	templateUrl: "./stats-heatmap-card.component.html",
 	styleUrl: "./stats-global.component.scss",
 })
 export class StatsHeatmapCardComponent {

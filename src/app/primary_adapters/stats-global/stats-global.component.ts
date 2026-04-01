@@ -3,6 +3,7 @@ import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
 import { GetGlobalStatsUseCase } from "../../primary_ports/stats-global/get-global-stats.usecase";
 import { SelectMonthUseCase } from "../../primary_ports/stats-global/select-month.usecase";
+import { SelectViewTypeUseCase } from "../../primary_ports/stats-global/select-view-type.usecase";
 import { MergeExercisesUseCase } from "../../primary_ports/stats-global/merge-exercises.usecase";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { formatSummaryDuration } from "../../core_logic/shared/utils";
@@ -35,6 +36,7 @@ import { StatsImportExportCardComponent } from "./stats-import-export-card.compo
 export class StatsGlobalComponent implements OnInit, OnDestroy {
 	protected readonly getGlobalStatsUseCase = inject(GetGlobalStatsUseCase);
 	private readonly selectMonthUseCase = inject(SelectMonthUseCase);
+	private readonly selectViewTypeUseCase = inject(SelectViewTypeUseCase);
 	private readonly mergeExercisesUseCase = inject(MergeExercisesUseCase);
 	private readonly router = inject(Router);
 	private readonly translate = inject(TranslateService);
@@ -93,8 +95,12 @@ export class StatsGlobalComponent implements OnInit, OnDestroy {
 
 	onMonthChange(idx: number): void {
 		this.selectedMonthIndex.set(idx);
-		const value = this.months()[idx].value;
-		if (value !== null) this.selectMonthUseCase.execute(value);
+		const selected = this.months()[idx];
+		if (selected.value !== null) {
+			this.selectMonthUseCase.execute(selected.value);
+		} else {
+			this.selectViewTypeUseCase.execute(selected.type);
+		}
 	}
 
 	navigateToExerciseStats(exerciseName: string): void {

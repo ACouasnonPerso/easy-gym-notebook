@@ -1,0 +1,11 @@
+<div class="chart">
+	@for (bar of bars(); track bar.date.toISOString()) {
+		<div class="bar-col">
+			<span class="bar-label-top">{{ bar.label }}</span>
+			<div class="bar-track">
+				<div data-testid="bar" class="bar" [style.height]="bar.heightPercent + '%'"></div>
+			</div>
+			<span class="bar-label-bottom">{{ bar.dateLabel }}</span>
+		</div>
+	}
+</div>

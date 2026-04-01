@@ -1,0 +1,7 @@
+<div class="series-badge-wrapper">
+	<span class="series-badge"> {{ "chrono.series" | translate }} {{ seriesCount() }} </span>
+	<div class="series-controls">
+		<button class="series-decrement-btn" (click)="decrementSeries.emit()" aria-label="-1 série">-1</button>
+		<button class="series-increment-btn" (click)="incrementSeries.emit()" aria-label="+1 série">+1</button>
+	</div>
+</div>

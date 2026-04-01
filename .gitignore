@@ -28,6 +28,10 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
+# Stryker
+.stryker-tmp/
+reports/
+
 # Miscellaneous
 /.angular/cache
 .sass-cache/
@@ -43,3 +47,8 @@ Thumbs.db
 
 # Environment / secrets
 /src/environments/firebase.config.ts
+/src/environments/environment.ts
+/src/environments/environment.prod.ts
+android/app/google-services.json
+ios/App/App/GoogleService-Info.plist
+ios/App/GoogleService-Info.plist

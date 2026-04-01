@@ -12,9 +12,13 @@
 	flex-direction: column;
 }
 .ios-silent-warning {
-	margin: 0;
+	margin: 10px 0 0;
 	padding: 10px 16px;
-	text-align: center;
+	position: absolute;
+	max-width: 40%;
+	top: 80px;
+	left: 0;
+	text-align: left;
 	font-size: 11px;
 	color: var(--text-muted, rgba(255, 255, 255, 0.35));
 }

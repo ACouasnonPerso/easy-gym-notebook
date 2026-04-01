@@ -41,18 +41,27 @@ export class ExerciseStatsService {
 		}
 
 		const occurrences: ExerciseOccurrence[] = matchingExercises
-			.map((e) => ({
-				exerciseId: e.id,
-				sessionId: e.sessionId,
-				date: sessionDateMap.get(e.sessionId) ?? new Date(0),
-				name: e.name,
-				weightKg: e.weightKg,
-				sets: e.sets,
-				reps: e.reps,
-				breakDurationSeconds: e.breakDurationSeconds,
-				volumeKg: e.weightKg * e.sets * e.reps,
-				status: e.status,
-			}))
+			.map((e) => {
+				const isPyramid = e.isPyramid && e.pyramidSets.length > 0;
+				const weightKg = isPyramid
+					? e.pyramidSets.reduce((sum, s) => sum + s.weightKg, 0) / e.pyramidSets.length
+					: e.weightKg;
+				const volumeKg = isPyramid
+					? e.pyramidSets.reduce((sum, s) => sum + s.reps * s.weightKg, 0)
+					: e.weightKg * e.sets * e.reps;
+				return {
+					exerciseId: e.id,
+					sessionId: e.sessionId,
+					date: sessionDateMap.get(e.sessionId) ?? new Date(0),
+					name: e.name,
+					weightKg,
+					sets: e.sets,
+					reps: e.reps,
+					breakDurationSeconds: e.breakDurationSeconds,
+					volumeKg,
+					status: e.status,
+				};
+			})
 			.sort((a, b) => a.date.getTime() - b.date.getTime());
 
 		this._occurrences.set(occurrences);
