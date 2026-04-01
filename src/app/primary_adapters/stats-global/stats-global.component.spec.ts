@@ -41,6 +41,7 @@ const FR_TRANSLATIONS = {
 		mergeCount: "Fusionner ({{ count }})",
 		confirmMergeTitle: "Confirmer la fusion",
 		confirmMergeBody: "",
+		yearLabel: "Année {{year}}",
 	},
 	common: {
 		cancel: "Annuler",
@@ -72,7 +73,9 @@ function setupI18n() {
 
 function makeGetGlobalStatsUseCaseSpy() {
 	return {
+		yearsWithSessions: signal([] as number[]),
 		heatmapData: signal([]),
+		yearlyHeatmapData: signal([]),
 		monthSummary: signal({ totalWeightKg: 0, sessionCount: 0, totalDurationSeconds: 0 }),
 		weekSummary: signal({ totalWeightKg: 0, sessionCount: 0, totalDurationSeconds: 0 }),
 		weeklyAverage: signal({ avgWeightKg: 0, sessionsPerWeek: 0, avgDurationSeconds: 0 }),
@@ -188,40 +191,44 @@ describe("StatsGlobalComponent — sélecteur de vue (année en cours et total)"
 		fixture.detectChanges();
 	});
 
-	it("devrait afficher la heatmap quand un mois normal est sélectionné (index 3)", () => {
+	it("devrait afficher la heatmap mensuelle quand un mois normal est sélectionné (index 3)", () => {
 		fixture.componentInstance.selectedMonthIndex.set(3);
 		fixture.detectChanges();
 
 		const el: HTMLElement = fixture.nativeElement;
-		const heatmapCard = Array.from(el.querySelectorAll(".stats-card-title")).find(
-			(t) => t.textContent?.trim() === "Training recurrences"
-		);
+		const heatmapCard = el.querySelector("app-stats-heatmap-card");
 
 		expect(heatmapCard).toBeTruthy();
 	});
 
-	it("devrait masquer la heatmap quand 'Annee en cours' est sélectionné (index 0)", () => {
+	it("devrait masquer la heatmap mensuelle quand 'Annee en cours' est sélectionné (index 0)", () => {
 		fixture.componentInstance.selectedMonthIndex.set(0);
 		fixture.detectChanges();
 
 		const el: HTMLElement = fixture.nativeElement;
-		const heatmapCard = Array.from(el.querySelectorAll(".stats-card-title")).find(
-			(t) => t.textContent?.trim() === "Training recurrences"
-		);
+		const heatmapCard = el.querySelector("app-stats-heatmap-card");
 
-		expect(heatmapCard).toBeUndefined();
+		expect(heatmapCard).toBeNull();
 	});
 
-	it("devrait masquer la heatmap quand 'Total' est sélectionné (index 1)", () => {
+	it("devrait afficher la heatmap annuelle quand 'Annee en cours' est sélectionné (index 0)", () => {
+		fixture.componentInstance.selectedMonthIndex.set(0);
+		fixture.detectChanges();
+
+		const el: HTMLElement = fixture.nativeElement;
+		const yearlyHeatmapCard = el.querySelector("app-stats-yearly-heatmap-card");
+
+		expect(yearlyHeatmapCard).toBeTruthy();
+	});
+
+	it("devrait masquer la heatmap mensuelle quand 'Total' est sélectionné (index 1)", () => {
 		fixture.componentInstance.selectedMonthIndex.set(1);
 		fixture.detectChanges();
 
 		const el: HTMLElement = fixture.nativeElement;
-		const heatmapCard = Array.from(el.querySelectorAll(".stats-card-title")).find(
-			(t) => t.textContent?.trim() === "Training recurrences"
-		);
+		const heatmapCard = el.querySelector("app-stats-heatmap-card");
 
-		expect(heatmapCard).toBeUndefined();
+		expect(heatmapCard).toBeNull();
 	});
 });
 
@@ -524,6 +531,203 @@ describe("StatsGlobalComponent — liste des exercices (current-week)", () => {
 		const el: HTMLElement = fixture.nativeElement;
 		const card = el.querySelector("app-stats-exercise-list-card");
 		expect(card).toBeTruthy();
+	});
+});
+
+describe("StatsGlobalComponent — generateDurations avec années passées", () => {
+	let component: StatsGlobalComponent;
+
+	function setupComponent() {
+		const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+		const selectMonthUseCaseSpy = { execute: jasmine.createSpy("execute") };
+		const mergeUseCaseSpy = makeMergeExercisesUseCaseSpy();
+		const routerSpy = { navigate: jasmine.createSpy("navigate") };
+
+		TestBed.configureTestingModule({
+			imports: [StatsGlobalComponent, translateModuleConfig],
+			providers: [
+				{ provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+				{ provide: SelectMonthUseCase, useValue: selectMonthUseCaseSpy },
+				{ provide: SelectViewTypeUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: MergeExercisesUseCase, useValue: mergeUseCaseSpy },
+				{ provide: Router, useValue: routerSpy },
+				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
+			],
+		});
+
+		setupI18n();
+		component = TestBed.createComponent(StatsGlobalComponent).componentInstance;
+		component.ngOnInit();
+	}
+
+	it("devrait inclure l'année courante entre parenthèses dans le label 'Année en cours'", () => {
+		setupComponent();
+		const currentYear = new Date().getFullYear();
+
+		const months = component['generateDurations']([]);
+		const currentYearEntry = months[0];
+
+		expect(currentYearEntry.label).toContain(`(${currentYear})`);
+	});
+
+	it("devrait inclure une année passée ayant des données juste après 'Année en cours'", () => {
+		setupComponent();
+
+		const months = component['generateDurations']([2024]);
+		const secondEntry = months[1];
+
+		expect(secondEntry.label).toBe("2024");
+	});
+
+	it("devrait trier les années passées par ordre décroissant", () => {
+		setupComponent();
+
+		const months = component['generateDurations']([2023, 2024]);
+
+		expect(months[1].label).toBe("2024");
+		expect(months[2].label).toBe("2023");
+	});
+
+	it("devrait afficher 'Année 2024' (traduit) comme label d'une année passée", () => {
+		setupComponent();
+
+		const months = component['generateDurations']([2024]);
+		const entry2024 = months[1];
+
+		expect(entry2024.label).toBe("Année 2024");
+	});
+
+	it("ne devrait pas dupliquer l'année en cours si elle est présente dans les années avec des données", () => {
+		setupComponent();
+		const currentYear = new Date().getFullYear();
+
+		const months = component['generateDurations']([currentYear]);
+		const yearEntries = months.filter((m) => m.type === "current-year");
+
+		expect(yearEntries.length).toBe(1);
+		expect(months[1].type).not.toBe("current-year");
+	});
+
+	it("devrait inclure '2024' dans la liste des mois quand yearsWithSessions retourne [2024]", async () => {
+		const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+		statsUseCaseSpy.yearsWithSessions = signal([2024]) as any;
+
+		TestBed.configureTestingModule({
+			imports: [StatsGlobalComponent, translateModuleConfig],
+			providers: [
+				{ provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+				{ provide: SelectMonthUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: SelectViewTypeUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: MergeExercisesUseCase, useValue: makeMergeExercisesUseCaseSpy() },
+				{ provide: Router, useValue: { navigate: jasmine.createSpy("navigate") } },
+				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
+			],
+		});
+
+		setupI18n();
+		const fixture = TestBed.createComponent(StatsGlobalComponent);
+		fixture.detectChanges();
+		await fixture.whenStable();
+		fixture.detectChanges();
+
+		const months = fixture.componentInstance.durations();
+		const has2024 = months.some((m) => m.label === "2024");
+		expect(has2024).toBeTrue();
+	});
+});
+
+describe("StatsGlobalComponent — heatmap annuelle pour n'importe quelle année", () => {
+	function setupComponent(yearsWithSessions: number[] = []) {
+		const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+		statsUseCaseSpy.yearsWithSessions = signal(yearsWithSessions) as any;
+
+		TestBed.configureTestingModule({
+			imports: [StatsGlobalComponent, translateModuleConfig],
+			providers: [
+				{ provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+				{ provide: SelectMonthUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: SelectViewTypeUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: MergeExercisesUseCase, useValue: makeMergeExercisesUseCaseSpy() },
+				{ provide: Router, useValue: { navigate: jasmine.createSpy("navigate") } },
+				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
+			],
+		});
+
+		setupI18n();
+		const component = TestBed.createComponent(StatsGlobalComponent).componentInstance;
+		component.ngOnInit();
+		return component;
+	}
+
+	it("devrait assigner le type 'year' (pas 'month') aux années passées dans generateDurations", () => {
+		const component = setupComponent();
+
+		const months = component["generateDurations"]([2024]);
+		const entry2024 = months.find((m) => m.label === "2024");
+
+		expect(entry2024).toBeTruthy();
+		expect(entry2024!.type).toBe("year");
+	});
+
+	it("devrait retourner true pour showYearlyHeatmap quand une année passée est sélectionnée (type 'year')", () => {
+		const component = setupComponent([2024]);
+
+		// Find index of 2024 entry
+		const idx = component.durations().findIndex((m) => m.label === "2024");
+		component.selectedMonthIndex.set(idx);
+
+		expect(component.showYearlyHeatmap()).toBeTrue();
+	});
+
+	it("devrait retourner false pour showHeatmap quand une année passée est sélectionnée (type 'year')", () => {
+		const component = setupComponent([2024]);
+
+		const idx = component.durations().findIndex((m) => m.label === "2024");
+		component.selectedMonthIndex.set(idx);
+
+		expect(component.showHeatmap()).toBeFalse();
+	});
+
+	it("devrait afficher la heatmap annuelle (et non mensuelle) dans le DOM quand une année passée est sélectionnée", () => {
+		const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+		statsUseCaseSpy.yearsWithSessions = signal([2024]) as any;
+
+		TestBed.configureTestingModule({
+			imports: [StatsGlobalComponent, translateModuleConfig],
+			providers: [
+				{ provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+				{ provide: SelectMonthUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: SelectViewTypeUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: MergeExercisesUseCase, useValue: makeMergeExercisesUseCaseSpy() },
+				{ provide: Router, useValue: { navigate: jasmine.createSpy("navigate") } },
+				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
+			],
+		});
+
+		setupI18n();
+		const fixture = TestBed.createComponent(StatsGlobalComponent);
+		fixture.detectChanges();
+
+		const idx = fixture.componentInstance.durations().findIndex((m) => m.label === "2024");
+		fixture.componentInstance.selectedMonthIndex.set(idx);
+		fixture.detectChanges();
+
+		const el: HTMLElement = fixture.nativeElement;
+		expect(el.querySelector("app-stats-yearly-heatmap-card")).toBeTruthy();
+		expect(el.querySelector("app-stats-heatmap-card")).toBeNull();
+	});
+
+	it("devrait retourner 'month' pour barChartMode quand une année passée est sélectionnée", () => {
+		const component = setupComponent([2024]);
+
+		const idx = component.durations().findIndex((m) => m.label === "2024");
+		component.selectedMonthIndex.set(idx);
+
+		expect(component.barChartMode()).toBe("month");
 	});
 });
 

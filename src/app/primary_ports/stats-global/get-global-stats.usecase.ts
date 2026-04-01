@@ -5,7 +5,9 @@ import { StatsService } from "../../core_logic/stats-global/stats.service";
 export class GetGlobalStatsUseCase {
 	private readonly statsService = inject(StatsService);
 
+	readonly yearsWithSessions = this.statsService.yearsWithSessions;
 	readonly heatmapData = this.statsService.heatmapData;
+	readonly yearlyHeatmapData = this.statsService.yearlyHeatmapData;
 	readonly monthSummary = this.statsService.monthSummary;
 	readonly weekSummary = this.statsService.weekSummary;
 	readonly weeklyAverage = this.statsService.weeklyAverage;

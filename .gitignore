@@ -45,6 +45,9 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Public assets
+/public
+
 # Environment / secrets
 /src/environments/firebase.config.ts
 /src/environments/environment.ts

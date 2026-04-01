@@ -10,6 +10,17 @@ export interface MuscleGroupDetail {
 	totalLoadKg: number;
 }
 
+export interface YearlyHeatmapCell {
+	date: Date;
+	hasSession: boolean;
+}
+
+export interface YearlyHeatmapRow {
+	month: number;
+	year: number;
+	cells: YearlyHeatmapCell[];
+}
+
 export interface HeatmapCell {
 	date: Date;
 	hasSession: boolean;
@@ -64,7 +75,7 @@ function getSundayOfWeek(date: Date): Date {
 	return d;
 }
 
-export type StatsViewType = "month" | "current-year" | "total" | "current-week";
+export type StatsViewType = "month" | "current-year" | "year" | "total" | "current-week";
 
 @Injectable({ providedIn: "root" })
 export class StatsService {
@@ -87,6 +98,11 @@ export class StatsService {
 		this.viewType.set("month");
 	}
 
+	setYear(year: number): void {
+		this.selectedMonth.set(new Date(year, 0, 1));
+		this.viewType.set("year");
+	}
+
 	setViewType(type: StatsViewType): void {
 		this.viewType.set(type);
 	}
@@ -98,6 +114,10 @@ export class StatsService {
 		}
 		if (type === "current-year") {
 			const year = new Date().getFullYear();
+			return this._allSessions().filter((s) => s.date.getFullYear() === year);
+		}
+		if (type === "year") {
+			const year = this.selectedMonth().getFullYear();
 			return this._allSessions().filter((s) => s.date.getFullYear() === year);
 		}
 		if (type === "current-week") {
@@ -300,6 +320,41 @@ export class StatsService {
 		return sessions
 			.map((s) => ({ date: s.date, durationSeconds: s.durationSeconds }))
 			.sort((a, b) => a.date.getTime() - b.date.getTime());
+	});
+
+	readonly yearsWithSessions = computed((): number[] => {
+		const years = new Set<number>();
+		for (const s of this._allSessions()) {
+			years.add(s.date.getFullYear());
+		}
+		return Array.from(years).sort((a, b) => b - a);
+	});
+
+	readonly yearlyHeatmapData = computed((): YearlyHeatmapRow[] => {
+		const type = this.viewType();
+		const year = type === "year" ? this.selectedMonth().getFullYear() : new Date().getFullYear();
+		const sessions = this._allSessions();
+
+		const sessionDayKeys = new Set<string>();
+		for (const s of sessions) {
+			if (s.date.getFullYear() === year) {
+				const key = `${s.date.getFullYear()}-${s.date.getMonth()}-${s.date.getDate()}`;
+				sessionDayKeys.add(key);
+			}
+		}
+
+		const rows: YearlyHeatmapRow[] = [];
+		for (let month = 0; month < 12; month++) {
+			const daysInMonth = new Date(year, month + 1, 0).getDate();
+			const cells: YearlyHeatmapCell[] = [];
+			for (let day = 1; day <= daysInMonth; day++) {
+				const date = new Date(year, month, day);
+				const key = `${year}-${month}-${day}`;
+				cells.push({ date, hasSession: sessionDayKeys.has(key) });
+			}
+			rows.push({ month, year, cells });
+		}
+		return rows;
 	});
 
 	readonly exerciseSummaries = computed((): ExerciseSummary[] => {

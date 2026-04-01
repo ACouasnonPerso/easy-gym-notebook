@@ -95,6 +95,7 @@
 		"confirmMergeTitle": "मर्ज की पुष्टि करें",
 		"confirmMergeBody": "{{count}} व्यायाम को \"{{name}}\" में बदलें? यह क्रिया अपरिवर्तनीय है।",
 		"currentYear": "वर्तमान वर्ष",
+		"yearLabel": "वर्ष {{year}}",
 		"total": "कुल",
 		"thisWeek": "इस सप्ताह",
 		"noDataMonth": "इस महीने कोई डेटा नहीं",

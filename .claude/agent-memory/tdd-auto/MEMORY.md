@@ -16,3 +16,4 @@
 | [project_pyramid_mode.md](project_pyramid_mode.md) | project | Pyramid mode feature: per-set weight/reps for strength exercises — 24 tests green as of 2026-03-27 |
 | [project_data_import.md](project_data_import.md) | project | Data import feature: ImportMapper/ImportService/ImportDataUseCase/ImportConfirmModalComponent — 21 tests green as of 2026-03-27 |
 | [project_mass_unit_selector.md](project_mass_unit_selector.md) | project | Mass unit selector (Métrique/Britanique/US) in session-list header — MassUnitService + MassUnitSelectorComponent — 15 tests green as of 2026-03-29 |
+| [project_yearly_heatmap.md](project_yearly_heatmap.md) | project | Yearly heatmap feature — 12-row heatmap for current-year view — 20 new tests green as of 2026-04-01 |

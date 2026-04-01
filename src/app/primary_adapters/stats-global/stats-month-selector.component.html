@@ -7,7 +7,7 @@
 	@if (showDropdown()) {
 		<div class="dropdown-backdrop" (click)="showDropdown.set(false)"></div>
 		<div class="dropdown-list">
-			@for (month of months(); track month.label; let i = $index) {
+			@for (month of durations(); track month.label; let i = $index) {
 				<div class="dropdown-item" [class.selected]="i === selectedMonthIndex()" (click)="selectMonth(i)">
 					{{ month.label }}
 				</div>

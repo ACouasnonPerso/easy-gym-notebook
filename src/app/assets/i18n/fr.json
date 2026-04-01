@@ -95,6 +95,7 @@
 		"confirmMergeTitle": "Confirmer le merge",
 		"confirmMergeBody": "Renommer {{count}} exercice(s) en \"{{name}}\" ? Cette action est irréversible.",
 		"currentYear": "Année en cours",
+		"yearLabel": "Année {{year}}",
 		"total": "Total",
 		"thisWeek": "Cette semaine",
 		"noDataMonth": "Aucune donnée ce mois-ci",

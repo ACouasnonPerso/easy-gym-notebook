@@ -95,6 +95,7 @@
 		"confirmMergeTitle": "تأكيد الدمج",
 		"confirmMergeBody": "إعادة تسمية {{count}} تمرين إلى \"{{name}}\"؟ هذا الإجراء لا رجعة فيه.",
 		"currentYear": "السنة الحالية",
+		"yearLabel": "سنة {{year}}",
 		"total": "الإجمالي",
 		"thisWeek": "هذا الأسبوع",
 		"noDataMonth": "لا توجد بيانات هذا الشهر",

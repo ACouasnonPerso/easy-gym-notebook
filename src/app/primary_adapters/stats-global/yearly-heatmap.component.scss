@@ -1,0 +1,54 @@
+.yhm-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	width: 100%;
+	overflow: hidden;
+}
+
+.yhm-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	width: 100%;
+	min-width: 0;
+}
+
+.yhm-month-label {
+	width: 28px;
+	font-size: 9px;
+	font-weight: 600;
+	color: var(--muted);
+	letter-spacing: 0.3px;
+	flex-shrink: 0;
+}
+
+.yhm-cells {
+	flex: 1;
+	min-width: 0;
+	display: grid;
+	grid-template-columns: repeat(31, 1fr);
+	gap: 2px;
+}
+
+.yhm-cell {
+	aspect-ratio: 1;
+	border-radius: 2px;
+}
+
+.yhm-cell.empty {
+	background: var(--card2);
+}
+
+.yhm-cell.done {
+	background: var(--green);
+}
+
+.yhm-cell.today {
+	background: #3b82f6;
+}
+
+.yhm-cell.done.today {
+	background: #16a34a;
+	box-shadow: 0 1px 4px rgba(22, 163, 74, 0.4);
+}

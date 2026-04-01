@@ -1,5 +1,5 @@
 <div class="session-meta">
-	<span class="session-date-label" (click)="showDateInput.set(true)">{{
+	<span class="session-date-label" (click)="toggleDateInput()">{{
 		session().date | date: "EEE d MMM yyyy"
 	}}</span>
 	@if (showDateInput()) {
@@ -8,7 +8,7 @@
 			class="date-input"
 			[value]="currentDateStr()"
 			(change)="onDateChange($any($event.target).value)"
-			(blur)="showDateInput.set(false)"
+			(keydown.escape)="showDateInput.set(false)"
 		/>
 	}
 	<div class="session-quick-stats">

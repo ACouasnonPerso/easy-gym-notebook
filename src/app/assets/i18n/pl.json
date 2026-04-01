@@ -95,6 +95,7 @@
 		"confirmMergeTitle": "Potwierdź scalanie",
 		"confirmMergeBody": "Zmienić nazwę {{count}} ćwiczenia(ń) na \"{{name}}\"? Ta akcja jest nieodwracalna.",
 		"currentYear": "Bieżący rok",
+		"yearLabel": "Rok {{year}}",
 		"total": "Łącznie",
 		"thisWeek": "Ten tydzień",
 		"noDataMonth": "Brak danych w tym miesiącu",

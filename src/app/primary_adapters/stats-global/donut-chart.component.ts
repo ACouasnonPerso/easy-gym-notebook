@@ -20,7 +20,7 @@ interface DonutSegment {
 	selector: "app-donut-chart",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [TranslateModule, WeightDisplayPipe],
+	imports: [TranslateModule],
 	providers: [WeightDisplayPipe],
 	templateUrl: "./donut-chart.component.html",
 	styleUrl: "./donut-chart.component.scss",

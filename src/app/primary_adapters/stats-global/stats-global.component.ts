@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, inject, signal, computed } from "@angular/core";
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, inject, signal, computed, effect } from "@angular/core";
 import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
 import { GetGlobalStatsUseCase } from "../../primary_ports/stats-global/get-global-stats.usecase";
@@ -15,6 +15,7 @@ import { BarChartMode } from "./training-time-bar-chart.component";
 import { StatsExerciseListCardComponent, MergeSubmitEvent } from "./stats-exercise-list-card.component";
 import { StatsMonthSelectorComponent } from "./stats-month-selector.component";
 import { StatsImportExportCardComponent } from "./stats-import-export-card.component";
+import { StatsYearlyHeatmapCardComponent } from "./stats-yearly-heatmap-card.component";
 
 @Component({
 	selector: "app-stats-global",
@@ -28,6 +29,7 @@ import { StatsImportExportCardComponent } from "./stats-import-export-card.compo
 		StatsExerciseListCardComponent,
 		StatsMonthSelectorComponent,
 		StatsImportExportCardComponent,
+		StatsYearlyHeatmapCardComponent,
 		TranslateModule,
 	],
 	templateUrl: "./stats-global.component.html",
@@ -41,13 +43,21 @@ export class StatsGlobalComponent implements OnInit, OnDestroy {
 	private readonly router = inject(Router);
 	private readonly translate = inject(TranslateService);
 
-	readonly months = signal<
-		{ label: string; value: Date | null; type: "month" | "current-year" | "total" | "current-week" }[]
-	>([]);
+	private readonly currentLang = signal<string>(this.translate.currentLang ?? "fr");
+
+	readonly durations = computed(() => {
+		this.currentLang(); // tracked so re-runs on lang change
+		return this.generateDurations(this.getGlobalStatsUseCase.yearsWithSessions());
+	});
 	readonly selectedMonthIndex = signal<number>(0);
 	private langChangeSub?: Subscription;
 
-	readonly isCurrentMonth = computed(() => this.selectedMonthIndex() === 3);
+	readonly isCurrentMonth = computed(() => {
+		const selected = this.durations()[this.selectedMonthIndex()];
+		if (!selected || selected.type !== "month" || selected.value === null) return false;
+		const now = new Date();
+		return selected.value.getFullYear() === now.getFullYear() && selected.value.getMonth() === now.getMonth();
+	});
 
 	readonly weekSameAsMonth = computed(() => {
 		const w = this.getGlobalStatsUseCase.weekSummary();
@@ -59,33 +69,37 @@ export class StatsGlobalComponent implements OnInit, OnDestroy {
 		);
 	});
 
-	readonly selectedViewType = computed(() => this.months()[this.selectedMonthIndex()]?.type ?? "month");
+	readonly selectedViewType = computed(() => this.durations()[this.selectedMonthIndex()]?.type ?? "month");
+
+	readonly showYearlyHeatmap = computed(() => {
+		const type = this.selectedViewType();
+		return type === "current-year" || type === "year";
+	});
 
 	readonly showHeatmap = computed(() => {
 		const type = this.selectedViewType();
-		return type !== "current-year" && type !== "total" && type !== "current-week";
+		return type !== "current-year" && type !== "year" && type !== "total" && type !== "current-week";
 	});
 
 	readonly barChartMode = computed((): BarChartMode => {
 		const type = this.selectedViewType();
-		if (type === "current-year" || type === "total") return "month";
+		if (type === "current-year" || type === "year" || type === "total") return "month";
 		return "day";
 	});
 
 	readonly summaryTitle = computed((): string => {
 		const type = this.selectedViewType();
 		if (type === "total") return "statsGlobal.totalSummary";
-		if (type === "current-year") return "statsGlobal.yearSummary";
+		if (type === "current-year" || type === "year") return "statsGlobal.yearSummary";
 		if (type === "current-week") return "statsGlobal.weekSummary";
 		return "statsGlobal.monthSummary";
 	});
 
 	ngOnInit(): void {
-		this.months.set(this.generateMonths());
 		this.selectedMonthIndex.set(3);
 		this.getGlobalStatsUseCase.execute();
-		this.langChangeSub = this.translate.onLangChange.subscribe(() => {
-			this.months.set(this.generateMonths());
+		this.langChangeSub = this.translate.onLangChange.subscribe((event) => {
+			this.currentLang.set(event.lang);
 		});
 	}
 
@@ -95,8 +109,12 @@ export class StatsGlobalComponent implements OnInit, OnDestroy {
 
 	onMonthChange(idx: number): void {
 		this.selectedMonthIndex.set(idx);
-		const selected = this.months()[idx];
-		if (selected.value !== null) {
+		const selected = this.durations()[idx];
+		if (selected.type === "year" && selected.value !== null) {
+			// For past/future year views, set the month date first then override view type
+			this.selectMonthUseCase.execute(selected.value);
+			this.selectViewTypeUseCase.execute("year");
+		} else if (selected.value !== null) {
 			this.selectMonthUseCase.execute(selected.value);
 		} else {
 			this.selectViewTypeUseCase.execute(selected.type);
@@ -125,14 +143,22 @@ export class StatsGlobalComponent implements OnInit, OnDestroy {
 		return formatSummaryDuration(totalSeconds);
 	}
 
-	private generateMonths(): {
+	private generateDurations(pastYearsWithSessions: number[]): {
 		label: string;
 		value: Date | null;
-		type: "month" | "current-year" | "total" | "current-week";
+		type: "month" | "current-year" | "year" | "total" | "current-week";
 	}[] {
-		const months: { label: string; value: Date | null; type: "month" | "current-year" | "total" | "current-week" }[] =
+		const months: { label: string; value: Date | null; type: "month" | "current-year" | "year" | "total" | "current-week" }[] =
 			[];
-		months.push({ label: this.translate.instant("statsGlobal.currentYear"), value: null, type: "current-year" });
+		const currentYear = new Date().getFullYear();
+		const currentYearLabel = `${this.translate.instant("statsGlobal.currentYear")} (${currentYear})`;
+		months.push({ label: currentYearLabel, value: null, type: "current-year" });
+		const pastYears = pastYearsWithSessions
+			.filter((y) => y !== currentYear)
+			.sort((a, b) => b - a);
+		for (const year of pastYears) {
+			months.push({ label: this.translate.instant("statsGlobal.yearLabel", { year }), value: new Date(year, 0, 1), type: "year" });
+		}
 		months.push({ label: this.translate.instant("statsGlobal.total"), value: null, type: "total" });
 		months.push({ label: this.translate.instant("statsGlobal.thisWeek"), value: null, type: "current-week" });
 		const now = new Date();

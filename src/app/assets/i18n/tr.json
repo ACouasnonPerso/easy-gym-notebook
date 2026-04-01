@@ -95,6 +95,7 @@
 		"confirmMergeTitle": "Birleştirmeyi onayla",
 		"confirmMergeBody": "{{count}} egzersizin adını \"{{name}}\" olarak değiştir? Bu işlem geri alınamaz.",
 		"currentYear": "Mevcut yıl",
+		"yearLabel": "{{year}} yılı",
 		"total": "Toplam",
 		"thisWeek": "Bu hafta",
 		"noDataMonth": "Bu ay veri yok",

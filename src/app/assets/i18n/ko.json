@@ -95,6 +95,7 @@
 		"confirmMergeTitle": "합치기 확인",
 		"confirmMergeBody": "{{count}}개 운동을 \"{{name}}\"으로 이름 변경하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
 		"currentYear": "올해",
+		"yearLabel": "{{year}}년",
 		"total": "전체",
 		"thisWeek": "이번 주",
 		"noDataMonth": "이번 달 데이터 없음",

@@ -95,6 +95,7 @@
 		"confirmMergeTitle": "Xác nhận gộp",
 		"confirmMergeBody": "Đổi tên {{count}} bài tập thành \"{{name}}\"? Hành động này không thể hoàn tác.",
 		"currentYear": "Năm hiện tại",
+		"yearLabel": "Năm {{year}}",
 		"total": "Tổng",
 		"thisWeek": "Tuần này",
 		"noDataMonth": "Không có dữ liệu tháng này",

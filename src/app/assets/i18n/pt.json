@@ -95,6 +95,7 @@
 		"confirmMergeTitle": "Confirmar mesclagem",
 		"confirmMergeBody": "Renomear {{count}} exercício(s) para \"{{name}}\"? Esta ação é irreversível.",
 		"currentYear": "Ano atual",
+		"yearLabel": "Ano {{year}}",
 		"total": "Total",
 		"thisWeek": "Esta semana",
 		"noDataMonth": "Sem dados este mês",

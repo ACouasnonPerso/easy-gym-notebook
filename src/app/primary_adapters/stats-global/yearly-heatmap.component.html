@@ -1,0 +1,12 @@
+<div class="yhm-wrapper">
+	@for (row of data(); track row.month) {
+		<div class="yhm-row" data-testid="yhm-row">
+			<span class="yhm-month-label" data-testid="yhm-month-label">{{ getMonthLabel(row.month) }}</span>
+			<div class="yhm-cells">
+				@for (cell of row.cells; track cell.date.toISOString()) {
+					<div [class]="getCellClass(cell)" data-testid="yhm-cell"></div>
+				}
+			</div>
+		</div>
+	}
+</div>

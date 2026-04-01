@@ -95,6 +95,7 @@
 		"confirmMergeTitle": "Bekräfta sammanslagning",
 		"confirmMergeBody": "Byta namn på {{count}} övning(ar) till \"{{name}}\"? Denna åtgärd är oåterkallelig.",
 		"currentYear": "Innevarande år",
+		"yearLabel": "År {{year}}",
 		"total": "Totalt",
 		"thisWeek": "Denna vecka",
 		"noDataMonth": "Inga data denna månad",
