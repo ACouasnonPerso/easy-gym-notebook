@@ -1,0 +1,20 @@
+<div class="mass-unit-select-container">
+	<div class="mass-unit-select-wrapper" (click)="showDropdown.set(!showDropdown())">
+		<span class="mass-unit-label">{{ unitKey(massUnitService.activeMassUnit()) | translate }}</span>
+		<span class="mass-unit-arrow" [class.open]="showDropdown()">▼</span>
+	</div>
+	@if (showDropdown()) {
+		<div class="mass-unit-dropdown-backdrop" (click)="showDropdown.set(false)"></div>
+		<div class="mass-unit-dropdown-list">
+			@for (unit of units; track unit) {
+				<div
+					class="mass-unit-dropdown-item"
+					[class.selected]="unit === massUnitService.activeMassUnit()"
+					(click)="select(unit)"
+				>
+					{{ unitKey(unit) | translate }}
+				</div>
+			}
+		</div>
+	}
+</div>

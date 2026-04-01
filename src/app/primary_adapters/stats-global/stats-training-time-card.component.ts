@@ -7,14 +7,7 @@ import { TrainingTimeBarChartComponent, SessionDurationEntry, BarChartMode } fro
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [TrainingTimeBarChartComponent, TranslateModule],
-	template: `
-		<div data-testid="training-time-bar-chart" class="stats-card">
-			<div class="stats-card-title">{{ "statsGlobal.trainingTime" | translate }}</div>
-			<div class="divider"></div>
-			<div style="height:12px"></div>
-			<app-training-time-bar-chart [sessions]="sessions()" [mode]="mode()" />
-		</div>
-	`,
+	templateUrl: "./stats-training-time-card.component.html",
 	styleUrl: "./stats-global.component.scss",
 })
 export class StatsTrainingTimeCardComponent {

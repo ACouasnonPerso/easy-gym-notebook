@@ -42,6 +42,11 @@ export class DonutChartComponent {
 		this.selectedGroup.update((current) => (current === group ? null : group));
 	}
 
+	isLegendItemDimmed(group: MuscleGroup): boolean {
+		const selected = this.selectedGroup();
+		return selected !== null && selected !== group;
+	}
+
 	readonly radius = RADIUS;
 	readonly circumference = CIRCUMFERENCE;
 	readonly svgSize = 150;

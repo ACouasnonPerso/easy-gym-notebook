@@ -21,7 +21,8 @@
 .timer-btn {
 	background: var(--card2);
 	border: 1px solid var(--border);
-	border-radius: 10px;
+	border-radius: 16px;
+	corner-shape: squircle;
 	padding: 6px 14px;
 	font-size: 9px;
 	font-weight: 700;

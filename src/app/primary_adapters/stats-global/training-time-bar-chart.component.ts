@@ -61,59 +61,8 @@ function getGroupKey(date: Date, mode: BarChartMode): string {
 	selector: "app-training-time-bar-chart",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	template: `
-		<div class="chart">
-			@for (bar of bars(); track bar.date.toISOString()) {
-				<div class="bar-col">
-					<span class="bar-label-top">{{ bar.label }}</span>
-					<div class="bar-track">
-						<div data-testid="bar" class="bar" [style.height]="bar.heightPercent + '%'"></div>
-					</div>
-					<span class="bar-label-bottom">{{ bar.dateLabel }}</span>
-				</div>
-			}
-		</div>
-	`,
-	styles: [
-		`
-			.chart {
-				display: flex;
-				align-items: flex-end;
-				gap: 6px;
-				height: 80px;
-			}
-			.bar-col {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				flex: 1;
-			}
-			.bar-track {
-				width: 100%;
-				height: 56px;
-				display: flex;
-				align-items: flex-end;
-			}
-			.bar {
-				width: 100%;
-				background: var(--orange, #f97316);
-				border-radius: 4px 4px 0 0;
-				min-height: 2px;
-			}
-			.bar-label-top {
-				font-size: 9px;
-				font-weight: 600;
-				color: var(--sub, #888);
-				margin-bottom: 2px;
-			}
-			.bar-label-bottom {
-				font-size: 9px;
-				font-weight: 600;
-				color: var(--muted, #666);
-				margin-top: 3px;
-			}
-		`,
-	],
+	templateUrl: "./training-time-bar-chart.component.html",
+	styleUrl: "./training-time-bar-chart.component.css",
 })
 export class TrainingTimeBarChartComponent {
 	sessions = input<SessionDurationEntry[]>([]);

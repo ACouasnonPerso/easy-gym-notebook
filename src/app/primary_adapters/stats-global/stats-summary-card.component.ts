@@ -10,27 +10,7 @@ import { WeightDisplayPipe } from "../../core_logic/mass-unit/weight-display.pip
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [TranslateModule],
 	providers: [WeightDisplayPipe],
-	template: `
-		<div class="stats-card">
-			<div class="stats-card-title">{{ title() }}</div>
-			<div class="divider"></div>
-			<div style="height:12px"></div>
-			<div class="summary-grid">
-				<div class="summary-stat">
-					<span class="summary-value" style="color:var(--orange)">{{ formatWeight(summary().totalWeightKg) }}</span>
-					<span class="summary-label">{{ "common.weight" | translate }}</span>
-				</div>
-				<div class="summary-stat" style="text-align:center">
-					<span class="summary-value" style="color:var(--green)">{{ summary().sessionCount }}</span>
-					<span class="summary-label">{{ "common.sessions" | translate }}</span>
-				</div>
-				<div class="summary-stat" style="text-align:right">
-					<span class="summary-value">{{ formatDuration(summary().totalDurationSeconds) }}</span>
-					<span class="summary-label">{{ "common.time" | translate }}</span>
-				</div>
-			</div>
-		</div>
-	`,
+	templateUrl: "./stats-summary-card.component.html",
 	styleUrl: "./stats-global.component.scss",
 })
 export class StatsSummaryCardComponent {

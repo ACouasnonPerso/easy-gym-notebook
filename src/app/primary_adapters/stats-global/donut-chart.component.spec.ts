@@ -40,6 +40,67 @@ function makeSession(overrides: Partial<Session> = {}): Session {
 	};
 }
 
+describe("DonutChartComponent — isLegendItemDimmed", () => {
+	let component: DonutChartComponent;
+
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			imports: [DonutChartComponent],
+			providers: [provideTranslateService()],
+		});
+		const fixture = TestBed.createComponent(DonutChartComponent);
+		component = fixture.componentInstance;
+	});
+
+	it("should return false for any group when no group is selected", () => {
+		expect(component.isLegendItemDimmed(MuscleGroup.Chest)).toBe(false);
+	});
+
+	it("should return false for the selected group itself", () => {
+		component.onSegmentClick(MuscleGroup.Chest);
+
+		expect(component.isLegendItemDimmed(MuscleGroup.Chest)).toBe(false);
+	});
+
+	it("should return true for a non-selected group when another group is selected", () => {
+		component.onSegmentClick(MuscleGroup.Chest);
+
+		expect(component.isLegendItemDimmed(MuscleGroup.Back)).toBe(true);
+	});
+
+	it("should return false for all groups once the selection is cleared", () => {
+		component.onSegmentClick(MuscleGroup.Chest);
+		component.onSegmentClick(MuscleGroup.Chest);
+
+		expect(component.isLegendItemDimmed(MuscleGroup.Back)).toBe(false);
+	});
+});
+
+describe("DonutChartComponent — legend opacity in template", () => {
+	it("should apply opacity 0.35 to legend items that are not selected when a group is highlighted", async () => {
+		TestBed.configureTestingModule({
+			imports: [DonutChartComponent],
+			providers: [provideTranslateService()],
+		});
+		const fixture = TestBed.createComponent(DonutChartComponent);
+		const component = fixture.componentInstance;
+
+		fixture.componentRef.setInput("distribution", new Map([
+			[MuscleGroup.Chest, 60],
+			[MuscleGroup.Back, 40],
+		]));
+		fixture.detectChanges();
+
+		component.onSegmentClick(MuscleGroup.Chest);
+		fixture.detectChanges();
+
+		const legendItems: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(".legend-item");
+		// First item is Chest (selected) — no dim; second is Back (not selected) — dimmed
+		expect(legendItems[0].style.opacity).toBe("");
+		expect(legendItems[1].style.opacity).toBe("0.35");
+	});
+});
+
 describe("DonutChartComponent — selectedGroup state", () => {
 	let component: DonutChartComponent;
 

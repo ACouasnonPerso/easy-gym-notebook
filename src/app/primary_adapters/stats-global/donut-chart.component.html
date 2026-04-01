@@ -28,7 +28,7 @@
 		</svg>
 		<div class="pie-legend">
 			@for (segment of segments(); track segment.group) {
-				<div class="legend-item" [class.selected]="selectedGroup() === segment.group" (click)="onSegmentClick(segment.group)" style="cursor: pointer">
+				<div class="legend-item" [class.selected]="selectedGroup() === segment.group" [style.opacity]="isLegendItemDimmed(segment.group) ? '0.35' : ''" (click)="onSegmentClick(segment.group)" style="cursor: pointer">
 					<div class="legend-dot" [style.background]="segment.color"></div>
 					<span class="legend-text">{{ segment.group }}</span>
 					<span class="legend-pct">{{ segment.percentage }}%</span>

@@ -19,7 +19,8 @@
 .chrono-btn-icon {
 	width: 80px;
 	height: 80px;
-	border-radius: 20px;
+	border-radius: 34px;
+	corner-shape: squircle;
 	border: 1px solid var(--border);
 	background: var(--card);
 	display: flex;
@@ -71,11 +72,12 @@
 .add-time-btn {
 	font-family: "Space Grotesk", sans-serif;
 	font-size: 14px;
+	corner-shape: squircle;
 	font-weight: 700;
 	color: var(--sub);
 	background: var(--card);
 	border: 1px solid var(--border);
-	border-radius: 12px;
+	border-radius: 16px;
 	padding: 8px 20px;
 	cursor: pointer;
 	letter-spacing: 0.5px;
