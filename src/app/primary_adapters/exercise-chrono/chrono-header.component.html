@@ -1,0 +1,21 @@
+<div class="header-pad">
+	<div style="margin-top: 9px;">
+		<app-chrono-back-button (back)="back.emit()" />
+	</div>
+	<div class="right-actions">
+		<div class="top-actions">
+			<app-chrono-break-duration
+				[hasExercise]="hasExercise()"
+				[formattedBreakDuration]="formattedBreakDuration()"
+				(openBreakDurationPopup)="openBreakDurationPopup.emit()"
+			/>
+			<app-chrono-sound-button [soundEnabled]="soundEnabled()" (toggleSound)="toggleSound.emit()" />
+		</div>
+		<app-chrono-series-badge
+			[hasExercise]="hasExercise()"
+			[seriesCount]="seriesCount()"
+			(incrementSeries)="incrementSeries.emit()"
+			(decrementSeries)="decrementSeries.emit()"
+		/>
+	</div>
+</div>

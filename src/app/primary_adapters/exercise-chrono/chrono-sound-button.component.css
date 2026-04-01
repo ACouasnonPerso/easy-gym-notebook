@@ -1,0 +1,29 @@
+.sound-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	border: none;
+	cursor: pointer;
+	font-size: 18px;
+	transition:
+		background 0.15s,
+		opacity 0.15s;
+	background: rgba(76, 175, 80, 0.15);
+	color: #4caf50;
+}
+
+.sound-btn:hover {
+	background: rgba(76, 175, 80, 0.28);
+}
+
+.sound-btn.muted {
+	background: rgba(255, 255, 255, 0.08);
+	color: rgba(255, 255, 255, 0.35);
+}
+
+.sound-btn.muted:hover {
+	background: rgba(255, 255, 255, 0.14);
+}

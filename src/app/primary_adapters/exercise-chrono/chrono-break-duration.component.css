@@ -1,0 +1,17 @@
+.break-duration-label {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 4px 10px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.15s;
+}
+
+.break-duration-label:hover {
+    background: rgba(255, 255, 255, 0.2);
+}

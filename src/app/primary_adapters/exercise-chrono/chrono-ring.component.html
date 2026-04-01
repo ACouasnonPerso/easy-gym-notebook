@@ -1,0 +1,17 @@
+<div class="chrono-ring-wrap">
+	<svg class="chrono-ring-svg" width="200" height="200" viewBox="0 0 200 200">
+		<circle class="chrono-ring-track" cx="100" cy="100" r="90" />
+		<circle
+			class="chrono-ring-fill"
+			cx="100"
+			cy="100"
+			r="90"
+			[attr.stroke]="ringColor()"
+			[attr.stroke-dashoffset]="ringOffset()"
+		/>
+	</svg>
+	<div class="chrono-inner">
+		<div class="chrono-time" [class.blinking]="isBlinking()">{{ formattedTime() }}</div>
+		<div class="chrono-label" [style.color]="ringColor()">{{ statusLabel() }}</div>
+	</div>
+</div>
