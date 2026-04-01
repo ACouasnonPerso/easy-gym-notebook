@@ -106,15 +106,15 @@
 		"exportJson": "Esporta JSON",
 		"importJson": "Importa JSON",
 		"confirmTitle": "Conferma importazione",
+		"sessions": "sessione/i",
+		"exercises": "esercizio/i",
 		"successMessage": "Importazione riuscita",
 		"errorInvalidJson": "File JSON non valido",
 		"errorMissingSessions": "Array 'sessions' mancante",
 		"errorMissingExercises": "Array 'exercises' mancante",
 		"errorInvalidSession": "Voce sessione non valida",
 		"errorInvalidExercise": "Voce esercizio non valida",
-		"errorUnknown": "Errore sconosciuto",
-		"sessions": "sessione/i",
-		"exercises": "esercizio/i"
+		"errorUnknown": "Errore sconosciuto"
 	},
 	"chrono": {
 		"startTraining": "START TRAINING",
@@ -190,6 +190,20 @@
 		"Adductors": "Adduttori",
 		"Abductors": "Abduttori",
 		"LowerBack": "Lombare"
+	},
+	"months": {
+		"0": "Jan",
+		"1": "Febbraio",
+		"2": "Mar",
+		"3": "Aprile",
+		"4": "Maggio",
+		"5": "Giugno",
+		"6": "Luglio",
+		"7": "Agosto",
+		"8": "Settembre",
+		"9": "Ottobre",
+		"10": "Novembre",
+		"11": "Dicembre"
 	},
 	"massUnit": {
 		"metric": "Metrico",

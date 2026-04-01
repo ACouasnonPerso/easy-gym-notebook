@@ -106,15 +106,15 @@
 		"exportJson": "JSON exporteren",
 		"importJson": "JSON importeren",
 		"confirmTitle": "Import bevestigen",
+		"sessions": "sessie(s)",
+		"exercises": "oefening(en)",
 		"successMessage": "Import geslaagd",
 		"errorInvalidJson": "Ongeldig JSON-bestand",
 		"errorMissingSessions": "Array 'sessions' ontbreekt",
 		"errorMissingExercises": "Array 'exercises' ontbreekt",
 		"errorInvalidSession": "Ongeldige sessie-invoer",
 		"errorInvalidExercise": "Ongeldige oefening-invoer",
-		"errorUnknown": "Onbekende fout",
-		"sessions": "sessie(s)",
-		"exercises": "oefening(en)"
+		"errorUnknown": "Onbekende fout"
 	},
 	"chrono": {
 		"startTraining": "START TRAINING",
@@ -190,6 +190,20 @@
 		"Adductors": "Adductoren",
 		"Abductors": "Abductoren",
 		"LowerBack": "Onderrug"
+	},
+	"months": {
+		"0": "Jan",
+		"1": "Feb",
+		"2": "Mar",
+		"3": "Apr",
+		"4": "Mei",
+		"5": "Jun",
+		"6": "Jul",
+		"7": "Aug",
+		"8": "Sep",
+		"9": "Okt",
+		"10": "Nov",
+		"11": "Dec"
 	},
 	"massUnit": {
 		"metric": "Metrisch",

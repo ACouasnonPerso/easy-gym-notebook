@@ -191,6 +191,20 @@
 		"Abductors": "Abducteurs",
 		"LowerBack": "Lombaires"
 	},
+	"months": {
+		"0": "Jan",
+		"1": "Fév",
+		"2": "Mars",
+		"3": "Avril",
+		"4": "Mai",
+		"5": "Juin",
+		"6": "Juillet",
+		"7": "Août",
+		"8": "Sep",
+		"9": "Oct",
+		"10": "Nov",
+		"11": "Déc"
+	},
 	"massUnit": {
 		"metric": "Métrique",
 		"imperial": "Impérial",

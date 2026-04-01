@@ -17,7 +17,10 @@
 	}
 
 	<!-- Worked muscles -->
-	<app-stats-muscle-donut-card [distribution]="getGlobalStatsUseCase.muscleGroupDistribution()" [details]="getGlobalStatsUseCase.muscleGroupDetails()" />
+	<app-stats-muscle-donut-card
+		[distribution]="getGlobalStatsUseCase.muscleGroupDistribution()"
+		[details]="getGlobalStatsUseCase.muscleGroupDetails()"
+	/>
 
 	<!-- Week summary -->
 	@if (isCurrentMonth() && !weekSameAsMonth()) {

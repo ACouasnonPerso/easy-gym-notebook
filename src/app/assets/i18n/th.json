@@ -106,15 +106,15 @@
 		"exportJson": "ส่งออก JSON",
 		"importJson": "นำเข้า JSON",
 		"confirmTitle": "ยืนยันการนำเข้า",
+		"sessions": "เซสชัน",
+		"exercises": "การออกกำลังกาย",
 		"successMessage": "นำเข้าสำเร็จ",
 		"errorInvalidJson": "ไฟล์ JSON ไม่ถูกต้อง",
 		"errorMissingSessions": "ไม่พบ array 'sessions'",
 		"errorMissingExercises": "ไม่พบ array 'exercises'",
 		"errorInvalidSession": "ข้อมูลเซสชันไม่ถูกต้อง",
 		"errorInvalidExercise": "ข้อมูลการออกกำลังกายไม่ถูกต้อง",
-		"errorUnknown": "ข้อผิดพลาดที่ไม่ทราบสาเหตุ",
-		"sessions": "เซสชัน",
-		"exercises": "การออกกำลังกาย"
+		"errorUnknown": "ข้อผิดพลาดที่ไม่ทราบสาเหตุ"
 	},
 	"chrono": {
 		"startTraining": "เริ่มฝึก",
@@ -190,6 +190,9 @@
 		"Adductors": "กล้ามเนื้อดึงเข้า",
 		"Abductors": "กล้ามเนื้อดึงออก",
 		"LowerBack": "หลังส่วนล่าง"
+	},
+	"months": {
+		"0": "ม.ค. #__# ก.พ. #__# มี.ค. #__# เม.ย. #__# พ.ค. #__# มิ.ย. #__# ก.ค. #__# ส.ค. #__# ก.ย. #__# ต.ค. #__# พ.ย. #__# ธ.ค. #__#"
 	},
 	"massUnit": {
 		"metric": "เมตริก",

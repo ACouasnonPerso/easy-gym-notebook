@@ -106,15 +106,15 @@
 		"exportJson": "Xuất JSON",
 		"importJson": "Nhập JSON",
 		"confirmTitle": "Xác nhận nhập",
+		"sessions": "buổi tập",
+		"exercises": "bài tập",
 		"successMessage": "Nhập thành công",
 		"errorInvalidJson": "File JSON không hợp lệ",
 		"errorMissingSessions": "Thiếu mảng 'sessions'",
 		"errorMissingExercises": "Thiếu mảng 'exercises'",
 		"errorInvalidSession": "Dữ liệu buổi tập không hợp lệ",
 		"errorInvalidExercise": "Dữ liệu bài tập không hợp lệ",
-		"errorUnknown": "Lỗi không xác định",
-		"sessions": "buổi tập",
-		"exercises": "bài tập"
+		"errorUnknown": "Lỗi không xác định"
 	},
 	"chrono": {
 		"startTraining": "BẮT ĐẦU TẬP",
@@ -190,6 +190,9 @@
 		"Adductors": "Khép đùi",
 		"Abductors": "Dạng đùi",
 		"LowerBack": "Lưng dưới"
+	},
+	"months": {
+		"0": "Tháng 1 #__# Tháng 2 #__# Tháng 3 #__# Tháng 4 #__# Tháng 5 #__# Tháng 6 #__# Tháng 7 #__# Tháng 8 #__# Tháng 9 #__# Tháng 10 #__# Tháng 11 #__# Tháng 12"
 	},
 	"massUnit": {
 		"metric": "Hệ mét",

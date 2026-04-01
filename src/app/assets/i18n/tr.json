@@ -106,15 +106,15 @@
 		"exportJson": "JSON dışa aktar",
 		"importJson": "JSON içe aktar",
 		"confirmTitle": "İçe aktarmayı onayla",
+		"sessions": "seans",
+		"exercises": "egzersiz",
 		"successMessage": "İçe aktarma başarılı",
 		"errorInvalidJson": "Geçersiz JSON dosyası",
 		"errorMissingSessions": "'sessions' dizisi eksik",
 		"errorMissingExercises": "'exercises' dizisi eksik",
 		"errorInvalidSession": "Geçersiz seans kaydı",
 		"errorInvalidExercise": "Geçersiz egzersiz kaydı",
-		"errorUnknown": "Bilinmeyen hata",
-		"sessions": "seans",
-		"exercises": "egzersiz"
+		"errorUnknown": "Bilinmeyen hata"
 	},
 	"chrono": {
 		"startTraining": "ANTRENMAN BAŞLAT",
@@ -190,6 +190,20 @@
 		"Adductors": "Adduktorlar",
 		"Abductors": "Abduktorlar",
 		"LowerBack": "Alt Sırt"
+	},
+	"months": {
+		"0": "Jan",
+		"1": "Şubat",
+		"2": "Mar",
+		"3": "Nisan",
+		"4": "Mayıs",
+		"5": "Haziran",
+		"6": "Temmuz",
+		"7": "Ağustos",
+		"8": "Eylül",
+		"9": "Ekim",
+		"10": "Kasım",
+		"11": "Aralık"
 	},
 	"massUnit": {
 		"metric": "Metrik",

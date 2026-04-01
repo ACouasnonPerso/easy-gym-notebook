@@ -52,6 +52,7 @@ Thumbs.db
 /src/environments/firebase.config.ts
 /src/environments/environment.ts
 /src/environments/environment.prod.ts
+/src/environments/secrets.json
 android/app/google-services.json
 ios/App/App/GoogleService-Info.plist
 ios/App/GoogleService-Info.plist

@@ -106,15 +106,15 @@
 		"exportJson": "Exportera JSON",
 		"importJson": "Importera JSON",
 		"confirmTitle": "Bekräfta import",
+		"sessions": "pass",
+		"exercises": "övning/ar",
 		"successMessage": "Import lyckades",
 		"errorInvalidJson": "Ogiltig JSON-fil",
 		"errorMissingSessions": "Saknat 'sessions'-fält",
 		"errorMissingExercises": "Saknat 'exercises'-fält",
 		"errorInvalidSession": "Ogiltig sessionspost",
 		"errorInvalidExercise": "Ogiltig övningspost",
-		"errorUnknown": "Okänt fel",
-		"sessions": "pass",
-		"exercises": "övning/ar"
+		"errorUnknown": "Okänt fel"
 	},
 	"chrono": {
 		"startTraining": "STARTA TRÄNING",
@@ -190,6 +190,20 @@
 		"Adductors": "Adduktorer",
 		"Abductors": "Abduktorer",
 		"LowerBack": "Nedre rygg"
+	},
+	"months": {
+		"0": "Jan",
+		"1": "Feb",
+		"2": "Mar",
+		"3": "Apr",
+		"4": "Maj",
+		"5": "Jun",
+		"6": "Jul",
+		"7": "Aug",
+		"8": "Sep",
+		"9": "Okt",
+		"10": "Nov",
+		"11": "Dec"
 	},
 	"massUnit": {
 		"metric": "Metrisk",

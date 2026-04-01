@@ -106,15 +106,15 @@
 		"exportJson": "تصدير JSON",
 		"importJson": "استيراد JSON",
 		"confirmTitle": "تأكيد الاستيراد",
+		"sessions": "جلسة/جلسات",
+		"exercises": "تمرين/تمارين",
 		"successMessage": "تم الاستيراد بنجاح",
 		"errorInvalidJson": "ملف JSON غير صالح",
 		"errorMissingSessions": "مصفوفة 'sessions' مفقودة",
 		"errorMissingExercises": "مصفوفة 'exercises' مفقودة",
 		"errorInvalidSession": "إدخال جلسة غير صالح",
 		"errorInvalidExercise": "إدخال تمرين غير صالح",
-		"errorUnknown": "خطأ غير معروف",
-		"sessions": "جلسة/جلسات",
-		"exercises": "تمرين/تمارين"
+		"errorUnknown": "خطأ غير معروف"
 	},
 	"chrono": {
 		"startTraining": "ابدأ التدريب",
@@ -190,6 +190,20 @@
 		"Adductors": "مقربات",
 		"Abductors": "مبعدات",
 		"LowerBack": "أسفل الظهر"
+	},
+	"months": {
+		"0": "جان",
+		"1": "شباط/فبراير",
+		"2": "مارس",
+		"3": "أبريل",
+		"4": "مايو",
+		"5": "يونيو",
+		"6": "يوليو",
+		"7": "أغسطس",
+		"8": "سبتمبر",
+		"9": "أكتوبر",
+		"10": "نوفمبر",
+		"11": "ديسمبر"
 	},
 	"massUnit": {
 		"metric": "متري",

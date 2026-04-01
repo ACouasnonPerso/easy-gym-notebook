@@ -23,7 +23,9 @@
 			</div>
 			<div class="h-stat right">
 				<span class="h-stat-value">{{ occurrenceCount() }}x</span>
-				<span class="h-stat-label">{{ (occurrenceCount() === 1 ? 'common.session' : 'common.sessions') | translate }}</span>
+				<span class="h-stat-label">{{
+					(occurrenceCount() === 1 ? "common.session" : "common.sessions") | translate
+				}}</span>
 			</div>
 		} @else {
 			<div class="h-stat">
@@ -36,7 +38,9 @@
 			</div>
 			<div class="h-stat right">
 				<span class="h-stat-value">{{ occurrenceCount() }}x</span>
-				<span class="h-stat-label">{{ (occurrenceCount() === 1 ? 'common.session' : 'common.sessions') | translate }}</span>
+				<span class="h-stat-label">{{
+					(occurrenceCount() === 1 ? "common.session" : "common.sessions") | translate
+				}}</span>
 			</div>
 		}
 	</div>

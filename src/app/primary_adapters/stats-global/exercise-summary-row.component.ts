@@ -31,8 +31,8 @@ export class ExerciseSummaryRowComponent {
 	selected = output<string>();
 
 	formatVolume(kg: number): string {
-		if (kg >= 1000) return this.weightDisplay.transform(kg / 1000, "t");
-		return this.weightDisplay.transform(Math.round(kg), "kg");
+		if (kg >= 1000) return this.weightDisplay.transform(Math.round((kg / 1000) * 100) / 100, "t");
+		return this.weightDisplay.transform(Math.round(kg * 100) / 100, "kg");
 	}
 
 	formatDuration(seconds: number): string {

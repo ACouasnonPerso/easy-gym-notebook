@@ -14,7 +14,8 @@ export class WeightDisplayPipe implements PipeTransform {
 		const system = this.massUnitService.activeMassUnit();
 
 		if (system === "metric") {
-			return `${value} ${unit}`;
+			const rounded = Math.round(value * 100) / 100;
+			return `${rounded} ${unit}`;
 		}
 
 		if (unit === "kg") {

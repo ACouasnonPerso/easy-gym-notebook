@@ -106,15 +106,15 @@
 		"exportJson": "JSONをエクスポート",
 		"importJson": "JSONをインポート",
 		"confirmTitle": "インポートの確認",
+		"sessions": "セッション",
+		"exercises": "エクササイズ",
 		"successMessage": "インポート成功",
 		"errorInvalidJson": "無効なJSONファイル",
 		"errorMissingSessions": "'sessions'配列がありません",
 		"errorMissingExercises": "'exercises'配列がありません",
 		"errorInvalidSession": "無効なセッションデータ",
 		"errorInvalidExercise": "無効なエクササイズデータ",
-		"errorUnknown": "不明なエラー",
-		"sessions": "セッション",
-		"exercises": "エクササイズ"
+		"errorUnknown": "不明なエラー"
 	},
 	"chrono": {
 		"startTraining": "トレーニング開始",
@@ -190,6 +190,20 @@
 		"Adductors": "内転筋",
 		"Abductors": "外転筋",
 		"LowerBack": "腰部"
+	},
+	"months": {
+		"0": "ヤン",
+		"1": "2月",
+		"2": "3月",
+		"3": "4月",
+		"4": "5月",
+		"5": "6月",
+		"6": "7月",
+		"7": "8月",
+		"8": "9月",
+		"9": "10月",
+		"10": "11月",
+		"11": "12月"
 	},
 	"massUnit": {
 		"metric": "メートル法",

@@ -85,10 +85,13 @@ describe("DonutChartComponent — legend opacity in template", () => {
 		const fixture = TestBed.createComponent(DonutChartComponent);
 		const component = fixture.componentInstance;
 
-		fixture.componentRef.setInput("distribution", new Map([
-			[MuscleGroup.Chest, 60],
-			[MuscleGroup.Back, 40],
-		]));
+		fixture.componentRef.setInput(
+			"distribution",
+			new Map([
+				[MuscleGroup.Chest, 60],
+				[MuscleGroup.Back, 40],
+			])
+		);
 		fixture.detectChanges();
 
 		component.onSegmentClick(MuscleGroup.Chest);
@@ -172,9 +175,30 @@ describe("StatsService — muscleGroupDetails", () => {
 	it("should return correct percentage, sessionCount and totalLoadKg for 2 muscle groups", () => {
 		const chestSession = makeSession({ id: "s1", date: new Date(2026, 2, 10) });
 		const backSession = makeSession({ id: "s2", date: new Date(2026, 2, 12), muscleGroup: MuscleGroup.Back });
-		const chestEx1 = makeExercise({ id: "e1", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 3, reps: 10 });
-		const chestEx2 = makeExercise({ id: "e2", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 80, sets: 4, reps: 8 });
-		const backEx1 = makeExercise({ id: "e3", sessionId: "s2", muscleGroup: MuscleGroup.Back, weightKg: 60, sets: 3, reps: 12 });
+		const chestEx1 = makeExercise({
+			id: "e1",
+			sessionId: "s1",
+			muscleGroup: MuscleGroup.Chest,
+			weightKg: 100,
+			sets: 3,
+			reps: 10,
+		});
+		const chestEx2 = makeExercise({
+			id: "e2",
+			sessionId: "s1",
+			muscleGroup: MuscleGroup.Chest,
+			weightKg: 80,
+			sets: 4,
+			reps: 8,
+		});
+		const backEx1 = makeExercise({
+			id: "e3",
+			sessionId: "s2",
+			muscleGroup: MuscleGroup.Back,
+			weightKg: 60,
+			sets: 3,
+			reps: 12,
+		});
 
 		setupService([chestSession, backSession], [chestEx1, chestEx2, backEx1]);
 

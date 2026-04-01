@@ -8,7 +8,12 @@ import { ChronoBreakDurationComponent } from "./chrono-break-duration.component"
 	selector: "app-chrono-header",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [ChronoBackButtonComponent, ChronoSoundButtonComponent, ChronoSeriesBadgeComponent, ChronoBreakDurationComponent],
+	imports: [
+		ChronoBackButtonComponent,
+		ChronoSoundButtonComponent,
+		ChronoSeriesBadgeComponent,
+		ChronoBreakDurationComponent,
+	],
 	templateUrl: "./chrono-header.component.html",
 	styleUrl: "./chrono-header.component.css",
 })

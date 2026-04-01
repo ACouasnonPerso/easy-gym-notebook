@@ -106,15 +106,15 @@
 		"exportJson": "Экспорт JSON",
 		"importJson": "Импорт JSON",
 		"confirmTitle": "Подтвердить импорт",
+		"sessions": "тренировка(ок)",
+		"exercises": "упражнение(й)",
 		"successMessage": "Импорт выполнен",
 		"errorInvalidJson": "Неверный файл JSON",
 		"errorMissingSessions": "Отсутствует массив 'sessions'",
 		"errorMissingExercises": "Отсутствует массив 'exercises'",
 		"errorInvalidSession": "Неверная запись тренировки",
 		"errorInvalidExercise": "Неверная запись упражнения",
-		"errorUnknown": "Неизвестная ошибка",
-		"sessions": "тренировка(ок)",
-		"exercises": "упражнение(й)"
+		"errorUnknown": "Неизвестная ошибка"
 	},
 	"chrono": {
 		"startTraining": "START TRAINING",
@@ -190,6 +190,20 @@
 		"Adductors": "Приводящие",
 		"Abductors": "Отводящие",
 		"LowerBack": "Поясница"
+	},
+	"months": {
+		"0": "Ян",
+		"1": "Февраль",
+		"2": "Март",
+		"3": "Апрель",
+		"4": "Май",
+		"5": "Июнь",
+		"6": "Июль",
+		"7": "Aug",
+		"8": "Сентябрь",
+		"9": "Октябрь",
+		"10": "Ноябрь",
+		"11": "Декабрь"
 	},
 	"massUnit": {
 		"metric": "Метрическая",

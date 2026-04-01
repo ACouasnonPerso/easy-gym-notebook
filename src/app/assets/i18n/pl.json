@@ -106,15 +106,15 @@
 		"exportJson": "Eksportuj JSON",
 		"importJson": "Importuj JSON",
 		"confirmTitle": "Potwierdź import",
+		"sessions": "sesja/sesje",
+		"exercises": "ćwiczenie/ćwiczenia",
 		"successMessage": "Import zakończony sukcesem",
 		"errorInvalidJson": "Nieprawidłowy plik JSON",
 		"errorMissingSessions": "Brakująca tablica 'sessions'",
 		"errorMissingExercises": "Brakująca tablica 'exercises'",
 		"errorInvalidSession": "Nieprawidłowy wpis sesji",
 		"errorInvalidExercise": "Nieprawidłowy wpis ćwiczenia",
-		"errorUnknown": "Nieznany błąd",
-		"sessions": "sesja/sesje",
-		"exercises": "ćwiczenie/ćwiczenia"
+		"errorUnknown": "Nieznany błąd"
 	},
 	"chrono": {
 		"startTraining": "ROZPOCZNIJ TRENING",
@@ -190,6 +190,20 @@
 		"Adductors": "Przywodziciele",
 		"Abductors": "Odwodziciele",
 		"LowerBack": "Dolny grzbiet"
+	},
+	"months": {
+		"0": "Jan",
+		"1": "Luty",
+		"2": "Mar",
+		"3": "Kwiecień",
+		"4": "Maj",
+		"5": "Czerwiec",
+		"6": "Lipiec",
+		"7": "Sierpień",
+		"8": "Wrzesień",
+		"9": "Paź",
+		"10": "Listopad",
+		"11": "Grudzień"
 	},
 	"massUnit": {
 		"metric": "Metryczny",

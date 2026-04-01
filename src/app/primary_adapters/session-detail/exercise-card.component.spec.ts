@@ -50,7 +50,9 @@ async function setup(exercise: Exercise) {
 		],
 	})
 		.overrideComponent(ExerciseCardComponent, {
-			set: { imports: [FakeExerciseExpandedComponent, NgStyle, TranslateModule, WeightDisplayPipe, DistanceDisplayPipe] },
+			set: {
+				imports: [FakeExerciseExpandedComponent, NgStyle, TranslateModule, WeightDisplayPipe, DistanceDisplayPipe],
+			},
 		})
 		.compileComponents();
 

@@ -106,15 +106,15 @@
 		"exportJson": "JSON 내보내기",
 		"importJson": "JSON 가져오기",
 		"confirmTitle": "가져오기 확인",
+		"sessions": "세션",
+		"exercises": "운동",
 		"successMessage": "가져오기 성공",
 		"errorInvalidJson": "잘못된 JSON 파일",
 		"errorMissingSessions": "'sessions' 배열 없음",
 		"errorMissingExercises": "'exercises' 배열 없음",
 		"errorInvalidSession": "잘못된 세션 항목",
 		"errorInvalidExercise": "잘못된 운동 항목",
-		"errorUnknown": "알 수 없는 오류",
-		"sessions": "세션",
-		"exercises": "운동"
+		"errorUnknown": "알 수 없는 오류"
 	},
 	"chrono": {
 		"startTraining": "START TRAINING",
@@ -190,6 +190,20 @@
 		"Adductors": "내전근",
 		"Abductors": "외전근",
 		"LowerBack": "허리"
+	},
+	"months": {
+		"0": "Jan",
+		"1": "2월",
+		"2": "3월",
+		"3": "4월",
+		"4": "5월",
+		"5": "Jun",
+		"6": "Jul",
+		"7": "8월",
+		"8": "Sep",
+		"9": "10월",
+		"10": "11월",
+		"11": "12월"
 	},
 	"massUnit": {
 		"metric": "미터법",
