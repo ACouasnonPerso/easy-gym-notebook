@@ -25,6 +25,12 @@
 					/>
 				}
 			</g>
+			<text
+				[attr.x]="center"
+				[attr.y]="center + 4"
+				text-anchor="middle"
+				class="donut-total"
+			>{{ totalLoad() }}</text>
 		</svg>
 		<div class="pie-legend">
 			@for (segment of segments(); track segment.group) {

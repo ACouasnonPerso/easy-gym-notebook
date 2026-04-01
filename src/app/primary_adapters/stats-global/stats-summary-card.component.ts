@@ -19,8 +19,8 @@ export class StatsSummaryCardComponent {
 	summary = input<MonthSummary>({ totalWeightKg: 0, sessionCount: 0, totalDurationSeconds: 0 });
 
 	formatWeight(kg: number): string {
-		if (kg >= 1000) return this.weightDisplay.transform(kg / 1000, "t");
-		return this.weightDisplay.transform(Math.round(kg), "kg");
+		if (kg >= 1000) return this.weightDisplay.transform(Math.round((kg / 1000) * 100) / 100, "t");
+		return this.weightDisplay.transform(Math.round(kg * 100) / 100, "kg");
 	}
 
 	formatDuration(totalSeconds: number): string {

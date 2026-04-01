@@ -1,11 +1,12 @@
 import { Component, ChangeDetectionStrategy, input } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { YearlyHeatmapRow, YearlyHeatmapCell } from "../../core_logic/stats-global/stats.service";
 
 @Component({
 	selector: "app-yearly-heatmap",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [],
+	imports: [TranslateModule],
 	templateUrl: "./yearly-heatmap.component.html",
 	styleUrl: "./yearly-heatmap.component.scss",
 })
@@ -24,8 +25,4 @@ export class YearlyHeatmapComponent {
 		return "yhm-cell empty";
 	}
 
-	getMonthLabel(month: number): string {
-		const date = new Date(2000, month, 1);
-		return date.toLocaleDateString("fr-FR", { month: "short" });
-	}
 }

@@ -52,6 +52,12 @@ export class DonutChartComponent {
 	readonly svgSize = 150;
 	readonly center = 75;
 
+	readonly totalLoad = computed((): string => {
+		const totalKg = Math.round(Array.from(this.details().values()).reduce((sum, d) => sum + d.totalLoadKg, 0));
+		if (totalKg >= 1000) return this.weightDisplay.transform(Math.round(totalKg / 1000), "t");
+		return this.weightDisplay.transform(totalKg, "kg");
+	});
+
 	readonly segments = computed((): DonutSegment[] => {
 		const dist = this.distribution();
 		const result: DonutSegment[] = [];
