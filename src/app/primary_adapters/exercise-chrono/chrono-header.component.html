@@ -1,0 +1,14 @@
+<div class="header-pad">
+	<app-chrono-back-button (back)="back.emit()" />
+	<div class="right-actions">
+		@if (!hasExercise()) {
+			<span class="break-duration-label" (click)="openBreakDurationPopup.emit()">
+				{{ formattedBreakDuration() }} {{ "common.rest" | translate }}
+			</span>
+		}
+		@if (hasExercise() && seriesCount() > 0) {
+			<span class="series-badge"> {{ "chrono.series" | translate }} {{ seriesCount() }} </span>
+		}
+		<app-chrono-sound-button [soundEnabled]="soundEnabled()" (toggleSound)="toggleSound.emit()" />
+	</div>
+</div>
