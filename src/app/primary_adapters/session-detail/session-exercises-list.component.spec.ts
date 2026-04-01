@@ -73,5 +73,4 @@ describe("SessionExercisesListComponent", () => {
 		const fab = fixture.debugElement.query(By.css(".fab"));
 		expect(fab).toBeNull();
 	});
-
 });

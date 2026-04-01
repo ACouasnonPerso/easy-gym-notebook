@@ -24,5 +24,4 @@ export class YearlyHeatmapComponent {
 		if (cell.hasSession) return "yhm-cell done";
 		return "yhm-cell empty";
 	}
-
 }

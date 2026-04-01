@@ -565,7 +565,7 @@ describe("StatsGlobalComponent — generateDurations avec années passées", () 
 		setupComponent();
 		const currentYear = new Date().getFullYear();
 
-		const months = component['generateDurations']([]);
+		const months = component["generateDurations"]([]);
 		const currentYearEntry = months[0];
 
 		expect(currentYearEntry.label).toContain(`(${currentYear})`);
@@ -574,7 +574,7 @@ describe("StatsGlobalComponent — generateDurations avec années passées", () 
 	it("devrait inclure une année passée ayant des données juste après 'Année en cours'", () => {
 		setupComponent();
 
-		const months = component['generateDurations']([2024]);
+		const months = component["generateDurations"]([2024]);
 		const secondEntry = months[1];
 
 		expect(secondEntry.label).toBe("2024");
@@ -583,7 +583,7 @@ describe("StatsGlobalComponent — generateDurations avec années passées", () 
 	it("devrait trier les années passées par ordre décroissant", () => {
 		setupComponent();
 
-		const months = component['generateDurations']([2023, 2024]);
+		const months = component["generateDurations"]([2023, 2024]);
 
 		expect(months[1].label).toBe("2024");
 		expect(months[2].label).toBe("2023");
@@ -592,7 +592,7 @@ describe("StatsGlobalComponent — generateDurations avec années passées", () 
 	it("devrait afficher 'Année 2024' (traduit) comme label d'une année passée", () => {
 		setupComponent();
 
-		const months = component['generateDurations']([2024]);
+		const months = component["generateDurations"]([2024]);
 		const entry2024 = months[1];
 
 		expect(entry2024.label).toBe("Année 2024");
@@ -602,7 +602,7 @@ describe("StatsGlobalComponent — generateDurations avec années passées", () 
 		setupComponent();
 		const currentYear = new Date().getFullYear();
 
-		const months = component['generateDurations']([currentYear]);
+		const months = component["generateDurations"]([currentYear]);
 		const yearEntries = months.filter((m) => m.type === "current-year");
 
 		expect(yearEntries.length).toBe(1);

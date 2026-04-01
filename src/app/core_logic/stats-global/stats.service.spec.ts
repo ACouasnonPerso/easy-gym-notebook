@@ -538,10 +538,7 @@ describe("StatsService", () => {
 		it("retourne sessionCount correct pour plusieurs sessions dans le mois", () => {
 			const march1 = new Date(2026, 2, 1);
 			const march15 = new Date(2026, 2, 15);
-			service._allSessions.set([
-				makeSession({ id: "s1", date: march1 }),
-				makeSession({ id: "s2", date: march15 }),
-			]);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 }), makeSession({ id: "s2", date: march15 })]);
 			service._allExercises.set([]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
@@ -578,9 +575,7 @@ describe("StatsService", () => {
 		it("divise les totaux du mois par le nombre de semaines", () => {
 			const march1 = new Date(2026, 2, 1); // March 2026 → ceil(31/7) = 5 weeks
 			service._allSessions.set([makeSession({ id: "s1", date: march1, durationSeconds: 5000 })]);
-			service._allExercises.set([
-				makeExercise({ sessionId: "s1", weightKg: 100, sets: 5, reps: 10 }),
-			]);
+			service._allExercises.set([makeExercise({ sessionId: "s1", weightKg: 100, sets: 5, reps: 10 })]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
 			const result = service.weeklyAverage();
@@ -631,10 +626,7 @@ describe("StatsService", () => {
 		it("calcule sessionCount = nombre de sessions distinctes avec ce groupe musculaire", () => {
 			const march1 = new Date(2026, 2, 1);
 			const march10 = new Date(2026, 2, 10);
-			service._allSessions.set([
-				makeSession({ id: "s1", date: march1 }),
-				makeSession({ id: "s2", date: march10 }),
-			]);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 }), makeSession({ id: "s2", date: march10 })]);
 			service._allExercises.set([
 				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest }),
 				makeExercise({ id: "ex-2", sessionId: "s2", muscleGroup: MuscleGroup.Chest }),
@@ -661,9 +653,7 @@ describe("StatsService", () => {
 		it("retourne une map vide si tous les exercices ont muscleGroup null", () => {
 			const march1 = new Date(2026, 2, 1);
 			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
-			service._allExercises.set([
-				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: null }),
-			]);
+			service._allExercises.set([makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: null })]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
 			expect(service.muscleGroupDetails().size).toBe(0);
@@ -694,10 +684,7 @@ describe("StatsService", () => {
 		it("calcule totalVolumeKg comme somme de tous les volumes d'un exercice", () => {
 			const march1 = new Date(2026, 2, 1);
 			const march8 = new Date(2026, 2, 8);
-			service._allSessions.set([
-				makeSession({ id: "s1", date: march1 }),
-				makeSession({ id: "s2", date: march8 }),
-			]);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 }), makeSession({ id: "s2", date: march8 })]);
 			service._allExercises.set([
 				makeExercise({ id: "ex-1", sessionId: "s1", name: "Bench Press", weightKg: 80, sets: 4, reps: 8 }),
 				makeExercise({ id: "ex-2", sessionId: "s2", name: "Bench Press", weightKg: 90, sets: 3, reps: 6 }),
@@ -750,9 +737,7 @@ describe("StatsService", () => {
 		it("totalDistanceKm est null quand l'exercice n'est pas cardio", () => {
 			const march1 = new Date(2026, 2, 1);
 			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
-			service._allExercises.set([
-				makeExercise({ sessionId: "s1", name: "Squat", isCardio: false, distanceKm: null }),
-			]);
+			service._allExercises.set([makeExercise({ sessionId: "s1", name: "Squat", isCardio: false, distanceKm: null })]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
 			const result = service.exerciseSummaries();
@@ -776,8 +761,18 @@ describe("StatsService", () => {
 			const march1 = new Date(2026, 2, 1);
 			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
 			service._allExercises.set([
-				makeExercise({ id: "ex-1", sessionId: "s1", name: "Compound", muscleGroups: [MuscleGroup.Chest, MuscleGroup.Triceps] }),
-				makeExercise({ id: "ex-2", sessionId: "s1", name: "Compound", muscleGroups: [MuscleGroup.Chest, MuscleGroup.Shoulders] }),
+				makeExercise({
+					id: "ex-1",
+					sessionId: "s1",
+					name: "Compound",
+					muscleGroups: [MuscleGroup.Chest, MuscleGroup.Triceps],
+				}),
+				makeExercise({
+					id: "ex-2",
+					sessionId: "s1",
+					name: "Compound",
+					muscleGroups: [MuscleGroup.Chest, MuscleGroup.Shoulders],
+				}),
 			]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
@@ -785,7 +780,7 @@ describe("StatsService", () => {
 			expect(result[0].muscleGroups).toContain(MuscleGroup.Chest);
 			expect(result[0].muscleGroups).toContain(MuscleGroup.Triceps);
 			expect(result[0].muscleGroups).toContain(MuscleGroup.Shoulders);
-			expect(result[0].muscleGroups.filter(mg => mg === MuscleGroup.Chest).length).toBe(1);
+			expect(result[0].muscleGroups.filter((mg) => mg === MuscleGroup.Chest).length).toBe(1);
 		});
 
 		it("retourne un tableau vide quand il n'y a pas d'exercices dans le mois", () => {
@@ -804,7 +799,7 @@ describe("StatsService", () => {
 			service._allExercises.set([makeExercise({ sessionId: "s1", muscleGroups: [MuscleGroup.Chest] })]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
-			const cell = service.heatmapData().find(c => c.date.getDate() === 10 && c.date.getMonth() === 2)!;
+			const cell = service.heatmapData().find((c) => c.date.getDate() === 10 && c.date.getMonth() === 2)!;
 			expect(cell.hasSession).toBe(true);
 		});
 
@@ -813,7 +808,7 @@ describe("StatsService", () => {
 			service._allExercises.set([]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
-			const cell = service.heatmapData().find(c => c.date.getDate() === 10 && c.date.getMonth() === 2)!;
+			const cell = service.heatmapData().find((c) => c.date.getDate() === 10 && c.date.getMonth() === 2)!;
 			expect(cell.hasSession).toBe(false);
 		});
 
@@ -824,8 +819,8 @@ describe("StatsService", () => {
 
 			// March 2026 starts on Monday the 2nd; grid may include Feb 23 - March 1
 			const cells = service.heatmapData();
-			const outsideCells = cells.filter(c => c.date.getMonth() !== 2);
-			outsideCells.forEach(c => expect(c.isCurrentMonth).toBe(false));
+			const outsideCells = cells.filter((c) => c.date.getMonth() !== 2);
+			outsideCells.forEach((c) => expect(c.isCurrentMonth).toBe(false));
 		});
 
 		it("isCurrentMonth est true pour tous les jours du mois sélectionné", () => {
@@ -834,9 +829,9 @@ describe("StatsService", () => {
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
 			const cells = service.heatmapData();
-			const marchCells = cells.filter(c => c.date.getMonth() === 2 && c.date.getFullYear() === 2026);
+			const marchCells = cells.filter((c) => c.date.getMonth() === 2 && c.date.getFullYear() === 2026);
 			expect(marchCells.length).toBe(31);
-			marchCells.forEach(c => expect(c.isCurrentMonth).toBe(true));
+			marchCells.forEach((c) => expect(c.isCurrentMonth).toBe(true));
 		});
 	});
 
@@ -873,10 +868,7 @@ describe("StatsService", () => {
 		it("should include exercises from all months when viewType is 'total'", async () => {
 			const jan = new Date(2026, 0, 10);
 			const march = new Date(2026, 2, 10);
-			service._allSessions.set([
-				makeSession({ id: "s-jan", date: jan }),
-				makeSession({ id: "s-march", date: march }),
-			]);
+			service._allSessions.set([makeSession({ id: "s-jan", date: jan }), makeSession({ id: "s-march", date: march })]);
 			service._allExercises.set([
 				makeExercise({ id: "ex-jan", sessionId: "s-jan", name: "Squat" }),
 				makeExercise({ id: "ex-march", sessionId: "s-march", name: "Développé couché" }),
@@ -914,10 +906,7 @@ describe("StatsService", () => {
 		it("should filter by selected month when viewType is 'month' (existing behaviour preserved)", async () => {
 			const jan = new Date(2026, 0, 10);
 			const march = new Date(2026, 2, 10);
-			service._allSessions.set([
-				makeSession({ id: "s-jan", date: jan }),
-				makeSession({ id: "s-march", date: march }),
-			]);
+			service._allSessions.set([makeSession({ id: "s-jan", date: jan }), makeSession({ id: "s-march", date: march })]);
 			service._allExercises.set([
 				makeExercise({ id: "ex-jan", sessionId: "s-jan", name: "Squat" }),
 				makeExercise({ id: "ex-march", sessionId: "s-march", name: "Développé couché" }),

@@ -11,7 +11,7 @@ import { AppVersionService } from "../../core_logic/shared/app-version.service";
 export class StatsMonthSelectorComponent {
 	readonly durations =
 		input.required<
-			{ label: string; value: Date | null; type: "month" | "current-year" | "total" | "current-week" | 'year' }[]
+			{ label: string; value: Date | null; type: "month" | "current-year" | "total" | "current-week" | "year" }[]
 		>();
 	readonly selectedMonthIndex = input.required<number>();
 	readonly monthChange = output<number>();

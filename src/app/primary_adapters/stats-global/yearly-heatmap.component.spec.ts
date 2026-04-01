@@ -17,7 +17,9 @@ function makePastDate(): Date {
 	return d;
 }
 
-function buildRows(overrides: { month: number; cellDates: { date: Date; hasSession: boolean }[] }[]): YearlyHeatmapRow[] {
+function buildRows(
+	overrides: { month: number; cellDates: { date: Date; hasSession: boolean }[] }[]
+): YearlyHeatmapRow[] {
 	const currentYear = new Date().getFullYear();
 	const rows: YearlyHeatmapRow[] = [];
 	for (let m = 0; m < 12; m++) {

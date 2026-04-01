@@ -148,16 +148,21 @@ export class StatsGlobalComponent implements OnInit, OnDestroy {
 		value: Date | null;
 		type: "month" | "current-year" | "year" | "total" | "current-week";
 	}[] {
-		const months: { label: string; value: Date | null; type: "month" | "current-year" | "year" | "total" | "current-week" }[] =
-			[];
+		const months: {
+			label: string;
+			value: Date | null;
+			type: "month" | "current-year" | "year" | "total" | "current-week";
+		}[] = [];
 		const currentYear = new Date().getFullYear();
 		const currentYearLabel = `${this.translate.instant("statsGlobal.currentYear")} (${currentYear})`;
 		months.push({ label: currentYearLabel, value: null, type: "current-year" });
-		const pastYears = pastYearsWithSessions
-			.filter((y) => y !== currentYear)
-			.sort((a, b) => b - a);
+		const pastYears = pastYearsWithSessions.filter((y) => y !== currentYear).sort((a, b) => b - a);
 		for (const year of pastYears) {
-			months.push({ label: this.translate.instant("statsGlobal.yearLabel", { year }), value: new Date(year, 0, 1), type: "year" });
+			months.push({
+				label: this.translate.instant("statsGlobal.yearLabel", { year }),
+				value: new Date(year, 0, 1),
+				type: "year",
+			});
 		}
 		months.push({ label: this.translate.instant("statsGlobal.total"), value: null, type: "total" });
 		months.push({ label: this.translate.instant("statsGlobal.thisWeek"), value: null, type: "current-week" });
