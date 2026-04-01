@@ -19,7 +19,7 @@
 .chrono-btn-icon {
 	width: 80px;
 	height: 80px;
-	border-radius: 34px;
+	border-radius: 20px;
 	corner-shape: squircle;
 	border: 1px solid var(--border);
 	background: var(--card);

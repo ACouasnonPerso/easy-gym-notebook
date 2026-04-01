@@ -30,7 +30,7 @@
 			@for (segment of segments(); track segment.group) {
 				<div class="legend-item" [class.selected]="selectedGroup() === segment.group" [style.opacity]="isLegendItemDimmed(segment.group) ? '0.35' : ''" (click)="onSegmentClick(segment.group)" style="cursor: pointer">
 					<div class="legend-dot" [style.background]="segment.color"></div>
-					<span class="legend-text">{{ segment.group }}</span>
+					<span class="legend-text">{{ 'muscleGroups.' + segment.group | translate }}</span>
 					<span class="legend-pct">{{ segment.percentage }}%</span>
 				</div>
 			}
@@ -42,7 +42,7 @@
 			<span class="dc-popover-label">{{ 'muscleGroups.' + group | translate }}</span>
 			<div class="dc-popover-stats">
 				<span>{{ details().get(group)?.percentage }}%</span>
-				<span>{{ details().get(group)?.sessionCount }} {{ 'common.sessions' | translate }}</span>
+				<span>{{ details().get(group)?.sessionCount }} {{ (details().get(group)?.sessionCount === 1 ? 'common.session' : 'common.sessions') | translate }}</span>
 				<span>{{ formatLoad(details().get(group)?.totalLoadKg ?? 0) }}</span>
 			</div>
 		</div>
