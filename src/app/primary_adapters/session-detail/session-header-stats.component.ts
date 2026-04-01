@@ -26,6 +26,9 @@ export class SessionHeaderStatsComponent {
 	onDateChange(value: string): void {
 		if (!value) return;
 		this.dateChange.emit(value);
-		this.showDateInput.set(false);
+	}
+
+	protected toggleDateInput() {
+		this.showDateInput.set(!this.showDateInput());
 	}
 }

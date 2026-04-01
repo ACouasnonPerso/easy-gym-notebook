@@ -1,7 +1,7 @@
 <div class="page">
 	<!-- Top bar: version + month selector -->
-	<app-stats-month-selector
-		[months]="months()"
+	<app-stats-duration-selector
+		[durations]="durations()"
 		[selectedMonthIndex]="selectedMonthIndex()"
 		(monthChange)="onMonthChange($event)"
 	/>
@@ -9,6 +9,11 @@
 	<!-- Heatmap -->
 	@if (showHeatmap()) {
 		<app-stats-heatmap-card [data]="getGlobalStatsUseCase.heatmapData()" />
+	}
+
+	<!-- Yearly heatmap (année en cours) -->
+	@if (showYearlyHeatmap()) {
+		<app-stats-yearly-heatmap-card [data]="getGlobalStatsUseCase.yearlyHeatmapData()" />
 	}
 
 	<!-- Worked muscles -->

@@ -2,16 +2,16 @@ import { Component, ChangeDetectionStrategy, input, output, inject, signal, comp
 import { AppVersionService } from "../../core_logic/shared/app-version.service";
 
 @Component({
-	selector: "app-stats-month-selector",
+	selector: "app-stats-duration-selector",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	templateUrl: "./stats-month-selector.component.html",
 	styleUrl: "./stats-month-selector.component.scss",
 })
 export class StatsMonthSelectorComponent {
-	readonly months =
+	readonly durations =
 		input.required<
-			{ label: string; value: Date | null; type: "month" | "current-year" | "total" | "current-week" }[]
+			{ label: string; value: Date | null; type: "month" | "current-year" | "total" | "current-week" | 'year' }[]
 		>();
 	readonly selectedMonthIndex = input.required<number>();
 	readonly monthChange = output<number>();
@@ -19,7 +19,7 @@ export class StatsMonthSelectorComponent {
 	readonly appVersion = inject(AppVersionService);
 	readonly showDropdown = signal(false);
 
-	readonly currentMonthLabel = computed(() => this.months()[this.selectedMonthIndex()]?.label ?? "");
+	readonly currentMonthLabel = computed(() => this.durations()[this.selectedMonthIndex()]?.label ?? "");
 
 	selectMonth(index: number): void {
 		this.monthChange.emit(index);

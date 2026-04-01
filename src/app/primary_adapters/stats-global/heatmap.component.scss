@@ -26,7 +26,8 @@
 .hm-cell {
 	width: 100%;
 	aspect-ratio: 1;
-	border-radius: 8px;
+	border-radius: 12px;
+	corner-shape: squircle;
 	background: var(--card2);
 	transition: transform 0.12s;
 	cursor: pointer;
