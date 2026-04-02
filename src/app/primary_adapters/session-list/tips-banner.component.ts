@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, inject, signal, computed } from "@angular/core";
+import { Component, ChangeDetectionStrategy, input, inject, signal, computed, OnDestroy } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { RequestReviewUseCase } from "../../primary_ports/session-list/request-review.usecase";
 
@@ -18,7 +18,7 @@ const ONBOARDING_TIPS = [
 	templateUrl: "./tips-banner.component.html",
 	styleUrl: "./tips-banner.component.scss",
 })
-export class TipsBannerComponent {
+export class TipsBannerComponent implements OnDestroy {
 	readonly sessionCount = input.required<number>();
 
 	private readonly requestReviewUseCase = inject(RequestReviewUseCase);
@@ -28,12 +28,26 @@ export class TipsBannerComponent {
 	private readonly dismissed = signal(false);
 	readonly showConfirm = signal(false);
 
-	readonly onboardingTip: string = ONBOARDING_TIPS[Math.floor(Math.random() * ONBOARDING_TIPS.length)];
+	private readonly _tipIntervalId: ReturnType<typeof setInterval>;
+
+	readonly onboardingTip = signal<string>(ONBOARDING_TIPS[Math.floor(Math.random() * ONBOARDING_TIPS.length)]);
 
 	readonly showOnboarding = computed(() => {
 		const count = this.sessionCount();
 		return count > 0 && count < 4;
 	});
+
+	constructor() {
+		this._tipIntervalId = setInterval(() => {
+			if (this.showOnboarding()) {
+				this.onboardingTip.set(ONBOARDING_TIPS[Math.floor(Math.random() * ONBOARDING_TIPS.length)]);
+			}
+		}, 5000);
+	}
+
+	ngOnDestroy(): void {
+		clearInterval(this._tipIntervalId);
+	}
 
 	readonly showReview = computed(() => {
 		const count = this.sessionCount();

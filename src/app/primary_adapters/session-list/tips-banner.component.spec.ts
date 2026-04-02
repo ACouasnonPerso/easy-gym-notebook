@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture } from "@angular/core/testing";
+import { TestBed, ComponentFixture, fakeAsync, tick } from "@angular/core/testing";
 import { signal, Signal } from "@angular/core";
 import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from "@ngx-translate/core";
 import { Observable, of } from "rxjs";
@@ -234,16 +234,34 @@ describe("TipsBannerComponent", () => {
 		it("retourne le premier conseil quand Math.random() retourne 0", () => {
 			spyOn(Math, "random").and.returnValue(0);
 			const { fixture } = setupFixture(2);
-			expect(fixture.componentInstance.onboardingTip).toBe("Long press a session to duplicate it");
+			expect(fixture.componentInstance.onboardingTip()).toBe("Long press a session to duplicate it");
 		});
 
 		it("retourne le dernier conseil quand Math.random() retourne 0.99", () => {
 			spyOn(Math, "random").and.returnValue(0.99);
 			const { fixture } = setupFixture(2);
-			expect(fixture.componentInstance.onboardingTip).toBe(
+			expect(fixture.componentInstance.onboardingTip()).toBe(
 				"Try to select the current year in stats to see your yearly heatmap 😉"
 			);
 		});
+	});
+
+	describe("rotation automatique du conseil onboarding", () => {
+		it("change le conseil après 5 secondes quand showOnboarding est true", fakeAsync(() => {
+			let callCount = 0;
+			spyOn(Math, "random").and.callFake(() => {
+				// First call: index 0, subsequent calls: index 1
+				return callCount++ === 0 ? 0 : 0.2;
+			});
+			const { fixture } = setupFixture(2);
+			const tipBefore = fixture.componentInstance.onboardingTip();
+
+			tick(5000);
+			fixture.detectChanges();
+
+			const tipAfter = fixture.componentInstance.onboardingTip();
+			expect(tipAfter).not.toBe(tipBefore);
+		}));
 	});
 
 	describe("masquage de la bannière", () => {
