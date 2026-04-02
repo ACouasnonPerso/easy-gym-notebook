@@ -64,7 +64,7 @@
 		"new": "New exercise",
 		"name": "Exercise name",
 		"namePlaceholder": "e.g. Bench press",
-		"page": "Exercise page",
+		"page": "Stats",
 		"empty": "No exercise.",
 		"addHint": "Add one!",
 		"deleteConfirm": "Delete this exercise?",
