@@ -37,6 +37,7 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		distanceKm: 5,
 		isPyramid: false,
 		pyramidSets: [],
+		rating: null,
 		...overrides,
 	} as Exercise;
 }
@@ -180,3 +181,50 @@ describe("ExerciseMapper", () => {
 		});
 	});
 });
+
+describe("ExerciseMapper -- rating field", () => {
+	let mapper: ExerciseMapper;
+
+	beforeEach(() => {
+		TestBed.configureTestingModule({ providers: [ExerciseMapper] });
+		mapper = TestBed.inject(ExerciseMapper);
+	});
+
+	describe("toDomain -- rating", () => {
+		it("should default rating to null when raw exercise has no rating field (backward compat)", () => {
+			const raw = makeRawExercise();
+			delete (raw as any).rating;
+
+			const result = mapper.toDomain(raw);
+
+			expect(result.rating).toBeNull();
+		});
+
+		it("should map rating value when present in raw exercise", () => {
+			const raw = makeRawExercise({ rating: 16 } as any);
+
+			const result = mapper.toDomain(raw);
+
+			expect(result.rating).toBe(16);
+		});
+	});
+
+	describe("toStorage -- rating", () => {
+		it("should include rating when exercise has a rating value", () => {
+			const exercise = makeExercise({ rating: 18 });
+
+			const result = mapper.toStorage(exercise);
+
+			expect(result.rating).toBe(18);
+		});
+
+		it("should include rating as null when exercise rating is null", () => {
+			const exercise = makeExercise({ rating: null });
+
+			const result = mapper.toStorage(exercise);
+
+			expect(result.rating).toBeNull();
+		});
+	});
+});
+

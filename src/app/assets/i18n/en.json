@@ -209,5 +209,20 @@
 		"metric": "Metric",
 		"imperial": "Imperial",
 		"us": "US"
+	},
+	"rating": {
+		"12": "Moderate effort",
+		"13": "Moderately difficult",
+		"14": "Sustained effort, comfortable margin",
+		"15": "Hard but manageable",
+		"16": "Hard, still 2-3 reps possible",
+		"17": "Really hard, maybe one more rep",
+		"18": "Really hard, next rep would have been tough",
+		"19": "Really hard, not one more rep",
+		"20": "Could not finish, too hard",
+		"title": "Rate exercise",
+		"10_11": "Easy, well below capacity",
+		"7_9": "Very easy, warm-up",
+		"1_6": "No effort"
 	}
 }

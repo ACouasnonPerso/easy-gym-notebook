@@ -51,6 +51,7 @@ export class ExerciseExpandedComponent {
 	readonly delete = output<void>();
 	readonly openChrono = output<void>();
 	readonly openStats = output<void>();
+	readonly openRating = output<void>();
 
 	readonly weightValuesForDisplay = computed<(number | string)[]>(() => {
 		if (this.massUnitService.activeMassUnit() === "metric") return WEIGHT_VALUES;
@@ -131,5 +132,9 @@ export class ExerciseExpandedComponent {
 		const m = Math.floor((current % 3600) / 60);
 		const newSeconds = part === "hours" ? value * 3600 + m * 60 : h * 3600 + value * 60;
 		this.update.emit({ durationSeconds: newSeconds });
+	}
+
+	onRatingSelected(rating: number | null): void {
+		this.update.emit({ rating });
 	}
 }

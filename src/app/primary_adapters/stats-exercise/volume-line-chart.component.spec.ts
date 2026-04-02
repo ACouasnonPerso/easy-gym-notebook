@@ -46,6 +46,7 @@ function makeOccurrences(count: number, baseVolumeKg = 1200): ExerciseOccurrence
 		breakDurationSeconds: 90,
 		volumeKg: baseVolumeKg + i * 10,
 		status: "validated" as const,
+	rating: null,
 	}));
 }
 
@@ -81,6 +82,7 @@ describe("VolumeLineChartComponent — graphique de progression du volume", () =
 			breakDurationSeconds: 90,
 			volumeKg: 1200,
 			status: "validated",
+		rating: null,
 		};
 		setup([occurrence]);
 
@@ -102,6 +104,7 @@ describe("VolumeLineChartComponent — graphique de progression du volume", () =
 			breakDurationSeconds: 90,
 			volumeKg: 1200,
 			status: "validated",
+		rating: null,
 		};
 		setup([occurrence]);
 

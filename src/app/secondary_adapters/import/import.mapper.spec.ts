@@ -28,7 +28,8 @@ function makeRawExerciseJson(overrides: Record<string, unknown> = {}): Record<st
 		distanceKm: null,
 		isPyramid: false,
 		pyramidSets: [],
-		...overrides,
+rating: null,
+...overrides,
 	};
 }
 
@@ -97,6 +98,7 @@ describe("ImportMapper", () => {
 					{ weightKg: 60, reps: 12 },
 					{ weightKg: 80, reps: 8 },
 				],
+				rating: null,
 			} as RawExercise);
 		});
 

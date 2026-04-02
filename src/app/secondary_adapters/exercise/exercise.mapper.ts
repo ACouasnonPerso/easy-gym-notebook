@@ -20,6 +20,7 @@ export class ExerciseMapper {
 			distanceKm: raw.distanceKm ?? null,
 			isPyramid: raw.isPyramid ?? false,
 			pyramidSets: raw.pyramidSets ?? [],
+			rating: raw.rating ?? null,
 		};
 	}
 
@@ -39,6 +40,7 @@ export class ExerciseMapper {
 			distanceKm: exercise.distanceKm,
 			isPyramid: exercise.isPyramid,
 			pyramidSets: exercise.pyramidSets,
+			rating: exercise.rating,
 		};
 	}
 }

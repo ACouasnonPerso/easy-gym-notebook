@@ -58,6 +58,7 @@ export class ImportMapper {
 			distanceKm: typeof raw["distanceKm"] === "number" ? raw["distanceKm"] : null,
 			isPyramid: typeof raw["isPyramid"] === "boolean" ? raw["isPyramid"] : false,
 			pyramidSets: Array.isArray(raw["pyramidSets"]) ? (raw["pyramidSets"] as PyramidSet[]) : [],
+			rating: typeof raw["rating"] === "number" ? raw["rating"] : null,
 		};
 	}
 }

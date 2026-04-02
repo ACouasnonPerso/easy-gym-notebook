@@ -48,6 +48,7 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		distanceKm: null,
 		isPyramid: false,
 		pyramidSets: [],
+		rating: null,
 		...overrides,
 	};
 }
@@ -162,4 +163,34 @@ describe("SessionCardComponent", () => {
 			expect(statLabel).toContain("Poids");
 		});
 	});
+
+	describe("averageRating", () => {
+		it("should return null when no exercises have a rating", () => {
+			const exercises = [makeExercise({ id: "ex1", rating: null }), makeExercise({ id: "ex2", rating: null })];
+			const fixture = setupFixture(makeSession(exercises));
+			expect(fixture.componentInstance.averageRating()).toBeNull();
+		});
+
+		it("should return the single rating when only one exercise is rated", () => {
+			const exercises = [makeExercise({ id: "ex1", rating: 16 }), makeExercise({ id: "ex2", rating: null })];
+			const fixture = setupFixture(makeSession(exercises));
+			expect(fixture.componentInstance.averageRating()).toBe(16);
+		});
+
+		it("should compute the average over only rated exercises", () => {
+			const exercises = [
+				makeExercise({ id: "ex1", rating: 14 }),
+				makeExercise({ id: "ex2", rating: 18 }),
+				makeExercise({ id: "ex3", rating: null }),
+			];
+			const fixture = setupFixture(makeSession(exercises));
+			expect(fixture.componentInstance.averageRating()).toBe(16);
+		});
+
+		it("should return null when session has no exercises", () => {
+			const fixture = setupFixture(makeSession([]));
+			expect(fixture.componentInstance.averageRating()).toBeNull();
+		});
+	});
+
 });

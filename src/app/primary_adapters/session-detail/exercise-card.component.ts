@@ -38,6 +38,7 @@ export class ExerciseCardComponent {
 	readonly exerciseDelete = output<void>();
 	readonly openChrono = output<void>();
 	readonly openStats = output<void>();
+	readonly openRating = output<void>();
 
 	readonly isValidated = computed(() => this.exercise().status === "validated");
 	readonly isActiveStatus = computed(

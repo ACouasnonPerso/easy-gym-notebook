@@ -22,8 +22,9 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		isPyramid: false,
 		pyramidSets: [],
 		distanceKm: null,
+		rating: null,
 		...overrides,
-	};
+	} as Exercise;
 }
 
 describe("ExerciseExpandedComponent — togglePyramid pre-fill", () => {

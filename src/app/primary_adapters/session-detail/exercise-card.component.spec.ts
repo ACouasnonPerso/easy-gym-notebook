@@ -18,6 +18,7 @@ class FakeExerciseExpandedComponent {
 	readonly delete = output<void>();
 	readonly openChrono = output<void>();
 	readonly openStats = output<void>();
+	readonly openRating = output<void>();
 }
 
 function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
@@ -37,6 +38,7 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		distanceKm: null,
 		isPyramid: false,
 		pyramidSets: [],
+		rating: null,
 		...overrides,
 	} as Exercise;
 }

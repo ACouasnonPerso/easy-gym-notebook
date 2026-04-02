@@ -1,0 +1,67 @@
+.overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.7);
+	display: flex;
+	align-items: flex-end;
+	z-index: 400;
+}
+.form-card {
+	background: var(--card);
+	border-radius: 20px 20px 0 0;
+	padding: 24px 20px 36px;
+	width: 100%;
+	max-height: 85vh;
+	display: flex;
+	flex-direction: column;
+}
+.form-title {
+	font-family: "Space Grotesk", sans-serif;
+	color: var(--text);
+	font-size: 18px;
+	font-weight: 800;
+	margin: 0 0 16px;
+	letter-spacing: -0.3px;
+}
+.rating-list {
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	-webkit-overflow-scrolling: touch;
+}
+.rating-option {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 14px;
+	border-radius: 12px;
+	border: 1px solid var(--border);
+	background: var(--card2);
+	cursor: pointer;
+	transition: border-color 0.15s, background 0.15s;
+	text-align: left;
+	width: 100%;
+}
+.rating-option:hover {
+	border-color: var(--orange);
+}
+.rating-option--active {
+	border-color: var(--orange);
+	background: var(--orange-dim);
+}
+.rating-value {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 15px;
+	font-weight: 700;
+	color: var(--orange);
+	min-width: 36px;
+	text-align: right;
+}
+.rating-label {
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--sub);
+	line-height: 1.3;
+}

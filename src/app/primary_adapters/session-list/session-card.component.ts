@@ -77,6 +77,13 @@ export class SessionCardComponent {
 			.reduce((sum, e) => sum + (e.distanceKm as number), 0)
 	);
 
+
+	readonly averageRating = computed((): number | null => {
+		const rated = this.session().exercises.filter((e) => e.rating !== null && e.rating !== undefined);
+		if (rated.length === 0) return null;
+		return Math.round(rated.reduce((sum, e) => sum + e.rating!, 0) / rated.length);
+	});
+
 	readonly totalDistanceKmFormatted = computed(() => {
 		const km = this.totalDistanceKm();
 		if (km === 0) return "_";

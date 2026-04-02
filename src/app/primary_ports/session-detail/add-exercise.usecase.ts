@@ -53,6 +53,7 @@ export class AddExerciseUseCase {
 			distanceKm: params.distanceKm ?? null,
 			isPyramid: params.isPyramid ?? false,
 			pyramidSets: params.pyramidSets ?? [],
+			rating: null,
 		};
 
 		await this.exerciseService.add(exercise);

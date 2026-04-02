@@ -122,6 +122,7 @@ export class ImportService {
 			distanceKm: raw.distanceKm ?? null,
 			isPyramid: raw.isPyramid ?? false,
 			pyramidSets: raw.pyramidSets ?? [],
+			rating: null,
 		};
 	}
 }

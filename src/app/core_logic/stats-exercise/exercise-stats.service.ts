@@ -60,9 +60,10 @@ export class ExerciseStatsService {
 					breakDurationSeconds: e.breakDurationSeconds,
 					volumeKg,
 					status: e.status,
+					rating: e.rating ?? null,
 				};
 			})
-			.sort((a, b) => a.date.getTime() - b.date.getTime());
+			.sort((a, b) => b.date.getTime() - a.date.getTime());
 
 		this._occurrences.set(occurrences);
 		this._cardioOccurrences.set([]);

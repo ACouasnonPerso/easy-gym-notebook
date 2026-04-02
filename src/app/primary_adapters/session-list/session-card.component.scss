@@ -27,11 +27,11 @@
 }
 .session-header {
 	display: flex;
-	justify-content: space-between;
-	align-items: flex-start;
+	align-items: center;
 	flex-wrap: wrap;
 	margin-bottom: 12px;
 	gap: 6px;
+	position: relative;
 }
 .session-date {
 	font-family: "Space Grotesk", sans-serif;
@@ -39,7 +39,8 @@
 	font-weight: 700;
 	color: var(--orange);
 	letter-spacing: 0.2px;
-	flex-shrink: 0;
+	flex: 1;
+	min-width: 50%;
 }
 .tag-list {
 	display: flex;
@@ -97,4 +98,21 @@
 	color: var(--muted);
 	letter-spacing: 1.2px;
 	text-transform: uppercase;
+}
+
+.rating-avg {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 10px;
+	font-weight: 600;
+	color: var(--muted);
+	position: relative;
+	top: 0;
+	right: 0;
+	background: var(--card2);
+	padding: 2px 6px;
+	border-radius: 6px;
+	border: 1px solid var(--border);
+	white-space: nowrap;
+	flex-shrink: 0;
+	margin-left: auto;
 }

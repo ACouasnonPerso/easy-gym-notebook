@@ -26,6 +26,9 @@
 				<span class="tag" [ngStyle]="tagStyle(group)">{{ "muscleGroups." + group | translate }}</span>
 			}
 		}
+		@if (exercise().rating !== null && exercise().rating !== undefined) {
+			<span class="rating-badge">{{ exercise().rating }}/20</span>
+		}
 	</div>
 	<div class="exercise-stats">
 		@if (isCardio()) {
@@ -93,5 +96,6 @@
 		(delete)="exerciseDelete.emit()"
 		(openChrono)="openChrono.emit()"
 		(openStats)="openStats.emit()"
+		(openRating)="openRating.emit()"
 	/>
 }

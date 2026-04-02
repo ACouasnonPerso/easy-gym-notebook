@@ -20,6 +20,7 @@ import { EndSessionModalComponent } from "./end-session-modal.component";
 import { SessionHeaderComponent } from "./session-header.component";
 import { SessionExercisesListComponent } from "./session-exercises-list.component";
 import { AddExerciseFormComponent } from "./add-exercise-form.component";
+import { ExerciseRatingPopupComponent } from "./exercise-rating-popup.component";
 import { SessionDetailUiService } from "./session-detail-ui.service";
 
 @Component({
@@ -32,6 +33,7 @@ import { SessionDetailUiService } from "./session-detail-ui.service";
 		EditDurationPopupComponent,
 		EndSessionModalComponent,
 		AddExerciseFormComponent,
+		ExerciseRatingPopupComponent,
 	],
 	providers: [WeightDisplayPipe],
 	templateUrl: "./session-detail.component.html",
@@ -59,6 +61,8 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 	readonly exercises = this.getSessionDetailUseCase.exercises;
 
 	readonly showDurationPicker = signal(false);
+	readonly showRatingPopup = signal(false);
+	readonly ratingExercise = signal<Exercise | null>(null);
 
 	readonly sessionId = signal("");
 
@@ -163,6 +167,20 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 		}
 		this.updateSessionDurationUseCase.execute(durationSeconds);
 		this.showDurationPicker.set(false);
+	}
+
+	openRatingPopup(exercise: Exercise): void {
+		this.ratingExercise.set(exercise);
+		this.showRatingPopup.set(true);
+	}
+
+	onRatingSelected(rating: number | null): void {
+		const exercise = this.ratingExercise();
+		if (exercise) {
+			this.updateExerciseUseCase.execute(exercise.id, { rating });
+		}
+		this.showRatingPopup.set(false);
+		this.ratingExercise.set(null);
 	}
 
 	onPause(): void {

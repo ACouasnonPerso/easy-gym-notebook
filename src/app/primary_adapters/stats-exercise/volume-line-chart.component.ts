@@ -15,7 +15,7 @@ export class VolumeLineChartComponent {
 	readonly occurrences = input<ExerciseOccurrence[]>([]);
 
 	readonly chartData = computed(() => {
-		const data = this.occurrences();
+		const data = [...this.occurrences()].reverse();
 		if (data.length === 0) return null;
 
 		const n = data.length;

@@ -9,6 +9,9 @@
 				<span class="muscle-tag cardio-tag">{{ "common.cardio" | translate }}</span>
 			}
 		</div>
+		@if (averageRating() !== null) {
+			<span class="rating-avg">{{ averageRating() }}/20</span>
+		}
 	</div>
 	<div class="session-stats">
 		<div class="stat-item">

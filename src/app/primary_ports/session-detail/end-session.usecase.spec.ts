@@ -25,7 +25,8 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		distanceKm: null,
 		isPyramid: false,
 		pyramidSets: [],
-		...overrides,
+rating: null,
+...overrides,
 	};
 }
 

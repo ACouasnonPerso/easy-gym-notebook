@@ -32,6 +32,9 @@
 			<div class="history-card">
 				<div class="history-header">
 					<span class="history-date">{{ formatDate(o.date) }}</span>
+					@if (o.rating !== null && o.rating !== undefined) {
+						<span class="rating-badge">{{ o.rating }}/20</span>
+					}
 				</div>
 				<div class="history-stats">
 					<div class="h-stat">

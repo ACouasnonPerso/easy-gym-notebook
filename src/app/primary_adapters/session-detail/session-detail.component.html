@@ -31,6 +31,7 @@
 		(exerciseDelete)="onExerciseDelete($event)"
 		(openChrono)="navigateToExerciseChrono($event)"
 		(openStats)="navigateToStats($event)"
+		(openRating)="openRatingPopup($event)"
 	/>
 </div>
 
@@ -46,5 +47,13 @@
 		[initialSeconds]="session()?.status === 'active' ? currentElapsedSeconds() : (session()?.durationSeconds ?? 0)"
 		(confirmed)="onDurationConfirmed($event)"
 		(cancelled)="showDurationPicker.set(false)"
+	/>
+}
+
+@if (showRatingPopup() && ratingExercise()) {
+	<app-exercise-rating-popup
+		[currentRating]="ratingExercise()!.rating"
+		(ratingSelected)="onRatingSelected($event)"
+		(cancelled)="showRatingPopup.set(false)"
 	/>
 }

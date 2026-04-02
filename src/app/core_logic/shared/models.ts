@@ -49,6 +49,7 @@ export interface Exercise {
 	distanceKm: number | null;
 	isPyramid: boolean;
 	pyramidSets: PyramidSet[];
+	rating: number | null;
 }
 
 export interface ExerciseOccurrence {
@@ -62,6 +63,7 @@ export interface ExerciseOccurrence {
 	breakDurationSeconds: number;
 	volumeKg: number;
 	status: ExerciseStatus;
+	rating: number | null;
 }
 
 export interface RawSession {
@@ -87,6 +89,7 @@ export interface RawExercise {
 	distanceKm: number | null;
 	isPyramid?: boolean;
 	pyramidSets?: PyramidSet[];
+	rating?: number | null;
 }
 
 export interface CardioOccurrence {
