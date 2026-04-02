@@ -11,6 +11,7 @@
 	},
 	"common": {
 		"cancel": "Cancel",
+		"close": "Close",
 		"confirm": "Confirm",
 		"weight": "Weight",
 		"exercises": "Exercises",
@@ -225,5 +226,10 @@
 		"10_11": "Easy, well below capacity",
 		"7_9": "Very easy, warm-up",
 		"1_6": "No effort"
+	},
+	"comment": {
+		"title": "Add a comment",
+		"placeholder": "Write a note about this exercise...",
+		"save": "Save"
 	}
 }

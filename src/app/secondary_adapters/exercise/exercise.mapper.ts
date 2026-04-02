@@ -21,6 +21,7 @@ export class ExerciseMapper {
 			isPyramid: raw.isPyramid ?? false,
 			pyramidSets: raw.pyramidSets ?? [],
 			rating: raw.rating ?? null,
+			comment: raw.comment ?? null,
 		};
 	}
 
@@ -41,6 +42,7 @@ export class ExerciseMapper {
 			isPyramid: exercise.isPyramid,
 			pyramidSets: exercise.pyramidSets,
 			rating: exercise.rating,
+			comment: exercise.comment,
 		};
 	}
 }

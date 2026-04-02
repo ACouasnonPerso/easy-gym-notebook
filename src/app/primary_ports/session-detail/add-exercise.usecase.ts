@@ -54,6 +54,7 @@ export class AddExerciseUseCase {
 			isPyramid: params.isPyramid ?? false,
 			pyramidSets: params.pyramidSets ?? [],
 			rating: null,
+			comment: null,
 		};
 
 		await this.exerciseService.add(exercise);

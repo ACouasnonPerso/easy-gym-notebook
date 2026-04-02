@@ -123,6 +123,7 @@ export class ImportService {
 			isPyramid: raw.isPyramid ?? false,
 			pyramidSets: raw.pyramidSets ?? [],
 			rating: null,
+			comment: null,
 		};
 	}
 }

@@ -2,6 +2,14 @@ import { Component, ChangeDetectionStrategy, input, inject, signal, computed } f
 import { TranslateModule } from "@ngx-translate/core";
 import { RequestReviewUseCase } from "../../primary_ports/session-list/request-review.usecase";
 
+const ONBOARDING_TIPS = [
+	"Long press a session to duplicate it",
+	'Try to name an exercice "velo" or "running" to activate mode cardio 🏃‍♂️',
+	"The exercice automatically detect the muscles with the name 💪",
+	"You can rate the exercice difficulty 2️⃣0️⃣",
+	"Try to select the current year in stats to see your yearly heatmap 😉",
+];
+
 @Component({
 	selector: "app-tips-banner",
 	standalone: true,
@@ -19,6 +27,8 @@ export class TipsBannerComponent {
 	private readonly pending = signal(false);
 	private readonly dismissed = signal(false);
 	readonly showConfirm = signal(false);
+
+	readonly onboardingTip: string = ONBOARDING_TIPS[Math.floor(Math.random() * ONBOARDING_TIPS.length)];
 
 	readonly showOnboarding = computed(() => {
 		const count = this.sessionCount();

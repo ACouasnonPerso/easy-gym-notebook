@@ -19,6 +19,11 @@ export class ExerciseRepository implements IExerciseRepository {
 		return all.filter((e) => e.sessionId === sessionId);
 	}
 
+	async getById(id: string): Promise<Exercise | null> {
+		const all = await this.getAll();
+		return all.find((e) => e.id === id) ?? null;
+	}
+
 	async save(exercise: Exercise): Promise<void> {
 		const all = this.readFromStorage();
 		const index = all.findIndex((e) => e.id === exercise.id);

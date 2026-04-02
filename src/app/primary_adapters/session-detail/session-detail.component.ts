@@ -21,6 +21,7 @@ import { SessionHeaderComponent } from "./session-header.component";
 import { SessionExercisesListComponent } from "./session-exercises-list.component";
 import { AddExerciseFormComponent } from "./add-exercise-form.component";
 import { ExerciseRatingPopupComponent } from "./exercise-rating-popup.component";
+import { ExerciseCommentPopupComponent } from "./exercise-comment-popup.component";
 import { SessionDetailUiService } from "./session-detail-ui.service";
 
 @Component({
@@ -34,6 +35,7 @@ import { SessionDetailUiService } from "./session-detail-ui.service";
 		EndSessionModalComponent,
 		AddExerciseFormComponent,
 		ExerciseRatingPopupComponent,
+		ExerciseCommentPopupComponent,
 	],
 	providers: [WeightDisplayPipe],
 	templateUrl: "./session-detail.component.html",
@@ -63,6 +65,8 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 	readonly showDurationPicker = signal(false);
 	readonly showRatingPopup = signal(false);
 	readonly ratingExercise = signal<Exercise | null>(null);
+	readonly showCommentPopup = signal(false);
+	readonly commentExercise = signal<Exercise | null>(null);
 
 	readonly sessionId = signal("");
 
@@ -181,6 +185,21 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 		}
 		this.showRatingPopup.set(false);
 		this.ratingExercise.set(null);
+	}
+
+
+	openCommentPopup(exercise: Exercise): void {
+		this.commentExercise.set(exercise);
+		this.showCommentPopup.set(true);
+	}
+
+	onCommentSaved(comment: string | null): void {
+		const exercise = this.commentExercise();
+		if (exercise) {
+			this.updateExerciseUseCase.execute(exercise.id, { comment });
+		}
+		this.showCommentPopup.set(false);
+		this.commentExercise.set(null);
 	}
 
 	onPause(): void {

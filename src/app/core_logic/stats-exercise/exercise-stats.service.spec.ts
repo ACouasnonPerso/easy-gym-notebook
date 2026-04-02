@@ -34,6 +34,7 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		isPyramid: false,
 		pyramidSets: [],
 rating: null,
+comment: null,
 ...overrides,
 	} as Exercise;
 }

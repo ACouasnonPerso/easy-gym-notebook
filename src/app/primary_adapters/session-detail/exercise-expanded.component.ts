@@ -52,6 +52,7 @@ export class ExerciseExpandedComponent {
 	readonly openChrono = output<void>();
 	readonly openStats = output<void>();
 	readonly openRating = output<void>();
+	readonly openComment = output<void>();
 
 	readonly weightValuesForDisplay = computed<(number | string)[]>(() => {
 		if (this.massUnitService.activeMassUnit() === "metric") return WEIGHT_VALUES;

@@ -32,6 +32,7 @@
 		(openChrono)="navigateToExerciseChrono($event)"
 		(openStats)="navigateToStats($event)"
 		(openRating)="openRatingPopup($event)"
+		(openComment)="openCommentPopup($event)"
 	/>
 </div>
 
@@ -55,5 +56,14 @@
 		[currentRating]="ratingExercise()!.rating"
 		(ratingSelected)="onRatingSelected($event)"
 		(cancelled)="showRatingPopup.set(false)"
+	/>
+}
+
+
+@if (showCommentPopup() && commentExercise()) {
+	<app-exercise-comment-popup
+		[currentComment]="commentExercise()!.comment"
+		(commentSaved)="onCommentSaved($event)"
+		(cancelled)="showCommentPopup.set(false)"
 	/>
 }

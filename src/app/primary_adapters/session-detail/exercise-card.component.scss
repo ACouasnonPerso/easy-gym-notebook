@@ -131,3 +131,11 @@
 	white-space: nowrap;
 	flex-shrink: 0;
 }
+
+.comment-indicator {
+	color: var(--sub);
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
+	opacity: 0.7;
+}

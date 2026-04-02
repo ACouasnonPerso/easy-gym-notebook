@@ -462,3 +462,130 @@ describe("SessionDetailComponent — démarrage automatique du chrono", () => {
 		expect(pauseChronoSpy.startForSession).not.toHaveBeenCalled();
 	});
 });
+
+describe("SessionDetailComponent — comment popup", () => {
+	it("openCommentPopup sets commentExercise signal to the given exercise", () => {
+		const { fixture } = createComponent();
+		const exercise = {
+			id: "ex-1",
+			sessionId: "session-1",
+			name: "Squat",
+			muscleGroup: null,
+			muscleGroups: [],
+			weightKg: 100,
+			sets: 4,
+			reps: 6,
+			breakDurationSeconds: 120,
+			status: "pending" as const,
+			isCardio: false,
+			durationSeconds: 0,
+			distanceKm: null,
+			isPyramid: false,
+			pyramidSets: [],
+			rating: null,
+			comment: null,
+		};
+
+		fixture.componentInstance.openCommentPopup(exercise);
+		fixture.detectChanges();
+
+		expect(fixture.componentInstance.commentExercise()).toEqual(exercise);
+	});
+
+	it("openCommentPopup sets showCommentPopup signal to true", () => {
+		const { fixture } = createComponent();
+		const exercise = {
+			id: "ex-1",
+			sessionId: "session-1",
+			name: "Squat",
+			muscleGroup: null,
+			muscleGroups: [],
+			weightKg: 100,
+			sets: 4,
+			reps: 6,
+			breakDurationSeconds: 120,
+			status: "pending" as const,
+			isCardio: false,
+			durationSeconds: 0,
+			distanceKm: null,
+			isPyramid: false,
+			pyramidSets: [],
+			rating: null,
+			comment: null,
+		};
+
+		fixture.componentInstance.openCommentPopup(exercise);
+		fixture.detectChanges();
+
+		expect(fixture.componentInstance.showCommentPopup()).toBeTrue();
+	});
+
+	it("onCommentSaved calls updateExerciseUseCase.execute with comment and resets state", () => {
+		const { fixture } = createComponent();
+		const updateExerciseSpy = TestBed.inject(UpdateExerciseUseCase) as any;
+		const exercise = {
+			id: "ex-1",
+			sessionId: "session-1",
+			name: "Squat",
+			muscleGroup: null,
+			muscleGroups: [],
+			weightKg: 100,
+			sets: 4,
+			reps: 6,
+			breakDurationSeconds: 120,
+			status: "pending" as const,
+			isCardio: false,
+			durationSeconds: 0,
+			distanceKm: null,
+			isPyramid: false,
+			pyramidSets: [],
+			rating: null,
+			comment: null,
+		};
+
+		fixture.componentInstance.openCommentPopup(exercise);
+		fixture.componentInstance.onCommentSaved("Great session");
+		fixture.detectChanges();
+
+		expect(updateExerciseSpy.execute).toHaveBeenCalledWith("ex-1", { comment: "Great session" });
+		expect(fixture.componentInstance.showCommentPopup()).toBeFalse();
+		expect(fixture.componentInstance.commentExercise()).toBeNull();
+	});
+
+	it("the comment popup is rendered in the template when showCommentPopup is true", () => {
+		const { fixture } = createComponent();
+		const exercise = {
+			id: "ex-1",
+			sessionId: "session-1",
+			name: "Squat",
+			muscleGroup: null,
+			muscleGroups: [],
+			weightKg: 100,
+			sets: 4,
+			reps: 6,
+			breakDurationSeconds: 120,
+			status: "pending" as const,
+			isCardio: false,
+			durationSeconds: 0,
+			distanceKm: null,
+			isPyramid: false,
+			pyramidSets: [],
+			rating: null,
+			comment: null,
+		};
+
+		fixture.componentInstance.openCommentPopup(exercise);
+		fixture.detectChanges();
+
+		const popup = fixture.nativeElement.querySelector("app-exercise-comment-popup");
+		expect(popup).toBeTruthy();
+	});
+
+	it("the comment popup is NOT rendered when showCommentPopup is false", () => {
+		const { fixture } = createComponent();
+		fixture.detectChanges();
+
+		const popup = fixture.nativeElement.querySelector("app-exercise-comment-popup");
+		expect(popup).toBeFalsy();
+	});
+});

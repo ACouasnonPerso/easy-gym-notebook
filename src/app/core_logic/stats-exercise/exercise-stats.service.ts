@@ -61,6 +61,7 @@ export class ExerciseStatsService {
 					volumeKg,
 					status: e.status,
 					rating: e.rating ?? null,
+					comment: e.comment ?? null,
 				};
 			})
 			.sort((a, b) => b.date.getTime() - a.date.getTime());

@@ -14,5 +14,6 @@
 		[isCardio]="useCase.isCardio()"
 		[occurrences]="useCase.occurrences()"
 		[cardioOccurrences]="useCase.cardioOccurrences()"
+		(commentEdited)="onCommentEdited($event)"
 	/>
 </div>

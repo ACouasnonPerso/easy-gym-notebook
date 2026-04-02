@@ -70,6 +70,87 @@
 	text-transform: uppercase;
 }
 
+.history-header-right {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.history-card--clickable {
+	cursor: pointer;
+}
+
+.comment-indicator {
+	color: var(--sub);
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
+	opacity: 0.7;
+}
+
+.comment-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 100;
+	display: flex;
+	align-items: flex-end;
+}
+
+.comment-modal {
+	background: var(--card);
+	border-radius: 20px 20px 0 0;
+	border: 1px solid var(--border);
+	padding: 24px 20px 32px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	position: relative;
+}
+
+.comment-text {
+	font-size: 14px;
+	color: var(--text);
+	line-height: 1.6;
+	white-space: pre-wrap;
+	margin: 0;
+}
+
+.btn-close {
+	align-self: flex-end;
+	background: var(--card2);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	color: var(--text);
+	font-size: 13px;
+	font-weight: 600;
+	padding: 8px 18px;
+	cursor: pointer;
+}
+
+.btn-edit {
+	position: absolute;
+	top: 16px;
+	right: 20px;
+	background: var(--card2);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	color: var(--muted);
+	cursor: pointer;
+	padding: 6px 10px;
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: color 0.15s, border-color 0.15s;
+}
+
+.btn-edit:hover {
+	color: var(--blue);
+	border-color: var(--blue);
+}
+
 .rating-badge {
 	font-family: "IBM Plex Mono", monospace;
 	font-size: 10px;

@@ -29,6 +29,13 @@
 		@if (exercise().rating !== null && exercise().rating !== undefined) {
 			<span class="rating-badge">{{ exercise().rating }}/20</span>
 		}
+		@if (hasComment()) {
+			<span class="comment-indicator" aria-label="Has comment">
+				<svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+					<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+				</svg>
+			</span>
+		}
 	</div>
 	<div class="exercise-stats">
 		@if (isCardio()) {
@@ -97,5 +104,6 @@
 		(openChrono)="openChrono.emit()"
 		(openStats)="openStats.emit()"
 		(openRating)="openRating.emit()"
+		(openComment)="openComment.emit()"
 	/>
 }

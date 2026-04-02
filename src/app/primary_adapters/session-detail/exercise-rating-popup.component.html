@@ -1,6 +1,9 @@
 <div class="overlay" (click)="cancelled.emit()">
 	<div class="form-card" (click)="$event.stopPropagation()">
-		<h2 class="form-title">{{ "rating.title" | translate }}</h2>
+		<div class="form-header">
+			<h2 class="form-title">{{ "rating.title" | translate }}</h2>
+			<button type="button" class="close-btn" (click)="cancelled.emit()" aria-label="Close">&#x2715;</button>
+		</div>
 		<div class="rating-list">
 			@for (option of options; track option.value) {
 				<button

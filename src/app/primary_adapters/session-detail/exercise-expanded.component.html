@@ -158,7 +158,20 @@
 	}
 
 	<div class="actions-row">
-		<button class="btn btn-secondary btn-rating" (click)="openRating.emit()" aria-label="Rate exercise"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><polygon points="12,2 15.1,8.3 22,9.2 17,14.1 18.2,21 12,17.8 5.8,21 7,14.1 2,9.2 8.9,8.3" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/></svg></button>
+		<button class="btn btn-secondary btn-comment" [class.btn-comment--active]="exercise().comment" (click)="openComment.emit()" aria-label="Add comment">
+			@if (exercise().comment) {
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+			} @else {
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+			}
+		</button>
+		<button class="btn btn-secondary btn-rating" [class.btn-rating--rated]="exercise().rating" (click)="openRating.emit()" aria-label="Rate exercise">
+			@if (exercise().rating) {
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 15.1,8.3 22,9.2 17,14.1 18.2,21 12,17.8 5.8,21 7,14.1 2,9.2 8.9,8.3" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+			} @else {
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><polygon points="12,2 15.1,8.3 22,9.2 17,14.1 18.2,21 12,17.8 5.8,21 7,14.1 2,9.2 8.9,8.3" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/></svg>
+			}
+		</button>
 		<button class="btn btn-secondary" (click)="openChrono.emit()">{{ "nav.chrono" | translate }}</button>
 		<button class="btn btn-secondary" (click)="openStats.emit()">{{ "exercise.page" | translate }}</button>
 		<button class="btn btn-delete" (click)="delete.emit()">{{ "common.delete" | translate }}</button>

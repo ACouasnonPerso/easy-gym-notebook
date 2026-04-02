@@ -50,6 +50,7 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		isPyramid: false,
 		pyramidSets: [],
 rating: null,
+comment: null,
 ...overrides,
 	} as Exercise;
 }
@@ -60,15 +61,17 @@ describe("UpdateExerciseUseCase", () => {
 	let exerciseRepoSpy: jasmine.SpyObj<{
 		getAll: () => Promise<Exercise[]>;
 		getBySessionId: (id: string) => Promise<Exercise[]>;
+		getById: (id: string) => Promise<Exercise | null>;
 		save: (e: Exercise) => Promise<void>;
 		delete: (id: string) => Promise<void>;
 	}>;
 
 	beforeEach(() => {
-		exerciseRepoSpy = jasmine.createSpyObj("ExerciseRepository", ["getAll", "getBySessionId", "save", "delete"]);
+		exerciseRepoSpy = jasmine.createSpyObj("ExerciseRepository", ["getAll", "getBySessionId", "getById", "save", "delete"]);
 		exerciseRepoSpy.save.and.returnValue(Promise.resolve());
 		exerciseRepoSpy.getBySessionId.and.returnValue(Promise.resolve([]));
 		exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([]));
+		exerciseRepoSpy.getById.and.returnValue(Promise.resolve(null));
 
 		const sessionRepoSpy = jasmine.createSpyObj("SessionRepository", ["getAll", "getById", "save", "delete"]);
 		sessionRepoSpy.save.and.returnValue(Promise.resolve());
@@ -174,6 +177,19 @@ describe("UpdateExerciseUseCase", () => {
 			expect(saved.isCardio).toBeTrue();
 			expect(saved.muscleGroups).toEqual([]);
 			expect(saved.muscleGroup).toBeNull();
+		});
+	});
+
+	describe("repository fallback when exercise not in cache", () => {
+		it("should persist the comment when the exercise was not loaded via a session (stats page context)", async () => {
+			const exercise = makeExercise({ comment: null });
+			exerciseRepoSpy.getById.and.returnValue(Promise.resolve(exercise));
+
+			await useCase.execute("ex-1", { comment: "Good set" });
+
+			expect(exerciseRepoSpy.save).toHaveBeenCalledTimes(1);
+			const saved: Exercise = exerciseRepoSpy.save.calls.mostRecent().args[0];
+			expect(saved.comment).toBe("Good set");
 		});
 	});
 });

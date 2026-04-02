@@ -19,6 +19,7 @@ class FakeExerciseExpandedComponent {
 	readonly openChrono = output<void>();
 	readonly openStats = output<void>();
 	readonly openRating = output<void>();
+	readonly openComment = output<void>();
 }
 
 function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
@@ -39,6 +40,7 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		isPyramid: false,
 		pyramidSets: [],
 		rating: null,
+		comment: null,
 		...overrides,
 	} as Exercise;
 }
@@ -243,5 +245,41 @@ describe("ExerciseCardComponent", () => {
 
 			expect(style).toEqual({});
 		});
+	});
+});
+
+describe("ExerciseCardComponent — hasComment signal", () => {
+	it("should set hasComment to false when exercise comment is null", async () => {
+		const { component } = await setup(makeExercise({ comment: null } as any));
+
+		expect(component.hasComment()).toBeFalse();
+	});
+
+	it("should set hasComment to false when exercise comment is an empty string", async () => {
+		const { component } = await setup(makeExercise({ comment: "" } as any));
+
+		expect(component.hasComment()).toBeFalse();
+	});
+
+	it("should set hasComment to true when exercise comment is a non-empty string", async () => {
+		const { component } = await setup(makeExercise({ comment: "My note" } as any));
+
+		expect(component.hasComment()).toBeTrue();
+	});
+
+	it("should render the comment icon in the DOM when hasComment is true", async () => {
+		const { fixture } = await setup(makeExercise({ comment: "My note" } as any));
+
+		const icon = fixture.nativeElement.querySelector(".comment-indicator");
+
+		expect(icon).toBeTruthy();
+	});
+
+	it("should NOT render the comment icon in the DOM when hasComment is false", async () => {
+		const { fixture } = await setup(makeExercise({ comment: null } as any));
+
+		const icon = fixture.nativeElement.querySelector(".comment-indicator");
+
+		expect(icon).toBeFalsy();
 	});
 });

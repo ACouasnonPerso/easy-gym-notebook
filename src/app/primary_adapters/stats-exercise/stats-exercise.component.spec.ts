@@ -2,6 +2,7 @@ import { TestBed, ComponentFixture } from "@angular/core/testing";
 import { signal } from "@angular/core";
 import { StatsExerciseComponent } from "./stats-exercise.component";
 import { GetExerciseStatsUseCase } from "../../primary_ports/stats-exercise/get-exercise-stats.usecase";
+import { UpdateExerciseUseCase } from "../../primary_ports/session-detail/update-exercise.usecase";
 import { ChartSelectionService } from "./chart-selection.service";
 import { ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
@@ -37,6 +38,38 @@ function makeUseCaseSpy() {
 	};
 }
 
+describe("StatsExerciseComponent — rechargement après commentaire", () => {
+	let fixture: ComponentFixture<StatsExerciseComponent>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	let getExerciseStatsUseCaseSpy: any;
+
+	beforeEach(() => {
+		getExerciseStatsUseCaseSpy = makeUseCaseSpy();
+
+		TestBed.configureTestingModule({
+			imports: [StatsExerciseComponent, translateModuleConfig],
+			providers: [
+				{ provide: GetExerciseStatsUseCase, useValue: getExerciseStatsUseCaseSpy },
+				{ provide: UpdateExerciseUseCase, useValue: { execute: jasmine.createSpy("execute").and.returnValue(Promise.resolve()) } },
+				{ provide: ActivatedRoute, useValue: { snapshot: { params: { exerciseName: "Bench%20Press" } } } },
+				{ provide: Location, useValue: { back: jasmine.createSpy("back") } },
+			],
+		});
+
+		setupI18n();
+		fixture = TestBed.createComponent(StatsExerciseComponent);
+		fixture.detectChanges();
+	});
+
+	it("should reload exercise stats after a comment is edited", async () => {
+		const component = fixture.componentInstance;
+
+		await component.onCommentEdited({ exerciseId: "ex-1", comment: "Great set" });
+
+		expect(getExerciseStatsUseCaseSpy.execute).toHaveBeenCalledTimes(2); // once on init, once after save
+	});
+});
+
 describe("StatsExerciseComponent — sélecteur de graphique", () => {
 	let fixture: ComponentFixture<StatsExerciseComponent>;
 	let chartSelectionService: ChartSelectionService;
@@ -49,6 +82,7 @@ describe("StatsExerciseComponent — sélecteur de graphique", () => {
 			imports: [StatsExerciseComponent, translateModuleConfig],
 			providers: [
 				{ provide: GetExerciseStatsUseCase, useValue: makeUseCaseSpy() },
+				{ provide: UpdateExerciseUseCase, useValue: { execute: jasmine.createSpy("execute").and.returnValue(Promise.resolve()) } },
 				{ provide: ActivatedRoute, useValue: { snapshot: { params: { exerciseName: "Squat" } } } },
 				{ provide: Location, useValue: { back: jasmine.createSpy("back") } },
 			],

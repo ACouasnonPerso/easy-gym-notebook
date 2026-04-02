@@ -228,3 +228,49 @@ describe("ExerciseMapper -- rating field", () => {
 	});
 });
 
+
+describe("ExerciseMapper -- comment field", () => {
+	let mapper: ExerciseMapper;
+
+	beforeEach(() => {
+		TestBed.configureTestingModule({ providers: [ExerciseMapper] });
+		mapper = TestBed.inject(ExerciseMapper);
+	});
+
+	describe("toDomain -- comment", () => {
+		it("should default comment to null when raw exercise has no comment field (backward compat)", () => {
+			const raw = makeRawExercise();
+			delete (raw as any).comment;
+
+			const result = mapper.toDomain(raw);
+
+			expect(result.comment).toBeNull();
+		});
+
+		it("should map comment string when present in raw exercise", () => {
+			const raw = makeRawExercise({ comment: "Great set today" } as any);
+
+			const result = mapper.toDomain(raw);
+
+			expect(result.comment).toBe("Great set today");
+		});
+	});
+
+	describe("toStorage -- comment", () => {
+		it("should include comment when exercise has a comment value", () => {
+			const exercise = makeExercise({ comment: "Heavy day" } as any);
+
+			const result = mapper.toStorage(exercise);
+
+			expect((result as any).comment).toBe("Heavy day");
+		});
+
+		it("should include comment as null when exercise comment is null", () => {
+			const exercise = makeExercise({ comment: null } as any);
+
+			const result = mapper.toStorage(exercise);
+
+			expect((result as any).comment).toBeNull();
+		});
+	});
+});

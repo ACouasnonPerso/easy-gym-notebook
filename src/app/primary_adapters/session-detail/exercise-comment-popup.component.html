@@ -1,0 +1,15 @@
+<div class="overlay" (click)="cancelled.emit()">
+	<div class="form-card" (click)="$event.stopPropagation()">
+		<div class="form-header">
+			<h2 class="form-title">{{ "comment.title" | translate }}</h2>
+			<button type="button" class="close-btn" (click)="cancelled.emit()">&#x2715;</button>
+		</div>
+		<textarea
+			class="comment-textarea"
+			[value]="textValue()"
+			(input)="onInput($event)"
+			[placeholder]="'comment.placeholder' | translate"
+		></textarea>
+		<button type="button" class="btn-save" (click)="save()">{{ "comment.save" | translate }}</button>
+	</div>
+</div>

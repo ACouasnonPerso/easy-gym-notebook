@@ -20,11 +20,14 @@ export class ExerciseService {
 	}
 
 	async update(exerciseId: string, changes: Partial<Exercise>): Promise<void> {
-		const exercise = this._exercises().find((e) => e.id === exerciseId);
+		const cached = this._exercises().find((e) => e.id === exerciseId);
+		const exercise = cached ?? await this.exerciseRepo.getById(exerciseId);
 		if (!exercise) return;
 		const updated = { ...exercise, ...changes };
 		await this.exerciseRepo.save(updated);
-		this._exercises.update((list) => list.map((e) => (e.id === exerciseId ? updated : e)));
+		if (cached) {
+			this._exercises.update((list) => list.map((e) => (e.id === exerciseId ? updated : e)));
+		}
 	}
 
 	async delete(exerciseId: string): Promise<void> {

@@ -23,9 +23,43 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		pyramidSets: [],
 		distanceKm: null,
 		rating: null,
+		comment: null,
 		...overrides,
 	} as Exercise;
 }
+
+describe("ExerciseExpandedComponent — btn-rating rated state", () => {
+	let fixture: ComponentFixture<ExerciseExpandedComponent>;
+
+	beforeEach(async () => {
+		localStorage.clear();
+
+		await TestBed.configureTestingModule({
+			imports: [ExerciseExpandedComponent],
+			providers: [MassUnitService, provideTranslateService({ defaultLanguage: "fr" })],
+		}).compileComponents();
+
+		TestBed.inject(MassUnitService).setMassUnit("metric");
+	});
+
+	it("should NOT have btn-rating--rated class when rating is null", () => {
+		fixture = TestBed.createComponent(ExerciseExpandedComponent);
+		fixture.componentRef.setInput("exercise", makeExercise({ rating: null }));
+		fixture.detectChanges();
+
+		const btn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-rating");
+		expect(btn.classList.contains("btn-rating--rated")).toBeFalse();
+	});
+
+	it("should have btn-rating--rated class when a rating is assigned", () => {
+		fixture = TestBed.createComponent(ExerciseExpandedComponent);
+		fixture.componentRef.setInput("exercise", makeExercise({ rating: 4 }));
+		fixture.detectChanges();
+
+		const btn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-rating");
+		expect(btn.classList.contains("btn-rating--rated")).toBeTrue();
+	});
+});
 
 describe("ExerciseExpandedComponent — togglePyramid pre-fill", () => {
 	let fixture: ComponentFixture<ExerciseExpandedComponent>;

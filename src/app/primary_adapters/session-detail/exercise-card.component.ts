@@ -39,6 +39,7 @@ export class ExerciseCardComponent {
 	readonly openChrono = output<void>();
 	readonly openStats = output<void>();
 	readonly openRating = output<void>();
+	readonly openComment = output<void>();
 
 	readonly isValidated = computed(() => this.exercise().status === "validated");
 	readonly isActiveStatus = computed(
@@ -48,6 +49,10 @@ export class ExerciseCardComponent {
 	readonly isCardio = computed(() => this.exercise().isCardio);
 	readonly durationMinutes = computed(() => formatDurationMinutes(this.exercise().durationSeconds));
 	readonly isPyramid = computed(() => this.exercise().isPyramid);
+	readonly hasComment = computed(() => {
+		const c = this.exercise().comment;
+		return c !== null && c !== undefined && c.length > 0;
+	});
 	readonly avgPyramidWeight = computed(() => {
 		const sets = this.exercise().pyramidSets;
 		if (!sets || sets.length === 0) return null;

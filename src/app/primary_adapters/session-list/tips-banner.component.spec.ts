@@ -60,12 +60,21 @@ function setupFixture(
 describe("TipsBannerComponent", () => {
 	describe("bandeau onboarding", () => {
 		it("affiche le conseil onboarding quand sessionCount est entre 1 et 3", () => {
+			spyOn(Math, "random").and.returnValue(0);
 			const { fixture } = setupFixture(2);
 			const el: HTMLElement = fixture.nativeElement;
 			const banner = el.querySelector(".tips-banner");
 			expect(banner).toBeTruthy();
 			const text = banner?.querySelector(".tips-text")?.textContent;
-			expect(text).toContain("Conseil");
+			expect(text).toContain("Long press a session to duplicate it");
+		});
+
+		it("affiche le contenu de onboardingTip dans le bandeau et non la clé de traduction fixe", () => {
+			spyOn(Math, "random").and.returnValue(0);
+			const { fixture } = setupFixture(2);
+			const el: HTMLElement = fixture.nativeElement;
+			const text = el.querySelector(".tips-banner .tips-text")?.textContent;
+			expect(text).toContain("Long press a session to duplicate it");
 		});
 	});
 
@@ -218,6 +227,20 @@ describe("TipsBannerComponent", () => {
 			expect(useCaseSpy.hasRequested()).toBe(false);
 			expect(el.querySelector(".tips-banner--clickable")).toBeNull();
 			expect(el.querySelector(".tips-banner")).toBeNull();
+		});
+	});
+
+	describe("onboardingTip", () => {
+		it("retourne le premier conseil quand Math.random() retourne 0", () => {
+			spyOn(Math, "random").and.returnValue(0);
+			const { fixture } = setupFixture(2);
+			expect(fixture.componentInstance.onboardingTip).toBe("Long press a session to duplicate it");
+		});
+
+		it("retourne le dernier conseil quand Math.random() retourne 0.99", () => {
+			spyOn(Math, "random").and.returnValue(0.99);
+			const { fixture } = setupFixture(2);
+			expect(fixture.componentInstance.onboardingTip).toBe("Try to select the current year in stats to see your yearly heatmap 😉");
 		});
 	});
 

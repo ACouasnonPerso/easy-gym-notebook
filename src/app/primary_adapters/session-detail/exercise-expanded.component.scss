@@ -256,3 +256,14 @@
 	padding: 8px 10px;
 	color: var(--orange);
 }
+.btn-rating--rated {
+	color: #facc15;
+}
+
+.btn-comment {
+	padding: 8px 10px;
+	color: var(--sub);
+}
+.btn-comment--active {
+	color: var(--blue);
+}
