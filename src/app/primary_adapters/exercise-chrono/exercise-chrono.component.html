@@ -10,7 +10,7 @@
 		(incrementSeries)="exerciseChronoUseCase.incrementSeriesCount()"
 		(decrementSeries)="exerciseChronoUseCase.decrementSeriesCount()"
 	/>
-	@if (!isIos) {
+	@if (isIos) {
 		<p class="ios-silent-warning">{{ "chrono.iosSilentWarning" | translate }}</p>
 	}
 	<div class="chrono-body">

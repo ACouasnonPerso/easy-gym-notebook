@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, input, output, computed, signal, in
 import { FormsModule } from "@angular/forms";
 import { Exercise, PyramidSet } from "../../core_logic/shared/models";
 import { DrumPickerComponent } from "../shared/drum-picker.component";
+import { DecimalInputDirective } from "../shared/decimal-input.directive";
 import { generateRange } from "../../core_logic/shared/utils";
 import { TranslateModule } from "@ngx-translate/core";
 import { MassUnitService } from "../../core_logic/mass-unit/mass-unit.service";
@@ -35,7 +36,7 @@ const KM_VALUES: (number | string)[] = [
 	selector: "app-exercise-expanded",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [DrumPickerComponent, FormsModule, TranslateModule],
+	imports: [DrumPickerComponent, FormsModule, TranslateModule, DecimalInputDirective],
 	templateUrl: "./exercise-expanded.component.html",
 	styleUrl: "./exercise-expanded.component.scss",
 })

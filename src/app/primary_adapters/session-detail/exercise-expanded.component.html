@@ -64,12 +64,11 @@
 						<span class="pyramid-row-num">{{ $index + 1 }}</span>
 						<div class="pyramid-field-group">
 							<input
-								type="number"
+								appDecimalInput
+								type="text"
 								class="pyramid-input"
 								[value]="set.weightKg"
 								(change)="updatePyramidSet($index, 'weightKg', +$any($event.target).value)"
-								min="0"
-								step="0.5"
 								inputmode="decimal"
 							/>
 							<span class="pyramid-unit">{{ weightUnit() }}</span>

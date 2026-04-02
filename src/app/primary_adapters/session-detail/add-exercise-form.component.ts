@@ -8,6 +8,7 @@ import { AutocompleteService } from "../../core_logic/session-detail/autocomplet
 import { MuscleGroupDetectorService } from "../../core_logic/shared/muscle-group-detector.service";
 import { HapticService } from "../../core_logic/shared/haptic.service";
 import { DrumPickerComponent } from "../shared/drum-picker.component";
+import { DecimalInputDirective } from "../shared/decimal-input.directive";
 import { generateRange } from "../../core_logic/shared/utils";
 import { TranslateModule } from "@ngx-translate/core";
 import { muscleGroupChipStyle } from "../../core_logic/shared/muscle-group-colors";
@@ -41,7 +42,7 @@ const KM_VALUES: (number | string)[] = [
 	selector: "app-add-exercise-form",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [FormsModule, NgStyle, DrumPickerComponent, TranslateModule],
+	imports: [FormsModule, NgStyle, DrumPickerComponent, TranslateModule, DecimalInputDirective],
 	templateUrl: "./add-exercise-form.component.html",
 	styleUrl: "./add-exercise-form.component.scss",
 })

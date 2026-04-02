@@ -3,6 +3,7 @@ import { By } from "@angular/platform-browser";
 import { signal } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
+import { Capacitor } from "@capacitor/core";
 import { ExerciseChronoComponent } from "./exercise-chrono.component";
 import { ExerciseChronoUseCase } from "../../primary_ports/exercise-chrono/exercise-chrono.usecase";
 import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from "@ngx-translate/core";
@@ -19,6 +20,7 @@ class FakeTranslateLoader implements TranslateLoader {
 				goBreak: "Pause",
 				goTraining: "Training",
 				series: "Série",
+				iosSilentWarning: "Son désactivé quand le téléphone est en mode silencieux",
 			},
 		} as unknown as TranslationObject);
 	}
@@ -269,5 +271,29 @@ describe("ExerciseChronoComponent — boutons -10s et +10s", () => {
 
 		expect(btnMinus).not.toBeUndefined();
 		expect(btnPlus).not.toBeUndefined();
+	});
+});
+
+describe("ExerciseChronoComponent — iOS silent warning", () => {
+	afterEach(() => {
+		(Capacitor.getPlatform as jasmine.Spy)?.and?.callThrough?.();
+	});
+
+	it("should show the iOS silent warning when the platform is ios", () => {
+		spyOn(Capacitor, "getPlatform").and.returnValue("ios");
+
+		const { fixture } = createComponent({});
+
+		const warning = fixture.debugElement.query(By.css(".ios-silent-warning"));
+		expect(warning).not.toBeNull();
+	});
+
+	it("should NOT show the iOS silent warning when the platform is not ios", () => {
+		spyOn(Capacitor, "getPlatform").and.returnValue("android");
+
+		const { fixture } = createComponent({});
+
+		const warning = fixture.debugElement.query(By.css(".ios-silent-warning"));
+		expect(warning).toBeNull();
 	});
 });
