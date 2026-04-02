@@ -31,6 +31,9 @@ export class StatsExerciseListCardComponent {
 	readonly showMergeConfirm = signal(false);
 
 	readonly selectedTags = signal<Set<MuscleGroup | "cardio">>(new Set());
+	readonly searchQuery = signal("");
+
+	readonly showSearchBar = computed((): boolean => this.exercises().length > 20);
 
 	readonly availableTags = computed((): MuscleGroup[] => {
 		const seen = new Set<MuscleGroup>();
@@ -46,12 +49,21 @@ export class StatsExerciseListCardComponent {
 
 	readonly filteredExercises = computed((): ExerciseSummary[] => {
 		const selected = this.selectedTags();
-		if (selected.size === 0) return this.exercises();
+		const normalize = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+		const query = normalize(this.searchQuery().trim());
+
+		let exercises = this.exercises();
+
+		if (query) {
+			exercises = exercises.filter((e) => normalize(e.name).includes(query));
+		}
+
+		if (selected.size === 0) return exercises;
 		const muscleGroupSelected = new Set<MuscleGroup>(
 			[...selected].filter((t): t is MuscleGroup => t !== "cardio") as MuscleGroup[]
 		);
 		const cardioSelected = selected.has("cardio");
-		return this.exercises().filter((e) => {
+		return exercises.filter((e) => {
 			if (cardioSelected && e.isCardio) return true;
 			return (e.muscleGroups ?? []).some((mg) => muscleGroupSelected.has(mg));
 		});

@@ -310,6 +310,117 @@ describe("StatsExerciseListCardComponent — cardio chip", () => {
 	});
 });
 
+describe("StatsExerciseListCardComponent — search bar visibility and filtering", () => {
+	let fixture: ReturnType<typeof TestBed.createComponent<StatsExerciseListCardComponent>>;
+
+	function setup(exercises: ExerciseSummary[]) {
+		TestBed.configureTestingModule({
+			imports: [StatsExerciseListCardComponent, translateModuleConfig],
+		});
+		setupI18n();
+		fixture = TestBed.createComponent(StatsExerciseListCardComponent);
+		fixture.componentRef.setInput("exercises", exercises);
+		fixture.detectChanges();
+	}
+
+	function makeExercises(count: number): ExerciseSummary[] {
+		return Array.from({ length: count }, (_, i) => makeExercise({ name: `Exercise ${i + 1}` }));
+	}
+
+	// Test 1 — search bar is absent when exercises count <= 20
+	it("ne doit pas afficher la barre de recherche quand il y a 20 exercices ou moins", () => {
+		setup(makeExercises(20));
+
+		const el: HTMLElement = fixture.nativeElement;
+		const searchBar = el.querySelector('[data-testid="exercise-search-input"]');
+		expect(searchBar).toBeNull();
+	});
+
+	// Test 2 — search bar appears when exercises count > 20
+	it("doit afficher la barre de recherche quand il y a plus de 20 exercices", () => {
+		setup(makeExercises(21));
+
+		const el: HTMLElement = fixture.nativeElement;
+		const searchBar = el.querySelector('[data-testid="exercise-search-input"]');
+		expect(searchBar).not.toBeNull();
+	});
+
+	// Test 3 — typing in the search bar filters exercises by name
+	it("doit filtrer les exercices par nom quand on tape dans la barre de recherche", () => {
+		const exercises = [
+			...makeExercises(20),
+			makeExercise({ name: "Développé couché" }),
+			makeExercise({ name: "Curl biceps" }),
+		];
+		setup(exercises);
+
+		const el: HTMLElement = fixture.nativeElement;
+		const searchBar = el.querySelector<HTMLInputElement>('[data-testid="exercise-search-input"]')!;
+
+		searchBar.value = "Développé";
+		searchBar.dispatchEvent(new Event("input"));
+		fixture.detectChanges();
+
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		expect(rows.length).toBe(1);
+		expect(rows[0].getAttribute("ng-reflect-exercise-name")).toBe("Développé couché");
+	});
+
+	// Test 4 — search is case-insensitive
+	it("doit filtrer les exercices sans tenir compte de la casse", () => {
+		const exercises = [
+			...makeExercises(20),
+			makeExercise({ name: "Développé couché" }),
+			makeExercise({ name: "Curl biceps" }),
+		];
+		setup(exercises);
+
+		const el: HTMLElement = fixture.nativeElement;
+		const searchBar = el.querySelector<HTMLInputElement>('[data-testid="exercise-search-input"]')!;
+
+		searchBar.value = "développé";
+		searchBar.dispatchEvent(new Event("input"));
+		fixture.detectChanges();
+
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		expect(rows.length).toBe(1);
+		expect(rows[0].getAttribute("ng-reflect-exercise-name")).toBe("Développé couché");
+	});
+
+	// Test 5 — search query and tag filter combine with AND logic
+	it("doit combiner le filtre par nom et le filtre par tag (intersection)", () => {
+		const exercises = [
+			...makeExercises(18),
+			makeExercise({ name: "Développé couché", muscleGroups: [MuscleGroup.Chest] }),
+			makeExercise({ name: "Développé militaire", muscleGroups: [MuscleGroup.Shoulders] }),
+			makeExercise({ name: "Curl biceps", muscleGroups: [MuscleGroup.Biceps] }),
+			makeExercise({ name: "Curl marteau", muscleGroups: [MuscleGroup.Biceps] }),
+		];
+		setup(exercises);
+
+		const el: HTMLElement = fixture.nativeElement;
+
+		// Select Biceps tag
+		const chips = el.querySelectorAll<HTMLElement>('[data-testid="tag-filter-chip"]');
+		const bicepsChip = Array.from(chips).find((c) => c.textContent?.trim() === MuscleGroup.Biceps)!;
+		bicepsChip.click();
+		fixture.detectChanges();
+
+		// Type "curl" in the search bar
+		const searchBar = el.querySelector<HTMLInputElement>('[data-testid="exercise-search-input"]')!;
+		searchBar.value = "curl";
+		searchBar.dispatchEvent(new Event("input"));
+		fixture.detectChanges();
+
+		// Only exercises matching BOTH "curl" in name AND Biceps tag should show
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		expect(rows.length).toBe(2);
+		const names = Array.from(rows).map((r) => r.getAttribute("ng-reflect-exercise-name"));
+		expect(names).toContain("Curl biceps");
+		expect(names).toContain("Curl marteau");
+	});
+});
+
 describe("StatsExerciseListCardComponent — merge button visibility", () => {
 	let fixture: ReturnType<typeof TestBed.createComponent<StatsExerciseListCardComponent>>;
 

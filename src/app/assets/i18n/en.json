@@ -99,7 +99,8 @@
 		"total": "Total",
 		"thisWeek": "This week",
 		"noDataMonth": "No data this month",
-		"trainingTime": "Training time"
+		"trainingTime": "Training time",
+		"searchPlaceholder": "Search exercises..."
 	},
 	"import": {
 		"cardTitle": "Import / Export",

@@ -138,6 +138,30 @@
 	border-color: var(--orange);
 	background: var(--orange-dim);
 }
+/* Search bar */
+.search-bar-container {
+	margin-bottom: 12px;
+}
+.exercise-search-input {
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--text);
+	background: var(--card2);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 10px 14px;
+	outline: none;
+	width: 100%;
+	box-sizing: border-box;
+	transition: border-color 0.15s;
+}
+.exercise-search-input:focus {
+	border-color: var(--orange);
+}
+.exercise-search-input::placeholder {
+	color: var(--muted);
+}
 .merge-controls {
 	display: flex;
 	flex-direction: column;

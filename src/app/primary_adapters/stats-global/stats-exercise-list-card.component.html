@@ -38,6 +38,19 @@
 		</div>
 	}
 
+	@if (showSearchBar()) {
+		<div class="search-bar-container">
+			<input
+				data-testid="exercise-search-input"
+				class="exercise-search-input"
+				type="search"
+				[placeholder]="'statsGlobal.searchPlaceholder' | translate"
+				[value]="searchQuery()"
+				(input)="searchQuery.set($any($event.target).value)"
+			/>
+		</div>
+	}
+
 	@if (isMergeMode()) {
 		<div class="merge-controls">
 			<input
