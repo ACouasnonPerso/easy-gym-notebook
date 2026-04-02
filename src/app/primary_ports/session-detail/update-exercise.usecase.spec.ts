@@ -49,9 +49,9 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		distanceKm: null,
 		isPyramid: false,
 		pyramidSets: [],
-rating: null,
-comment: null,
-...overrides,
+		rating: null,
+		comment: null,
+		...overrides,
 	} as Exercise;
 }
 
@@ -67,7 +67,13 @@ describe("UpdateExerciseUseCase", () => {
 	}>;
 
 	beforeEach(() => {
-		exerciseRepoSpy = jasmine.createSpyObj("ExerciseRepository", ["getAll", "getBySessionId", "getById", "save", "delete"]);
+		exerciseRepoSpy = jasmine.createSpyObj("ExerciseRepository", [
+			"getAll",
+			"getBySessionId",
+			"getById",
+			"save",
+			"delete",
+		]);
 		exerciseRepoSpy.save.and.returnValue(Promise.resolve());
 		exerciseRepoSpy.getBySessionId.and.returnValue(Promise.resolve([]));
 		exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([]));

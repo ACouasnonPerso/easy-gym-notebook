@@ -187,7 +187,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 		this.ratingExercise.set(null);
 	}
 
-
 	openCommentPopup(exercise: Exercise): void {
 		this.commentExercise.set(exercise);
 		this.showCommentPopup.set(true);

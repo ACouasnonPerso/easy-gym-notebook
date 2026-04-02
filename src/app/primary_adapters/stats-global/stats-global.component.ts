@@ -99,7 +99,11 @@ export class StatsGlobalComponent implements OnInit, OnDestroy {
 		await this.getGlobalStatsUseCase.execute();
 		const now = new Date();
 		const idx = this.durations().findIndex(
-			(d) => d.type === "month" && d.value !== null && d.value.getFullYear() === now.getFullYear() && d.value.getMonth() === now.getMonth(),
+			(d) =>
+				d.type === "month" &&
+				d.value !== null &&
+				d.value.getFullYear() === now.getFullYear() &&
+				d.value.getMonth() === now.getMonth()
 		);
 		this.selectedMonthIndex.set(idx >= 0 ? idx : 0);
 		this.langChangeSub = this.translate.onLangChange.subscribe((event) => {

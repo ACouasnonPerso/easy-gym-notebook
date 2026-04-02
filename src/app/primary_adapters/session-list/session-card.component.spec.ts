@@ -193,5 +193,4 @@ describe("SessionCardComponent", () => {
 			expect(fixture.componentInstance.averageRating()).toBeNull();
 		});
 	});
-
 });

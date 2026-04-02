@@ -77,7 +77,6 @@ export class SessionCardComponent {
 			.reduce((sum, e) => sum + (e.distanceKm as number), 0)
 	);
 
-
 	readonly averageRating = computed((): number | null => {
 		const rated = this.session().exercises.filter((e) => e.rating !== null && e.rating !== undefined);
 		if (rated.length === 0) return null;

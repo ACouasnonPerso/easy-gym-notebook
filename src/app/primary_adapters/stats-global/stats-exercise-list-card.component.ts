@@ -49,7 +49,11 @@ export class StatsExerciseListCardComponent {
 
 	readonly filteredExercises = computed((): ExerciseSummary[] => {
 		const selected = this.selectedTags();
-		const normalize = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+		const normalize = (s: string) =>
+			s
+				.normalize("NFD")
+				.replace(/\p{Diacritic}/gu, "")
+				.toLowerCase();
 		const query = normalize(this.searchQuery().trim());
 
 		let exercises = this.exercises();

@@ -45,8 +45,8 @@ function makeOccurrences(count: number, baseWeightKg = 80): ExerciseOccurrence[]
 		breakDurationSeconds: 90,
 		volumeKg: (baseWeightKg + i) * 15,
 		status: "validated" as const,
-	rating: null,
-	comment: null,
+		rating: null,
+		comment: null,
 	}));
 }
 
@@ -82,8 +82,8 @@ describe("WeightLineChartComponent — graphique de progression du poids", () =>
 			breakDurationSeconds: 90,
 			volumeKg: 2560,
 			status: "validated",
-		rating: null,
-		comment: null,
+			rating: null,
+			comment: null,
 		};
 		setup([occurrence]);
 
@@ -105,8 +105,8 @@ describe("WeightLineChartComponent — graphique de progression du poids", () =>
 			breakDurationSeconds: 90,
 			volumeKg: 1500,
 			status: "validated",
-		rating: null,
-		comment: null,
+			rating: null,
+			comment: null,
 		};
 		setup([occurrence]);
 

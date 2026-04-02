@@ -21,7 +21,7 @@ export class ExerciseService {
 
 	async update(exerciseId: string, changes: Partial<Exercise>): Promise<void> {
 		const cached = this._exercises().find((e) => e.id === exerciseId);
-		const exercise = cached ?? await this.exerciseRepo.getById(exerciseId);
+		const exercise = cached ?? (await this.exerciseRepo.getById(exerciseId));
 		if (!exercise) return;
 		const updated = { ...exercise, ...changes };
 		await this.exerciseRepo.save(updated);

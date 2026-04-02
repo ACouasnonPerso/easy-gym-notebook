@@ -240,7 +240,9 @@ describe("TipsBannerComponent", () => {
 		it("retourne le dernier conseil quand Math.random() retourne 0.99", () => {
 			spyOn(Math, "random").and.returnValue(0.99);
 			const { fixture } = setupFixture(2);
-			expect(fixture.componentInstance.onboardingTip).toBe("Try to select the current year in stats to see your yearly heatmap 😉");
+			expect(fixture.componentInstance.onboardingTip).toBe(
+				"Try to select the current year in stats to see your yearly heatmap 😉"
+			);
 		});
 	});
 

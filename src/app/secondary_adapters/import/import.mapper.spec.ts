@@ -28,8 +28,8 @@ function makeRawExerciseJson(overrides: Record<string, unknown> = {}): Record<st
 		distanceKm: null,
 		isPyramid: false,
 		pyramidSets: [],
-rating: null,
-...overrides,
+		rating: null,
+		...overrides,
 	};
 }
 

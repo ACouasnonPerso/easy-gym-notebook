@@ -50,7 +50,10 @@ describe("StatsExerciseComponent — rechargement après commentaire", () => {
 			imports: [StatsExerciseComponent, translateModuleConfig],
 			providers: [
 				{ provide: GetExerciseStatsUseCase, useValue: getExerciseStatsUseCaseSpy },
-				{ provide: UpdateExerciseUseCase, useValue: { execute: jasmine.createSpy("execute").and.returnValue(Promise.resolve()) } },
+				{
+					provide: UpdateExerciseUseCase,
+					useValue: { execute: jasmine.createSpy("execute").and.returnValue(Promise.resolve()) },
+				},
 				{ provide: ActivatedRoute, useValue: { snapshot: { params: { exerciseName: "Bench%20Press" } } } },
 				{ provide: Location, useValue: { back: jasmine.createSpy("back") } },
 			],
@@ -82,7 +85,10 @@ describe("StatsExerciseComponent — sélecteur de graphique", () => {
 			imports: [StatsExerciseComponent, translateModuleConfig],
 			providers: [
 				{ provide: GetExerciseStatsUseCase, useValue: makeUseCaseSpy() },
-				{ provide: UpdateExerciseUseCase, useValue: { execute: jasmine.createSpy("execute").and.returnValue(Promise.resolve()) } },
+				{
+					provide: UpdateExerciseUseCase,
+					useValue: { execute: jasmine.createSpy("execute").and.returnValue(Promise.resolve()) },
+				},
 				{ provide: ActivatedRoute, useValue: { snapshot: { params: { exerciseName: "Squat" } } } },
 				{ provide: Location, useValue: { back: jasmine.createSpy("back") } },
 			],

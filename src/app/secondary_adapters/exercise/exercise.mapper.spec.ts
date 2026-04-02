@@ -228,7 +228,6 @@ describe("ExerciseMapper -- rating field", () => {
 	});
 });
 
-
 describe("ExerciseMapper -- comment field", () => {
 	let mapper: ExerciseMapper;
 
