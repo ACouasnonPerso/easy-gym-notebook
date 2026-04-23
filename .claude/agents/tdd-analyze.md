@@ -5,7 +5,7 @@ description: >
   from business requirements. Read-only: explores the codebase to understand
   domain context, then outputs a structured test plan for the tdd or tdd-auto agents.
 tools: Read, Glob, Grep
-model: inherit
+model: claude-sonnet-4-6
 memory: project
 skills:
   - tdd-testing-patterns

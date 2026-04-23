@@ -11,15 +11,12 @@ description: >
   resuming. NEVER spawn a new agent instance to bypass a gate. NEVER
   auto-resume. The gate pause IS the expected behavior, not an error.
 tools: Read, Write, Edit, Bash, Glob, Grep, mcp__ide__getDiagnostics
-model: inherit
+model: claude-sonnet-4-6
 permissionMode: acceptEdits
 memory: project
 skills:
   - tdd-workflow-engine
   - tdd-testing-patterns
-  - tdd-core-patterns
-  - tdd-component-integration-patterns
-  - tdd-integration-patterns
 ---
 
 # TDD Agent

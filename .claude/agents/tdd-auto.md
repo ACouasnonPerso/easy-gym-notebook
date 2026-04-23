@@ -9,15 +9,13 @@ description: >
   only pausing at CYCLE_COMPLETE to report results and get the next requirement.
   Use "tdd" (interactive) instead if the user wants to review each step.
 tools: Read, Write, Edit, Bash, Glob, Grep, mcp__ide__getDiagnostics
-model: inherit
+model: claude-sonnet-4-6
 permissionMode: acceptEdits
 memory: project
 skills:
   - tdd-workflow-engine
   - tdd-testing-patterns
-  - tdd-core-patterns
-  - tdd-component-integration-patterns
-  - tdd-integration-patterns
+  - ui-angular
 ---
 
 # TDD Auto Agent
@@ -69,8 +67,14 @@ If the requirement includes a numbered test list with TPP/FLFI annotations (from
 1. Analyze the requirement
 2. Detect or confirm test type (see `tdd-workflow-engine` — Test Type Detection)
 3. Plan test order for TPP compliance: choose the first test satisfiable by the simplest transformation, order subsequent tests so each requires at most one step down the TPP table. If the requirement involves a collection, start with the empty or single-element case.
-4. Present the test-type-specific analysis (same format as interactive variant)
-5. **Immediately proceed to RED_PHASE** — no waiting
+4. **Inform the user** with a brief plain-language summary of what will be tested — one bullet per test, in business language, no technical details. Format:
+   ```
+   Tests that will be written:
+   • [functional description in business language]
+   • [functional description in business language]
+   • …
+   ```
+5. **Immediately proceed to RED_PHASE** — no waiting, no user confirmation needed
 
 ### STATE 2: RED_PHASE (Autonomous)
 
@@ -93,8 +97,9 @@ V4 is the ONLY case where the auto agent pauses mid-cycle.
 ### STATE 3: GREEN_PHASE (Autonomous)
 
 1. Implement clean solution with proper DDD/Clean Architecture patterns
-2. Write clean code directly — no intermediate "make it work" step, no separate refactor phase
-3. Only implement what the failing test demands — stop when it passes
+2. **If the implementation involves an Angular HTML template** (`.html` component file), follow the `ui-angular` skill: discover the project's design system first, use only design-system colors and tokens, apply Angular template conventions (no `*ngIf`, `@Input()`, etc.)
+3. Write clean code directly — no intermediate "make it work" step, no separate refactor phase
+4. Only implement what the failing test demands — stop when it passes
 4. Run test → verify it passes
 5. **Regression check:** run the full spec file (all tests in the same `describe` block). If an existing test breaks, fix the regression before continuing.
 6. All tests green → transition to CYCLE_CHECK
@@ -158,13 +163,10 @@ See `tdd-workflow-engine` for shared rules (RULE 0, 4, 5, 6).
 ### ANALYSIS (no pause)
 
 ```
-Detected: UNIT TEST (core business logic — store + reducers)
-Keywords: none — defaulting to unit
-
-TPP plan:
-  Test 1 — correct streak starts at zero (nil → constant)
-  Test 2 — correct streak increases on correct answer (constant → variable)
-  Test 3 — correct streak resets on wrong answer (unconditional → conditional)
+Tests that will be written:
+• La série de bonnes réponses démarre à zéro en début de partie
+• La série augmente d'un à chaque bonne réponse
+• La série repasse à zéro dès qu'une mauvaise réponse est donnée
 
 Proceeding automatically...
 ```

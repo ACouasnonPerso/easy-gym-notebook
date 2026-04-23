@@ -5,7 +5,7 @@ description: >
   targeted questions, forming theories, and proposing failing tests to reproduce
   the issue. Read-only until the reproduction phase — never modifies production code.
 tools: Read, Glob, Grep
-model: inherit
+model: claude-sonnet-4-6
 memory: project
 ---
 
