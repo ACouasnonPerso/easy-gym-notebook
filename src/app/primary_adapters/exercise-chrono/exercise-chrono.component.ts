@@ -9,6 +9,8 @@ import { HapticService } from "../../core_logic/shared/haptic.service";
 import { ChronoHeaderComponent } from "./chrono-header.component";
 import { ChronoRingComponent } from "./chrono-ring.component";
 import { ChronoActionsComponent } from "./chrono-actions.component";
+import { ChronoCustomSettingsPanelComponent } from "./chrono-custom-settings-panel.component";
+import { loadCustomSettings, defaultCustomSettings } from "../../core_logic/exercise-chrono/chrono-custom-settings";
 
 @Component({
 	selector: "app-exercise-chrono",
@@ -19,6 +21,7 @@ import { ChronoActionsComponent } from "./chrono-actions.component";
 		ChronoHeaderComponent,
 		ChronoRingComponent,
 		ChronoActionsComponent,
+		ChronoCustomSettingsPanelComponent,
 		TranslatePipe,
 	],
 	templateUrl: "./exercise-chrono.component.html",
@@ -35,6 +38,7 @@ export class ExerciseChronoComponent implements OnInit {
 	readonly _breakDuration = signal(60);
 	readonly hasExercise = signal(false);
 	readonly showBreakDurationPopup = signal(false);
+	readonly showCustomSettingsPanel = signal(false);
 
 	readonly circumference = 2 * Math.PI * 90;
 
@@ -85,15 +89,23 @@ export class ExerciseChronoComponent implements OnInit {
 		const raw = this.route.snapshot.queryParams["breakDuration"];
 		const parsed = parseInt(raw, 10);
 		const hasParam = raw !== undefined && raw !== null && !isNaN(parsed);
-		const n = hasParam ? parsed : 60;
-		this._breakDuration.set(n);
+		const savedSettings = loadCustomSettings();
+		const baseSettings = savedSettings ?? defaultCustomSettings(60);
+		const resolved = hasParam ? { ...baseSettings, breakDuration: parsed } : baseSettings;
+		this._breakDuration.set(resolved.breakDuration);
 		this.hasExercise.set(hasParam);
-		this.exerciseChronoUseCase.initWithBreakDuration(n);
+		this.exerciseChronoUseCase.applyCustomSettings(resolved);
 	}
 
 	onBreakDurationConfirmed(seconds: number): void {
 		this._breakDuration.set(seconds);
 		this.showBreakDurationPopup.set(false);
 		this.exerciseChronoUseCase.updateBreakDuration(seconds);
+	}
+
+	onCustomSettingsConfirmed(s: import("../../core_logic/exercise-chrono/chrono-custom-settings").ChronoCustomSettings): void {
+		this._breakDuration.set(s.breakDuration);
+		this.showCustomSettingsPanel.set(false);
+		this.exerciseChronoUseCase.applyCustomSettings(s);
 	}
 }

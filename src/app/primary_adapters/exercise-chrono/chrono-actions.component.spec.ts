@@ -65,3 +65,30 @@ describe("ChronoActionsComponent — haptic feedback sur -10s et +10s", () => {
 		expect(emitted).toBe(10);
 	});
 });
+
+describe('ChronoActionsComponent — over state', () => {
+	it('shows RESTART button when state is over', () => {
+		const { fixture } = createComponent('over');
+		const labels = fixture.debugElement.queryAll(By.css('.chrono-btn-label'));
+		const texts = labels.map((l) => l.nativeElement.textContent.trim());
+		// Should find a restart button (translate key chrono.restart - displayed as key since no translations loaded)
+		const hasRestartBtn = texts.some((t) => t.includes('restart') || t.includes('RESTART'));
+		expect(hasRestartBtn).toBeTrue();
+	});
+
+	it('emits restart output when restart button is clicked', () => {
+		const { fixture } = createComponent('over');
+		let emitted = false;
+		fixture.componentInstance.restart.subscribe(() => (emitted = true));
+		const btn = fixture.debugElement.query(By.css('.chrono-btn'));
+		btn.triggerEventHandler('click', null);
+		expect(emitted).toBeTrue();
+	});
+
+	it('does not show start/pause buttons in over state', () => {
+		const { fixture } = createComponent('over');
+		const btns = fixture.debugElement.queryAll(By.css('.chrono-btn'));
+		// Only the restart button should be present
+		expect(btns.length).toBe(1);
+	});
+});

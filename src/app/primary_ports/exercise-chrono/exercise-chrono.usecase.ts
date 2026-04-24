@@ -1,5 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { ExerciseChronoService } from "../../core_logic/exercise-chrono/exercise-chrono.service";
+import { ChronoCustomSettings } from "../../core_logic/exercise-chrono/chrono-custom-settings";
 
 @Injectable({ providedIn: "root" })
 export class ExerciseChronoUseCase {
@@ -10,6 +11,7 @@ export class ExerciseChronoUseCase {
 	readonly timeSeconds = this.service.timeSeconds;
 	readonly seriesCount = this.service.seriesCount;
 	readonly soundEnabled = this.service.soundEnabled;
+	readonly settings = this.service.settings;
 
 	toggleSound(): void {
 		this.service.toggleSound();
@@ -57,5 +59,13 @@ export class ExerciseChronoUseCase {
 
 	addTime(seconds: number): void {
 		this.service.addTime(seconds);
+	}
+
+	applyCustomSettings(s: ChronoCustomSettings): void {
+		this.service.applyCustomSettings(s);
+	}
+
+	restart(): void {
+		this.service.restart();
 	}
 }

@@ -42,10 +42,14 @@ function buildUseCase() {
 		reset: jasmine.createSpy("reset"),
 		toggleSound: jasmine.createSpy("toggleSound"),
 		addTime: jasmine.createSpy("addTime"),
+		applyCustomSettings: jasmine.createSpy("applyCustomSettings"),
+		restart: jasmine.createSpy("restart"),
+		settings: signal({ breakDuration: 60, repetitions: null, totalSets: null }),
 	};
 }
 
 function createComponent(queryParams: Record<string, string> = {}) {
+	localStorage.removeItem("egn_chrono_custom_settings");
 	const useCaseSpy = buildUseCase();
 	const locationSpy = { back: jasmine.createSpy("back") };
 
@@ -101,12 +105,12 @@ describe("ExerciseChronoComponent — label durée de repos", () => {
 		expect(label).toBeNull();
 	});
 
-	it('affiche la durée de repos formatée dans le label (120s → "2:00 repos")', () => {
+	it('affiche la durée de repos formatée dans le label (60s -> "1:00 repos")', () => {
 		const { fixture } = createComponent({});
 
 		const label = fixture.debugElement.query(By.css(".break-duration-label"));
 
-		expect(label.nativeElement.textContent.trim()).toBe("2:00 repos");
+		expect(label.nativeElement.textContent.trim()).toBe("1:00 repos");
 	});
 });
 
@@ -138,7 +142,7 @@ describe("ExerciseChronoComponent — popup durée de repos", () => {
 		fixture.detectChanges();
 
 		const popup = fixture.debugElement.query(By.css("app-edit-duration-popup"));
-		expect(popup.componentInstance.initialSeconds()).toBe(120);
+		expect(popup.componentInstance.initialSeconds()).toBe(60);
 	});
 
 	it("confirmer le popup met à jour _breakDuration et appelle updateBreakDuration", () => {
@@ -166,7 +170,7 @@ describe("ExerciseChronoComponent — popup durée de repos", () => {
 		fixture.detectChanges();
 
 		expect(useCaseSpy.updateBreakDuration).toHaveBeenCalledWith(180);
-		expect(useCaseSpy.initWithBreakDuration).not.toHaveBeenCalledWith(180);
+		// initWithBreakDuration is no longer called in the new flow; applyCustomSettings is used instead
 	});
 
 	it("annuler le popup masque le popup sans modifier _breakDuration", () => {
@@ -181,8 +185,8 @@ describe("ExerciseChronoComponent — popup durée de repos", () => {
 
 		const popupAfter = fixture.debugElement.query(By.css("app-edit-duration-popup"));
 		expect(popupAfter).toBeNull();
-		expect(fixture.componentInstance._breakDuration()).toBe(120);
-		expect(useCaseSpy.initWithBreakDuration).toHaveBeenCalledTimes(1); // only ngOnInit call
+		expect(fixture.componentInstance._breakDuration()).toBe(60);
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledTimes(1); // only ngOnInit call
 	});
 });
 
@@ -295,5 +299,30 @@ describe("ExerciseChronoComponent — iOS silent warning", () => {
 
 		const warning = fixture.debugElement.query(By.css(".ios-silent-warning"));
 		expect(warning).toBeNull();
+	});
+});
+
+describe('ExerciseChronoComponent — Story 6: init flow and settings panel', () => {
+	it('ngOnInit with no breakDuration param calls applyCustomSettings with default settings', () => {
+		const { useCaseSpy } = createComponent({});
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith({
+			breakDuration: 60, repetitions: null, totalSets: null
+		});
+	});
+
+	it('ngOnInit with breakDuration=90 calls applyCustomSettings with breakDuration=90', () => {
+		const { useCaseSpy } = createComponent({ breakDuration: '90' });
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith(
+			jasmine.objectContaining({ breakDuration: 90 })
+		);
+	});
+
+	it('restart event from chrono-actions calls useCase.restart()', () => {
+		const { fixture, useCaseSpy } = createComponent({});
+		useCaseSpy.chronoState.set('over');
+		fixture.detectChanges();
+		const actions = fixture.debugElement.query(By.css('app-chrono-actions'));
+		actions.componentInstance.restart.emit();
+		expect(useCaseSpy.restart).toHaveBeenCalledTimes(1);
 	});
 });

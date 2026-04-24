@@ -1,0 +1,42 @@
+<div class="overlay" (click)="cancelled.emit()">
+	<div class="panel-card" (click)="$event.stopPropagation()">
+		<h2 class="panel-title">{{ "chrono.customSettings" | translate }}</h2>
+
+		<!-- Break duration -->
+		<div class="settings-row">
+			<span class="settings-label">{{ "common.rest" | translate }}</span>
+			<div class="stepper">
+				<button class="stepper-btn" (click)="onBreakDurationChange(-10)">-10s</button>
+				<span class="stepper-value">{{ breakDurationVal() }}s</span>
+				<button class="stepper-btn" (click)="onBreakDurationChange(10)">+10s</button>
+			</div>
+		</div>
+
+		<!-- Repetitions -->
+		<div class="settings-row">
+			<span class="settings-label">{{ "chrono.repetitions" | translate }}</span>
+			<div class="stepper">
+				<button class="stepper-btn" [disabled]="repetitionsInfinite()" (click)="onRepetitionsChange(-1)">-</button>
+				<span class="stepper-value">{{ repetitionsInfinite() ? ("chrono.infinite" | translate) : repetitionsVal() }}</span>
+				<button class="stepper-btn" [disabled]="repetitionsInfinite()" (click)="onRepetitionsChange(1)">+</button>
+				<button class="infinity-btn" [class.active]="repetitionsInfinite()" (click)="toggleRepetitionsInfinite()">&#8734;</button>
+			</div>
+		</div>
+
+		<!-- Total sets -->
+		<div class="settings-row">
+			<span class="settings-label">{{ "chrono.totalSets" | translate }}</span>
+			<div class="stepper">
+				<button class="stepper-btn" [disabled]="totalSetsInfinite()" (click)="onTotalSetsChange(-1)">-</button>
+				<span class="stepper-value">{{ totalSetsInfinite() ? ("chrono.infinite" | translate) : totalSetsVal() }}</span>
+				<button class="stepper-btn" [disabled]="totalSetsInfinite()" (click)="onTotalSetsChange(1)">+</button>
+				<button class="infinity-btn" [class.active]="totalSetsInfinite()" (click)="toggleTotalSetsInfinite()">&#8734;</button>
+			</div>
+		</div>
+
+		<div class="actions">
+			<button class="btn-cancel" (click)="cancelled.emit()">{{ "common.cancel" | translate }}</button>
+			<button class="btn-primary" (click)="onConfirm()">{{ "common.confirm" | translate }}</button>
+		</div>
+	</div>
+</div>

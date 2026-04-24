@@ -10,6 +10,7 @@
 		(incrementSeries)="exerciseChronoUseCase.incrementSeriesCount()"
 		(decrementSeries)="exerciseChronoUseCase.decrementSeriesCount()"
 	/>
+	<button class="settings-gear-btn" (click)="showCustomSettingsPanel.set(true)">&#9881;</button>
 	@if (isIos) {
 		<p class="ios-silent-warning">{{ "chrono.iosSilentWarning" | translate }}</p>
 	}
@@ -30,6 +31,7 @@
 			(goBreak)="haptic.vibrate(); exerciseChronoUseCase.goBreak()"
 			(goTraining)="haptic.vibrate(); exerciseChronoUseCase.goTraining()"
 			(addTime)="exerciseChronoUseCase.addTime($event)"
+			(restart)="exerciseChronoUseCase.restart()"
 		/>
 	</div>
 </div>
@@ -39,5 +41,13 @@
 		[initialSeconds]="_breakDuration()"
 		(confirmed)="onBreakDurationConfirmed($event)"
 		(cancelled)="showBreakDurationPopup.set(false)"
+	/>
+}
+
+@if (showCustomSettingsPanel()) {
+	<app-chrono-custom-settings-panel
+		[initialSettings]="exerciseChronoUseCase.settings()"
+		(confirmed)="onCustomSettingsConfirmed($event)"
+		(cancelled)="showCustomSettingsPanel.set(false)"
 	/>
 }

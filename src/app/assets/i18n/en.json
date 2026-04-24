@@ -125,7 +125,13 @@
 		"ready": "Ready",
 		"training": "Training",
 		"series": "Set",
-		"iosSilentWarning": "Sound disabled when phone is in silent mode"
+		"iosSilentWarning": "Sound disabled when phone is in silent mode",
+		"customSettings": "Custom settings",
+		"repetitions": "Repetitions",
+		"totalSets": "Total sets",
+		"infinite": "∞",
+		"over": "OVER",
+		"restart": "RESTART"
 	},
 	"days": {
 		"mon": "M",

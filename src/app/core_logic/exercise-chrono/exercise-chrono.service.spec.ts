@@ -538,4 +538,125 @@ describe("ExerciseChronoService", () => {
 			expect(service.chronoState()).toBe("initial");
 		});
 	});
+
+	describe('"over" state and OVER trigger', () => {
+		it('goBreak() sets state to "over" when totalSets=1 and 1 phase completed', () => {
+			service.init({ breakDuration: 60, repetitions: null, totalSets: 1 });
+			service.start();
+			service.goBreak();
+			expect(service.chronoState()).toBe('over');
+		});
+
+		it('goBreak() sets state to "break" when totalSets=null (infinite)', () => {
+			service.init({ breakDuration: 60, repetitions: null, totalSets: null });
+			service.start();
+			service.goBreak();
+			expect(service.chronoState()).toBe('break');
+		});
+
+		it('goBreak() sets state to "break" when completedPhases < totalSets', () => {
+			service.init({ breakDuration: 60, repetitions: null, totalSets: 3 });
+			service.start();
+			service.goBreak();
+			expect(service.chronoState()).toBe('break');
+		});
+
+		it('goBreak() goes over after totalSets=2 phases when repetitions=null', () => {
+			service.init({ breakDuration: 60, repetitions: null, totalSets: 2 });
+			service.start(); // completedPhases=1
+			service.goBreak(); // not over
+			expect(service.chronoState()).toBe('break');
+			service.goTraining(); // completedPhases=2
+			service.goBreak(); // over
+			expect(service.chronoState()).toBe('over');
+		});
+
+		it('goBreak() uses totalSets * repetitions as effective total phases', () => {
+			service.init({ breakDuration: 60, repetitions: 3, totalSets: 2 });
+			// Effective = 6 phases
+			service.start(); // completedPhases=1
+			for (let i = 0; i < 4; i++) {
+				service.goBreak();
+				service.goTraining(); // completedPhases increases each time
+			}
+			// completedPhases=5, not over yet
+			service.goBreak();
+			expect(service.chronoState()).toBe('break');
+			service.goTraining(); // completedPhases=6
+			service.goBreak(); // over
+			expect(service.chronoState()).toBe('over');
+		});
+	});
+
+	describe('restart()', () => {
+		it('sets state to "initial" from "over"', () => {
+			service.init({ breakDuration: 60, repetitions: null, totalSets: 1 });
+			service.start();
+			service.goBreak(); // over
+			service.restart();
+			expect(service.chronoState()).toBe('initial');
+		});
+
+		it('resets seriesCount to 0', () => {
+			service.init({ breakDuration: 60, repetitions: null, totalSets: 1 });
+			service.start();
+			service.restart();
+			expect(service.seriesCount()).toBe(0);
+		});
+
+		it('keeps settings unchanged', () => {
+			const settings = { breakDuration: 90, repetitions: 3, totalSets: 2 };
+			service.init(settings);
+			service.restart();
+			expect(service.settings()).toEqual(settings);
+		});
+	});
+
+	describe('applyCustomSettings()', () => {
+		it('updates the settings signal', () => {
+			service.init(60);
+			const s = { breakDuration: 90, repetitions: 5, totalSets: null };
+			service.applyCustomSettings(s);
+			expect(service.settings()).toEqual(s);
+		});
+
+		it('persists settings to localStorage', () => {
+			service.init(60);
+			const s = { breakDuration: 90, repetitions: 5, totalSets: 2 };
+			service.applyCustomSettings(s);
+			const raw = localStorage.getItem('egn_chrono_custom_settings');
+			expect(raw).not.toBeNull();
+			expect(JSON.parse(raw!)).toEqual(s);
+		});
+	});
+
+	describe('persist() and restoreFromPersist() with settings', () => {
+		it('persist() writes settings to egn_exercise_chrono', () => {
+			const s = { breakDuration: 90, repetitions: 3, totalSets: 2 };
+			service.init(s);
+			service.start();
+			const raw = localStorage.getItem('egn_exercise_chrono');
+			const data = JSON.parse(raw!);
+			expect(data.settings).toEqual(s);
+		});
+
+		it('restoreFromPersist() restores settings from stored JSON', () => {
+			const s = { breakDuration: 90, repetitions: 3, totalSets: 2 };
+			localStorage.setItem('egn_exercise_chrono', JSON.stringify({
+				breakDuration: 90, timerStartedAtMs: 0, timeAtStart: 0, state: 'initial',
+				settings: s, completedPhases: 0
+			}));
+			service.restoreFromPersist();
+			expect(service.settings()).toEqual(s);
+		});
+
+		it('restoreFromPersist() uses default settings when field is missing (migration)', () => {
+			localStorage.setItem('egn_exercise_chrono', JSON.stringify({
+				breakDuration: 60, timerStartedAtMs: 0, timeAtStart: 0, state: 'initial'
+			}));
+			service.restoreFromPersist();
+			expect(service.settings().breakDuration).toBe(60);
+			expect(service.settings().repetitions).toBeNull();
+		});
+	});
 });

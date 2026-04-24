@@ -2,8 +2,9 @@ import { computed, inject, Injectable, PLATFORM_ID, signal } from "@angular/core
 import { isPlatformBrowser } from "@angular/common";
 import { Capacitor } from "@capacitor/core";
 import { NativeAudio } from "@capacitor-community/native-audio";
+import { ChronoCustomSettings, defaultCustomSettings, saveCustomSettings } from "./chrono-custom-settings";
 
-export type ChronoState = "initial" | "training" | "training_paused" | "break" | "break_paused";
+export type ChronoState = "initial" | "training" | "training_paused" | "break" | "break_paused" | "over";
 
 @Injectable({ providedIn: "root" })
 export class ExerciseChronoService {
@@ -30,6 +31,11 @@ export class ExerciseChronoService {
 	/** Value of _timeSeconds at the moment the current timer segment was started. */
 	private _timeAtStart: number = 0;
 	private _soundsPreloaded = false;
+	/** Total training phases completed. */
+	private _completedPhases: number = 0;
+
+	private readonly _settings = signal<ChronoCustomSettings>(defaultCustomSettings(60));
+	readonly settings = this._settings.asReadonly();
 
 	toggleSound(): void {
 		this._soundEnabled.update((v) => !v);
@@ -44,23 +50,59 @@ export class ExerciseChronoService {
 		}
 	}
 
-	/** Called once on page load to configure break duration. Does NOT start the timer. */
-	init(breakDuration: number): void {
+	/** Called once on page load to configure. Does NOT start the timer. */
+	init(breakDurationOrSettings: number | ChronoCustomSettings): void {
 		this.clearTimer();
 		this.removeVisibilityListener();
-		this._breakDuration.set(breakDuration);
+		if (typeof breakDurationOrSettings === "number") {
+			this._breakDuration.set(breakDurationOrSettings);
+			this._settings.set(defaultCustomSettings(breakDurationOrSettings));
+		} else {
+			this._breakDuration.set(breakDurationOrSettings.breakDuration);
+			this._settings.set(breakDurationOrSettings);
+		}
 		this._chronoState.set("initial");
 		this._timeSeconds.set(0);
 		this._seriesCount.set(0);
+		this._completedPhases = 0;
 		this.preloadSounds();
 	}
 
-	/** Start training from initial state. */
+	/** Update settings without resetting the session. */
+	applyCustomSettings(s: ChronoCustomSettings): void {
+		this._settings.set(s);
+		this._breakDuration.set(s.breakDuration);
+		saveCustomSettings(s);
+		this.persist();
+	}
+
+	/** Reset to initial state, keep settings. */
+	restart(): void {
+		this.clearTimer();
+		this.removeVisibilityListener();
+		this._chronoState.set("initial");
+		this._timeSeconds.set(0);
+		this._seriesCount.set(0);
+		this._completedPhases = 0;
+		saveCustomSettings(this._settings());
+		this.persist();
+	}
+
+	/** Returns true if the last phase has been completed. */
+	isLastPhase(): boolean {
+		const s = this._settings();
+		const effective = this.effectiveTotalPhases(s);
+		if (effective === null) return false;
+		return this._completedPhases >= effective;
+	}
+
+		/** Start training from initial state. */
 	start(): void {
 		if (this._chronoState() !== "initial") return;
 		this._chronoState.set("training");
 		this._timeSeconds.set(0);
 		this._seriesCount.update((n) => n + 1);
+		this._completedPhases = 1;
 		this.startCountup();
 		this.persist();
 	}
@@ -112,9 +154,16 @@ export class ExerciseChronoService {
 		}
 	}
 
-	/** Switch from training (or training_paused) to break. */
+	/** Switch from training (or training_paused) to break, or OVER if last phase. */
 	goBreak(): void {
 		this.clearTimer();
+		const settings = this._settings();
+		const effective = this.effectiveTotalPhases(settings);
+		if (effective !== null && this._completedPhases >= effective) {
+			this._chronoState.set("over");
+			this.persist();
+			return;
+		}
 		this._chronoState.set("break");
 		this._timeSeconds.set(this._breakDuration());
 		this.startCountdown();
@@ -127,6 +176,7 @@ export class ExerciseChronoService {
 		this._chronoState.set("training");
 		this._timeSeconds.set(0);
 		this._seriesCount.update((n) => n + 1);
+		this._completedPhases += 1;
 		this.startCountup();
 		this.persist();
 	}
@@ -146,6 +196,7 @@ export class ExerciseChronoService {
 				this._chronoState.set("training");
 				this._timeSeconds.set(0);
 				this._seriesCount.update((n) => n + 1);
+				this._completedPhases += 1;
 				this.startCountup();
 			} else if (remaining === 10) this.playCountdownSound("ten");
 			else if (remaining === 3) this.playCountdownSound("three");
@@ -191,6 +242,8 @@ export class ExerciseChronoService {
 				timerStartedAtMs: this._timerStartedAtMs,
 				timeAtStart: this._timeAtStart,
 				state: this._chronoState(),
+				settings: this._settings(),
+				completedPhases: this._completedPhases,
 			})
 		);
 	}
@@ -205,11 +258,19 @@ export class ExerciseChronoService {
 				timerStartedAtMs: number;
 				timeAtStart: number;
 				state: ChronoState;
+				settings?: ChronoCustomSettings;
+				completedPhases?: number;
 			};
 			this._breakDuration.set(data.breakDuration);
 			this._timerStartedAtMs = data.timerStartedAtMs;
 			this._timeAtStart = data.timeAtStart;
 			this._chronoState.set(data.state);
+			this._completedPhases = data.completedPhases ?? 0;
+			if (data.settings) {
+				this._settings.set(data.settings);
+			} else {
+				this._settings.set(defaultCustomSettings(data.breakDuration));
+			}
 			const elapsed = Math.floor((Date.now() - data.timerStartedAtMs) / 1000);
 			const s = data.state;
 			if (s === "training") {
@@ -223,6 +284,7 @@ export class ExerciseChronoService {
 					this._chronoState.set("training");
 					this._timeSeconds.set(0);
 					this._seriesCount.update((n) => n + 1);
+					this._completedPhases += 1;
 					this.startCountup();
 				}
 			} else if (s === "training_paused") {
@@ -251,6 +313,12 @@ export class ExerciseChronoService {
 			this._timerStartedAtMs = Date.now();
 			this._timeAtStart = this._timeSeconds();
 		}
+	}
+
+	private effectiveTotalPhases(s: ChronoCustomSettings): number | null {
+		if (s.totalSets === null) return null;
+		if (s.repetitions === null) return s.totalSets;
+		return s.totalSets * s.repetitions;
 	}
 
 	private async preloadSounds(): Promise<void> {
