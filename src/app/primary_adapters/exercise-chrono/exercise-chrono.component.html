@@ -2,13 +2,12 @@
 	<app-chrono-header
 		[hasExercise]="hasExercise()"
 		[seriesCount]="seriesCount()"
-		[formattedBreakDuration]="formattedBreakDuration()"
 		[soundEnabled]="soundEnabled()"
 		(back)="haptic.vibrate(); location.back()"
-		(openBreakDurationPopup)="showBreakDurationPopup.set(true)"
 		(toggleSound)="exerciseChronoUseCase.toggleSound()"
 		(incrementSeries)="exerciseChronoUseCase.incrementSeriesCount()"
 		(decrementSeries)="exerciseChronoUseCase.decrementSeriesCount()"
+		(openSettings)="showSettingsPanel.set(true)"
 	/>
 	@if (isIos) {
 		<p class="ios-silent-warning">{{ "chrono.iosSilentWarning" | translate }}</p>
@@ -20,6 +19,7 @@
 			[ringColor]="ringColor()"
 			[ringOffset]="ringOffset()"
 			[isBlinking]="isBlinking()"
+			[chronoState]="chronoState()"
 		/>
 		<app-chrono-actions
 			[chronoState]="chronoState()"
@@ -30,6 +30,7 @@
 			(goBreak)="haptic.vibrate(); exerciseChronoUseCase.goBreak()"
 			(goTraining)="haptic.vibrate(); exerciseChronoUseCase.goTraining()"
 			(addTime)="exerciseChronoUseCase.addTime($event)"
+			(restart)="exerciseChronoUseCase.restart()"
 		/>
 	</div>
 </div>
@@ -39,5 +40,13 @@
 		[initialSeconds]="_breakDuration()"
 		(confirmed)="onBreakDurationConfirmed($event)"
 		(cancelled)="showBreakDurationPopup.set(false)"
+	/>
+}
+
+@if (showSettingsPanel()) {
+	<app-chrono-custom-settings-panel
+		[initialSettings]="settings()"
+		(confirmed)="onSettingsConfirmed($event)"
+		(cancelled)="onSettingsCancelled()"
 	/>
 }

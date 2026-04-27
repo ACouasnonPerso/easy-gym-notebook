@@ -186,23 +186,16 @@
 			aria-label="Rate exercise"
 		>
 			@if (exercise().rating) {
-				<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-					<polygon
-						points="12,2 15.1,8.3 22,9.2 17,14.1 18.2,21 12,17.8 5.8,21 7,14.1 2,9.2 8.9,8.3"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linejoin="round"
-					/>
+				<svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+					<rect x="0.5" y="9" width="3" height="5" rx="1" fill="#22c55e" />
+					<rect x="5.5" y="5" width="3" height="9" rx="1" fill="#f5a623" />
+					<rect x="10.5" y="1" width="3" height="13" rx="1" fill="#ef4444" />
 				</svg>
 			} @else {
-				<svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-					<polygon
-						points="12,2 15.1,8.3 22,9.2 17,14.1 18.2,21 12,17.8 5.8,21 7,14.1 2,9.2 8.9,8.3"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linejoin="round"
-						fill="none"
-					/>
+				<svg width="14" height="14" viewBox="0 0 14 14" fill="none" opacity="0.35">
+					<rect x="0.5" y="9" width="3" height="5" rx="1" fill="#22c55e" />
+					<rect x="5.5" y="5" width="3" height="9" rx="1" fill="#f5a623" />
+					<rect x="10.5" y="1" width="3" height="13" rx="1" fill="#ef4444" />
 				</svg>
 			}
 		</button>

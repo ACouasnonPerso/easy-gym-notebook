@@ -12,8 +12,7 @@ function createComponent(overrides: { hasExercise?: boolean; seriesCount?: numbe
 	const fixture = TestBed.createComponent(ChronoHeaderComponent);
 	fixture.componentRef.setInput("hasExercise", overrides.hasExercise ?? false);
 	fixture.componentRef.setInput("seriesCount", overrides.seriesCount ?? 0);
-	fixture.componentRef.setInput("formattedBreakDuration", "2:00");
-	fixture.componentRef.setInput("soundEnabled", overrides.soundEnabled ?? true);
+fixture.componentRef.setInput("soundEnabled", overrides.soundEnabled ?? true);
 	fixture.detectChanges();
 	return fixture;
 }

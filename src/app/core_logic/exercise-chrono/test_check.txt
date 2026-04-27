@@ -1,0 +1,4 @@
+
+describe("ExerciseChronoService custom settings Story2", () => {
+	it("test", () => { expect(true).toBe(true); });
+});

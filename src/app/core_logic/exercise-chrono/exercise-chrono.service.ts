@@ -2,8 +2,9 @@ import { computed, inject, Injectable, PLATFORM_ID, signal } from "@angular/core
 import { isPlatformBrowser } from "@angular/common";
 import { Capacitor } from "@capacitor/core";
 import { NativeAudio } from "@capacitor-community/native-audio";
+import { ChronoCustomSettings, defaultCustomSettings } from "./chrono-custom-settings";
 
-export type ChronoState = "initial" | "training" | "training_paused" | "break" | "break_paused";
+export type ChronoState = "initial" | "training" | "training_paused" | "break" | "break_paused" | "over";
 
 @Injectable({ providedIn: "root" })
 export class ExerciseChronoService {
@@ -11,7 +12,6 @@ export class ExerciseChronoService {
 
 	private readonly _chronoState = signal<ChronoState>("initial");
 	readonly chronoState = this._chronoState.asReadonly();
-	/** Backward-compat: 'exercise' when training, 'pause' when on break */
 	readonly mode = computed<"pause" | "exercise">(() => {
 		const s = this._chronoState();
 		return s === "break" || s === "break_paused" ? "pause" : "exercise";
@@ -25,17 +25,20 @@ export class ExerciseChronoService {
 	readonly soundEnabled = this._soundEnabled.asReadonly();
 	private _intervalId: ReturnType<typeof setInterval> | null = null;
 	private _visibilityChangeListener: (() => void) | null = null;
-	/** Timestamp (ms) at which the current timer segment was started. */
 	private _timerStartedAtMs: number = 0;
-	/** Value of _timeSeconds at the moment the current timer segment was started. */
 	private _timeAtStart: number = 0;
 	private _soundsPreloaded = false;
+
+	private readonly _settings = signal<ChronoCustomSettings>(defaultCustomSettings(undefined));
+	readonly settings = this._settings.asReadonly();
+
+	private readonly _completedReps = signal<number>(0);
+	readonly completedReps = this._completedReps.asReadonly();
 
 	toggleSound(): void {
 		this._soundEnabled.update((v) => !v);
 	}
 
-	/** Update break duration without resetting chrono state. */
 	updateBreakDuration(breakDuration: number): void {
 		this._breakDuration.set(breakDuration);
 		const s = this._chronoState();
@@ -44,7 +47,6 @@ export class ExerciseChronoService {
 		}
 	}
 
-	/** Called once on page load to configure break duration. Does NOT start the timer. */
 	init(breakDuration: number): void {
 		this.clearTimer();
 		this.removeVisibilityListener();
@@ -55,17 +57,41 @@ export class ExerciseChronoService {
 		this.preloadSounds();
 	}
 
-	/** Start training from initial state. */
-	start(): void {
-		if (this._chronoState() !== "initial") return;
-		this._chronoState.set("training");
-		this._timeSeconds.set(0);
-		this._seriesCount.update((n) => n + 1);
-		this.startCountup();
+	applyCustomSettings(s: ChronoCustomSettings): void {
+		this._settings.set(s);
+		this._completedReps.set(0);
+		const bd = s.breakDuration ?? 60;
+		this.init(bd);
 		this.persist();
 	}
 
-	/** Pause current training or break timer. */
+	restart(): void {
+		this._completedReps.set(0);
+		const bd = this._settings().breakDuration ?? 60;
+		this.clearTimer();
+		this.removeVisibilityListener();
+		this._breakDuration.set(bd);
+		this._chronoState.set("initial");
+		this._timeSeconds.set(0);
+		this._seriesCount.set(0);
+		this.persist();
+	}
+
+	start(): void {
+		if (this._chronoState() !== "initial") return;
+		this._chronoState.set("training");
+		this._seriesCount.update((n) => n + 1);
+		const exerciseDuration = this._settings().exerciseDuration;
+		if (exerciseDuration !== null) {
+			this._timeSeconds.set(exerciseDuration);
+			this.startExerciseCountdown();
+		} else {
+			this._timeSeconds.set(0);
+			this.startCountup();
+		}
+		this.persist();
+	}
+
 	pause(): void {
 		const s = this._chronoState();
 		if (s === "training") {
@@ -81,12 +107,16 @@ export class ExerciseChronoService {
 		}
 	}
 
-	/** Resume from a paused state. */
 	resume(): void {
 		const s = this._chronoState();
 		if (s === "training_paused") {
 			this._chronoState.set("training");
-			this.startCountup();
+			const exerciseDuration = this._settings().exerciseDuration;
+			if (exerciseDuration !== null) {
+				this.startExerciseCountdown();
+			} else {
+				this.startCountup();
+			}
 			this.persist();
 		} else if (s === "break_paused") {
 			this._chronoState.set("break");
@@ -95,14 +125,19 @@ export class ExerciseChronoService {
 		}
 	}
 
-	/** Reset timer in place: stays in same mode (training or break) but time resets to 0 / breakDuration. */
 	reset(): void {
 		const s = this._chronoState();
 		this.clearTimer();
 		if (s === "training_paused") {
 			this._chronoState.set("training");
-			this._timeSeconds.set(0);
-			this.startCountup();
+			const exerciseDuration = this._settings().exerciseDuration;
+			if (exerciseDuration !== null) {
+				this._timeSeconds.set(exerciseDuration);
+				this.startExerciseCountdown();
+			} else {
+				this._timeSeconds.set(0);
+				this.startCountup();
+			}
 			this.persist();
 		} else if (s === "break_paused") {
 			this._chronoState.set("break");
@@ -112,23 +147,74 @@ export class ExerciseChronoService {
 		}
 	}
 
-	/** Switch from training (or training_paused) to break. */
 	goBreak(): void {
 		this.clearTimer();
 		this._chronoState.set("break");
 		this._timeSeconds.set(this._breakDuration());
-		this.startCountdown();
+		const breakDuration = this._settings().breakDuration;
+		if (breakDuration !== null) {
+			this.startCountdown();
+		}
 		this.persist();
 	}
 
-	/** Switch from break (or break_paused) to training. */
 	goTraining(): void {
 		this.clearTimer();
-		this._chronoState.set("training");
-		this._timeSeconds.set(0);
+		this.beginNextTraining();
+	}
+
+	private beginNextTraining(): void {
+		this._completedReps.update((n) => n + 1);
 		this._seriesCount.update((n) => n + 1);
-		this.startCountup();
+		const reps = this._settings().repetitions;
+		if (reps !== null && this._seriesCount() > reps) {
+			this._chronoState.set("over");
+			this.persist();
+			return;
+		}
+		this._chronoState.set("training");
+		const exerciseDuration = this._settings().exerciseDuration;
+		if (exerciseDuration !== null) {
+			this._timeSeconds.set(exerciseDuration);
+			this.startExerciseCountdown();
+		} else {
+			this._timeSeconds.set(0);
+			this.startCountup();
+		}
 		this.persist();
+	}
+
+	startExerciseCountdown(): void {
+		this._timerStartedAtMs = Date.now();
+		this._timeAtStart = this._timeSeconds();
+		this.addVisibilityListener("countdown");
+		this._intervalId = setInterval(() => {
+			const elapsed = Math.floor((Date.now() - this._timerStartedAtMs) / 1000);
+			const remaining = this._timeAtStart - elapsed;
+			this._timeSeconds.set(remaining);
+			if (remaining <= 0) {
+				this.clearTimer();
+				this.removeVisibilityListener();
+				this.playBeep();
+				this.onExerciseEnd();
+			}
+		}, 1000);
+	}
+
+	private onExerciseEnd(): void {
+		const reps = this._settings().repetitions;
+		if (reps !== null && this._seriesCount() >= reps) {
+			this._chronoState.set("over");
+			this.persist();
+		} else {
+			this._chronoState.set("break");
+			this._timeSeconds.set(this._breakDuration());
+			const breakDuration = this._settings().breakDuration;
+			if (breakDuration !== null) {
+				this.startCountdown();
+			}
+			this.persist();
+		}
 	}
 
 	startCountdown(): void {
@@ -143,10 +229,7 @@ export class ExerciseChronoService {
 				this.clearTimer();
 				this.removeVisibilityListener();
 				this.playBeep();
-				this._chronoState.set("training");
-				this._timeSeconds.set(0);
-				this._seriesCount.update((n) => n + 1);
-				this.startCountup();
+				this.beginNextTraining();
 			} else if (remaining === 10) this.playCountdownSound("ten");
 			else if (remaining === 3) this.playCountdownSound("three");
 			else if (remaining === 2) this.playCountdownSound("two");
@@ -191,6 +274,8 @@ export class ExerciseChronoService {
 				timerStartedAtMs: this._timerStartedAtMs,
 				timeAtStart: this._timeAtStart,
 				state: this._chronoState(),
+				settings: this._settings(),
+				completedReps: this._completedReps(),
 			})
 		);
 	}
@@ -205,11 +290,19 @@ export class ExerciseChronoService {
 				timerStartedAtMs: number;
 				timeAtStart: number;
 				state: ChronoState;
+				settings?: ChronoCustomSettings;
+				completedReps?: number;
 			};
 			this._breakDuration.set(data.breakDuration);
 			this._timerStartedAtMs = data.timerStartedAtMs;
 			this._timeAtStart = data.timeAtStart;
 			this._chronoState.set(data.state);
+			if (data.settings) {
+				this._settings.set(data.settings);
+			}
+			if (data.completedReps !== undefined) {
+				this._completedReps.set(data.completedReps);
+			}
 			const elapsed = Math.floor((Date.now() - data.timerStartedAtMs) / 1000);
 			const s = data.state;
 			if (s === "training") {
@@ -230,6 +323,7 @@ export class ExerciseChronoService {
 			} else if (s === "break_paused") {
 				this._timeSeconds.set(data.timeAtStart);
 			}
+			// "over" and "initial": no timer to start
 		} catch (e) {
 			/* ignore malformed data */
 		}

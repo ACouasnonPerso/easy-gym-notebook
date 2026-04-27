@@ -9,6 +9,8 @@ import { HapticService } from "../../core_logic/shared/haptic.service";
 import { ChronoHeaderComponent } from "./chrono-header.component";
 import { ChronoRingComponent } from "./chrono-ring.component";
 import { ChronoActionsComponent } from "./chrono-actions.component";
+import { ChronoCustomSettingsPanelComponent } from "./chrono-custom-settings-panel.component";
+import { ChronoCustomSettings, loadCustomSettings, defaultCustomSettings } from "../../core_logic/exercise-chrono/chrono-custom-settings";
 
 @Component({
 	selector: "app-exercise-chrono",
@@ -19,6 +21,7 @@ import { ChronoActionsComponent } from "./chrono-actions.component";
 		ChronoHeaderComponent,
 		ChronoRingComponent,
 		ChronoActionsComponent,
+		ChronoCustomSettingsPanelComponent,
 		TranslatePipe,
 	],
 	templateUrl: "./exercise-chrono.component.html",
@@ -35,12 +38,14 @@ export class ExerciseChronoComponent implements OnInit {
 	readonly _breakDuration = signal(60);
 	readonly hasExercise = signal(false);
 	readonly showBreakDurationPopup = signal(false);
+	readonly showSettingsPanel = signal(false);
 
 	readonly circumference = 2 * Math.PI * 90;
 
 	readonly chronoState = this.exerciseChronoUseCase.chronoState;
 	readonly seriesCount = this.exerciseChronoUseCase.seriesCount;
 	readonly soundEnabled = this.exerciseChronoUseCase.soundEnabled;
+	readonly settings = this.exerciseChronoUseCase.settings;
 
 	readonly formattedTime = computed(() => {
 		const s = this.exerciseChronoUseCase.timeSeconds();
@@ -73,11 +78,13 @@ export class ExerciseChronoComponent implements OnInit {
 		const state = this.exerciseChronoUseCase.chronoState();
 		if (state === "break" || state === "break_paused") return this.translate.instant("common.break");
 		if (state === "initial") return this.translate.instant("chrono.ready");
+		if (state === "over") return this.translate.instant("chrono.over");
 		return this.translate.instant("chrono.training");
 	});
 
 	readonly ringColor = computed(() => {
 		const state = this.exerciseChronoUseCase.chronoState();
+		if (state === "over") return "#888888";
 		return state === "break" || state === "break_paused" ? "#f5a623" : "#4caf50";
 	});
 
@@ -85,15 +92,37 @@ export class ExerciseChronoComponent implements OnInit {
 		const raw = this.route.snapshot.queryParams["breakDuration"];
 		const parsed = parseInt(raw, 10);
 		const hasParam = raw !== undefined && raw !== null && !isNaN(parsed);
-		const n = hasParam ? parsed : 60;
-		this._breakDuration.set(n);
 		this.hasExercise.set(hasParam);
-		this.exerciseChronoUseCase.initWithBreakDuration(n);
+
+		// Priority: persisted settings > route param seed > default
+		const persisted = loadCustomSettings();
+		let resolvedSettings: ChronoCustomSettings;
+		if (persisted) {
+			resolvedSettings = persisted;
+		} else {
+			const seed = hasParam ? parsed : undefined;
+			resolvedSettings = defaultCustomSettings(seed);
+		}
+
+		const breakDurationValue = resolvedSettings.breakDuration ?? 60;
+		this._breakDuration.set(breakDurationValue);
+		this.exerciseChronoUseCase.applyCustomSettings(resolvedSettings);
 	}
 
 	onBreakDurationConfirmed(seconds: number): void {
 		this._breakDuration.set(seconds);
 		this.showBreakDurationPopup.set(false);
 		this.exerciseChronoUseCase.updateBreakDuration(seconds);
+	}
+
+	onSettingsConfirmed(settings: ChronoCustomSettings): void {
+		this.showSettingsPanel.set(false);
+		const breakDurationValue = settings.breakDuration ?? 60;
+		this._breakDuration.set(breakDurationValue);
+		this.exerciseChronoUseCase.applyCustomSettings(settings);
+	}
+
+	onSettingsCancelled(): void {
+		this.showSettingsPanel.set(false);
 	}
 }

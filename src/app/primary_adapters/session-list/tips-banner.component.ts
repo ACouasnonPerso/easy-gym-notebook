@@ -2,12 +2,14 @@ import { Component, ChangeDetectionStrategy, input, inject, signal, computed, On
 import { TranslateModule } from "@ngx-translate/core";
 import { RequestReviewUseCase } from "../../primary_ports/session-list/request-review.usecase";
 
+const SHOW_TIPS_FOR_N_SESSIONS = 6;
+
 const ONBOARDING_TIPS = [
-	"Long press a session to duplicate it",
-	'Try to name an exercice "velo" or "running" to activate mode cardio 🏃‍♂️',
-	"The exercice automatically detect the muscles with the name 💪",
-	"You can rate the exercice difficulty 2️⃣0️⃣",
-	"Try to select the current year in stats to see your yearly heatmap 😉",
+	"sessionList.tips.0",
+	"sessionList.tips.1",
+	"sessionList.tips.2",
+	"sessionList.tips.3",
+	"sessionList.tips.4",
 ];
 
 @Component({
@@ -30,19 +32,24 @@ export class TipsBannerComponent implements OnDestroy {
 
 	private readonly _tipIntervalId: ReturnType<typeof setInterval>;
 
-	readonly onboardingTip = signal<string>(ONBOARDING_TIPS[Math.floor(Math.random() * ONBOARDING_TIPS.length)]);
+	private readonly _tipIndex = signal(Math.floor(Math.random() * ONBOARDING_TIPS.length));
+	readonly onboardingTip = computed(() => ONBOARDING_TIPS[this._tipIndex()]);
 
 	readonly showOnboarding = computed(() => {
 		const count = this.sessionCount();
-		return count > 0 && count < 4;
+		return count > 0 && count < SHOW_TIPS_FOR_N_SESSIONS;
 	});
 
 	constructor() {
 		this._tipIntervalId = setInterval(() => {
 			if (this.showOnboarding()) {
-				this.onboardingTip.set(ONBOARDING_TIPS[Math.floor(Math.random() * ONBOARDING_TIPS.length)]);
+				this.onNextTip();
 			}
-		}, 5000);
+		}, 10000);
+	}
+
+	onNextTip(): void {
+		this._tipIndex.update((i) => (i + 1) % ONBOARDING_TIPS.length);
 	}
 
 	ngOnDestroy(): void {
@@ -52,7 +59,7 @@ export class TipsBannerComponent implements OnDestroy {
 	readonly showReview = computed(() => {
 		const count = this.sessionCount();
 		const hasRequested = this.requestReviewUseCase.hasRequested();
-		return count >= 4 && !this.justReviewed() && !hasRequested && !this.dismissed();
+		return count >= SHOW_TIPS_FOR_N_SESSIONS && !this.justReviewed() && !hasRequested && !this.dismissed();
 	});
 
 	readonly showThanks = computed(() => {

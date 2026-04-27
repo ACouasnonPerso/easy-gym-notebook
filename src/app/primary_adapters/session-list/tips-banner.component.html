@@ -1,8 +1,8 @@
 @if (showOnboarding()) {
-	<div class="tips-banner">
+	<button class="tips-banner tips-banner--clickable" (click)="onNextTip()">
 		<span class="tips-icon">💡</span>
-		<span class="tips-text">{{ onboardingTip() }}</span>
-	</div>
+		<span class="tips-text">{{ onboardingTip() | translate }}</span>
+	</button>
 }
 
 @if (showReview()) {

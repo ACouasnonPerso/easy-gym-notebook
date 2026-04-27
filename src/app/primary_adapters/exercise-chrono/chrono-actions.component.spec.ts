@@ -65,3 +65,32 @@ describe("ChronoActionsComponent — haptic feedback sur -10s et +10s", () => {
 		expect(emitted).toBe(10);
 	});
 });
+
+describe("ChronoActionsComponent Story 5 - OVER state RESTART button", () => {
+	it("shows RESTART button when chronoState is over", () => {
+		const { fixture } = createComponent("over");
+		const restartBtn = fixture.debugElement.query(By.css("[data-testid='restart-btn']"));
+		expect(restartBtn).not.toBeNull();
+	});
+
+	it("does not show RESTART button when chronoState is initial", () => {
+		const { fixture } = createComponent("initial");
+		const restartBtn = fixture.debugElement.query(By.css("[data-testid='restart-btn']"));
+		expect(restartBtn).toBeNull();
+	});
+
+	it("does not show RESTART button when chronoState is training", () => {
+		const { fixture } = createComponent("training");
+		const restartBtn = fixture.debugElement.query(By.css("[data-testid='restart-btn']"));
+		expect(restartBtn).toBeNull();
+	});
+
+	it("RESTART button click emits restart output", () => {
+		const { fixture } = createComponent("over");
+		let emitted = false;
+		fixture.componentInstance.restart.subscribe(() => (emitted = true));
+		const restartBtn = fixture.debugElement.query(By.css("[data-testid='restart-btn']"));
+		restartBtn.triggerEventHandler("click", null);
+		expect(emitted).toBeTrue();
+	});
+});

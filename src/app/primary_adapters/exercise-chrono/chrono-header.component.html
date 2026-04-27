@@ -4,11 +4,12 @@
 	</div>
 	<div class="right-actions">
 		<div class="top-actions">
-			<app-chrono-break-duration
-				[hasExercise]="hasExercise()"
-				[formattedBreakDuration]="formattedBreakDuration()"
-				(openBreakDurationPopup)="openBreakDurationPopup.emit()"
-			/>
+			<button
+				class="settings-gear-btn"
+				data-testid="settings-gear-btn"
+				(click)="openSettings.emit()"
+				aria-label="Settings"
+			>CUSTOM</button>
 			<app-chrono-sound-button [soundEnabled]="soundEnabled()" (toggleSound)="toggleSound.emit()" />
 		</div>
 		<app-chrono-series-badge

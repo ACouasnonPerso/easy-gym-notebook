@@ -11,7 +11,11 @@
 		/>
 	</svg>
 	<div class="chrono-inner">
-		<div class="chrono-time" [class.blinking]="isBlinking()">{{ formattedTime() }}</div>
+		@if (chronoState() === "over") {
+			<div class="chrono-over-label" data-testid="over-label">{{ "chrono.over" | translate }}</div>
+		} @else {
+			<div class="chrono-time" [class.blinking]="isBlinking()">{{ formattedTime() }}</div>
+		}
 		<div class="chrono-label" [style.color]="ringColor()">{{ statusLabel() }}</div>
 	</div>
 </div>

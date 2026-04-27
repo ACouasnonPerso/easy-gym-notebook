@@ -79,7 +79,7 @@ describe("TipsBannerComponent", () => {
 	});
 
 	describe("bandeau review", () => {
-		it("affiche le tips de review quand sessionCount >= 4 et que la review na pas encore été demandée", () => {
+		it("affiche le tips de review quand sessionCount >= 6 et que la review na pas encore été demandée", () => {
 			const { fixture } = setupFixture(10, false);
 			const el: HTMLElement = fixture.nativeElement;
 			const banner = el.querySelector(".tips-banner");
@@ -88,8 +88,8 @@ describe("TipsBannerComponent", () => {
 			expect(text).toContain("Notez cette application");
 		});
 
-		it("affiche le tips de review quand sessionCount est exactement 4", () => {
-			const { fixture } = setupFixture(4, false);
+		it("affiche le tips de review quand sessionCount est exactement 6", () => {
+			const { fixture } = setupFixture(6, false);
 			const el: HTMLElement = fixture.nativeElement;
 			const banner = el.querySelector(".tips-banner");
 			expect(banner).toBeTruthy();
@@ -234,34 +234,54 @@ describe("TipsBannerComponent", () => {
 		it("retourne le premier conseil quand Math.random() retourne 0", () => {
 			spyOn(Math, "random").and.returnValue(0);
 			const { fixture } = setupFixture(2);
-			expect(fixture.componentInstance.onboardingTip()).toBe("Long press a session to duplicate it");
+			expect(fixture.componentInstance.onboardingTip()).toBe("sessionList.tips.0");
 		});
 
 		it("retourne le dernier conseil quand Math.random() retourne 0.99", () => {
 			spyOn(Math, "random").and.returnValue(0.99);
 			const { fixture } = setupFixture(2);
-			expect(fixture.componentInstance.onboardingTip()).toBe(
-				"Try to select the current year in stats to see your yearly heatmap 😉"
-			);
+			expect(fixture.componentInstance.onboardingTip()).toBe("sessionList.tips.4");
 		});
 	});
 
 	describe("rotation automatique du conseil onboarding", () => {
-		it("change le conseil après 5 secondes quand showOnboarding est true", fakeAsync(() => {
-			let callCount = 0;
-			spyOn(Math, "random").and.callFake(() => {
-				// First call: index 0, subsequent calls: index 1
-				return callCount++ === 0 ? 0 : 0.2;
-			});
+		it("change le conseil après 10 secondes quand showOnboarding est true", fakeAsync(() => {
+			spyOn(Math, "random").and.returnValue(0);
 			const { fixture } = setupFixture(2);
 			const tipBefore = fixture.componentInstance.onboardingTip();
 
-			tick(5000);
+			tick(10000);
 			fixture.detectChanges();
 
 			const tipAfter = fixture.componentInstance.onboardingTip();
 			expect(tipAfter).not.toBe(tipBefore);
 		}));
+	});
+
+	describe("clic sur le conseil onboarding", () => {
+		it("affiche le conseil suivant au clic", () => {
+			spyOn(Math, "random").and.returnValue(0);
+			const { fixture } = setupFixture(2);
+			const el: HTMLElement = fixture.nativeElement;
+			const tipBefore = fixture.componentInstance.onboardingTip();
+
+			el.querySelector<HTMLButtonElement>(".tips-banner--clickable")!.click();
+			fixture.detectChanges();
+
+			expect(fixture.componentInstance.onboardingTip()).not.toBe(tipBefore);
+		});
+
+		it("boucle sur le premier conseil après le dernier", () => {
+			spyOn(Math, "random").and.returnValue(0.99);
+			const { fixture } = setupFixture(2);
+			const el: HTMLElement = fixture.nativeElement;
+			expect(fixture.componentInstance.onboardingTip()).toBe("sessionList.tips.4");
+
+			el.querySelector<HTMLButtonElement>(".tips-banner--clickable")!.click();
+			fixture.detectChanges();
+
+			expect(fixture.componentInstance.onboardingTip()).toBe("sessionList.tips.0");
+		});
 	});
 
 	describe("masquage de la bannière", () => {
@@ -271,7 +291,7 @@ describe("TipsBannerComponent", () => {
 			expect(el.querySelector(".tips-banner")).toBeNull();
 		});
 
-		it("masque la bannière au démarrage quand sessionCount >= 4 ET la review a déjà été demandée", () => {
+		it("masque la bannière au démarrage quand sessionCount >= 6 ET la review a déjà été demandée", () => {
 			const { fixture } = setupFixture(10, true);
 			const el: HTMLElement = fixture.nativeElement;
 			expect(el.querySelector(".tips-banner")).toBeNull();

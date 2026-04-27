@@ -32,8 +32,12 @@ function buildUseCase() {
 		timeSeconds: signal(0),
 		seriesCount: signal(0),
 		soundEnabled: signal(true),
+		settings: signal({ exerciseDuration: null, breakDuration: 60, repetitions: null }),
+		completedReps: signal(0),
 		initWithBreakDuration: jasmine.createSpy("initWithBreakDuration"),
 		updateBreakDuration: jasmine.createSpy("updateBreakDuration"),
+		applyCustomSettings: jasmine.createSpy("applyCustomSettings"),
+		restart: jasmine.createSpy("restart"),
 		start: jasmine.createSpy("start"),
 		pause: jasmine.createSpy("pause"),
 		resume: jasmine.createSpy("resume"),
@@ -42,6 +46,8 @@ function buildUseCase() {
 		reset: jasmine.createSpy("reset"),
 		toggleSound: jasmine.createSpy("toggleSound"),
 		addTime: jasmine.createSpy("addTime"),
+		incrementSeriesCount: jasmine.createSpy("incrementSeriesCount"),
+		decrementSeriesCount: jasmine.createSpy("decrementSeriesCount"),
 	};
 }
 
@@ -106,7 +112,7 @@ describe("ExerciseChronoComponent — label durée de repos", () => {
 
 		const label = fixture.debugElement.query(By.css(".break-duration-label"));
 
-		expect(label.nativeElement.textContent.trim()).toBe("2:00 repos");
+		expect(label.nativeElement.textContent.trim()).toBe("1:00 repos");
 	});
 });
 
@@ -138,7 +144,7 @@ describe("ExerciseChronoComponent — popup durée de repos", () => {
 		fixture.detectChanges();
 
 		const popup = fixture.debugElement.query(By.css("app-edit-duration-popup"));
-		expect(popup.componentInstance.initialSeconds()).toBe(120);
+		expect(popup.componentInstance.initialSeconds()).toBe(60);
 	});
 
 	it("confirmer le popup met à jour _breakDuration et appelle updateBreakDuration", () => {
@@ -166,7 +172,7 @@ describe("ExerciseChronoComponent — popup durée de repos", () => {
 		fixture.detectChanges();
 
 		expect(useCaseSpy.updateBreakDuration).toHaveBeenCalledWith(180);
-		expect(useCaseSpy.initWithBreakDuration).not.toHaveBeenCalledWith(180);
+		expect(useCaseSpy.updateBreakDuration).toHaveBeenCalledWith(180);
 	});
 
 	it("annuler le popup masque le popup sans modifier _breakDuration", () => {
@@ -181,8 +187,8 @@ describe("ExerciseChronoComponent — popup durée de repos", () => {
 
 		const popupAfter = fixture.debugElement.query(By.css("app-edit-duration-popup"));
 		expect(popupAfter).toBeNull();
-		expect(fixture.componentInstance._breakDuration()).toBe(120);
-		expect(useCaseSpy.initWithBreakDuration).toHaveBeenCalledTimes(1); // only ngOnInit call
+		expect(fixture.componentInstance._breakDuration()).toBe(60);
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledTimes(1); // only ngOnInit call
 	});
 });
 
@@ -295,5 +301,148 @@ describe("ExerciseChronoComponent — iOS silent warning", () => {
 
 		const warning = fixture.debugElement.query(By.css(".ios-silent-warning"));
 		expect(warning).toBeNull();
+	});
+});
+
+// Story 6 helper — builds use case stub with custom settings support
+function buildUseCaseWithSettings(queryParams: Record<string, string> = {}, persistedSettings?: object) {
+	const useCaseSpy = {
+		chronoState: signal<string>("initial"),
+		timeSeconds: signal(0),
+		seriesCount: signal(0),
+		soundEnabled: signal(true),
+		settings: signal({ exerciseDuration: null, breakDuration: 60, repetitions: null }),
+		completedReps: signal(0),
+		initWithBreakDuration: jasmine.createSpy("initWithBreakDuration"),
+		updateBreakDuration: jasmine.createSpy("updateBreakDuration"),
+		applyCustomSettings: jasmine.createSpy("applyCustomSettings"),
+		restart: jasmine.createSpy("restart"),
+		start: jasmine.createSpy("start"),
+		pause: jasmine.createSpy("pause"),
+		resume: jasmine.createSpy("resume"),
+		goBreak: jasmine.createSpy("goBreak"),
+		goTraining: jasmine.createSpy("goTraining"),
+		reset: jasmine.createSpy("reset"),
+		toggleSound: jasmine.createSpy("toggleSound"),
+		addTime: jasmine.createSpy("addTime"),
+		incrementSeriesCount: jasmine.createSpy("incrementSeriesCount"),
+		decrementSeriesCount: jasmine.createSpy("decrementSeriesCount"),
+	};
+
+	if (persistedSettings) {
+		localStorage.setItem("egn_chrono_custom_settings", JSON.stringify(persistedSettings));
+	} else {
+		localStorage.removeItem("egn_chrono_custom_settings");
+	}
+
+	const locationSpy = { back: jasmine.createSpy("back") };
+	TestBed.configureTestingModule({
+		imports: [
+			ExerciseChronoComponent,
+			TranslateModule.forRoot({ loader: { provide: TranslateLoader, useClass: FakeTranslateLoader } }),
+		],
+		providers: [
+			{ provide: ActivatedRoute, useValue: { snapshot: { queryParams } } },
+			{ provide: Location, useValue: locationSpy },
+			{ provide: ExerciseChronoUseCase, useValue: useCaseSpy },
+		],
+	});
+
+	const translate = TestBed.inject(TranslateService);
+	translate.setDefaultLang("fr");
+	translate.use("fr");
+
+	const fixture = TestBed.createComponent(ExerciseChronoComponent);
+	fixture.detectChanges();
+	return { fixture, useCaseSpy };
+}
+
+describe("ExerciseChronoComponent Story 6 - settings init priority", () => {
+	afterEach(() => localStorage.clear());
+
+	it("uses route param breakDuration as seed when no persisted settings exist", () => {
+		const { useCaseSpy } = buildUseCaseWithSettings({ breakDuration: "90" });
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith(
+			jasmine.objectContaining({ breakDuration: 90 })
+		);
+	});
+
+	it("uses default breakDuration 60 when no route param and no persisted settings", () => {
+		const { useCaseSpy } = buildUseCaseWithSettings({});
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith(
+			jasmine.objectContaining({ breakDuration: 60 })
+		);
+	});
+
+	it("uses persisted settings over route param when persisted settings exist", () => {
+		const persisted = { exerciseDuration: 45, breakDuration: 30, repetitions: 5 };
+		const { useCaseSpy } = buildUseCaseWithSettings({ breakDuration: "90" }, persisted);
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith(persisted);
+	});
+});
+
+describe("ExerciseChronoComponent Story 6 - settings panel", () => {
+	afterEach(() => localStorage.clear());
+
+	it("settings panel is not shown by default", () => {
+		const { fixture } = buildUseCaseWithSettings({});
+		const panel = fixture.debugElement.query(By.css("app-chrono-custom-settings-panel"));
+		expect(panel).toBeNull();
+	});
+
+	it("gear button in header opens settings panel", () => {
+		const { fixture } = buildUseCaseWithSettings({});
+		const gearBtn = fixture.debugElement.query(By.css("[data-testid='settings-gear-btn']"));
+		gearBtn.triggerEventHandler("click", null);
+		fixture.detectChanges();
+		const panel = fixture.debugElement.query(By.css("app-chrono-custom-settings-panel"));
+		expect(panel).not.toBeNull();
+	});
+
+	it("panel confirmed calls applyCustomSettings and closes panel", () => {
+		const { fixture, useCaseSpy } = buildUseCaseWithSettings({});
+		const gearBtn = fixture.debugElement.query(By.css("[data-testid='settings-gear-btn']"));
+		gearBtn.triggerEventHandler("click", null);
+		fixture.detectChanges();
+
+		const panel = fixture.debugElement.query(By.css("app-chrono-custom-settings-panel"));
+		panel.componentInstance.confirmed.emit({ exerciseDuration: 30, breakDuration: 60, repetitions: 3 });
+		fixture.detectChanges();
+
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith({ exerciseDuration: 30, breakDuration: 60, repetitions: 3 });
+		const panelAfter = fixture.debugElement.query(By.css("app-chrono-custom-settings-panel"));
+		expect(panelAfter).toBeNull();
+	});
+
+	it("panel cancelled closes panel without calling applyCustomSettings again", () => {
+		const { fixture, useCaseSpy } = buildUseCaseWithSettings({});
+		const callsBefore = (useCaseSpy.applyCustomSettings as jasmine.Spy).calls.count();
+		const gearBtn = fixture.debugElement.query(By.css("[data-testid='settings-gear-btn']"));
+		gearBtn.triggerEventHandler("click", null);
+		fixture.detectChanges();
+
+		const panel = fixture.debugElement.query(By.css("app-chrono-custom-settings-panel"));
+		panel.componentInstance.cancelled.emit();
+		fixture.detectChanges();
+
+		expect((useCaseSpy.applyCustomSettings as jasmine.Spy).calls.count()).toBe(callsBefore);
+		const panelAfter = fixture.debugElement.query(By.css("app-chrono-custom-settings-panel"));
+		expect(panelAfter).toBeNull();
+	});
+});
+
+describe("ExerciseChronoComponent Story 6 - restart", () => {
+	afterEach(() => localStorage.clear());
+
+	it("restart event from actions bar calls useCase.restart()", () => {
+		const { fixture, useCaseSpy } = buildUseCaseWithSettings({});
+		useCaseSpy.chronoState.set("over");
+		fixture.detectChanges();
+
+		const actionsComp = fixture.debugElement.query(By.css("app-chrono-actions"));
+		actionsComp.componentInstance.restart.emit();
+		fixture.detectChanges();
+
+		expect(useCaseSpy.restart).toHaveBeenCalledTimes(1);
 	});
 });

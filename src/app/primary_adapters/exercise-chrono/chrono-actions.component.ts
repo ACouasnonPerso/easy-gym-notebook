@@ -23,6 +23,7 @@ export class ChronoActionsComponent {
 	readonly goBreak = output<void>();
 	readonly goTraining = output<void>();
 	readonly addTime = output<number>();
+	readonly restart = output<void>();
 
 	onAddTime(seconds: number): void {
 		this.haptic.vibrate();
