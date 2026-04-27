@@ -1,35 +1,9 @@
 @if (activeOccurrence()) {
-	<div class="comment-overlay" (click)="closeComment()">
-		<div class="comment-modal" (click)="$event.stopPropagation()">
-			<button type="button" class="btn-edit" (click)="openEditPopup()" aria-label="Edit comment">
-				<svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-					<path
-						d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					/>
-					<path
-						d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					/>
-				</svg>
-			</button>
-			<p class="comment-text">{{ activeOccurrence()!.comment }}</p>
-			<button type="button" class="btn-close" (click)="closeComment()">{{ "common.close" | translate }}</button>
-		</div>
-	</div>
-	@if (showEditPopup()) {
-		<app-exercise-comment-popup
-			[currentComment]="activeOccurrence()!.comment"
-			(commentSaved)="onCommentSaved($event)"
-			(cancelled)="closeEditPopup()"
-		/>
-	}
+	<app-exercise-history-detail-popup
+		[occurrence]="activeOccurrence()!"
+		(close)="closeComment()"
+		(commentEdited)="onDetailCommentEdited($event)"
+	/>
 }
 
 @if (isCardio()) {
@@ -64,9 +38,8 @@
 	} @else {
 		@for (o of occurrences(); track o.exerciseId) {
 			<div
-				class="history-card"
-				[class.history-card--clickable]="!!o.comment"
-				(click)="o.comment ? openComment(o, $event) : null"
+				class="history-card history-card--clickable"
+				(click)="openComment(o)"
 			>
 				<div class="history-header">
 					<span class="history-date">{{ formatDate(o.date) }}</span>

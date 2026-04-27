@@ -174,6 +174,135 @@ describe("ExerciseStatsService", () => {
 		});
 	});
 
+	describe("setBreakdown", () => {
+		it("TC1 — non-pyramid 4-set: setBreakdown has 4 identical entries", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				name: "Squat",
+				isPyramid: false,
+				weightKg: 80,
+				sets: 4,
+				reps: 5,
+				pyramidSets: [],
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Squat");
+
+			const breakdown = service.occurrences()[0].setBreakdown;
+			expect(breakdown.length).toBe(4);
+			breakdown.forEach((s) => {
+				expect(s).toEqual({ weightKg: 80, reps: 5 });
+			});
+		});
+
+		it("TC2 — non-pyramid 1-set: setBreakdown deepEquals [{ weightKg: 40, reps: 12 }]", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				name: "Curl",
+				isPyramid: false,
+				weightKg: 40,
+				sets: 1,
+				reps: 12,
+				pyramidSets: [],
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Curl");
+
+			expect(service.occurrences()[0].setBreakdown).toEqual([{ weightKg: 40, reps: 12 }]);
+		});
+
+		it("TC3 — pyramid 2-set: setBreakdown deepEquals the two pyramid sets", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				name: "Squat",
+				isPyramid: true,
+				pyramidSets: [
+					{ weightKg: 80, reps: 5 },
+					{ weightKg: 100, reps: 3 },
+				],
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Squat");
+
+			expect(service.occurrences()[0].setBreakdown).toEqual([
+				{ weightKg: 80, reps: 5 },
+				{ weightKg: 100, reps: 3 },
+			]);
+		});
+
+		it("TC4 — pyramid 3-set: setBreakdown has 3 entries in correct order", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				name: "Deadlift",
+				isPyramid: true,
+				pyramidSets: [
+					{ weightKg: 60, reps: 8 },
+					{ weightKg: 80, reps: 6 },
+					{ weightKg: 100, reps: 4 },
+				],
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Deadlift");
+
+			expect(service.occurrences()[0].setBreakdown).toEqual([
+				{ weightKg: 60, reps: 8 },
+				{ weightKg: 80, reps: 6 },
+				{ weightKg: 100, reps: 4 },
+			]);
+		});
+
+		it("TC5 — pyramid 1-set: setBreakdown deepEquals [{ weightKg: 90, reps: 5 }]", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				name: "Squat",
+				isPyramid: true,
+				pyramidSets: [{ weightKg: 90, reps: 5 }],
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Squat");
+
+			expect(service.occurrences()[0].setBreakdown).toEqual([{ weightKg: 90, reps: 5 }]);
+		});
+
+		it("TC6 — non-pyramid invariance: weightKg, volumeKg, totalReps unchanged when setBreakdown is populated", async () => {
+			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
+			const exercise = makeExercise({
+				name: "Squat",
+				isPyramid: false,
+				weightKg: 80,
+				sets: 4,
+				reps: 5,
+				pyramidSets: [],
+			});
+
+			sessionRepoSpy.getAll.and.returnValue(Promise.resolve([session]));
+			exerciseRepoSpy.getAll.and.returnValue(Promise.resolve([exercise]));
+
+			await service.loadForExercise("Squat");
+
+			const occ = service.occurrences()[0];
+			expect(occ.weightKg).toBe(80);
+			expect(occ.volumeKg).toBe(1600);
+			expect(occ.totalReps).toBe(20);
+			expect(occ.setBreakdown.length).toBe(4);
+		});
+	});
+
 	describe("cardio occurrences", () => {
 		it("should populate cardioOccurrences and leave occurrences empty for a cardio exercise", async () => {
 			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });

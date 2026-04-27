@@ -4,13 +4,13 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ExerciseOccurrence, CardioOccurrence } from "../../core_logic/shared/models";
 import { WeightDisplayPipe } from "../../core_logic/mass-unit/weight-display.pipe";
 import { DistanceDisplayPipe } from "../../core_logic/mass-unit/distance-display.pipe";
-import { ExerciseCommentPopupComponent } from "../session-detail/exercise-comment-popup.component";
+import { ExerciseHistoryDetailPopupComponent } from "./exercise-history-detail-popup.component";
 
 @Component({
 	selector: "app-exercise-history-list",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [TranslateModule, DecimalPipe, WeightDisplayPipe, DistanceDisplayPipe, ExerciseCommentPopupComponent],
+	imports: [TranslateModule, DecimalPipe, WeightDisplayPipe, DistanceDisplayPipe, ExerciseHistoryDetailPopupComponent],
 	templateUrl: "./exercise-history-list.component.html",
 	styleUrl: "./exercise-history-list.component.scss",
 })
@@ -20,13 +20,12 @@ export class ExerciseHistoryListComponent {
 	readonly cardioOccurrences = input.required<CardioOccurrence[]>();
 
 	readonly activeOccurrence = signal<ExerciseOccurrence | null>(null);
-	readonly showEditPopup = signal(false);
 
 	readonly commentEdited = output<{ exerciseId: string; comment: string | null }>();
 
 	private readonly translate = inject(TranslateService);
 
-	openComment(occurrence: ExerciseOccurrence, event: Event): void {
+	openComment(occurrence: ExerciseOccurrence): void {
 		this.activeOccurrence.set(occurrence);
 	}
 
@@ -34,17 +33,8 @@ export class ExerciseHistoryListComponent {
 		this.activeOccurrence.set(null);
 	}
 
-	openEditPopup(): void {
-		this.showEditPopup.set(true);
-	}
-
-	closeEditPopup(): void {
-		this.showEditPopup.set(false);
-	}
-
-	onCommentSaved(comment: string | null): void {
-		this.commentEdited.emit({ exerciseId: this.activeOccurrence()!.exerciseId, comment });
-		this.closeEditPopup();
+	onDetailCommentEdited(payload: { exerciseId: string; comment: string | null }): void {
+		this.commentEdited.emit(payload);
 		this.closeComment();
 	}
 

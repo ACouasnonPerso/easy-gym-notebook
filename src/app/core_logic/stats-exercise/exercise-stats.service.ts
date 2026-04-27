@@ -52,6 +52,9 @@ export class ExerciseStatsService {
 				const volumeKg = isPyramid
 					? e.pyramidSets.reduce((sum, s) => sum + s.reps * s.weightKg, 0)
 					: e.weightKg * e.sets * e.reps;
+				const setBreakdown = isPyramid
+					? [...e.pyramidSets]
+					: Array.from({ length: e.sets }, () => ({ weightKg: e.weightKg, reps: e.reps }));
 				return {
 					exerciseId: e.id,
 					sessionId: e.sessionId,
@@ -66,6 +69,7 @@ export class ExerciseStatsService {
 					rating: e.rating ?? null,
 					comment: e.comment ?? null,
 					totalReps,
+					setBreakdown,
 				};
 			})
 			.sort((a, b) => b.date.getTime() - a.date.getTime());

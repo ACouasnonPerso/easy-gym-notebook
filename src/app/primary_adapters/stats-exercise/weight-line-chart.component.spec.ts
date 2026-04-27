@@ -47,6 +47,7 @@ function makeOccurrences(count: number, baseWeightKg = 80): ExerciseOccurrence[]
 		status: "validated" as const,
 		rating: null,
 		comment: null,
+		setBreakdown: [],
 	}));
 }
 
@@ -84,6 +85,7 @@ describe("WeightLineChartComponent — graphique de progression du poids", () =>
 			status: "validated",
 			rating: null,
 			comment: null,
+			setBreakdown: [],
 		};
 		setup([occurrence]);
 
@@ -107,6 +109,7 @@ describe("WeightLineChartComponent — graphique de progression du poids", () =>
 			status: "validated",
 			rating: null,
 			comment: null,
+			setBreakdown: [],
 		};
 		setup([occurrence]);
 

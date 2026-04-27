@@ -67,7 +67,7 @@ export interface ExerciseOccurrence {
 	rating: number | null;
 	comment: string | null;
 	totalReps?: number;
-	setBreakdown?: { weightKg: number; reps: number; }[];
+	setBreakdown: PyramidSet[];
 }
 
 export interface RawSession {
