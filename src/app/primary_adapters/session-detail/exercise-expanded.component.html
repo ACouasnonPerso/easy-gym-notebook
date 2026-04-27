@@ -145,9 +145,10 @@
 					(valueChange)="update.emit({ reps: +$event })"
 				/>
 			</div>
-			<div class="picker-col picker-col--wide">
+			<div class="picker-col">
 				<span class="picker-label">{{ "common.rest" | translate }}</span>
 				<app-drum-picker
+					style="min-width: 80px"
 					[values]="breakValues"
 					[selectedValue]="breakSelectedValue()"
 					(valueChange)="emitBreakUpdate($event)"

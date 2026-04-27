@@ -167,9 +167,10 @@
 					<span class="picker-label">{{ "common.reps" | translate }}</span>
 					<app-drum-picker [values]="repsValues" [selectedValue]="reps()" (valueChange)="reps.set(+$event)" />
 				</div>
-				<div class="picker-col picker-col--wide">
+				<div class="picker-col">
 					<span class="picker-label">{{ "common.rest" | translate }}</span>
 					<app-drum-picker
+						style="min-width: 80px"
 						[values]="breakValues"
 						[selectedValue]="breakSelectedValue()"
 						(valueChange)="setBreakFromMmss($event)"

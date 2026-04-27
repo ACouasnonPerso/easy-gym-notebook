@@ -201,11 +201,7 @@
 	align-items: center;
 	flex: 1;
 	min-width: 0;
-}
-.picker-col--wide {
-	min-width: 80px;
-}
-@media (max-width: 360px) {
+}@media (max-width: 360px) {
 	.picker-label {
 		font-size: 6px;
 		letter-spacing: 0.5px;

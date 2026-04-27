@@ -1,8 +1,10 @@
+:host {
+	display: block;
+	width: 100%;
+}
 .drum-wrapper {
 	position: relative;
 	height: 120px;
-	min-width: 0;
-	width: 100%;
 	overflow: hidden;
 }
 .drum-scroll {

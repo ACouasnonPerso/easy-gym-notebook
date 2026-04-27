@@ -123,11 +123,7 @@
 	align-items: center;
 	flex: 1;
 	min-width: 0;
-}
-.picker-col--wide {
-	min-width: 80px;
-}
-.picker-label {
+}.picker-label {
 	font-size: 8px;
 	font-weight: 600;
 	color: var(--muted);
