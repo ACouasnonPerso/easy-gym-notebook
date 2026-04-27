@@ -10,6 +10,7 @@ const ONBOARDING_TIPS = [
 	"sessionList.tips.2",
 	"sessionList.tips.3",
 	"sessionList.tips.4",
+	"sessionList.tips.5",
 ];
 
 @Component({

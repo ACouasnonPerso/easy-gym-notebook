@@ -31,9 +31,14 @@
 			<button class="tab-btn" [class.active]="selectedChart() === 'weight'" (click)="chartSelect.emit('weight')">
 				{{ "common.weight" | translate }}
 			</button>
+			<button class="tab-btn" [class.active]="selectedChart() === 'reps'" (click)="chartSelect.emit('reps')">
+				{{ "common.reps" | translate }}
+			</button>
 		</div>
 		@if (selectedChart() === "volume") {
 			<app-volume-line-chart [occurrences]="occurrences()" />
+		} @else if (selectedChart() === "reps") {
+			<app-total-reps-line-chart [occurrences]="occurrences()" />
 		} @else {
 			<app-weight-line-chart [occurrences]="occurrences()" />
 		}

@@ -7,6 +7,7 @@ import { CardioTimeChartComponent } from "./cardio-time-chart.component";
 import { CardioDistanceChartComponent } from "./cardio-distance-chart.component";
 import { CardioPaceChartComponent } from "./cardio-pace-chart.component";
 import { CardioSpeedChartComponent } from "./cardio-speed-chart.component";
+import { TotalRepsLineChartComponent } from "./total-reps-line-chart.component";
 import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
@@ -16,6 +17,7 @@ import { TranslateModule } from "@ngx-translate/core";
 	imports: [
 		VolumeLineChartComponent,
 		WeightLineChartComponent,
+		TotalRepsLineChartComponent,
 		CardioTimeChartComponent,
 		CardioDistanceChartComponent,
 		CardioPaceChartComponent,
