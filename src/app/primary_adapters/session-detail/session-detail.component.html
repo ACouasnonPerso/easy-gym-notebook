@@ -33,6 +33,7 @@
 		(openStats)="navigateToStats($event)"
 		(openRating)="openRatingPopup($event)"
 		(openComment)="openCommentPopup($event)"
+		(openPhoto)="openPhotoLightbox($event)"
 	/>
 </div>
 
@@ -57,6 +58,12 @@
 		(ratingSelected)="onRatingSelected($event)"
 		(cancelled)="showRatingPopup.set(false)"
 	/>
+}
+
+@if (photoLightboxUrl()) {
+	<div class="photo-lightbox" (click)="photoLightboxUrl.set(null)">
+		<img [src]="photoLightboxUrl()!" class="photo-lightbox-img" alt="" (click)="$event.stopPropagation()" />
+	</div>
 }
 
 @if (showCommentPopup() && commentExercise()) {

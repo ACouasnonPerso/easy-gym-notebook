@@ -67,6 +67,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 	readonly ratingExercise = signal<Exercise | null>(null);
 	readonly showCommentPopup = signal(false);
 	readonly commentExercise = signal<Exercise | null>(null);
+	readonly photoLightboxUrl = signal<string | null>(null);
 
 	readonly sessionId = signal("");
 
@@ -199,6 +200,10 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 		}
 		this.showCommentPopup.set(false);
 		this.commentExercise.set(null);
+	}
+
+	openPhotoLightbox(url: string): void {
+		this.photoLightboxUrl.set(url);
 	}
 
 	onPause(): void {

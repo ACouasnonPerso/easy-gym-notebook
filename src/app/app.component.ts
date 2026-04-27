@@ -8,6 +8,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { ActiveLang } from "./core_logic/language/language.service";
 import { SessionChronoService } from "./core_logic/chrono/session-chrono.service";
 import { SessionService } from "./core_logic/session/session.service";
+import { ExercisePhotoService } from "./core_logic/exercise-photo/exercise-photo.service";
 
 @Component({
 	selector: "app-root",
@@ -22,8 +23,10 @@ export class AppComponent {
 	private readonly translate = inject(TranslateService);
 	private readonly sessionService = inject(SessionService);
 	private readonly sessionChronoService = inject(SessionChronoService);
+	private readonly exercisePhotoService = inject(ExercisePhotoService);
 
 	constructor() {
+		this.exercisePhotoService.loadAll();
 		this.translate.addLangs([
 			"fr",
 			"en",

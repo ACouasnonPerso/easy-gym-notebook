@@ -97,10 +97,11 @@
 .ex-stat {
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	gap: 2px;
 }
 .ex-stat.right {
-	text-align: right;
+	align-items: center;
 }
 .ex-stat-value {
 	font-family: "IBM Plex Mono", monospace;

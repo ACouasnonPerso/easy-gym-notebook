@@ -8,6 +8,25 @@
 	padding-bottom: 100px;
 }
 
+.photo-lightbox {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.92);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 2000;
+	cursor: pointer;
+}
+
+.photo-lightbox-img {
+	max-width: 92vw;
+	max-height: 85vh;
+	object-fit: contain;
+	border-radius: 12px;
+	cursor: default;
+}
+
 .overlay {
 	position: fixed;
 	inset: 0;

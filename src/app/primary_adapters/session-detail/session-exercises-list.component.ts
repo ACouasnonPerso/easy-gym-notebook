@@ -29,6 +29,7 @@ export class SessionExercisesListComponent {
 	readonly openStats = output<Exercise>();
 	readonly openRating = output<Exercise>();
 	readonly openComment = output<Exercise>();
+	readonly openPhoto = output<string>();
 
 	readonly uiService = inject(SessionDetailUiService);
 	private readonly haptic = inject(HapticService);
