@@ -55,6 +55,10 @@
     "duplicate": "Sao chép",
     "delete": "Xóa",
     "tip": "Giữ lâu để sao chép buổi tập",
+    "tips": {
+      "0": "Nhấn và giữ một buổi tập để sao chép nó #__# Hãy thử đặt tên cho bài tập là “đạp xe” hoặc “chạy bộ” để kích hoạt chế độ cardio 🏃‍♂️ #__# Bài tập sẽ tự động nhận diện các nhóm cơ tương ứng với tên gọi 💪\n#__# Bạn có thể đánh giá độ khó của bài tập từ 2️⃣0️⃣ #__# Hãy thử chọn năm hiện tại trong phần thống kê để xem bản đồ nhiệt hàng năm của bạn 😉 #__# Tìm kiếm bài tập... #__# Cài đặt tùy chỉnh #__# Thời lượng bài tập #__# Thời gian nghỉ #__# Số hiệp #__#\nVô hạn #__# KẾT THÚC #__# BẮT ĐẦU LẠI #__# Tháng 2 #__# Tháng 3 #__# Tháng 4 #__# Tháng 5 #__# Tháng 6 #__# Tháng 7 #__# Tháng 8 #__# Tháng 9 #__# Tháng 10 #__# Tháng 11 #__# Tháng 12 #__# Cường độ vừa phải",
+      "1": "Khó vừa phải #__# Nỗ lực liên tục, còn dư sức #__# Khó, có thể làm thêm 3 lần nữa #__# Khó, có thể làm thêm 2 lần nữa #__# Rất khó, còn làm được 1 lần nữa #__# Rất khó, lần tiếp theo sẽ rất vất vả #__# Rất khó, không thể làm thêm lần nào nữa #__# Không thể hoàn thành, quá khó #__#\nĐánh giá bài tập #__# Dễ, dưới mức khả năng rất nhiều #__# Rất dễ, khởi động #__# Không tốn sức #__# Thêm bình luận #__# Viết ghi chú về bài tập này... #__# Lưu"
+    },
     "reviewTip": "Bạn\nthích ứng dụng? Hãy cho 5 sao và để lại đánh giá — điều đó giúp chúng tôi rất nhiều 🙏",
     "reviewThanks": "Cảm ơn bạn đã đánh giá!",
     "reviewConfirmTitle": "Bạn có thích ứng dụng này không?",
@@ -65,7 +69,7 @@
     "new": "Bài tập mới",
     "name": "Tên bài tập",
     "namePlaceholder": "vd: Đẩy ngực",
-    "page": "Trang bài tập",
+    "page": "Thống kê",
     "empty": "Không có bài tập.",
     "addHint": "Thêm một bài!",
     "deleteConfirm": "Xóa bài tập này?",

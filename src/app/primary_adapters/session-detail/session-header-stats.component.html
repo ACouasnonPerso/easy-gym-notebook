@@ -1,5 +1,5 @@
 <div class="session-meta">
-	<span class="session-date-label" (click)="toggleDateInput()">{{ session().date | date: "EEE d MMM yyyy" }}</span>
+	<span class="session-date-label" (click)="toggleDateInput()">{{ dateLabel() }}</span>
 	@if (showDateInput()) {
 		<input
 			type="date"

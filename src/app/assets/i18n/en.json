@@ -136,7 +136,7 @@
         "customSettings": "Custom Settings",
         "exerciseDuration": "Exercise duration",
         "breakDuration": "Break duration",
-        "repetitions": "Repetitions",
+        "repetitions": "Sets",
         "infinite": "Infinite",
         "over": "OVER",
         "restart": "RESTART"
@@ -232,7 +232,7 @@
         "14": "Sustained effort, comfortable margin",
         "15": "Hard, 3 more reps possible",
         "16": "Hard, 2 more reps possible",
-        "17": "Really hard, maybe one more rep",
+        "17": "Really hard, 1 more rep",
         "18": "Really hard, next rep would have been tough",
         "19": "Really hard, not one more rep",
         "20": "Could not finish, too hard",

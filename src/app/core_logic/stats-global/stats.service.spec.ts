@@ -369,9 +369,9 @@ describe("StatsService", () => {
 			const march1 = new Date(2026, 2, 1);
 			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
 			service._allExercises.set([
-				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest }),
-				makeExercise({ id: "ex-2", sessionId: "s1", muscleGroup: MuscleGroup.Back }),
-				makeExercise({ id: "ex-3", sessionId: "s1", muscleGroup: MuscleGroup.Quads }),
+				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-2", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-3", sessionId: "s1", muscleGroup: MuscleGroup.Quads, weightKg: 100, sets: 1, reps: 1 }),
 			]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
@@ -394,7 +394,7 @@ describe("StatsService", () => {
 				MuscleGroup.Abs,
 			];
 			service._allExercises.set(
-				muscleGroups.map((mg, i) => makeExercise({ id: `ex-${i + 1}`, sessionId: "s1", muscleGroup: mg }))
+				muscleGroups.map((mg, i) => makeExercise({ id: `ex-${i + 1}`, sessionId: "s1", muscleGroup: mg, weightKg: 100, sets: 1, reps: 1 }))
 			);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
@@ -408,16 +408,16 @@ describe("StatsService", () => {
 			const march1 = new Date(2026, 2, 1);
 			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
 			service._allExercises.set([
-				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest }),
-				makeExercise({ id: "ex-2", sessionId: "s1", muscleGroup: MuscleGroup.Chest }),
-				makeExercise({ id: "ex-3", sessionId: "s1", muscleGroup: MuscleGroup.Back }),
-				makeExercise({ id: "ex-4", sessionId: "s1", muscleGroup: MuscleGroup.Back }),
-				makeExercise({ id: "ex-5", sessionId: "s1", muscleGroup: MuscleGroup.Quads }),
-				makeExercise({ id: "ex-6", sessionId: "s1", muscleGroup: MuscleGroup.Quads }),
-				makeExercise({ id: "ex-7", sessionId: "s1", muscleGroup: MuscleGroup.Quads }),
-				makeExercise({ id: "ex-8", sessionId: "s1", muscleGroup: MuscleGroup.Quads }),
-				makeExercise({ id: "ex-9", sessionId: "s1", muscleGroup: MuscleGroup.Quads }),
-				makeExercise({ id: "ex-10", sessionId: "s1", muscleGroup: MuscleGroup.Quads }),
+				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-2", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-3", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-4", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-5", sessionId: "s1", muscleGroup: MuscleGroup.Quads, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-6", sessionId: "s1", muscleGroup: MuscleGroup.Quads, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-7", sessionId: "s1", muscleGroup: MuscleGroup.Quads, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-8", sessionId: "s1", muscleGroup: MuscleGroup.Quads, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-9", sessionId: "s1", muscleGroup: MuscleGroup.Quads, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-10", sessionId: "s1", muscleGroup: MuscleGroup.Quads, weightKg: 100, sets: 1, reps: 1 }),
 			]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
@@ -612,9 +612,9 @@ describe("StatsService", () => {
 			const march1 = new Date(2026, 2, 1);
 			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
 			service._allExercises.set([
-				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest }),
-				makeExercise({ id: "ex-2", sessionId: "s1", muscleGroup: MuscleGroup.Chest }),
-				makeExercise({ id: "ex-3", sessionId: "s1", muscleGroup: MuscleGroup.Back }),
+				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-2", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-3", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 1, reps: 1 }),
 			]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
@@ -630,8 +630,8 @@ describe("StatsService", () => {
 			const march10 = new Date(2026, 2, 10);
 			service._allSessions.set([makeSession({ id: "s1", date: march1 }), makeSession({ id: "s2", date: march10 })]);
 			service._allExercises.set([
-				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest }),
-				makeExercise({ id: "ex-2", sessionId: "s2", muscleGroup: MuscleGroup.Chest }),
+				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-2", sessionId: "s2", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 }),
 			]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
@@ -858,11 +858,109 @@ describe("StatsService", () => {
 		it("retourne 100% pour un seul groupe musculaire", () => {
 			const march1 = new Date(2026, 2, 1);
 			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
-			service._allExercises.set([makeExercise({ sessionId: "s1", muscleGroup: MuscleGroup.Chest })]);
+			service._allExercises.set([makeExercise({ sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 })]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
 			const result = service.muscleGroupDistribution();
 			expect(result.get(MuscleGroup.Chest)).toBe(100);
+		});
+	});
+
+	describe("muscleGroupDetails — volume-based percentage consistency", () => {
+		it("should return the same percentage for a group as muscleGroupDistribution returns, on the same input", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				// Chest: 1 exercise, volume = 500 * 2 * 5 = 5000 kg
+				makeExercise({ id: "ex-chest", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 500, sets: 2, reps: 5 }),
+				// Back: 3 exercises, each 100 * 5 * 1 = 500 kg → total 1500 kg
+				makeExercise({ id: "ex-back-1", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
+				makeExercise({ id: "ex-back-2", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
+				makeExercise({ id: "ex-back-3", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const distribution = service.muscleGroupDistribution();
+			const details = service.muscleGroupDetails();
+
+			expect(details.get(MuscleGroup.Chest)?.percentage).toBe(distribution.get(MuscleGroup.Chest));
+			expect(details.get(MuscleGroup.Back)?.percentage).toBe(distribution.get(MuscleGroup.Back));
+		});
+	});
+
+	describe("muscleGroupDistribution — volume-based percentage", () => {
+		it("should assign 100% to the only muscle group when all exercises belong to that group and have non-zero volume", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 80, sets: 3, reps: 10 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.muscleGroupDistribution();
+			expect(result.get(MuscleGroup.Chest)).toBe(100);
+		});
+
+		it("should assign equal percentages to two groups when each has the same total volume", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 3, reps: 10 }),
+				makeExercise({ id: "ex-2", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 3, reps: 10 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.muscleGroupDistribution();
+			expect(result.get(MuscleGroup.Chest)).toBe(result.get(MuscleGroup.Back));
+		});
+
+		it("should make all percentages sum to exactly 100 when individual volumes produce fractional shares (three equal-volume groups → 33+33+34 = 100)", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				// Three groups each with volume = 100*1*1 = 100 kg → each share = 33.33%
+				makeExercise({ id: "ex-1", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-2", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 1, reps: 1 }),
+				makeExercise({ id: "ex-3", sessionId: "s1", muscleGroup: MuscleGroup.Quads, weightKg: 100, sets: 1, reps: 1 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.muscleGroupDistribution();
+			const total = Array.from(result.values()).reduce((sum, pct) => sum + pct, 0);
+			expect(total).toBe(100);
+		});
+
+		it("should exclude a group from the map when all its exercises have zero volume", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				// Back: volume = 0*3*10 = 0 → should be excluded
+				makeExercise({ id: "ex-back", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 0, sets: 3, reps: 10 }),
+				// Chest: volume = 80*3*10 = 2400 → should be present at 100%
+				makeExercise({ id: "ex-chest", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 80, sets: 3, reps: 10 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.muscleGroupDistribution();
+			expect(result.has(MuscleGroup.Back)).toBeFalse();
+			expect(result.get(MuscleGroup.Chest)).toBe(100);
+		});
+
+		it("should assign a higher % to the group with greater total volume even when it has fewer exercises (1 chest @ 5000 kg vs 3 back @ 1500 kg total → chest% > back%)", () => {
+			const march1 = new Date(2026, 2, 1);
+			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
+			service._allExercises.set([
+				// Chest: 1 exercise, volume = 500 * 2 * 5 = 5000 kg
+				makeExercise({ id: "ex-chest", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 500, sets: 2, reps: 5 }),
+				// Back: 3 exercises, each 100 * 5 * 1 = 500 kg → total 1500 kg
+				makeExercise({ id: "ex-back-1", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
+				makeExercise({ id: "ex-back-2", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
+				makeExercise({ id: "ex-back-3", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
+			]);
+			service.selectedMonth.set(new Date(2026, 2, 1));
+
+			const result = service.muscleGroupDistribution();
+			expect(result.get(MuscleGroup.Chest)!).toBeGreaterThan(result.get(MuscleGroup.Back)!);
 		});
 	});
 

@@ -143,6 +143,172 @@ describe("DonutChartComponent — selectedGroup state", () => {
 	});
 });
 
+describe("DonutChartComponent — totalLoad", () => {
+	function createComponent(detailsMap: Map<MuscleGroup, { percentage: number; sessionCount: number; totalLoadKg: number }>) {
+		TestBed.configureTestingModule({
+			imports: [DonutChartComponent],
+			providers: [provideTranslateService()],
+		});
+		const fixture = TestBed.createComponent(DonutChartComponent);
+		fixture.componentRef.setInput("details", detailsMap);
+		fixture.detectChanges();
+		return fixture.componentInstance;
+	}
+
+	it("should display '0 kg' as total when details map is empty", () => {
+		const component = createComponent(new Map());
+
+		expect(component.totalLoad()).toBe("0 kg");
+	});
+
+	it("should display total in kg when combined load is below 1 tonne", () => {
+		const component = createComponent(
+			new Map([[MuscleGroup.Chest, { percentage: 100, sessionCount: 1, totalLoadKg: 500 }]])
+		);
+
+		expect(component.totalLoad()).toBe("500 kg");
+	});
+
+	it("should round to nearest kg when sub-tonne total is fractional", () => {
+		const component = createComponent(
+			new Map([[MuscleGroup.Chest, { percentage: 100, sessionCount: 1, totalLoadKg: 500.7 }]])
+		);
+
+		expect(component.totalLoad()).toBe("501 kg");
+	});
+
+	it("should display total in tonnes when combined load meets or exceeds 1 tonne", () => {
+		const component = createComponent(
+			new Map([[MuscleGroup.Chest, { percentage: 100, sessionCount: 1, totalLoadKg: 2000 }]])
+		);
+
+		expect(component.totalLoad()).toBe("2 t");
+	});
+
+	it("should display up to 2 decimal places for a fractional tonne total (99.37 t fixture)", () => {
+		const component = createComponent(
+			new Map([[MuscleGroup.Chest, { percentage: 100, sessionCount: 1, totalLoadKg: 99370 }]])
+		);
+
+		expect(component.totalLoad()).toBe("99.37 t");
+	});
+
+	it("should match the sum that per-group formatLoad calls would produce across multiple groups", () => {
+		// 50000 + 49370 = 99370 kg = 99.37 t
+		const detailsMap = new Map([
+			[MuscleGroup.Chest, { percentage: 51, sessionCount: 2, totalLoadKg: 50000 }],
+			[MuscleGroup.Back, { percentage: 49, sessionCount: 1, totalLoadKg: 49370 }],
+		]);
+		const component = createComponent(detailsMap);
+
+		const expectedTotal = component.formatLoad(50000 + 49370);
+
+		expect(component.totalLoad()).toBe(expectedTotal);
+		expect(component.totalLoad()).toBe("99.37 t");
+	});
+});
+
+describe("DonutChartComponent — legend % vs popover % cross-consistency", () => {
+	it("should display the correct percentage in the legend for a single muscle group when the distribution and details agree", () => {
+		TestBed.configureTestingModule({
+			imports: [DonutChartComponent],
+			providers: [provideTranslateService()],
+		});
+		const fixture = TestBed.createComponent(DonutChartComponent);
+
+		fixture.componentRef.setInput(
+			"distribution",
+			new Map([[MuscleGroup.Chest, 100]])
+		);
+		fixture.componentRef.setInput(
+			"details",
+			new Map([[MuscleGroup.Chest, { percentage: 100, sessionCount: 1, totalLoadKg: 500 }]])
+		);
+		fixture.detectChanges();
+
+		const legendItems: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(".legend-item");
+		const legendPct = legendItems[0].querySelector(".legend-pct")!.textContent?.trim();
+		const detailPct = fixture.componentInstance.details().get(MuscleGroup.Chest)?.percentage + "%";
+
+		expect(legendPct).toBe(detailPct);
+	});
+
+	it("should display the same percentage in the legend as shown in the popover for every group when the fixture contains three muscle groups with whole-number volume shares", () => {
+		TestBed.configureTestingModule({
+			imports: [DonutChartComponent],
+			providers: [provideTranslateService()],
+		});
+		const fixture = TestBed.createComponent(DonutChartComponent);
+
+		// 50 / 30 / 20 — whole numbers, no rounding ambiguity
+		fixture.componentRef.setInput(
+			"distribution",
+			new Map([
+				[MuscleGroup.Chest, 50],
+				[MuscleGroup.Back, 30],
+				[MuscleGroup.Quads, 20],
+			])
+		);
+		fixture.componentRef.setInput(
+			"details",
+			new Map([
+				[MuscleGroup.Chest, { percentage: 50, sessionCount: 2, totalLoadKg: 1000 }],
+				[MuscleGroup.Back, { percentage: 30, sessionCount: 1, totalLoadKg: 600 }],
+				[MuscleGroup.Quads, { percentage: 20, sessionCount: 1, totalLoadKg: 400 }],
+			])
+		);
+		fixture.detectChanges();
+
+		const legendItems: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(".legend-item");
+		const groups = [MuscleGroup.Chest, MuscleGroup.Back, MuscleGroup.Quads];
+
+		groups.forEach((group, i) => {
+			const legendPct = legendItems[i].querySelector(".legend-pct")!.textContent?.trim();
+			const detailPct = fixture.componentInstance.details().get(group)?.percentage + "%";
+			expect(legendPct).withContext(`legend % for ${group} should match popover %`).toBe(detailPct);
+		});
+	});
+
+	it("should display the same percentage in the legend as shown in the popover for every group when one group's volume share has a fractional .5 part", () => {
+		TestBed.configureTestingModule({
+			imports: [DonutChartComponent],
+			providers: [provideTranslateService()],
+		});
+		const fixture = TestBed.createComponent(DonutChartComponent);
+
+		// volumes: Chest=70, Back=65, Legs=65 → total=200
+		// raw shares: 35% / 32.5% / 32.5%
+		// LRM rounds: one tied group gets +1 → 35 / 33 / 32 (or 35 / 32 / 33)
+		// Both distribution and details must use the same rounded values from StatsService
+		fixture.componentRef.setInput(
+			"distribution",
+			new Map([
+				[MuscleGroup.Chest, 35],
+				[MuscleGroup.Back, 33],
+				[MuscleGroup.Quads, 32],
+			])
+		);
+		fixture.componentRef.setInput(
+			"details",
+			new Map([
+				[MuscleGroup.Chest, { percentage: 35, sessionCount: 3, totalLoadKg: 1400 }],
+				[MuscleGroup.Back, { percentage: 33, sessionCount: 2, totalLoadKg: 1300 }],
+				[MuscleGroup.Quads, { percentage: 32, sessionCount: 2, totalLoadKg: 1300 }],
+			])
+		);
+		fixture.detectChanges();
+
+		const legendItems: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll(".legend-item");
+		const groups = [MuscleGroup.Chest, MuscleGroup.Back, MuscleGroup.Quads];
+
+		groups.forEach((group, i) => {
+			const legendPct = legendItems[i].querySelector(".legend-pct")!.textContent?.trim();
+			const detailPct = fixture.componentInstance.details().get(group)?.percentage + "%";
+			expect(legendPct).withContext(`legend % for ${group} should match popover % even with .5 fractional share`).toBe(detailPct);
+		});
+	});
+});
+
 describe("StatsService — muscleGroupDetails", () => {
 	let service: StatsService;
 

@@ -35,7 +35,9 @@ export class DonutChartComponent {
 
 	formatLoad(kg: number): string {
 		if (kg >= 1000) return this.weightDisplay.transform(kg / 1000, "t");
-		return this.weightDisplay.transform(Math.round(kg), "kg");
+		const rounded = Math.round(kg);
+		if (rounded === 0) return "0 kg";
+		return this.weightDisplay.transform(rounded, "kg");
 	}
 
 	onSegmentClick(group: MuscleGroup): void {
@@ -53,9 +55,8 @@ export class DonutChartComponent {
 	readonly center = 75;
 
 	readonly totalLoad = computed((): string => {
-		const totalKg = Math.round(Array.from(this.details().values()).reduce((sum, d) => sum + d.totalLoadKg, 0));
-		if (totalKg >= 1000) return this.weightDisplay.transform(Math.round(totalKg / 1000), "t");
-		return this.weightDisplay.transform(totalKg, "kg");
+		const totalKg = Array.from(this.details().values()).reduce((sum, d) => sum + d.totalLoadKg, 0);
+		return this.formatLoad(totalKg);
 	});
 
 	readonly segments = computed((): DonutSegment[] => {

@@ -22,6 +22,24 @@ type: project
 - `SessionChronoService` is `providedIn: 'root'` singleton; persists state in localStorage under `egn_chrono_start` / `egn_chrono_paused`
 - `ChronoStatus` = `'running' | 'paused' | 'ended'` — defined in `session-chrono.service.ts`
 
+## StatsService — muscleGroup distribution pattern (2026-04-27)
+- Both `muscleGroupDistribution` and `muscleGroupDetails` use Largest Remainder Method (LRM) for percentage rounding
+- Currently (before story 1) both computed signals derive percentages from **exercise count** per `e.muscleGroup` (singular field)
+- `computeVolume(e)` from `src/app/core_logic/shared/utils.ts` is the authoritative volume formula (pyramid-aware)
+- `makeSession` / `makeExercise` factory helpers in spec file use spread+override; `service._allSessions.set([...])` + `service._allExercises.set([...])` + `service.selectedMonth.set(...)` drive state
+- Spec file: `src/app/core_logic/stats-global/stats.service.spec.ts`
+- Service file: `src/app/core_logic/stats-global/stats.service.ts`
+
+## DonutChartComponent — totalLoad bug (story 2, 2026-04-27)
+- Component: `src/app/primary_adapters/stats-global/donut-chart.component.ts`
+- Spec: `src/app/primary_adapters/stats-global/donut-chart.component.spec.ts`
+- `formatLoad(kg)`: if `kg >= 1000` passes `kg / 1000` (raw fraction) to `weightDisplay.transform(..., 't')`; else passes `Math.round(kg)` to `weightDisplay.transform(..., 'kg')`
+- `totalLoad()` bug: calls `Math.round(sum)` before threshold check, then calls `Math.round(totalKg / 1000)` for the tonne branch — double-rounds, causing integer drift vs `formatLoad`
+- Fix: sum raw kg (no pre-rounding), apply same `>= 1000` threshold, pass raw fraction to pipe for tonne branch
+- `WeightDisplayPipe.transform(value, unit)` in metric: `Math.round(value * 100) / 100` → max 2 decimal places
+- Test setup pattern for this component: `TestBed.configureTestingModule({ imports: [DonutChartComponent], providers: [provideTranslateService()] })` + `fixture.componentRef.setInput('details', ...)`
+- `MassUnitService` defaults to metric in tests (localStorage.clear() not needed if never set)
+
 ## Key file locations (easy-gym-notebook)
 - Chrono service: `src/app/core_logic/chrono/session-chrono.service.ts`
 - Chrono service spec: `src/app/core_logic/chrono/session-chrono.service.spec.ts`
