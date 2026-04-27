@@ -241,8 +241,9 @@ export class StatsService {
 			.slice(0, deficit)
 			.forEach((e) => e.floor++);
 
+		const sorted = entries.slice().sort((a, b) => b.floor - a.floor);
 		const percentages = new Map<MuscleGroup, number>();
-		for (const { group, floor } of entries) percentages.set(group, floor);
+		for (const { group, floor } of sorted) percentages.set(group, floor);
 
 		return percentages;
 	});
