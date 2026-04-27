@@ -6,11 +6,7 @@ import { ChronoSeriesBadgeComponent } from "./chrono-series-badge.component";
 	selector: "app-chrono-header",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-		ChronoBackButtonComponent,
-		ChronoSoundButtonComponent,
-		ChronoSeriesBadgeComponent,
-	],
+	imports: [ChronoBackButtonComponent, ChronoSoundButtonComponent, ChronoSeriesBadgeComponent],
 	templateUrl: "./chrono-header.component.html",
 	styleUrl: "./chrono-header.component.css",
 })

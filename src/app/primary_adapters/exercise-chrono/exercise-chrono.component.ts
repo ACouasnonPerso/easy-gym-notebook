@@ -10,7 +10,11 @@ import { ChronoHeaderComponent } from "./chrono-header.component";
 import { ChronoRingComponent } from "./chrono-ring.component";
 import { ChronoActionsComponent } from "./chrono-actions.component";
 import { ChronoCustomSettingsPanelComponent } from "./chrono-custom-settings-panel.component";
-import { ChronoCustomSettings, loadCustomSettings, defaultCustomSettings } from "../../core_logic/exercise-chrono/chrono-custom-settings";
+import {
+	ChronoCustomSettings,
+	loadCustomSettings,
+	defaultCustomSettings,
+} from "../../core_logic/exercise-chrono/chrono-custom-settings";
 
 @Component({
 	selector: "app-exercise-chrono",

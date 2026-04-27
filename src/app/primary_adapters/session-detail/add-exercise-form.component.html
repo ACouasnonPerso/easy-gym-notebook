@@ -36,6 +36,7 @@
 				(input)="onNameInput($event)"
 				[placeholder]="'exercise.namePlaceholder' | translate"
 				class="input"
+				[class.input--error]="nameInputError()"
 			/>
 			@if (suggestions().length > 0) {
 				<div class="suggestions">
@@ -166,10 +167,9 @@
 					<span class="picker-label">{{ "common.reps" | translate }}</span>
 					<app-drum-picker [values]="repsValues" [selectedValue]="reps()" (valueChange)="reps.set(+$event)" />
 				</div>
-				<div class="picker-col">
+				<div class="picker-col picker-col--wide">
 					<span class="picker-label">{{ "common.rest" | translate }}</span>
 					<app-drum-picker
-						style="min-width: 90px !important"
 						[values]="breakValues"
 						[selectedValue]="breakSelectedValue()"
 						(valueChange)="setBreakFromMmss($event)"
@@ -180,7 +180,7 @@
 
 		<div class="actions">
 			<button class="btn-cancel" (click)="cancelled.emit()">{{ "common.cancel" | translate }}</button>
-			<button class="btn-submit" [disabled]="isSubmitDisabled()" (click)="onSubmit()">
+			<button class="btn-submit" [class.btn-submit--disabled]="isSubmitDisabled()" [attr.aria-disabled]="isSubmitDisabled()" (click)="onSubmit()">
 				{{ "common.add" | translate }}
 			</button>
 		</div>

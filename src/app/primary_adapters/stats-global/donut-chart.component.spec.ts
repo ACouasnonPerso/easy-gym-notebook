@@ -144,7 +144,9 @@ describe("DonutChartComponent — selectedGroup state", () => {
 });
 
 describe("DonutChartComponent — totalLoad", () => {
-	function createComponent(detailsMap: Map<MuscleGroup, { percentage: number; sessionCount: number; totalLoadKg: number }>) {
+	function createComponent(
+		detailsMap: Map<MuscleGroup, { percentage: number; sessionCount: number; totalLoadKg: number }>
+	) {
 		TestBed.configureTestingModule({
 			imports: [DonutChartComponent],
 			providers: [provideTranslateService()],
@@ -216,10 +218,7 @@ describe("DonutChartComponent — legend % vs popover % cross-consistency", () =
 		});
 		const fixture = TestBed.createComponent(DonutChartComponent);
 
-		fixture.componentRef.setInput(
-			"distribution",
-			new Map([[MuscleGroup.Chest, 100]])
-		);
+		fixture.componentRef.setInput("distribution", new Map([[MuscleGroup.Chest, 100]]));
 		fixture.componentRef.setInput(
 			"details",
 			new Map([[MuscleGroup.Chest, { percentage: 100, sessionCount: 1, totalLoadKg: 500 }]])
@@ -304,7 +303,9 @@ describe("DonutChartComponent — legend % vs popover % cross-consistency", () =
 		groups.forEach((group, i) => {
 			const legendPct = legendItems[i].querySelector(".legend-pct")!.textContent?.trim();
 			const detailPct = fixture.componentInstance.details().get(group)?.percentage + "%";
-			expect(legendPct).withContext(`legend % for ${group} should match popover % even with .5 fractional share`).toBe(detailPct);
+			expect(legendPct)
+				.withContext(`legend % for ${group} should match popover % even with .5 fractional share`)
+				.toBe(detailPct);
 		});
 	});
 });

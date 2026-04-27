@@ -362,16 +362,12 @@ describe("ExerciseChronoComponent Story 6 - settings init priority", () => {
 
 	it("uses route param breakDuration as seed when no persisted settings exist", () => {
 		const { useCaseSpy } = buildUseCaseWithSettings({ breakDuration: "90" });
-		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith(
-			jasmine.objectContaining({ breakDuration: 90 })
-		);
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith(jasmine.objectContaining({ breakDuration: 90 }));
 	});
 
 	it("uses default breakDuration 60 when no route param and no persisted settings", () => {
 		const { useCaseSpy } = buildUseCaseWithSettings({});
-		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith(
-			jasmine.objectContaining({ breakDuration: 60 })
-		);
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith(jasmine.objectContaining({ breakDuration: 60 }));
 	});
 
 	it("uses persisted settings over route param when persisted settings exist", () => {
@@ -409,7 +405,11 @@ describe("ExerciseChronoComponent Story 6 - settings panel", () => {
 		panel.componentInstance.confirmed.emit({ exerciseDuration: 30, breakDuration: 60, repetitions: 3 });
 		fixture.detectChanges();
 
-		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith({ exerciseDuration: 30, breakDuration: 60, repetitions: 3 });
+		expect(useCaseSpy.applyCustomSettings).toHaveBeenCalledWith({
+			exerciseDuration: 30,
+			breakDuration: 60,
+			repetitions: 3,
+		});
 		const panelAfter = fixture.debugElement.query(By.css("app-chrono-custom-settings-panel"));
 		expect(panelAfter).toBeNull();
 	});

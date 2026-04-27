@@ -394,7 +394,9 @@ describe("StatsService", () => {
 				MuscleGroup.Abs,
 			];
 			service._allExercises.set(
-				muscleGroups.map((mg, i) => makeExercise({ id: `ex-${i + 1}`, sessionId: "s1", muscleGroup: mg, weightKg: 100, sets: 1, reps: 1 }))
+				muscleGroups.map((mg, i) =>
+					makeExercise({ id: `ex-${i + 1}`, sessionId: "s1", muscleGroup: mg, weightKg: 100, sets: 1, reps: 1 })
+				)
 			);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
@@ -858,7 +860,9 @@ describe("StatsService", () => {
 		it("retourne 100% pour un seul groupe musculaire", () => {
 			const march1 = new Date(2026, 2, 1);
 			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
-			service._allExercises.set([makeExercise({ sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 })]);
+			service._allExercises.set([
+				makeExercise({ sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 100, sets: 1, reps: 1 }),
+			]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
 			const result = service.muscleGroupDistribution();
@@ -872,11 +876,39 @@ describe("StatsService", () => {
 			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
 			service._allExercises.set([
 				// Chest: 1 exercise, volume = 500 * 2 * 5 = 5000 kg
-				makeExercise({ id: "ex-chest", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 500, sets: 2, reps: 5 }),
+				makeExercise({
+					id: "ex-chest",
+					sessionId: "s1",
+					muscleGroup: MuscleGroup.Chest,
+					weightKg: 500,
+					sets: 2,
+					reps: 5,
+				}),
 				// Back: 3 exercises, each 100 * 5 * 1 = 500 kg → total 1500 kg
-				makeExercise({ id: "ex-back-1", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
-				makeExercise({ id: "ex-back-2", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
-				makeExercise({ id: "ex-back-3", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
+				makeExercise({
+					id: "ex-back-1",
+					sessionId: "s1",
+					muscleGroup: MuscleGroup.Back,
+					weightKg: 100,
+					sets: 5,
+					reps: 1,
+				}),
+				makeExercise({
+					id: "ex-back-2",
+					sessionId: "s1",
+					muscleGroup: MuscleGroup.Back,
+					weightKg: 100,
+					sets: 5,
+					reps: 1,
+				}),
+				makeExercise({
+					id: "ex-back-3",
+					sessionId: "s1",
+					muscleGroup: MuscleGroup.Back,
+					weightKg: 100,
+					sets: 5,
+					reps: 1,
+				}),
 			]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
@@ -937,7 +969,14 @@ describe("StatsService", () => {
 				// Back: volume = 0*3*10 = 0 → should be excluded
 				makeExercise({ id: "ex-back", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 0, sets: 3, reps: 10 }),
 				// Chest: volume = 80*3*10 = 2400 → should be present at 100%
-				makeExercise({ id: "ex-chest", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 80, sets: 3, reps: 10 }),
+				makeExercise({
+					id: "ex-chest",
+					sessionId: "s1",
+					muscleGroup: MuscleGroup.Chest,
+					weightKg: 80,
+					sets: 3,
+					reps: 10,
+				}),
 			]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 
@@ -951,11 +990,39 @@ describe("StatsService", () => {
 			service._allSessions.set([makeSession({ id: "s1", date: march1 })]);
 			service._allExercises.set([
 				// Chest: 1 exercise, volume = 500 * 2 * 5 = 5000 kg
-				makeExercise({ id: "ex-chest", sessionId: "s1", muscleGroup: MuscleGroup.Chest, weightKg: 500, sets: 2, reps: 5 }),
+				makeExercise({
+					id: "ex-chest",
+					sessionId: "s1",
+					muscleGroup: MuscleGroup.Chest,
+					weightKg: 500,
+					sets: 2,
+					reps: 5,
+				}),
 				// Back: 3 exercises, each 100 * 5 * 1 = 500 kg → total 1500 kg
-				makeExercise({ id: "ex-back-1", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
-				makeExercise({ id: "ex-back-2", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
-				makeExercise({ id: "ex-back-3", sessionId: "s1", muscleGroup: MuscleGroup.Back, weightKg: 100, sets: 5, reps: 1 }),
+				makeExercise({
+					id: "ex-back-1",
+					sessionId: "s1",
+					muscleGroup: MuscleGroup.Back,
+					weightKg: 100,
+					sets: 5,
+					reps: 1,
+				}),
+				makeExercise({
+					id: "ex-back-2",
+					sessionId: "s1",
+					muscleGroup: MuscleGroup.Back,
+					weightKg: 100,
+					sets: 5,
+					reps: 1,
+				}),
+				makeExercise({
+					id: "ex-back-3",
+					sessionId: "s1",
+					muscleGroup: MuscleGroup.Back,
+					weightKg: 100,
+					sets: 5,
+					reps: 1,
+				}),
 			]);
 			service.selectedMonth.set(new Date(2026, 2, 1));
 

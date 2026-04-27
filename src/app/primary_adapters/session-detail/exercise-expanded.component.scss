@@ -194,18 +194,22 @@
 }
 .pickers-row {
 	display: flex;
-	overflow-x: auto;
-	padding-bottom: 8px;
-	scrollbar-width: none;
-}
-.pickers-row::-webkit-scrollbar {
-	display: none;
 }
 .picker-col {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	flex: 1;
+	min-width: 0;
+}
+.picker-col--wide {
+	min-width: 80px;
+}
+@media (max-width: 360px) {
+	.picker-label {
+		font-size: 6px;
+		letter-spacing: 0.5px;
+	}
 }
 .picker-label {
 	font-size: 8px;

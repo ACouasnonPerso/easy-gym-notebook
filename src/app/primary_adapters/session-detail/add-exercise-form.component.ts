@@ -84,6 +84,8 @@ export class AddExerciseFormComponent {
 			(!this.isCardio() && this.isPyramid() && this.pyramidSets().length === 0)
 	);
 
+	readonly nameInputError = signal(false);
+
 	readonly weightValues = WEIGHT_VALUES;
 	readonly setsValues = SETS_VALUES;
 	readonly repsValues = REPS_VALUES;
@@ -164,7 +166,11 @@ export class AddExerciseFormComponent {
 	}
 
 	async onSubmit(): Promise<void> {
-		if (!this.name().trim()) return;
+		if (!this.name().trim()) {
+			this.nameInputError.set(true);
+			setTimeout(() => this.nameInputError.set(false), 2000);
+			return;
+		}
 		if (this.isSubmitDisabled()) return;
 		this.haptic.vibrate();
 		await this.addExerciseUseCase.execute({

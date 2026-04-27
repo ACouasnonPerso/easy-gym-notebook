@@ -9,7 +9,9 @@
 				data-testid="settings-gear-btn"
 				(click)="openSettings.emit()"
 				aria-label="Settings"
-			>CUSTOM</button>
+			>
+				CUSTOM
+			</button>
 			<app-chrono-sound-button [soundEnabled]="soundEnabled()" (toggleSound)="toggleSound.emit()" />
 		</div>
 		<app-chrono-series-badge

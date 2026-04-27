@@ -541,231 +541,251 @@ describe("ExerciseChronoService", () => {
 });
 
 describe("ExerciseChronoService custom settings and OVER state Story 2", () => {
-  let service: ExerciseChronoService;
+	let service: ExerciseChronoService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ExerciseChronoService);
-    jasmine.clock().install();
-    jasmine.clock().mockDate(new Date(0));
-    localStorage.clear();
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({});
+		service = TestBed.inject(ExerciseChronoService);
+		jasmine.clock().install();
+		jasmine.clock().mockDate(new Date(0));
+		localStorage.clear();
+	});
 
-  afterEach(() => {
-    jasmine.clock().uninstall();
-  });
+	afterEach(() => {
+		jasmine.clock().uninstall();
+	});
 
-  describe("applyCustomSettings and settings signal", () => {
-    it("exposes the applied settings via settings signal", () => {
-      service.applyCustomSettings({ exerciseDuration: 30, breakDuration: 60, repetitions: 3 });
-      const s = service.settings();
-      expect(s.exerciseDuration).toBe(30);
-    });
+	describe("applyCustomSettings and settings signal", () => {
+		it("exposes the applied settings via settings signal", () => {
+			service.applyCustomSettings({ exerciseDuration: 30, breakDuration: 60, repetitions: 3 });
+			const s = service.settings();
+			expect(s.exerciseDuration).toBe(30);
+		});
 
-    it("resets chronoState to initial after applyCustomSettings", () => {
-      service.applyCustomSettings({ exerciseDuration: null, breakDuration: 60, repetitions: null });
-      expect(service.chronoState()).toBe("initial");
-    });
+		it("resets chronoState to initial after applyCustomSettings", () => {
+			service.applyCustomSettings({ exerciseDuration: null, breakDuration: 60, repetitions: null });
+			expect(service.chronoState()).toBe("initial");
+		});
 
-    it("completedReps starts at 0 after applyCustomSettings", () => {
-      service.applyCustomSettings({ exerciseDuration: 30, breakDuration: 60, repetitions: 5 });
-      expect(service.completedReps()).toBe(0);
-    });
-  });
-  describe("Finite exerciseDuration WORK as countdown", () => {
-    it("starts training as countdown from exerciseDuration when finite", () => {
-      service.applyCustomSettings({ exerciseDuration: 30, breakDuration: 60, repetitions: null });
-      service.start();
-      expect(service.timeSeconds()).toBe(30);
-    });
+		it("completedReps starts at 0 after applyCustomSettings", () => {
+			service.applyCustomSettings({ exerciseDuration: 30, breakDuration: 60, repetitions: 5 });
+			expect(service.completedReps()).toBe(0);
+		});
+	});
+	describe("Finite exerciseDuration WORK as countdown", () => {
+		it("starts training as countdown from exerciseDuration when finite", () => {
+			service.applyCustomSettings({ exerciseDuration: 30, breakDuration: 60, repetitions: null });
+			service.start();
+			expect(service.timeSeconds()).toBe(30);
+		});
 
-    it("auto-transitions from WORK to BREAK when exercise countdown hits 0", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: null });
-      service.start();
-      jasmine.clock().tick(6000);
-      expect(service.chronoState()).toBe("break");
-    });
-  });
+		it("auto-transitions from WORK to BREAK when exercise countdown hits 0", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: null });
+			service.start();
+			jasmine.clock().tick(6000);
+			expect(service.chronoState()).toBe("break");
+		});
+	});
 
-  describe("Finite breakDuration BREAK auto-transitions to WORK", () => {
-    it("auto-starts next WORK when break countdown hits 0", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: null });
-      service.start();
-      jasmine.clock().tick(6000);
-      jasmine.clock().tick(6000);
-      expect(service.chronoState()).toBe("training");
-    });
+	describe("Finite breakDuration BREAK auto-transitions to WORK", () => {
+		it("auto-starts next WORK when break countdown hits 0", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: null });
+			service.start();
+			jasmine.clock().tick(6000);
+			jasmine.clock().tick(6000);
+			expect(service.chronoState()).toBe("training");
+		});
 
-    it("increments completedReps when break countdown hits 0", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: null });
-      service.start();
-      jasmine.clock().tick(6000);
-      jasmine.clock().tick(6000);
-      expect(service.completedReps()).toBe(1);
-    });
+		it("increments completedReps when break countdown hits 0", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: null });
+			service.start();
+			jasmine.clock().tick(6000);
+			jasmine.clock().tick(6000);
+			expect(service.completedReps()).toBe(1);
+		});
 
-    it("increments seriesCount when break countdown hits 0", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: null });
-      service.start();
-      jasmine.clock().tick(6000);
-      jasmine.clock().tick(6000);
-      expect(service.seriesCount()).toBe(2);
-    });
-  });
-  describe("OVER state with finite reps", () => {
-    it("transitions to over when last WORK ends with 1 rep", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
-      service.start();
-      jasmine.clock().tick(6000);
-      expect(service.chronoState()).toBe("over");
-    });
+		it("increments seriesCount when break countdown hits 0", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: null });
+			service.start();
+			jasmine.clock().tick(6000);
+			jasmine.clock().tick(6000);
+			expect(service.seriesCount()).toBe(2);
+		});
+	});
+	describe("OVER state with finite reps", () => {
+		it("transitions to over when last WORK ends with 1 rep", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
+			service.start();
+			jasmine.clock().tick(6000);
+			expect(service.chronoState()).toBe("over");
+		});
 
-    it("does not start final BREAK when transitioning to over", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
-      service.start();
-      jasmine.clock().tick(6000);
-      expect(service.chronoState()).not.toBe("break");
-    });
+		it("does not start final BREAK when transitioning to over", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
+			service.start();
+			jasmine.clock().tick(6000);
+			expect(service.chronoState()).not.toBe("break");
+		});
 
-    it("does not increment completedReps when transitioning to over", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
-      service.start();
-      jasmine.clock().tick(6000);
-      expect(service.completedReps()).toBe(0);
-    });
+		it("does not increment completedReps when transitioning to over", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
+			service.start();
+			jasmine.clock().tick(6000);
+			expect(service.completedReps()).toBe(0);
+		});
 
-    it("transitions to over after 2 reps with repetitions 2", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: 2 });
-      service.start();
-      jasmine.clock().tick(6000);
-      jasmine.clock().tick(6000);
-      jasmine.clock().tick(6000);
-      expect(service.chronoState()).toBe("over");
-    });
+		it("transitions to over after 2 reps with repetitions 2", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: 2 });
+			service.start();
+			jasmine.clock().tick(6000);
+			jasmine.clock().tick(6000);
+			jasmine.clock().tick(6000);
+			expect(service.chronoState()).toBe("over");
+		});
 
-    it("completedReps is 1 after 1 break out of 2 reps", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: 2 });
-      service.start();
-      jasmine.clock().tick(6000);
-      jasmine.clock().tick(6000);
-      jasmine.clock().tick(6000);
-      expect(service.completedReps()).toBe(1);
-    });
-  });
-  describe("restart", () => {
-    it("resets to initial from over", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
-      service.start();
-      jasmine.clock().tick(6000);
-      service.restart();
-      expect(service.chronoState()).toBe("initial");
-    });
+		it("completedReps is 1 after 1 break out of 2 reps", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: 2 });
+			service.start();
+			jasmine.clock().tick(6000);
+			jasmine.clock().tick(6000);
+			jasmine.clock().tick(6000);
+			expect(service.completedReps()).toBe(1);
+		});
+	});
+	describe("restart", () => {
+		it("resets to initial from over", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
+			service.start();
+			jasmine.clock().tick(6000);
+			service.restart();
+			expect(service.chronoState()).toBe("initial");
+		});
 
-    it("resets seriesCount to 0 on restart", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
-      service.start();
-      jasmine.clock().tick(6000);
-      service.restart();
-      expect(service.seriesCount()).toBe(0);
-    });
+		it("resets seriesCount to 0 on restart", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
+			service.start();
+			jasmine.clock().tick(6000);
+			service.restart();
+			expect(service.seriesCount()).toBe(0);
+		});
 
-    it("resets completedReps to 0 on restart", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: 2 });
-      service.start();
-      jasmine.clock().tick(6000);
-      jasmine.clock().tick(6000);
-      jasmine.clock().tick(6000);
-      service.restart();
-      expect(service.completedReps()).toBe(0);
-    });
+		it("resets completedReps to 0 on restart", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 5, repetitions: 2 });
+			service.start();
+			jasmine.clock().tick(6000);
+			jasmine.clock().tick(6000);
+			jasmine.clock().tick(6000);
+			service.restart();
+			expect(service.completedReps()).toBe(0);
+		});
 
-    it("keeps settings after restart", () => {
-      const settings = { exerciseDuration: 5, breakDuration: 60, repetitions: 1 };
-      service.applyCustomSettings(settings);
-      service.start();
-      jasmine.clock().tick(6000);
-      service.restart();
-      expect(service.settings()).toEqual(settings);
-    });
-  });
+		it("keeps settings after restart", () => {
+			const settings = { exerciseDuration: 5, breakDuration: 60, repetitions: 1 };
+			service.applyCustomSettings(settings);
+			service.start();
+			jasmine.clock().tick(6000);
+			service.restart();
+			expect(service.settings()).toEqual(settings);
+		});
+	});
 
-  describe("Infinite exerciseDuration WORK as count-up", () => {
-    it("WORK is count-up when exerciseDuration is null", () => {
-      service.applyCustomSettings({ exerciseDuration: null, breakDuration: 60, repetitions: null });
-      service.start();
-      jasmine.clock().tick(3000);
-      expect(service.timeSeconds()).toBe(3);
-    });
+	describe("Infinite exerciseDuration WORK as count-up", () => {
+		it("WORK is count-up when exerciseDuration is null", () => {
+			service.applyCustomSettings({ exerciseDuration: null, breakDuration: 60, repetitions: null });
+			service.start();
+			jasmine.clock().tick(3000);
+			expect(service.timeSeconds()).toBe(3);
+		});
 
-    it("manual goBreak transitions to BREAK when exerciseDuration is null", () => {
-      service.applyCustomSettings({ exerciseDuration: null, breakDuration: 60, repetitions: null });
-      service.start();
-      service.goBreak();
-      expect(service.chronoState()).toBe("break");
-    });
-  });
+		it("manual goBreak transitions to BREAK when exerciseDuration is null", () => {
+			service.applyCustomSettings({ exerciseDuration: null, breakDuration: 60, repetitions: null });
+			service.start();
+			service.goBreak();
+			expect(service.chronoState()).toBe("break");
+		});
+	});
 
-  describe("Infinite breakDuration BREAK is manual", () => {
-    it("BREAK does not auto-transition when breakDuration is null", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: null, repetitions: null });
-      service.start();
-      jasmine.clock().tick(6000);
-      jasmine.clock().tick(60000);
-      expect(service.chronoState()).toBe("break");
-    });
+	describe("Infinite breakDuration BREAK is manual", () => {
+		it("BREAK does not auto-transition when breakDuration is null", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: null, repetitions: null });
+			service.start();
+			jasmine.clock().tick(6000);
+			jasmine.clock().tick(60000);
+			expect(service.chronoState()).toBe("break");
+		});
 
-    it("manual goTraining transitions to next WORK when breakDuration is null", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: null, repetitions: null });
-      service.start();
-      jasmine.clock().tick(6000);
-      service.goTraining();
-      expect(service.chronoState()).toBe("training");
-    });
-  });
-  describe("persist and restoreFromPersist Story 2 additions", () => {
-    it("persist writes settings and completedReps", () => {
-      service.applyCustomSettings({ exerciseDuration: 30, breakDuration: 60, repetitions: 3 });
-      service.start();
-      const raw = localStorage.getItem("egn_exercise_chrono");
-      const data = JSON.parse(raw!);
-      expect(data.settings).toEqual({ exerciseDuration: 30, breakDuration: 60, repetitions: 3 });
-      expect(data.completedReps).toBe(0);
-    });
+		it("manual goTraining transitions to next WORK when breakDuration is null", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: null, repetitions: null });
+			service.start();
+			jasmine.clock().tick(6000);
+			service.goTraining();
+			expect(service.chronoState()).toBe("training");
+		});
+	});
+	describe("persist and restoreFromPersist Story 2 additions", () => {
+		it("persist writes settings and completedReps", () => {
+			service.applyCustomSettings({ exerciseDuration: 30, breakDuration: 60, repetitions: 3 });
+			service.start();
+			const raw = localStorage.getItem("egn_exercise_chrono");
+			const data = JSON.parse(raw!);
+			expect(data.settings).toEqual({ exerciseDuration: 30, breakDuration: 60, repetitions: 3 });
+			expect(data.completedReps).toBe(0);
+		});
 
-    it("persist writes over state", () => {
-      service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
-      service.start();
-      jasmine.clock().tick(6000);
-      const raw = localStorage.getItem("egn_exercise_chrono");
-      const data = JSON.parse(raw!);
-      expect(data.state).toBe("over");
-    });
+		it("persist writes over state", () => {
+			service.applyCustomSettings({ exerciseDuration: 5, breakDuration: 60, repetitions: 1 });
+			service.start();
+			jasmine.clock().tick(6000);
+			const raw = localStorage.getItem("egn_exercise_chrono");
+			const data = JSON.parse(raw!);
+			expect(data.state).toBe("over");
+		});
 
-    it("restoreFromPersist restores over state", () => {
-      localStorage.setItem("egn_exercise_chrono", JSON.stringify({
-        breakDuration: 60, timerStartedAtMs: 0, timeAtStart: 0, state: "over",
-        settings: { exerciseDuration: 30, breakDuration: 60, repetitions: 1 }, completedReps: 0
-      }));
-      service.restoreFromPersist();
-      expect(service.chronoState()).toBe("over");
-    });
+		it("restoreFromPersist restores over state", () => {
+			localStorage.setItem(
+				"egn_exercise_chrono",
+				JSON.stringify({
+					breakDuration: 60,
+					timerStartedAtMs: 0,
+					timeAtStart: 0,
+					state: "over",
+					settings: { exerciseDuration: 30, breakDuration: 60, repetitions: 1 },
+					completedReps: 0,
+				})
+			);
+			service.restoreFromPersist();
+			expect(service.chronoState()).toBe("over");
+		});
 
-    it("restoreFromPersist restores settings and completedReps", () => {
-      localStorage.setItem("egn_exercise_chrono", JSON.stringify({
-        breakDuration: 60, timerStartedAtMs: 0, timeAtStart: 0, state: "initial",
-        settings: { exerciseDuration: 45, breakDuration: 90, repetitions: 5 }, completedReps: 2
-      }));
-      service.restoreFromPersist();
-      expect(service.settings().exerciseDuration).toBe(45);
-      expect(service.completedReps()).toBe(2);
-    });
+		it("restoreFromPersist restores settings and completedReps", () => {
+			localStorage.setItem(
+				"egn_exercise_chrono",
+				JSON.stringify({
+					breakDuration: 60,
+					timerStartedAtMs: 0,
+					timeAtStart: 0,
+					state: "initial",
+					settings: { exerciseDuration: 45, breakDuration: 90, repetitions: 5 },
+					completedReps: 2,
+				})
+			);
+			service.restoreFromPersist();
+			expect(service.settings().exerciseDuration).toBe(45);
+			expect(service.completedReps()).toBe(2);
+		});
 
-    it("restoreFromPersist is backward compatible with missing settings", () => {
-      localStorage.setItem("egn_exercise_chrono", JSON.stringify({
-        breakDuration: 60, timerStartedAtMs: 0, timeAtStart: 15, state: "training_paused"
-      }));
-      service.restoreFromPersist();
-      expect(service.chronoState()).toBe("training_paused");
-    });
-  });
+		it("restoreFromPersist is backward compatible with missing settings", () => {
+			localStorage.setItem(
+				"egn_exercise_chrono",
+				JSON.stringify({
+					breakDuration: 60,
+					timerStartedAtMs: 0,
+					timeAtStart: 15,
+					state: "training_paused",
+				})
+			);
+			service.restoreFromPersist();
+			expect(service.chronoState()).toBe("training_paused");
+		});
+	});
 });
