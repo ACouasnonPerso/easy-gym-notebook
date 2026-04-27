@@ -2,11 +2,13 @@ import { Component, ChangeDetectionStrategy, input, output, computed, inject } f
 import { NgStyle } from "@angular/common";
 import { Exercise, MuscleGroup } from "../../core_logic/shared/models";
 import { ExerciseExpandedComponent } from "./exercise-expanded.component";
+import { PhotoThumbnailComponent } from "../exercise-photo/photo-thumbnail.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { HapticService } from "../../core_logic/shared/haptic.service";
 import { muscleGroupChipStyle } from "../../core_logic/shared/muscle-group-colors";
 import { WeightDisplayPipe } from "../../core_logic/mass-unit/weight-display.pipe";
 import { DistanceDisplayPipe } from "../../core_logic/mass-unit/distance-display.pipe";
+import { GetExercisePhotoUseCase } from "../../primary_ports/exercise-photo/get-exercise-photo.usecase";
 
 function formatDurationMinutes(seconds: number): string {
 	return Math.floor(seconds / 60).toString();
@@ -22,12 +24,13 @@ function formatBreakDuration(seconds: number): string {
 	selector: "app-exercise-card",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [ExerciseExpandedComponent, NgStyle, TranslateModule, WeightDisplayPipe, DistanceDisplayPipe],
+	imports: [ExerciseExpandedComponent, PhotoThumbnailComponent, NgStyle, TranslateModule, WeightDisplayPipe, DistanceDisplayPipe],
 	templateUrl: "./exercise-card.component.html",
 	styleUrl: "./exercise-card.component.scss",
 })
 export class ExerciseCardComponent {
 	private readonly haptic = inject(HapticService);
+	private readonly getPhoto = inject(GetExercisePhotoUseCase);
 	readonly exercise = input.required<Exercise>();
 	readonly isExpanded = input<boolean>(false);
 	readonly toggleExpand = output<void>();
@@ -36,11 +39,13 @@ export class ExerciseCardComponent {
 	readonly exerciseValidate = output<void>();
 	readonly exerciseCancel = output<void>();
 	readonly exerciseDelete = output<void>();
+	readonly openPhoto = output<string>();
 	readonly openChrono = output<void>();
 	readonly openStats = output<void>();
 	readonly openRating = output<void>();
 	readonly openComment = output<void>();
 
+	readonly hasPhoto = computed(() => !!this.getPhoto.photoFor(this.exercise().name));
 	readonly isValidated = computed(() => this.exercise().status === "validated");
 	readonly isActiveStatus = computed(
 		() => this.exercise().status === "pending" || this.exercise().status === "cancelled"

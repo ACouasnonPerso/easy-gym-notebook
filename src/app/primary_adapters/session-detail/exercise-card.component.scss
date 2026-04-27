@@ -83,7 +83,13 @@
 	padding: 3px 9px;
 	border-radius: 20px;
 }
+.exercise-body {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
 .exercise-stats {
+	flex: 1;
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 4px;

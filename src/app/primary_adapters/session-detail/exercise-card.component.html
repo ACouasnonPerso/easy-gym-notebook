@@ -42,6 +42,8 @@
 			</span>
 		}
 	</div>
+	<div class="exercise-body">
+	<app-photo-thumbnail [exerciseName]="exercise().name" (clickPhoto)="openPhoto.emit($event)" />
 	<div class="exercise-stats">
 		@if (isCardio()) {
 			<div class="ex-stat">
@@ -66,10 +68,12 @@
 					<span class="ex-stat-value pyramid-sets-count">{{ exercise().pyramidSets.length }}</span>
 					<span class="ex-stat-label">{{ "common.sets" | translate }}</span>
 				</div>
+				@if (!hasPhoto()) {
 				<div class="ex-stat">
 					<span class="ex-stat-value blue">{{ breakLabel() }}</span>
 					<span class="ex-stat-label">{{ "common.break" | translate }}</span>
 				</div>
+				}
 				<div class="ex-stat right">
 					<span class="ex-stat-value">≈{{ avgPyramidReps() }}</span>
 					<span class="ex-stat-label">{{ "common.reps" | translate }}</span>
@@ -88,15 +92,18 @@
 				<span class="ex-stat-value">{{ exercise().sets }}</span>
 				<span class="ex-stat-label">{{ "common.sets" | translate }}</span>
 			</div>
-			<div class="ex-stat">
-				<span class="ex-stat-value blue">{{ breakLabel() }}</span>
-				<span class="ex-stat-label">{{ "common.break" | translate }}</span>
-			</div>
+			@if (!hasPhoto()) {
+				<div class="ex-stat">
+					<span class="ex-stat-value blue">{{ breakLabel() }}</span>
+					<span class="ex-stat-label">{{ "common.break" | translate }}</span>
+				</div>
+			}
 			<div class="ex-stat right">
 				<span class="ex-stat-value">{{ exercise().reps }}</span>
 				<span class="ex-stat-label">{{ "common.reps" | translate }}</span>
 			</div>
 		}
+	</div>
 	</div>
 </div>
 @if (isExpanded()) {
