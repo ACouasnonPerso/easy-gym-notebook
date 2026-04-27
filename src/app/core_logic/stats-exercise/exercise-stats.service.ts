@@ -43,6 +43,9 @@ export class ExerciseStatsService {
 		const occurrences: ExerciseOccurrence[] = matchingExercises
 			.map((e) => {
 				const isPyramid = e.isPyramid && e.pyramidSets.length > 0;
+				const totalReps = isPyramid
+					? e.pyramidSets.reduce((sum, s) => sum + s.reps, 0)
+					: e.sets * e.reps;
 				const weightKg = isPyramid
 					? e.pyramidSets.reduce((sum, s) => sum + s.weightKg, 0) / e.pyramidSets.length
 					: e.weightKg;
@@ -62,6 +65,7 @@ export class ExerciseStatsService {
 					status: e.status,
 					rating: e.rating ?? null,
 					comment: e.comment ?? null,
+					totalReps,
 				};
 			})
 			.sort((a, b) => b.date.getTime() - a.date.getTime());

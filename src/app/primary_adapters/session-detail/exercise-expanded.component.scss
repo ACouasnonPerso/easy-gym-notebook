@@ -267,3 +267,24 @@
 .btn-comment--active {
 	color: var(--blue);
 }
+
+.btn-photo {
+	padding: 8px 10px;
+	color: var(--orange);
+}
+.btn-photo--has-photo {
+	opacity: 1;
+}
+.btn-photo--no-photo {
+	opacity: 0.8;
+}
+.btn-photo:disabled {
+	opacity: 0.35;
+	cursor: not-allowed;
+}
+.btn-photo-remove {
+	padding: 8px 10px;
+	color: var(--red);
+	background: rgba(239, 68, 68, 0.1);
+	border: 1px solid rgba(239, 68, 68, 0.25);
+}

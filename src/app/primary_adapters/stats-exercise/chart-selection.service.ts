@@ -1,6 +1,6 @@
 import { Injectable, signal } from "@angular/core";
 
-export type ChartType = "volume" | "weight" | "pace" | "speed";
+export type ChartType = "volume" | "weight" | "pace" | "speed" | "reps";
 
 const STORAGE_KEY = "chart-selection";
 

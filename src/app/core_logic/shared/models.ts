@@ -66,6 +66,8 @@ export interface ExerciseOccurrence {
 	status: ExerciseStatus;
 	rating: number | null;
 	comment: string | null;
+	totalReps?: number;
+	setBreakdown?: { weightKg: number; reps: number; }[];
 }
 
 export interface RawSession {
@@ -111,4 +113,10 @@ export interface ImportResult {
 	sessionCount?: number;
 	exerciseCount?: number;
 	error?: string;
+}
+
+export interface ExercisePhoto {
+	exerciseName: string;
+	dataUrl: string;
+	capturedAt: Date;
 }

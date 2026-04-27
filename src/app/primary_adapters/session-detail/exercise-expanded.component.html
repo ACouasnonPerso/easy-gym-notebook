@@ -1,4 +1,13 @@
 <div class="expanded-panel" (click)="$event.stopPropagation()">
+	<input
+		#fileInput
+		type="file"
+		accept="image/*"
+		capture
+		style="display:none"
+		(change)="onFileInputChange($event)"
+	/>
+
 	<div class="name-row">
 		<div class="name-row-top">
 			<input
@@ -201,6 +210,55 @@
 		</button>
 		<button class="btn btn-secondary" (click)="openChrono.emit()">{{ "nav.chrono" | translate }}</button>
 		<button class="btn btn-secondary" (click)="openStats.emit()">{{ "exercise.page" | translate }}</button>
+		<button
+			class="btn btn-secondary btn-photo"
+			[class.btn-photo--has-photo]="hasPhoto()"
+			[class.btn-photo--no-photo]="!hasPhoto()"
+			[disabled]="!isNameValid()"
+			(click)="triggerFilePicker()"
+			aria-label="Add or change photo"
+		>
+			@if (hasPhoto()) {
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+					<rect x="3" y="7" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8" fill="none" />
+					<circle cx="12" cy="14" r="3" stroke="currentColor" stroke-width="1.6" fill="none" />
+					<path d="M7 7V6a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1" stroke="currentColor" stroke-width="1.6" />
+				</svg>
+			} @else {
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" opacity="0.8">
+					<rect x="3" y="7" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8" fill="none" />
+					<circle cx="12" cy="14" r="3" stroke="currentColor" stroke-width="1.6" fill="none" />
+					<path d="M7 7V6a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1" stroke="currentColor" stroke-width="1.6" />
+					<line x1="17" y1="3" x2="21" y2="7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+					<line x1="21" y1="3" x2="17" y2="7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+				</svg>
+			}
+		</button>
+		@if (hasPhoto()) {
+			<button
+				class="btn btn-secondary btn-photo-remove"
+				(click)="showRemoveConfirm.set(true)"
+				aria-label="Remove photo"
+			>
+				<svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+					<line x1="2" y1="2" x2="10" y2="10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+					<line x1="10" y1="2" x2="2" y2="10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+				</svg>
+			</button>
+		}
 		<button class="btn btn-delete" (click)="delete.emit()">{{ "common.delete" | translate }}</button>
 	</div>
+	@if (showRemoveConfirm()) {
+		<app-confirm-dialog
+			[message]="'exercise.removePhotoConfirm' | translate"
+			(confirmed)="onRemoveConfirmed()"
+			(cancelled)="showRemoveConfirm.set(false)"
+		/>
+	}
+	<app-toast
+		[visible]="toastVisible()"
+		[type]="toastType()"
+		[message]="'exercise.photoError' | translate"
+		(dismissed)="onToastDismissed()"
+	/>
 </div>

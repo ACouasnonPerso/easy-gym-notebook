@@ -1,0 +1,46 @@
+<div class="overlay" (click)="close.emit()">
+	<div class="form-card" (click)="$event.stopPropagation()">
+		<div class="sets-list">
+			@for (set of occurrence().setBreakdown; track $index) {
+				<div class="set-row">
+					<span class="set-num">{{ $index + 1 }}</span>
+					<span class="set-weight">{{ set.weightKg | weightDisplay: "kg" }}</span>
+					<span class="set-sep">×</span>
+					<span class="set-reps">{{ set.reps }}</span>
+				</div>
+			}
+		</div>
+		@if (occurrence().comment) {
+			<div class="comment-section">
+				<p class="comment-text">{{ occurrence().comment }}</p>
+				<button type="button" class="btn-edit" (click)="openEditPopup()" aria-label="Edit comment">
+					<svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+						<path
+							d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+						<path
+							d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+					</svg>
+				</button>
+			</div>
+		}
+		<button type="button" class="btn-close" (click)="close.emit()">{{ "common.close" | translate }}</button>
+	</div>
+</div>
+
+@if (showEditPopup()) {
+	<app-exercise-comment-popup
+		[currentComment]="occurrence().comment"
+		(commentSaved)="onCommentSaved($event)"
+		(cancelled)="closeEditPopup()"
+	/>
+}

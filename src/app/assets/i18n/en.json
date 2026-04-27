@@ -79,7 +79,9 @@
 		"validateAria": "Validate exercise",
 		"cancelAria": "Cancel exercise",
 		"pyramid": "Pyramid",
-		"addSet": "Add a set"
+		"addSet": "Add a set",
+		"removePhotoConfirm": "Remove this photo?",
+		"photoError": "Failed to save photo"
 	},
 	"session": {
 		"endConfirm": "End the session?"

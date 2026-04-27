@@ -32,10 +32,6 @@ Spawn the `tdd-analyze` sub-agent with:
 
 ```
 Story: [paste the full story block: goal, scope, acceptance criteria]
-
-Explore the current codebase to understand existing conventions (models, file structure, test patterns).
-Produce a complete, TPP-ordered, FLFI-labeled test list covering ALL acceptance criteria from the story.
-Output a structured test plan. Do not write any code or create any files.
 ```
 
 Wait for the test plan before continuing.
@@ -48,10 +44,7 @@ Spawn the `tdd-auto` sub-agent with:
 Story: [paste the full story block: goal, scope, acceptance criteria]
 Test plan: [paste full output from Phase 1]
 
-Implement this story using the TDD cycle (RED → GREEN for each test in the plan).
-Follow Clean Architecture, Angular 21 conventions, OnPush, signals, no NgModule.
-After all tests are green, run: ng build --configuration development
-Fix any compilation error before finishing.
+After all tests pass, run: ng build --configuration development and fix any compilation errors.
 ```
 
 Wait for a successful `ng build` before continuing.
@@ -62,9 +55,6 @@ Spawn the `reviewer` sub-agent with:
 
 ```
 Story: [paste the full story block: goal, scope, acceptance criteria]
-
-Review the implementation of this story.
-Use the story's acceptance criteria as the primary validation reference.
 ```
 
 If the reviewer returns ❌, re-delegate fixes to `tdd-auto` then re-run Phase 3.

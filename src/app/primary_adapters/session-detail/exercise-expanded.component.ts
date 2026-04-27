@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, output, computed, signal, inject } from "@angular/core";
+import { Component, ChangeDetectionStrategy, input, output, computed, signal, inject, ViewChild, ElementRef } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Exercise, PyramidSet } from "../../core_logic/shared/models";
 import { DrumPickerComponent } from "../shared/drum-picker.component";
@@ -6,11 +6,16 @@ import { DecimalInputDirective } from "../shared/decimal-input.directive";
 import { generateRange } from "../../core_logic/shared/utils";
 import { TranslateModule } from "@ngx-translate/core";
 import { MassUnitService } from "../../core_logic/mass-unit/mass-unit.service";
+import { GetExercisePhotoUseCase } from "../../primary_ports/exercise-photo/get-exercise-photo.usecase";
+import { SetExercisePhotoUseCase } from "../../primary_ports/exercise-photo/set-exercise-photo.usecase";
+import { RemoveExercisePhotoUseCase } from "../../primary_ports/exercise-photo/remove-exercise-photo.usecase";
+import { ConfirmDialogComponent } from "../shared/confirm-dialog.component";
+import { ToastComponent, ToastType } from "../shared/toast.component";
 
 function secondsToMmss(s: number): string {
 	const m = Math.floor(s / 60);
 	const sec = s % 60;
-	return `${m.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
+	return m.toString().padStart(2, "0") + ":" + sec.toString().padStart(2, "0");
 }
 
 function mmssToSeconds(mmss: string): number {
@@ -36,12 +41,16 @@ const KM_VALUES: (number | string)[] = [
 	selector: "app-exercise-expanded",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [DrumPickerComponent, FormsModule, TranslateModule, DecimalInputDirective],
+	imports: [DrumPickerComponent, FormsModule, TranslateModule, DecimalInputDirective, ConfirmDialogComponent, ToastComponent],
 	templateUrl: "./exercise-expanded.component.html",
 	styleUrl: "./exercise-expanded.component.scss",
 })
 export class ExerciseExpandedComponent {
 	private readonly massUnitService = inject(MassUnitService);
+	private readonly getPhotoUseCase = inject(GetExercisePhotoUseCase);
+	private readonly setPhotoUseCase = inject(SetExercisePhotoUseCase);
+	private readonly removePhotoUseCase = inject(RemoveExercisePhotoUseCase);
+
 	readonly weightUnit = computed(() => (this.massUnitService.activeMassUnit() === "metric" ? "kg" : "lb"));
 
 	readonly exercise = input.required<Exercise>();
@@ -53,6 +62,15 @@ export class ExerciseExpandedComponent {
 	readonly openStats = output<void>();
 	readonly openRating = output<void>();
 	readonly openComment = output<void>();
+
+	readonly hasPhoto = computed(() => !!this.getPhotoUseCase.photoFor(this.exercise().name));
+	readonly isNameValid = computed(() => this.exercise().name.trim().length > 0);
+
+	readonly showRemoveConfirm = signal(false);
+	readonly toastVisible = signal(false);
+	readonly toastType = signal<ToastType>("error");
+
+	@ViewChild("fileInput") fileInputRef!: ElementRef<HTMLInputElement>;
 
 	readonly weightValuesForDisplay = computed<(number | string)[]>(() => {
 		if (this.massUnitService.activeMassUnit() === "metric") return WEIGHT_VALUES;
@@ -78,6 +96,39 @@ export class ExerciseExpandedComponent {
 	readonly isPyramidLocal = computed(() => this.exercise().isPyramid ?? false);
 	readonly pyramidSetsLocal = signal<PyramidSet[] | null>(null);
 	readonly effectivePyramidSets = computed(() => this.pyramidSetsLocal() ?? this.exercise().pyramidSets ?? []);
+
+	triggerFilePicker(): void {
+		if (this.fileInputRef?.nativeElement) {
+			this.fileInputRef.nativeElement.click();
+		}
+	}
+
+	async onFileSelected(file: File): Promise<void> {
+		try {
+			await this.setPhotoUseCase.execute(this.exercise().name, file);
+		} catch {
+			this.toastType.set("error");
+			this.toastVisible.set(true);
+		}
+	}
+
+	onFileInputChange(event: Event): void {
+		const input = event.target as HTMLInputElement;
+		const file = input?.files?.[0];
+		if (file) {
+			void this.onFileSelected(file);
+		}
+		if (input) input.value = "";
+	}
+
+	async onRemoveConfirmed(): Promise<void> {
+		await this.removePhotoUseCase.execute(this.exercise().name);
+		this.showRemoveConfirm.set(false);
+	}
+
+	onToastDismissed(): void {
+		this.toastVisible.set(false);
+	}
 
 	togglePyramid(): void {
 		const next = !this.isPyramidLocal();

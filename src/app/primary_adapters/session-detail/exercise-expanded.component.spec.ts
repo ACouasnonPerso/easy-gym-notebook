@@ -1,9 +1,12 @@
-import { TestBed, ComponentFixture } from "@angular/core/testing";
-import { Component, signal } from "@angular/core";
+import { TestBed, ComponentFixture, fakeAsync, tick } from "@angular/core/testing";
 import { provideTranslateService } from "@ngx-translate/core";
 import { ExerciseExpandedComponent } from "./exercise-expanded.component";
 import { MassUnitService, MassUnit } from "../../core_logic/mass-unit/mass-unit.service";
 import { Exercise } from "../../core_logic/shared/models";
+import { ExercisePhotoStore } from "../../stores/exercise-photo.store";
+import { SetExercisePhotoUseCase } from "../../primary_ports/exercise-photo/set-exercise-photo.usecase";
+import { RemoveExercisePhotoUseCase } from "../../primary_ports/exercise-photo/remove-exercise-photo.usecase";
+import { GetExercisePhotoUseCase } from "../../primary_ports/exercise-photo/get-exercise-photo.usecase";
 
 function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 	return {
@@ -27,6 +30,17 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 		...overrides,
 	} as Exercise;
 }
+function createPhotoStore(): ExercisePhotoStore { return new ExercisePhotoStore(); }
+
+function makePhotoProviders() {
+	return [
+		{ provide: ExercisePhotoStore, useFactory: createPhotoStore },
+		{ provide: SetExercisePhotoUseCase, useValue: jasmine.createSpyObj("SetExercisePhotoUseCase", ["execute"]) },
+		{ provide: RemoveExercisePhotoUseCase, useValue: jasmine.createSpyObj("RemoveExercisePhotoUseCase", ["execute"]) },
+		{ provide: GetExercisePhotoUseCase, useValue: jasmine.createSpyObj("GetExercisePhotoUseCase", ["photoFor"]) },
+	];
+}
+
 
 describe("ExerciseExpandedComponent — btn-rating rated state", () => {
 	let fixture: ComponentFixture<ExerciseExpandedComponent>;
@@ -36,7 +50,7 @@ describe("ExerciseExpandedComponent — btn-rating rated state", () => {
 
 		await TestBed.configureTestingModule({
 			imports: [ExerciseExpandedComponent],
-			providers: [MassUnitService, provideTranslateService({ defaultLanguage: "fr" })],
+			providers: [MassUnitService, provideTranslateService({ defaultLanguage: "fr" }), ...makePhotoProviders()],
 		}).compileComponents();
 
 		TestBed.inject(MassUnitService).setMassUnit("metric");
@@ -71,7 +85,7 @@ describe("ExerciseExpandedComponent — togglePyramid pre-fill", () => {
 
 		await TestBed.configureTestingModule({
 			imports: [ExerciseExpandedComponent],
-			providers: [MassUnitService, provideTranslateService({ defaultLanguage: "fr" })],
+			providers: [MassUnitService, provideTranslateService({ defaultLanguage: "fr" }), ...makePhotoProviders()],
 		}).compileComponents();
 
 		massUnitService = TestBed.inject(MassUnitService);
@@ -107,7 +121,7 @@ describe("ExerciseExpandedComponent — weight unit conversion", () => {
 
 		await TestBed.configureTestingModule({
 			imports: [ExerciseExpandedComponent],
-			providers: [MassUnitService, provideTranslateService({ defaultLanguage: "fr" })],
+			providers: [MassUnitService, provideTranslateService({ defaultLanguage: "fr" }), ...makePhotoProviders()],
 		}).compileComponents();
 
 		massUnitService = TestBed.inject(MassUnitService);
@@ -218,4 +232,176 @@ describe("ExerciseExpandedComponent — weight unit conversion", () => {
 			expect(emittedKg).toBeCloseTo(85, 1);
 		});
 	});
+});
+describe("ExerciseExpandedComponent — photo button", () => {
+	let fixture: ComponentFixture<ExerciseExpandedComponent>;
+	let component: ExerciseExpandedComponent;
+	let store: ExercisePhotoStore;
+	let setPhotoSpy: jasmine.SpyObj<SetExercisePhotoUseCase>;
+	let removePhotoSpy: jasmine.SpyObj<RemoveExercisePhotoUseCase>;
+
+	beforeEach(async () => {
+		localStorage.clear();
+		setPhotoSpy = jasmine.createSpyObj<SetExercisePhotoUseCase>("SetExercisePhotoUseCase", ["execute"]);
+		setPhotoSpy.execute.and.returnValue(Promise.resolve());
+		removePhotoSpy = jasmine.createSpyObj<RemoveExercisePhotoUseCase>("RemoveExercisePhotoUseCase", ["execute"]);
+		removePhotoSpy.execute.and.returnValue(Promise.resolve());
+		store = new ExercisePhotoStore();
+		await TestBed.configureTestingModule({
+			imports: [ExerciseExpandedComponent],
+			providers: [
+				MassUnitService,
+				provideTranslateService({ defaultLanguage: "fr" }),
+				{ provide: ExercisePhotoStore, useValue: store },
+				{ provide: SetExercisePhotoUseCase, useValue: setPhotoSpy },
+				{ provide: RemoveExercisePhotoUseCase, useValue: removePhotoSpy },
+				GetExercisePhotoUseCase,
+			],
+		}).compileComponents();
+		TestBed.inject(MassUnitService).setMassUnit("metric");
+	});
+
+	function createFixture(overrides: Partial<Exercise> = {}): void {
+		fixture = TestBed.createComponent(ExerciseExpandedComponent);
+		fixture.componentRef.setInput("exercise", makeExercise(overrides));
+		fixture.detectChanges();
+		component = fixture.componentInstance;
+	}
+	it("should render a photo button in the actions row", () => {
+		createFixture();
+		const btn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-photo");
+		expect(btn).toBeTruthy();
+	});
+
+	it("should show btn-photo--no-photo class when no photo is set", () => {
+		createFixture();
+		const btn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-photo");
+		expect(btn.classList.contains("btn-photo--no-photo")).toBeTrue();
+		expect(btn.classList.contains("btn-photo--has-photo")).toBeFalse();
+	});
+
+	it("should show btn-photo--has-photo class when a photo exists for this exercise", () => {
+		store.setForName("Bench Press", { exerciseName: "Bench Press", dataUrl: "data:image/jpeg;base64,abc", capturedAt: new Date() });
+		createFixture();
+		const btn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-photo");
+		expect(btn.classList.contains("btn-photo--has-photo")).toBeTrue();
+		expect(btn.classList.contains("btn-photo--no-photo")).toBeFalse();
+	});
+
+	it("should disable the photo button when exercise name is empty", () => {
+		createFixture({ name: "" });
+		const btn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-photo");
+		expect(btn.disabled).toBeTrue();
+	});
+
+	it("should disable the photo button when exercise name is whitespace-only", () => {
+		createFixture({ name: "   " });
+		const btn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-photo");
+		expect(btn.disabled).toBeTrue();
+	});
+
+	it("should enable the photo button when exercise name is non-empty", () => {
+		createFixture({ name: "Squat" });
+		const btn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-photo");
+		expect(btn.disabled).toBeFalse();
+	});
+
+	it("should have a hidden file input with accept=image/* and capture attribute", () => {
+		createFixture();
+		const input: HTMLInputElement = fixture.nativeElement.querySelector("input[type=file]");
+		expect(input).toBeTruthy();
+		expect(input.accept).toBe("image/*");
+		expect(input.hasAttribute("capture")).toBeTrue();
+	});
+
+	it("should click the hidden file input when photo button is tapped", () => {
+		createFixture();
+		const input: HTMLInputElement = fixture.nativeElement.querySelector("input[type=file]");
+		const clickSpy = spyOn(input, "click");
+		const btn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-photo");
+		btn.click();
+		expect(clickSpy).toHaveBeenCalled();
+	});
+
+	it("should call SetExercisePhotoUseCase with exercise name and file on file change", fakeAsync(async () => {
+		createFixture({ name: "Bench Press" });
+		const file = new File(["data"], "photo.jpg", { type: "image/jpeg" });
+		await component.onFileSelected(file);
+		tick();
+		expect(setPhotoSpy.execute).toHaveBeenCalledWith("Bench Press", file);
+	}));
+
+	it("should not show toast on successful photo set", fakeAsync(async () => {
+		createFixture();
+		const file = new File(["data"], "photo.jpg", { type: "image/jpeg" });
+		await component.onFileSelected(file);
+		tick();
+		fixture.detectChanges();
+		expect(component.toastVisible()).toBeFalse();
+	}));
+
+	it("should show error toast when SetExercisePhotoUseCase throws", fakeAsync(async () => {
+		setPhotoSpy.execute.and.returnValue(Promise.reject(new Error("fail")));
+		createFixture();
+		const file = new File(["data"], "photo.jpg", { type: "image/jpeg" });
+		await component.onFileSelected(file).catch(() => {});
+		tick();
+		fixture.detectChanges();
+		expect(component.toastVisible()).toBeTrue();
+		expect(component.toastType()).toBe("error");
+	}));
+
+	it("should show a remove button when a photo exists", () => {
+		store.setForName("Bench Press", { exerciseName: "Bench Press", dataUrl: "data:image/jpeg;base64,abc", capturedAt: new Date() });
+		createFixture();
+		const removeBtn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-photo-remove");
+		expect(removeBtn).toBeTruthy();
+	});
+
+	it("should NOT show a remove button when no photo exists", () => {
+		createFixture();
+		const removeBtn = fixture.nativeElement.querySelector(".btn-photo-remove");
+		expect(removeBtn).toBeNull();
+	});
+
+	it("should show confirm dialog when remove button is clicked", () => {
+		store.setForName("Bench Press", { exerciseName: "Bench Press", dataUrl: "data:image/jpeg;base64,abc", capturedAt: new Date() });
+		createFixture();
+		const removeBtn: HTMLButtonElement = fixture.nativeElement.querySelector(".btn-photo-remove");
+		removeBtn.click();
+		fixture.detectChanges();
+		expect(component.showRemoveConfirm()).toBeTrue();
+		const dialog = fixture.nativeElement.querySelector("app-confirm-dialog");
+		expect(dialog).toBeTruthy();
+	});
+
+	it("should call RemoveExercisePhotoUseCase when remove is confirmed", fakeAsync(async () => {
+		store.setForName("Bench Press", { exerciseName: "Bench Press", dataUrl: "data:image/jpeg;base64,abc", capturedAt: new Date() });
+		createFixture({ name: "Bench Press" });
+		component.showRemoveConfirm.set(true);
+		await component.onRemoveConfirmed();
+		tick();
+		expect(removePhotoSpy.execute).toHaveBeenCalledWith("Bench Press");
+		expect(component.showRemoveConfirm()).toBeFalse();
+	}));
+
+	it("should hide the confirm dialog on remove cancel", () => {
+		createFixture();
+		component.showRemoveConfirm.set(true);
+		component.showRemoveConfirm.set(false);
+		fixture.detectChanges();
+		const dialog = fixture.nativeElement.querySelector("app-confirm-dialog");
+		expect(dialog).toBeNull();
+	});
+
+	it("should reset toastVisible to false when toast dismissed event fires", fakeAsync(async () => {
+		setPhotoSpy.execute.and.returnValue(Promise.reject(new Error("fail")));
+		createFixture();
+		const file = new File(["data"], "photo.jpg", { type: "image/jpeg" });
+		await component.onFileSelected(file).catch(() => {});
+		tick();
+		fixture.detectChanges();
+		component.onToastDismissed();
+		expect(component.toastVisible()).toBeFalse();
+	}));
 });

@@ -1,0 +1,90 @@
+.overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100;
+}
+
+.form-card {
+	background: var(--color-surface, #1e1e2e);
+	border-radius: 12px;
+	padding: 20px;
+	min-width: 280px;
+	max-width: 480px;
+	width: 90%;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.sets-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.set-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 0;
+}
+
+.set-num {
+	width: 20px;
+	color: var(--color-text-muted, #888);
+	font-size: 12px;
+}
+
+.set-weight {
+	font-weight: 600;
+	color: var(--color-orange, #f5a623);
+}
+
+.set-sep {
+	color: var(--color-text-muted, #888);
+}
+
+.set-reps {
+	font-weight: 600;
+}
+
+.comment-section {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	padding: 12px;
+	background: var(--color-surface-alt, #2a2a3e);
+	border-radius: 8px;
+}
+
+.comment-text {
+	flex: 1;
+	margin: 0;
+	font-size: 14px;
+	line-height: 1.4;
+	white-space: pre-wrap;
+}
+
+.btn-edit {
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--color-text-muted, #888);
+	padding: 4px;
+	flex-shrink: 0;
+}
+
+.btn-close {
+	align-self: flex-end;
+	background: none;
+	border: 1px solid var(--color-border, #444);
+	border-radius: 8px;
+	color: var(--color-text, #eee);
+	cursor: pointer;
+	font-size: 14px;
+	padding: 8px 16px;
+}
