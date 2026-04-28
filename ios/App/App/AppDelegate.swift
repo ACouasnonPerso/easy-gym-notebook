@@ -11,6 +11,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Allow app sounds to mix with background music from other apps
         FirebaseApp.configure()
+        application.applicationSupportsShakeToEdit = false
 
         return true
     }

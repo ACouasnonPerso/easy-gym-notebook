@@ -9,17 +9,21 @@ export class AutocompleteService {
 	async getSuggestions(prefix: string): Promise<string[]> {
 		if (!prefix.trim()) return [];
 		const all = await this.exerciseRepo.getAll();
-		const lowerPrefix = prefix.toLowerCase();
+		const normalizedPrefix = this._normalize(prefix);
 		const seen = new Set<string>();
 		const suggestions: string[] = [];
 		for (const exercise of all) {
-			const nameLower = exercise.name.toLowerCase();
-			if (!nameLower.startsWith(lowerPrefix) || seen.has(nameLower)) continue;
-			seen.add(nameLower);
+			const normalizedName = this._normalize(exercise.name);
+			if (!normalizedName.includes(normalizedPrefix) || seen.has(normalizedName)) continue;
+			seen.add(normalizedName);
 			suggestions.push(exercise.name);
 			if (suggestions.length === 8) break;
 		}
 		return suggestions;
+	}
+
+	private _normalize(text: string): string {
+		return text.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 	}
 
 	async getDefaultsByExactName(name: string): Promise<Partial<Exercise> | null> {

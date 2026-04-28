@@ -157,4 +157,74 @@ describe("AutocompleteService", () => {
 			});
 		});
 	});
+
+	describe("getSuggestions — fuzzy matching", () => {
+		it("should return an exercise when the search term appears in the middle of the name, not just at the start", async () => {
+			repoSpy.getAll.and.returnValue(
+				Promise.resolve([
+					makeExercise({ name: "Pecs poulies vers le haut" }),
+				])
+			);
+
+			const result = await service.getSuggestions("haut");
+
+			expect(result).toContain("Pecs poulies vers le haut");
+		});
+
+		it("should return an exercise when the search term uses different casing from the stored name", async () => {
+			repoSpy.getAll.and.returnValue(
+				Promise.resolve([
+					makeExercise({ name: "Pecs poulies vers le haut" }),
+				])
+			);
+
+			const result = await service.getSuggestions("pOUl");
+
+			expect(result).toContain("Pecs poulies vers le haut");
+		});
+
+		it("should return an exercise when the search term uses accented characters that differ from the stored name", async () => {
+			repoSpy.getAll.and.returnValue(
+				Promise.resolve([
+					makeExercise({ name: "Pecs poulies vers le haut" }),
+				])
+			);
+
+			const result = await service.getSuggestions("PéC");
+
+			expect(result).toContain("Pecs poulies vers le haut");
+		});
+
+		it("should return an exercise when the stored name has accents and the search term uses the same word without accents", async () => {
+			repoSpy.getAll.and.returnValue(
+				Promise.resolve([
+					makeExercise({ name: "Développé couché" }),
+				])
+			);
+
+			const result = await service.getSuggestions("couche");
+
+			expect(result).toContain("Développé couché");
+		});
+
+		it("should match all four example search terms from the requirement against the compound name", async () => {
+			repoSpy.getAll.and.returnValue(
+				Promise.resolve([
+					makeExercise({ name: "Pecs poulies vers le haut" }),
+				])
+			);
+
+			const [r1, r2, r3, r4] = await Promise.all([
+				service.getSuggestions("haut"),
+				service.getSuggestions("PéC"),
+				service.getSuggestions("pOUl"),
+				service.getSuggestions("lies"),
+			]);
+
+			expect(r1).toContain("Pecs poulies vers le haut");
+			expect(r2).toContain("Pecs poulies vers le haut");
+			expect(r3).toContain("Pecs poulies vers le haut");
+			expect(r4).toContain("Pecs poulies vers le haut");
+		});
+	});
 });
