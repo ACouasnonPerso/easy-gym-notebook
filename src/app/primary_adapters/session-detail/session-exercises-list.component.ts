@@ -34,7 +34,7 @@ export class SessionExercisesListComponent {
 	readonly uiService = inject(SessionDetailUiService);
 	private readonly haptic = inject(HapticService);
 
-	readonly expandedExerciseId = signal<string | null>(null);
+	readonly expandedExerciseId = this.uiService.expandedExerciseId;
 	readonly showAddForm = this.uiService.showAddExerciseForm;
 	readonly showDeleteConfirm = signal(false);
 	readonly pendingDeleteId = signal<string | null>(null);
@@ -45,7 +45,7 @@ export class SessionExercisesListComponent {
 	}
 
 	toggleExpand(exerciseId: string): void {
-		this.expandedExerciseId.set(this.expandedExerciseId() === exerciseId ? null : exerciseId);
+		this.uiService.toggleExpandedExercise(exerciseId);
 	}
 
 	onDeleteRequest(exerciseId: string): void {
