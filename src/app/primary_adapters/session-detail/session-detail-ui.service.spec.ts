@@ -25,4 +25,21 @@ describe("SessionDetailUiService", () => {
 
 		expect(service.showAddExerciseForm()).toBe(false);
 	});
+
+	it("expandedExerciseId starts as null", () => {
+		expect(service.expandedExerciseId()).toBeNull();
+	});
+
+	it("setExpandedExerciseId remembers which exercise is expanded", () => {
+		service.setExpandedExerciseId("exercise-42");
+
+		expect(service.expandedExerciseId()).toBe("exercise-42");
+	});
+
+	it("toggleExpandedExercise collapses the exercise when called twice with the same id", () => {
+		service.toggleExpandedExercise("exercise-42");
+		service.toggleExpandedExercise("exercise-42");
+
+		expect(service.expandedExerciseId()).toBeNull();
+	});
 });
