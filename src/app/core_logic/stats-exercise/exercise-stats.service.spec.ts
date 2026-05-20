@@ -85,7 +85,7 @@ describe("ExerciseStatsService", () => {
 			expect(service.occurrences()[0].volumeKg).toBe(1600);
 		});
 
-		it("pour un exercice pyramide avec 2 séries, weightKg doit être la moyenne des poids", async () => {
+		it("pour un exercice pyramide avec 2 séries, weightKg doit être la moyenne pondérée par les reps", async () => {
 			const session = makeSession({ id: "session-1", date: new Date("2026-01-01") });
 			const exercise = makeExercise({
 				id: "ex-1",
@@ -105,7 +105,8 @@ describe("ExerciseStatsService", () => {
 
 			await service.loadForExercise("Squat");
 
-			expect(service.occurrences()[0].weightKg).toBe(90);
+			// Weighted average: (80*5 + 100*3) / (5+3) = 700/8 = 87.5
+			expect(service.occurrences()[0].weightKg).toBeCloseTo(87.5, 5);
 		});
 
 		it("pour un exercice pyramide avec 2 séries, volumeKg doit être la somme de (reps_i × poids_i)", async () => {

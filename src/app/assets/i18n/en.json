@@ -112,7 +112,9 @@
 		"thisWeek": "This week",
 		"noDataMonth": "No data this month",
 		"trainingTime": "Training time",
-		"searchPlaceholder": "Search exercises..."
+		"searchPlaceholder": "Search exercises...",
+		"showMore": "Show more",
+		"showLess": "Show less"
 	},
 	"import": {
 		"cardTitle": "Import / Export",

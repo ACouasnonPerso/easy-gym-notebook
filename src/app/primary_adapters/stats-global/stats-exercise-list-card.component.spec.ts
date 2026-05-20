@@ -18,6 +18,8 @@ const TRANSLATIONS = {
 		mergeCount: "Fusionner ({{ count }})",
 		confirmMergeTitle: "Confirmer la fusion",
 		confirmMergeBody: "",
+		showMore: "Show more",
+		showLess: "Show less",
 	},
 	muscleGroups: {
 		Chest: "Chest",
@@ -65,6 +67,10 @@ function makeExercise(overrides: Partial<ExerciseSummary> = {}): ExerciseSummary
 		muscleGroups: [],
 		...overrides,
 	};
+}
+
+function makeExercises(count: number): ExerciseSummary[] {
+	return Array.from({ length: count }, (_, i) => makeExercise({ name: `Exercise ${i + 1}` }));
 }
 
 describe("StatsExerciseListCardComponent — tag chip colors", () => {
@@ -323,10 +329,6 @@ describe("StatsExerciseListCardComponent — search bar visibility and filtering
 		fixture.detectChanges();
 	}
 
-	function makeExercises(count: number): ExerciseSummary[] {
-		return Array.from({ length: count }, (_, i) => makeExercise({ name: `Exercise ${i + 1}` }));
-	}
-
 	// Test 1 — search bar is absent when exercises count <= 20
 	it("ne doit pas afficher la barre de recherche quand il y a 20 exercices ou moins", () => {
 		setup(makeExercises(20));
@@ -472,5 +474,143 @@ describe("StatsExerciseListCardComponent — merge button visibility", () => {
 		const el: HTMLElement = fixture.nativeElement;
 		const mergeBtn = el.querySelector('[data-testid="merge-btn"]');
 		expect(mergeBtn).not.toBeNull();
+	});
+});
+
+describe("StatsExerciseListCardComponent - liste tronquee et bouton afficher plus", () => {
+	let fixture: ReturnType<typeof TestBed.createComponent<StatsExerciseListCardComponent>>;
+
+	function setup(exercises: ExerciseSummary[]) {
+		TestBed.configureTestingModule({
+			imports: [StatsExerciseListCardComponent, translateModuleConfig],
+		});
+		setupI18n();
+		fixture = TestBed.createComponent(StatsExerciseListCardComponent);
+		fixture.componentRef.setInput("exercises", exercises);
+		fixture.detectChanges();
+	}
+
+	// T1
+	it("8 exercices sans filtre : affiche 8 lignes et aucun bouton toggle", () => {
+		setup(makeExercises(8));
+		const el: HTMLElement = fixture.nativeElement;
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		expect(rows.length).toBe(8);
+		expect(el.querySelector('[data-testid="show-more-toggle"]')).toBeNull();
+	});
+
+	// T2
+	it("15 exercices avec un tag actif : toutes les lignes correspondantes, aucun toggle", () => {
+		const exercises = Array.from({ length: 15 }, (_, i) =>
+			makeExercise({ name: `Exercise ${i + 1}`, muscleGroups: [MuscleGroup.Chest] })
+		);
+		setup(exercises);
+		const el: HTMLElement = fixture.nativeElement;
+		const chips = el.querySelectorAll<HTMLElement>('[data-testid="tag-filter-chip"]');
+		const chestChip = Array.from(chips).find((c) => c.textContent?.trim() === MuscleGroup.Chest)!;
+		chestChip.click();
+		fixture.detectChanges();
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		expect(rows.length).toBe(15);
+		expect(el.querySelector('[data-testid="show-more-toggle"]')).toBeNull();
+	});
+
+	// T3
+	it("15 exercices en mode fusion : 15 lignes de fusion, aucun toggle", () => {
+		setup(makeExercises(15));
+		const el: HTMLElement = fixture.nativeElement;
+		const mergeBtn = el.querySelector<HTMLElement>('[data-testid="merge-btn"]')!;
+		mergeBtn.click();
+		fixture.detectChanges();
+		const checkboxes = el.querySelectorAll('[data-testid="exercise-merge-checkbox"]');
+		expect(checkboxes.length).toBe(15);
+		expect(el.querySelector('[data-testid="show-more-toggle"]')).toBeNull();
+	});
+
+	// T4
+	it("recherche active avec 7 correspondances : 7 lignes, aucun toggle", () => {
+		const exercises = [
+			...Array.from({ length: 14 }, (_, i) => makeExercise({ name: `Exercise ${i + 1}` })),
+			...Array.from({ length: 7 }, (_, i) => makeExercise({ name: `Curl ${i + 1}` })),
+		];
+		setup(exercises);
+		const el: HTMLElement = fixture.nativeElement;
+		const searchBar = el.querySelector<HTMLInputElement>('[data-testid="exercise-search-input"]')!;
+		searchBar.value = "Curl";
+		searchBar.dispatchEvent(new Event("input"));
+		fixture.detectChanges();
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		expect(rows.length).toBe(7);
+		expect(el.querySelector('[data-testid="show-more-toggle"]')).toBeNull();
+	});
+
+	// T5
+	it("recherche active avec 15 correspondances : 15 lignes, aucun toggle (depasse le seuil)", () => {
+		const exercises = [
+			...Array.from({ length: 6 }, (_, i) => makeExercise({ name: `Exercise ${i + 1}` })),
+			...Array.from({ length: 15 }, (_, i) => makeExercise({ name: `Curl ${i + 1}` })),
+		];
+		setup(exercises);
+		const el: HTMLElement = fixture.nativeElement;
+		const searchBar = el.querySelector<HTMLInputElement>('[data-testid="exercise-search-input"]')!;
+		searchBar.value = "Curl";
+		searchBar.dispatchEvent(new Event("input"));
+		fixture.detectChanges();
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		expect(rows.length).toBe(15);
+		expect(el.querySelector('[data-testid="show-more-toggle"]')).toBeNull();
+	});
+
+	// T6
+	it("15 exercices sans filtre replie : 10 lignes et bouton Voir plus", () => {
+		setup(makeExercises(15));
+		const el: HTMLElement = fixture.nativeElement;
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		expect(rows.length).toBe(10);
+		expect(el.querySelector('[data-testid="show-more-toggle"]')).not.toBeNull();
+	});
+
+	// T7
+	it("clic sur Voir plus : 15 lignes et label Voir moins", () => {
+		setup(makeExercises(15));
+		const el: HTMLElement = fixture.nativeElement;
+		const toggle = el.querySelector<HTMLElement>('[data-testid="show-more-toggle"]')!;
+		toggle.click();
+		fixture.detectChanges();
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		expect(rows.length).toBe(15);
+		const updatedToggle = el.querySelector<HTMLElement>('[data-testid="show-more-toggle"]')!;
+		expect(updatedToggle.textContent?.trim()).toContain("Show less");
+	});
+
+	// T8
+	it("clic sur Voir moins : retour a 10 lignes et label Voir plus", () => {
+		setup(makeExercises(15));
+		const el: HTMLElement = fixture.nativeElement;
+		let toggle = el.querySelector<HTMLElement>('[data-testid="show-more-toggle"]')!;
+		toggle.click();
+		fixture.detectChanges();
+		toggle = el.querySelector<HTMLElement>('[data-testid="show-more-toggle"]')!;
+		toggle.click();
+		fixture.detectChanges();
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		expect(rows.length).toBe(10);
+		const updatedToggle = el.querySelector<HTMLElement>('[data-testid="show-more-toggle"]')!;
+		expect(updatedToggle.textContent?.trim()).toContain("Show more");
+	});
+
+	// T9
+	it("le tableau exercises en entree nest jamais mute : longueur identique avant et apres le toggle", () => {
+		const exercises = makeExercises(15);
+		const originalLength = exercises.length;
+		setup(exercises);
+		const el: HTMLElement = fixture.nativeElement;
+		let toggle = el.querySelector<HTMLElement>('[data-testid="show-more-toggle"]')!;
+		toggle.click();
+		fixture.detectChanges();
+		toggle = el.querySelector<HTMLElement>('[data-testid="show-more-toggle"]')!;
+		toggle.click();
+		fixture.detectChanges();
+		expect(exercises.length).toBe(originalLength);
 	});
 });

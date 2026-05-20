@@ -197,7 +197,10 @@ export class ExerciseChronoService {
 				this.removeVisibilityListener();
 				this.playBeep();
 				this.onExerciseEnd();
-			}
+			} else if (remaining === 10) this.playCountdownSound("ten");
+			else if (remaining === 3) this.playCountdownSound("three");
+			else if (remaining === 2) this.playCountdownSound("two");
+			else if (remaining === 1) this.playCountdownSound("one");
 		}, 1000);
 	}
 

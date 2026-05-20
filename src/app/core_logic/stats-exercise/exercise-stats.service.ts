@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from "@angular/core";
 import { CardioOccurrence, ExerciseOccurrence } from "../shared/models";
 import { SESSION_REPOSITORY } from "../../secondary_ports/session/session.repository.interface";
 import { EXERCISE_REPOSITORY } from "../../secondary_ports/exercise/exercise.repository.interface";
+import { computePyramidWeightedAverage } from "../shared/utils";
 
 @Injectable({ providedIn: "root" })
 export class ExerciseStatsService {
@@ -47,7 +48,7 @@ export class ExerciseStatsService {
 					? e.pyramidSets.reduce((sum, s) => sum + s.reps, 0)
 					: e.sets * e.reps;
 				const weightKg = isPyramid
-					? e.pyramidSets.reduce((sum, s) => sum + s.weightKg, 0) / e.pyramidSets.length
+					? computePyramidWeightedAverage(e.pyramidSets)
 					: e.weightKg;
 				const volumeKg = isPyramid
 					? e.pyramidSets.reduce((sum, s) => sum + s.reps * s.weightKg, 0)

@@ -1,4 +1,4 @@
-import { computeVolume, formatSummaryDuration } from "./utils";
+import { computeVolume, computePyramidWeightedAverage, formatSummaryDuration } from "./utils";
 import { Exercise } from "./models";
 
 function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
@@ -59,6 +59,28 @@ describe("formatSummaryDuration", () => {
 		const result = formatSummaryDuration(2 * 24 * 3600 + 3 * 3600 + 45 * 60);
 
 		expect(result).toBe("2d3h45");
+	});
+});
+
+describe("computePyramidWeightedAverage", () => {
+	it("should compute weighted average weight as sum(weightKg_i * reps_i) / sum(reps_i) for two sets with different reps", () => {
+		// (30*10 + 20*2) / (10+2) = (300+40)/12 = 340/12 ≈ 28.33
+		const sets = [
+			{ weightKg: 30, reps: 10 },
+			{ weightKg: 20, reps: 2 },
+		];
+
+		const result = computePyramidWeightedAverage(sets);
+
+		expect(result).toBeCloseTo(340 / 12, 5);
+	});
+
+	it("should return the set's weight exactly when there is only one set", () => {
+		const sets = [{ weightKg: 90, reps: 5 }];
+
+		const result = computePyramidWeightedAverage(sets);
+
+		expect(result).toBe(90);
 	});
 });
 

@@ -6,6 +6,7 @@ import { PhotoThumbnailComponent } from "../exercise-photo/photo-thumbnail.compo
 import { TranslateModule } from "@ngx-translate/core";
 import { HapticService } from "../../core_logic/shared/haptic.service";
 import { muscleGroupChipStyle } from "../../core_logic/shared/muscle-group-colors";
+import { computePyramidWeightedAverage } from "../../core_logic/shared/utils";
 import { WeightDisplayPipe } from "../../core_logic/mass-unit/weight-display.pipe";
 import { DistanceDisplayPipe } from "../../core_logic/mass-unit/distance-display.pipe";
 import { GetExercisePhotoUseCase } from "../../primary_ports/exercise-photo/get-exercise-photo.usecase";
@@ -61,7 +62,7 @@ export class ExerciseCardComponent {
 	readonly avgPyramidWeight = computed(() => {
 		const sets = this.exercise().pyramidSets;
 		if (!sets || sets.length === 0) return null;
-		return Math.round(sets.reduce((s, r) => s + r.weightKg, 0) / sets.length);
+		return Math.round(computePyramidWeightedAverage(sets));
 	});
 	readonly avgPyramidReps = computed(() => {
 		const sets = this.exercise().pyramidSets;

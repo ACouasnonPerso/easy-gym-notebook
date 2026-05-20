@@ -1,4 +1,11 @@
-import { Exercise } from "./models";
+import { Exercise, PyramidSet } from "./models";
+
+export function computePyramidWeightedAverage(sets: PyramidSet[]): number {
+	const totalReps = sets.reduce((sum, s) => sum + s.reps, 0);
+	if (totalReps === 0) return 0;
+	const weightedSum = sets.reduce((sum, s) => sum + s.weightKg * s.reps, 0);
+	return weightedSum / totalReps;
+}
 
 export function computeVolume(exercise: Exercise): number {
 	if (exercise.isPyramid && exercise.pyramidSets.length > 0) {

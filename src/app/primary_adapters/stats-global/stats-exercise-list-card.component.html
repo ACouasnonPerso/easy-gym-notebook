@@ -73,7 +73,7 @@
 	}
 
 	<div class="exercise-list" [style.margin-top]="isMergeMode() ? '12px' : '0'">
-		@for (exercise of filteredExercises(); track exercise.name) {
+		@for (exercise of visibleExercises(); track exercise.name) {
 			@if (isMergeMode()) {
 				<div
 					class="exercise-merge-row"
@@ -107,6 +107,12 @@
 			}
 		}
 	</div>
+
+	@if (showToggleButton()) {
+		<button data-testid="show-more-toggle" class="show-more-btn" (click)="toggleExpanded()">
+			{{ (isExpanded() ? 'statsGlobal.showLess' : 'statsGlobal.showMore') | translate }}
+		</button>
+	}
 </div>
 
 @if (showMergeConfirm()) {

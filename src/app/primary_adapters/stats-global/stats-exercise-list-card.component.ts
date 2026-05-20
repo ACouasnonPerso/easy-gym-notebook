@@ -32,6 +32,7 @@ export class StatsExerciseListCardComponent {
 
 	readonly selectedTags = signal<Set<MuscleGroup | "cardio">>(new Set());
 	readonly searchQuery = signal("");
+	readonly isExpanded = signal(false);
 
 	readonly showSearchBar = computed((): boolean => this.exercises().length > 20);
 
@@ -73,6 +74,18 @@ export class StatsExerciseListCardComponent {
 		});
 	});
 
+	readonly showToggleButton = computed((): boolean =>
+		this.selectedTags().size === 0 &&
+		!this.isMergeMode() &&
+		this.searchQuery().trim() === "" &&
+		this.filteredExercises().length > 10
+	);
+	readonly visibleExercises = computed((): ExerciseSummary[] =>
+		this.showToggleButton() && !this.isExpanded()
+			? this.filteredExercises().slice(0, 10)
+			: this.filteredExercises()
+	);
+
 	readonly mergeSelectionIsCardio = computed<boolean | null>(() => {
 		const selected = this.mergeSelectedNames();
 		if (selected.size === 0) return null;
@@ -100,6 +113,8 @@ export class StatsExerciseListCardComponent {
 		}
 		this.selectedTags.set(current);
 	}
+
+	toggleExpanded(): void { this.isExpanded.update(v => !v); }
 
 	toggleMergeMode(): void {
 		const next = !this.isMergeMode();

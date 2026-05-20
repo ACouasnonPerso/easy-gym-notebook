@@ -40,6 +40,22 @@ type: project
 - Test setup pattern for this component: `TestBed.configureTestingModule({ imports: [DonutChartComponent], providers: [provideTranslateService()] })` + `fixture.componentRef.setInput('details', ...)`
 - `MassUnitService` defaults to metric in tests (localStorage.clear() not needed if never set)
 
+## StatsExerciseListCardComponent — signals and test patterns (2026-05-19)
+- Component: `src/app/primary_adapters/stats-global/stats-exercise-list-card.component.ts`
+- Spec: `src/app/primary_adapters/stats-global/stats-exercise-list-card.component.spec.ts`
+- Template: `src/app/primary_adapters/stats-global/stats-exercise-list-card.component.html`
+- Internal signals (not inputs): `isMergeMode`, `mergeSelectedNames`, `mergeNewName`, `showMergeConfirm`, `selectedTags`, `searchQuery`
+- Computed signals: `showSearchBar` (> 20 items), `availableTags`, `hasCardio`, `filteredExercises`, `mergeSelectionIsCardio`
+- Only external input: `exercises: input<ExerciseSummary[]>([])`
+- Test setup pattern: `TestBed.configureTestingModule({ imports: [StatsExerciseListCardComponent, translateModuleConfig] })` + `setupI18n()` + `fixture.componentRef.setInput('exercises', exercises)` + `fixture.detectChanges()`
+- Internal state is mutated via DOM clicks only (no direct signal access in tests)
+- Merge mode activated by clicking `[data-testid="merge-btn"]`; merge rows use `[data-testid="exercise-merge-checkbox"]`
+- Tag filter chips: `[data-testid="tag-filter-chip"]`; search input: `[data-testid="exercise-search-input"]`
+- `makeExercise(overrides)` factory (spread+override) exists in spec file; `makeExercises(count)` helper (no muscle groups, names "Exercise 1..N") exists in search-bar describe block — should be hoisted to module scope when reused
+- `FakeTranslateLoader` + `translateModuleConfig` + `setupI18n()` helper pattern used throughout
+- `TRANSLATIONS` constant in spec file must be kept in sync with any new i18n keys added to `en.json`
+- `en.json` statsGlobal block does NOT yet contain `showMore` / `showLess` keys (as of 2026-05-19)
+
 ## Key file locations (easy-gym-notebook)
 - Chrono service: `src/app/core_logic/chrono/session-chrono.service.ts`
 - Chrono service spec: `src/app/core_logic/chrono/session-chrono.service.spec.ts`
