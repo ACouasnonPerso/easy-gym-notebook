@@ -94,7 +94,13 @@
     "volumeFormula": "= Вес x Повт x Подходы",
     "distanceKm": "км",
     "pace": "Темп",
-    "speed": "Скорость"
+    "speed": "Скорость",
+    "groupBy": {
+      "session": "Сессия",
+      "week": "Неделя",
+      "month": "Месяц",
+      "year": "Год"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "Частота тренировок",

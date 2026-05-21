@@ -94,7 +94,13 @@
     "volumeFormula": "= 무게 x 횟수 x 세트",
     "distanceKm": "km",
     "pace": "페이스",
-    "speed": "속도"
+    "speed": "속도",
+    "groupBy": {
+      "session": "세션",
+      "week": "주",
+      "month": "월",
+      "year": "년"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "운동 빈도",

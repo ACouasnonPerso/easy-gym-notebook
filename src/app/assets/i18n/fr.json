@@ -94,7 +94,13 @@
     "volumeFormula": "= Poids x Rép x Séries",
     "distanceKm": "km",
     "pace": "Rythme",
-    "speed": "Vitesse"
+    "speed": "Vitesse",
+    "groupBy": {
+      "session": "Session",
+      "week": "Semaine",
+      "month": "Mois",
+      "year": "Année"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "Récurrences d'entraînement",
@@ -121,7 +127,7 @@
       "volumeProgression": "Volume en hausse cette semaine",
       "mostImproved": "La meilleure progression",
       "sevenDayStreak": "Sessions dans 7 jours",
-      "consecutiveWeeks": "Semaines actives d'affilée \uD83D\uDD25",
+      "consecutiveWeeks": "Semaines actives d'affilée 🔥",
       "volumeMilestone": "Volume total"
     }
   },

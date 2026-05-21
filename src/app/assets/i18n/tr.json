@@ -94,7 +94,13 @@
     "volumeFormula": "= Ağırlık x Tekrar x Set",
     "distanceKm": "km",
     "pace": "Tempo",
-    "speed": "Hız"
+    "speed": "Hız",
+    "groupBy": {
+      "session": "Oturum",
+      "week": "Hafta",
+      "month": "Ay",
+      "year": "Yıl"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "Antrenman sıklıkları",

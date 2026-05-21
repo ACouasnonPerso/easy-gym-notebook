@@ -94,7 +94,13 @@
     "volumeFormula": "= 重量 x 回数 x セット",
     "distanceKm": "km",
     "pace": "ペース",
-    "speed": "スピード"
+    "speed": "スピード",
+    "groupBy": {
+      "session": "セッション",
+      "week": "週間",
+      "month": "月",
+      "year": "年"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "トレーニング頻度",

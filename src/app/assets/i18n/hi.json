@@ -94,7 +94,13 @@
     "volumeFormula": "= भार x दोहराव x सेट",
     "distanceKm": "किमी",
     "pace": "गति",
-    "speed": "रफ़्तार"
+    "speed": "रफ़्तार",
+    "groupBy": {
+      "session": "सत्र",
+      "week": "सप्ताह",
+      "month": "महीना",
+      "year": "वर्ष"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "प्रशिक्षण आवृत्ति",

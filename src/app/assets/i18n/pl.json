@@ -94,7 +94,13 @@
     "volumeFormula": "= Ciężar x Powtórzenia x Serie",
     "distanceKm": "km",
     "pace": "Tempo",
-    "speed": "Prędkość"
+    "speed": "Prędkość",
+    "groupBy": {
+      "session": "Sesja",
+      "week": "Tydzień",
+      "month": "Miesiąc",
+      "year": "Rok"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "Regularność treningów",

@@ -94,7 +94,13 @@
     "volumeFormula": "= Peso x Rep x Series",
     "distanceKm": "km",
     "pace": "Ritmo",
-    "speed": "Velocidad"
+    "speed": "Velocidad",
+    "groupBy": {
+      "session": "Sesión",
+      "week": "Semana",
+      "month": "Mes",
+      "year": "Año"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "Recurrencias de entrenamiento",

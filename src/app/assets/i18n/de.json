@@ -94,7 +94,13 @@
     "volumeFormula": "= Gewicht x Wdh x Sätze",
     "distanceKm": "km",
     "pace": "Tempo",
-    "speed": "Geschwindigkeit"
+    "speed": "Geschwindigkeit",
+    "groupBy": {
+      "session": "Sitzung",
+      "week": "Woche",
+      "month": "Monat",
+      "year": "Jahr"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "Trainingshäufigkeit",

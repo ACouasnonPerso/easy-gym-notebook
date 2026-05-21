@@ -94,7 +94,13 @@
     "volumeFormula": "= Vikt x Rep x Set",
     "distanceKm": "km",
     "pace": "Tempo",
-    "speed": "Hastighet"
+    "speed": "Hastighet",
+    "groupBy": {
+      "session": "Session",
+      "week": "Vecka",
+      "month": "Månad",
+      "year": "År"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "Träningsfrekvens",

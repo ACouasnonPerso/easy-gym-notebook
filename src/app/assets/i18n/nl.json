@@ -94,7 +94,13 @@
     "volumeFormula": "= Gewicht x Herh x Sets",
     "distanceKm": "km",
     "pace": "Tempo",
-    "speed": "Snelheid"
+    "speed": "Snelheid",
+    "groupBy": {
+      "session": "Sessie",
+      "week": "Week",
+      "month": "Maand",
+      "year": "Jaar"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "Trainingsfrequentie",

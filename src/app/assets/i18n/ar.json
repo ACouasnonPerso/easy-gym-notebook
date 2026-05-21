@@ -94,7 +94,13 @@
     "volumeFormula": "= الوزن × التكرارات × المجموعات",
     "distanceKm": "كم",
     "pace": "الإيقاع",
-    "speed": "السرعة"
+    "speed": "السرعة",
+    "groupBy": {
+      "session": "الجلسة",
+      "week": "الأسبوع",
+      "month": "الشهر",
+      "year": "السنة"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "تكرارات التدريب",
