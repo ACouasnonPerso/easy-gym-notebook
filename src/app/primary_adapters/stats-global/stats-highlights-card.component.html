@@ -8,7 +8,12 @@
         }
         <span class="tile-value">{{ highlight.value }}</span>
         @if (highlight.subValue) {
-          <span class="tile-sub-value">{{ highlight.subValue }}</span>
+          <span class="tile-sub-value">
+            {{ highlight.subValue }}
+            @if (highlight.subContext) {
+              <span class="tile-sub-context">{{ highlight.subContext }}</span>
+            }
+          </span>
         }
       </div>
     }

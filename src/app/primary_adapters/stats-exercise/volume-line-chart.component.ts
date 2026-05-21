@@ -36,7 +36,7 @@ export class VolumeLineChartComponent {
 		const volumePoints = data.map((o, i) => ({
 			x: xCoords[i],
 			y: yVolume(o.volumeKg),
-			label: i % labelStep === 0 ? `${o.volumeKg} kg` : "",
+			label: i % labelStep === 0 ? `${parseFloat(o.volumeKg.toFixed(2))} kg` : "",
 		}));
 
 		const volumePolyline = n > 1 ? volumePoints.map((p) => `${p.x},${p.y}`).join(" ") : "";

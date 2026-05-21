@@ -5,6 +5,22 @@
 	display: flex;
 	flex-direction: column;
 	gap: 14px;
+	max-width: 720px;
+	margin: 0 auto;
+	width: 100%;
+}
+
+@media (min-width: 640px) {
+	.page {
+		padding: 28px 24px 100px;
+		gap: 16px;
+	}
+}
+
+@media (min-width: 1024px) {
+	.page {
+		padding: 40px 32px 120px;
+	}
 }
 .back-btn {
 	display: flex;

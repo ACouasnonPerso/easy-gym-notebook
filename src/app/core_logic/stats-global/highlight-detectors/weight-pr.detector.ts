@@ -1,5 +1,5 @@
 import { DetectorContext, HighlightMetric } from "../highlight-metric.model";
-import { Exercise } from "../../shared/models";
+import { Exercise, Session } from "../../shared/models";
 
 function getMaxWeightForExercise(exercises: Exercise[], name: string): number {
 	let max = 0;
@@ -67,6 +67,21 @@ export function weightPrDetector(ctx: DetectorContext): HighlightMetric | null {
 		return null;
 	}
 
+	const historicalMax = bestCandidate.newMax - bestCandidate.gain;
+	const sessionById = new Map<string, Session>(sessions.map((s) => [s.id, s]));
+	let previousPrDate: string | undefined;
+	for (const ex of historicalExercises.filter((e) => e.name === bestCandidate!.name)) {
+		const w = ex.isPyramid && ex.pyramidSets.length > 0
+			? Math.max(...ex.pyramidSets.map((s) => s.weightKg))
+			: ex.weightKg;
+		if (Math.abs(w - historicalMax) < 0.01) {
+			const session = sessionById.get(ex.sessionId);
+			if (session && (!previousPrDate || session.date > new Date(previousPrDate))) {
+				previousPrDate = session.date.toISOString();
+			}
+		}
+	}
+
 	debugLog?.(`[weight-pr] ✅ DÉCLENCHÉ — "${bestCandidate.name}" +${bestCandidate.gain.toFixed(1)} kg → ${bestCandidate.newMax} kg`);
 	return {
 		id: "weight-pr",
@@ -77,6 +92,7 @@ export function weightPrDetector(ctx: DetectorContext): HighlightMetric | null {
 			exerciseName: bestCandidate.name,
 			weightKg: bestCandidate.newMax,
 			gainKg: bestCandidate.gain,
+			previousPrDate,
 		},
 	};
 }

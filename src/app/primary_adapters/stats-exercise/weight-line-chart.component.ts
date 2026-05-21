@@ -36,7 +36,7 @@ export class WeightLineChartComponent {
 		const weightPoints = data.map((o, i) => ({
 			x: xCoords[i],
 			y: yWeight(o.weightKg),
-			label: i % labelStep === 0 ? `${o.weightKg} kg` : "",
+			label: i % labelStep === 0 ? `${parseFloat(o.weightKg.toFixed(2))} kg` : "",
 		}));
 
 		const weightPolyline = n > 1 ? weightPoints.map((p) => `${p.x},${p.y}`).join(" ") : "";

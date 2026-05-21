@@ -86,6 +86,8 @@ export function mostImprovedDetector(ctx: DetectorContext): HighlightMetric | nu
 			exerciseName: bestCandidate.name,
 			currentMaxKg: bestCandidate.currentMax,
 			gainKg: bestCandidate.gain,
+			prevYear,
+			prevMonth,
 		},
 	};
 }

@@ -32,6 +32,8 @@ export interface HighlightViewModel {
 	value: string;
 	/** Sub-value / gain line (e.g. '+5 kg') — optional */
 	subValue?: string;
+	/** Time context appended to subValue (e.g. 'vs last month', 'in 3 weeks') — optional */
+	subContext?: string;
 	/** Exercise name shown below the label — optional */
 	exerciseName?: string;
 	/** Icon name or emoji character */
