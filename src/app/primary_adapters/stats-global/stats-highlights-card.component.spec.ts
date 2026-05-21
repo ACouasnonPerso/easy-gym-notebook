@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { StatsHighlightsCardComponent } from "./stats-highlights-card.component";
+import { StatsHighlightsCardComponent, HIGHLIGHTS_PALETTE } from "./stats-highlights-card.component";
 import { HighlightViewModel } from "../../core_logic/stats-global/highlight-metric.model";
 import { TranslateModule } from "@ngx-translate/core";
 
@@ -104,5 +104,34 @@ describe("StatsHighlightsCardComponent", () => {
 		fixture.detectChanges();
 		const subEl = fixture.nativeElement.querySelector(".tile-sub-value");
 		expect(subEl).toBeNull();
+	});
+
+	describe("with a small palette injected (3 colors, 4 highlights)", () => {
+		let smallFixture: ComponentFixture<StatsHighlightsCardComponent>;
+		let smallComponent: StatsHighlightsCardComponent;
+
+		beforeEach(async () => {
+			await TestBed.resetTestingModule();
+			await TestBed.configureTestingModule({
+				imports: [StatsHighlightsCardComponent, TranslateModule.forRoot()],
+				providers: [{ provide: HIGHLIGHTS_PALETTE, useValue: ["red", "blue", "green"] }],
+			}).compileComponents();
+
+			smallFixture = TestBed.createComponent(StatsHighlightsCardComponent);
+			smallComponent = smallFixture.componentInstance;
+		});
+
+		it("should return all unique colors even when highlights count exceeds palette size", () => {
+			smallFixture.componentRef.setInput("highlights", [
+				makeViewModel({ id: "a" }),
+				makeViewModel({ id: "b" }),
+				makeViewModel({ id: "c" }),
+				makeViewModel({ id: "d" }),
+			]);
+			smallFixture.detectChanges();
+			const colors = smallComponent.tileColors();
+			const uniqueColors = new Set(colors);
+			expect(uniqueColors.size).toBe(colors.length);
+		});
 	});
 });

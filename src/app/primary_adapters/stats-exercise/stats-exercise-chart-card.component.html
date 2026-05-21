@@ -15,13 +15,13 @@
 			</button>
 		</div>
 		@if (selectedChart() === "volume") {
-			<app-cardio-time-chart [occurrences]="cardioOccurrences()" />
+			<app-cardio-time-chart [occurrences]="groupedCardioOccurrences()" [groupBy]="groupBy()" />
 		} @else if (selectedChart() === "weight") {
-			<app-cardio-distance-chart [occurrences]="cardioOccurrences()" />
+			<app-cardio-distance-chart [occurrences]="groupedCardioOccurrences()" [groupBy]="groupBy()" />
 		} @else if (selectedChart() === "pace") {
-			<app-cardio-pace-chart [occurrences]="cardioOccurrences()" />
+			<app-cardio-pace-chart [occurrences]="groupedCardioOccurrences()" [groupBy]="groupBy()" />
 		} @else {
-			<app-cardio-speed-chart [occurrences]="cardioOccurrences()" />
+			<app-cardio-speed-chart [occurrences]="groupedCardioOccurrences()" [groupBy]="groupBy()" />
 		}
 	} @else {
 		<div class="chart-tabs">
@@ -32,15 +32,15 @@
 				{{ "common.weight" | translate }}
 			</button>
 			<button class="tab-btn" [class.active]="selectedChart() === 'reps'" (click)="chartSelect.emit('reps')">
-				{{ "common.reps" | translate }}
+				{{ "common.totalReps" | translate }}
 			</button>
 		</div>
 		@if (selectedChart() === "volume") {
-			<app-volume-line-chart [occurrences]="occurrences()" />
+			<app-volume-line-chart [occurrences]="groupedOccurrences()" [groupBy]="groupBy()" />
 		} @else if (selectedChart() === "reps") {
-			<app-total-reps-line-chart [occurrences]="occurrences()" />
+			<app-total-reps-line-chart [occurrences]="groupedOccurrences()" [groupBy]="groupBy()" />
 		} @else {
-			<app-weight-line-chart [occurrences]="occurrences()" />
+			<app-weight-line-chart [occurrences]="groupedOccurrences()" [groupBy]="groupBy()" />
 		}
 	}
 </div>

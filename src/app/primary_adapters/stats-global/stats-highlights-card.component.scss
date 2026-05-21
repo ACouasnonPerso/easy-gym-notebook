@@ -27,23 +27,11 @@
     bottom: 0;
     width: 3px;
     border-radius: 12px 0 0 12px;
-  }
-
-  &--perf::before {
-    background: var(--orange);
-  }
-
-  &--regularity::before {
-    background: var(--green);
+    background: var(--tile-color);
   }
 
   &:hover {
-    &.highlight-tile--perf {
-      border-color: var(--orange);
-    }
-    &.highlight-tile--regularity {
-      border-color: var(--green);
-    }
+    border-color: var(--tile-color);
   }
 }
 
@@ -67,14 +55,7 @@
   font-family: "IBM Plex Mono", monospace;
   font-size: 20px;
   font-weight: 600;
-
-  .highlight-tile--perf & {
-    color: var(--orange);
-  }
-
-  .highlight-tile--regularity & {
-    color: var(--green);
-  }
+  color: var(--tile-color);
 }
 
 .tile-sub-value {

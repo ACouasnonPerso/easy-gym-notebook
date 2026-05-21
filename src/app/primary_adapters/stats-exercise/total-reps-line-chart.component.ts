@@ -1,7 +1,11 @@
-import { Component, ChangeDetectionStrategy, input, computed } from "@angular/core";
+import { Component, ChangeDetectionStrategy, input, computed, inject } from "@angular/core";
 import { ExerciseOccurrence } from "../../core_logic/shared/models";
 import { getLabelStep } from "./label-step";
 import { TranslateModule } from "@ngx-translate/core";
+import { GroupBy } from "../../core_logic/stats-exercise/group-by.model";
+import { getXAxisLabel } from "./x-axis-label";
+import { LinearRegressionService } from "../../core_logic/stats-exercise/linear-regression.service";
+import { computeRegressionOverlay, RegressionOverlay } from "./regression-overlay";
 
 @Component({
 	selector: "app-total-reps-line-chart",
@@ -12,10 +16,12 @@ import { TranslateModule } from "@ngx-translate/core";
 	styleUrl: "./total-reps-line-chart.component.scss",
 })
 export class TotalRepsLineChartComponent {
+	private readonly regressionService = inject(LinearRegressionService);
 	readonly occurrences = input<ExerciseOccurrence[]>([]);
+	readonly groupBy = input<GroupBy>('session');
 
 	readonly chartData = computed(() => {
-		const data = [...this.occurrences()].reverse();
+		const data = [...this.occurrences()];
 		if (data.length === 0) return null;
 
 		const n = data.length;
@@ -46,10 +52,7 @@ export class TotalRepsLineChartComponent {
 
 		const xLabels = data.map((o, i) => ({
 			x: xCoords[i],
-			label:
-				i % labelStep === 0
-					? `${o.date.getDate().toString().padStart(2, "0")}/${(o.date.getMonth() + 1).toString().padStart(2, "0")}`
-					: "",
+			label: i % labelStep === 0 ? getXAxisLabel(o.date, this.groupBy()) : "",
 		}));
 
 		return {
@@ -59,6 +62,13 @@ export class TotalRepsLineChartComponent {
 			xLabels,
 			minV,
 			maxV,
+			reps,
 		};
+	});
+
+	readonly regressionOverlay = computed((): RegressionOverlay => {
+		const cd = this.chartData();
+		if (cd === null) return { visible: false };
+		return computeRegressionOverlay(cd.repsPoints, this.regressionService, cd.reps);
 	});
 }

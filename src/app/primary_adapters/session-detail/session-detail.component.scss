@@ -8,6 +8,18 @@
 	padding-bottom: 100px;
 }
 
+.page-inner {
+	max-width: 720px;
+	margin: 0 auto;
+	width: 100%;
+}
+
+@media (min-width: 1024px) {
+	.page-inner {
+		padding: 0 32px;
+	}
+}
+
 .photo-lightbox {
 	position: fixed;
 	inset: 0;

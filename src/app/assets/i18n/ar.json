@@ -47,7 +47,8 @@
     "weekShort": "أ",
     "unitMin": "د",
     "unitKg": "كغ",
-    "unitSec": "ث"
+    "unitSec": "ث",
+    "numberThousandAbbreviation": "k"
   },
   "sessionList": {
     "title": "الجلسات",

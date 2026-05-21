@@ -47,7 +47,8 @@
     "weekShort": "週",
     "unitMin": "分",
     "unitKg": "kg",
-    "unitSec": "秒"
+    "unitSec": "秒",
+    "numberThousandAbbreviation": "k"
   },
   "sessionList": {
     "title": "セッション",

@@ -1,9 +1,11 @@
-import { Injectable, inject, computed } from "@angular/core";
+import { Injectable, inject, computed, effect } from "@angular/core";
 import { StatsService } from "./stats.service";
 import { FavoriteExercisesService } from "./favorite-exercises.service";
 import { HighlightMetric, HighlightViewModel, DetectorContext } from "./highlight-metric.model";
 import { MILESTONE_REPOSITORY } from "../../secondary_ports/highlight-stats/milestone-repository.interface";
+import { RECENT_HIGHLIGHTS_REPOSITORY, RecentHighlightEntry } from "../../secondary_ports/highlight-stats/recent-highlights-repository.interface";
 import { HighlightDebugService } from "./highlight-debug.service";
+import { SessionService } from "../session/session.service";
 
 // Detectors
 import { weightPrDetector } from "./highlight-detectors/weight-pr.detector";
@@ -97,13 +99,25 @@ export class HighlightStatsService {
 	private readonly statsService = inject(StatsService);
 	private readonly favoriteExercisesService = inject(FavoriteExercisesService);
 	private readonly milestoneRepo = inject(MILESTONE_REPOSITORY);
+	private readonly recentRepo = inject(RECENT_HIGHLIGHTS_REPOSITORY);
 	private readonly debugService = inject(HighlightDebugService);
+	private readonly sessionService = inject(SessionService);
+
+	/** Generated once at instantiation — stable during the session, varies across cold starts. */
+	private readonly coldStartSeed = Math.random();
+
+	readonly sessionBoostExercises = computed((): Set<string> => {
+		const session = this.sessionService.currentSession();
+		if (!session) return new Set();
+		return new Set(session.exercises.map((e) => e.name));
+	});
 
 	readonly highlights = computed((): HighlightViewModel[] => {
 		const sessions = this.statsService._allSessions();
 		const exercises = this.statsService._allExercises();
 		const today = new Date();
 		const isDebug = this.debugService.isEnabled();
+		const recentEntries = this.recentRepo.getRecent();
 
 		const debugLog = isDebug
 			? (msg: string) => console.log(`%c${msg}`, "color: #93c5fd;")
@@ -128,24 +142,23 @@ export class HighlightStatsService {
 		// Run all detectors
 		const candidates: HighlightMetric[] = [];
 
-		const milestoneResult = volumeMilestoneDetector(
+		candidates.push(...volumeMilestoneDetector(
 			ctx,
 			() => this.milestoneRepo.getLastMilestoneKg(),
 			(kg) => this.milestoneRepo.setLastMilestoneKg(kg)
-		);
-		if (milestoneResult) candidates.push(milestoneResult);
+		));
 
-		for (const detector of [weightPrDetector, volumeProgressionDetector, mostImprovedDetector]) {
-			const result = detector(ctx);
-			if (result) candidates.push(result);
-		}
+		candidates.push(...weightPrDetector(ctx));
+
+		candidates.push(...volumeProgressionDetector(ctx));
+
+		candidates.push(...mostImprovedDetector(ctx, this.coldStartSeed));
 
 		for (const detector of [sevenDayStreakDetector, consecutiveWeeksDetector]) {
-			const result = detector(ctx);
-			if (result) candidates.push(result);
+			candidates.push(...detector(ctx));
 		}
 
-		const result = selectHighlights(candidates, ctx, isDebug);
+		const result = selectHighlights(candidates, ctx, isDebug, this.sessionBoostExercises(), recentEntries);
 
 		if (isDebug) {
 			if (result.length === 0) {
@@ -158,13 +171,35 @@ export class HighlightStatsService {
 
 		return result;
 	});
+
+	constructor() {
+		// Write-back must live in an effect, not inside the computed, because
+		// Angular forbids side-effects inside computed signals (writes are suppressed).
+		effect(() => {
+			const result = this.highlights();
+			if (result.length > 0) {
+				this.recentRepo.pushRecent(result.map((h) => {
+					const entry: RecentHighlightEntry = { id: h.id };
+					if (h.exerciseName) entry.exerciseName = h.exerciseName;
+					return entry;
+				}));
+			}
+		});
+	}
 }
 
 /**
  * Applies favorite bonus to perf metrics, sorts, and selects up to 2 perf + 1 regularity.
  * Deduplicates by exerciseName (regularity metrics exempt).
+ * Fresh candidates (identity not in recentEntries) are preferred over stale ones within each pool.
  */
-export function selectHighlights(candidates: HighlightMetric[], ctx: DetectorContext, debug = false): HighlightViewModel[] {
+export function selectHighlights(
+	candidates: HighlightMetric[],
+	ctx: DetectorContext,
+	debug = false,
+	sessionBoostExercises: Set<string> = new Set(),
+	recentEntries: RecentHighlightEntry[] = [],
+): HighlightViewModel[] {
 	const debugLog = debug ? (msg: string) => console.log(`%c${msg}`, "color: #93c5fd;") : undefined;
 
 	if (debug) {
@@ -174,17 +209,24 @@ export function selectHighlights(candidates: HighlightMetric[], ctx: DetectorCon
 			debugLog?.(`[selection] ${candidates.length} candidat(s) avant sélection :`);
 		}
 	}
-	// Apply favorite bonus to perf candidates
+
+	// Apply favorite bonus and session boost to perf candidates
 	const scored = candidates.map((m) => {
 		const bonus = m.category === "perf" && m.exerciseName
 			? ctx.favoriteBonus(m.exerciseName)
 			: 0;
-		const finalScore = m.impactScore * (1 + bonus);
-		debugLog?.(`[selection]   ${m.id}${m.exerciseName ? ` (${m.exerciseName})` : ""} — score: ${m.impactScore.toFixed(2)} × (1 + bonus ${(bonus * 100).toFixed(0)}%) = ${finalScore.toFixed(2)}`);
+		const sessionBoost = m.category === "perf" && m.exerciseName && sessionBoostExercises.has(m.exerciseName) ? 1.5 : 1.0;
+		const finalScore = m.impactScore * (1 + bonus) * sessionBoost;
+		debugLog?.(`[selection]   ${m.id}${m.exerciseName ? ` (${m.exerciseName})` : ""} — score: ${m.impactScore.toFixed(2)} × (1 + bonus ${(bonus * 100).toFixed(0)}%) × boost ${sessionBoost} = ${finalScore.toFixed(2)}`);
 		return { metric: m, finalScore };
 	});
 
-	// Split by category
+	// Build recent identity set for fresh/stale discrimination
+	// Identity = (id, exerciseName ?? '')
+	const recentSet = new Set(recentEntries.map((e) => `${e.id}::${e.exerciseName ?? ""}`));
+	const isFresh = (metric: HighlightMetric) => !recentSet.has(`${metric.id}::${metric.exerciseName ?? ""}`);
+
+	// Split by category and sort by score (descending within each tier)
 	const perfCandidates = scored
 		.filter((s) => s.metric.category === "perf")
 		.sort((a, b) => b.finalScore - a.finalScore);
@@ -193,40 +235,54 @@ export function selectHighlights(candidates: HighlightMetric[], ctx: DetectorCon
 		.filter((s) => s.metric.category === "regularity")
 		.sort((a, b) => b.finalScore - a.finalScore);
 
+	// Fresh-first ordering within each pool (score order preserved within each freshness tier)
+	const orderedPerf = [
+		...perfCandidates.filter((s) => isFresh(s.metric)),
+		...perfCandidates.filter((s) => !isFresh(s.metric)),
+	];
+	const orderedReg = [
+		...regularityCandidates.filter((s) => isFresh(s.metric)),
+		...regularityCandidates.filter((s) => !isFresh(s.metric)),
+	];
+
 	const selected: HighlightMetric[] = [];
 	const usedExerciseNames = new Set<string>();
 
-	// Select up to 2 perf candidates (deduplicating by exerciseName)
-	for (const { metric } of perfCandidates) {
-		if (selected.length >= 2) break;
+	// Select up to 2 perf candidates (deduplicating by exerciseName), fresh first
+	let perfCount = 0;
+	for (const { metric } of orderedPerf) {
+		if (perfCount >= 2) break;
 		if (metric.exerciseName && usedExerciseNames.has(metric.exerciseName)) continue;
 		selected.push(metric);
 		if (metric.exerciseName) usedExerciseNames.add(metric.exerciseName);
+		perfCount++;
 	}
 
-	// Select up to 1 regularity candidate
-	const topRegularity = regularityCandidates[0];
-	if (topRegularity) {
-		selected.push(topRegularity.metric);
+	// Select up to 1 regularity candidate, fresh first
+	if (orderedReg.length > 0) {
+		selected.push(orderedReg[0].metric);
 	}
 
-	// Fallback: if only one category is available, fill up to 3
+	// Fallback: fill remaining slots up to 3.
+	// Rule: perf slots are preferred; a 2nd regularity is only ever added when
+	// there are zero perf candidates in the entire pool (pure-regularity session).
 	if (selected.length < 3) {
-		if (regularityCandidates.length > 0 && perfCandidates.length === 0) {
-			// Only regularity — add more regularity
-			for (const { metric } of regularityCandidates) {
-				if (selected.includes(metric)) continue;
+		// 1. Fill with more perf (cap = 3 when no regularity exists at all, else 2)
+		const perfCap = regularityCandidates.length === 0 ? 3 : 2;
+		for (const { metric } of orderedPerf) {
+			if (selected.length >= 3 || perfCount >= perfCap) break;
+			if (selected.includes(metric)) continue;
+			if (metric.exerciseName && usedExerciseNames.has(metric.exerciseName)) continue;
+			selected.push(metric);
+			if (metric.exerciseName) usedExerciseNames.add(metric.exerciseName);
+			perfCount++;
+		}
+		// 2. Extra regularity only when the pool has no perf candidates at all
+		if (perfCandidates.length === 0) {
+			for (const { metric } of orderedReg) {
 				if (selected.length >= 3) break;
-				selected.push(metric);
-			}
-		} else if (perfCandidates.length > 0 && regularityCandidates.length === 0) {
-			// Only perf — add more perf
-			for (const { metric } of perfCandidates) {
 				if (selected.includes(metric)) continue;
-				if (selected.length >= 3) break;
-				if (metric.exerciseName && usedExerciseNames.has(metric.exerciseName)) continue;
 				selected.push(metric);
-				if (metric.exerciseName) usedExerciseNames.add(metric.exerciseName);
 			}
 		}
 	}

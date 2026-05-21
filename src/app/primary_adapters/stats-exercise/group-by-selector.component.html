@@ -1,0 +1,14 @@
+<div class="select-wrapper" (click)="showDropdown.set(!showDropdown())">
+	<span class="label">{{ currentLabel() | translate }}</span>
+	<span class="arrow" [class.open]="showDropdown()">▼</span>
+</div>
+@if (showDropdown()) {
+	<div class="dropdown-backdrop" (click)="showDropdown.set(false)"></div>
+	<div class="dropdown-list">
+		@for (option of options; track option.value) {
+			<div class="dropdown-item" [class.selected]="option.value === selected()" (click)="selectOption(option.value)">
+				{{ option.labelKey | translate }}
+			</div>
+		}
+	</div>
+}

@@ -47,7 +47,8 @@
     "weekShort": "W",
     "unitMin": "min",
     "unitKg": "kg",
-    "unitSec": "s"
+    "unitSec": "s",
+    "numberThousandAbbreviation": "k"
   },
   "sessionList": {
     "title": "Sessions",
@@ -93,7 +94,13 @@
     "volumeFormula": "= Weight x Reps x Sets",
     "distanceKm": "km",
     "pace": "Pace",
-    "speed": "Speed"
+    "speed": "Speed",
+    "groupBy": {
+      "session": "Session",
+      "week": "Week",
+      "month": "Month",
+      "year": "Year"
+    }
   },
   "statsGlobal": {
     "trainingRecurrences": "Training recurrences",
@@ -120,8 +127,8 @@
       "volumeProgression": "Volume up this week",
       "mostImproved": "Most improved",
       "sevenDayStreak": "Sessions in 7 days",
-      "consecutiveWeeks": "Active weeks in a row",
-      "volumeMilestone": "Total volume milestone"
+      "consecutiveWeeks": "Active weeks in a row \uD83D\uDD25",
+      "volumeMilestone": "Total volume"
     }
   },
   "import": {

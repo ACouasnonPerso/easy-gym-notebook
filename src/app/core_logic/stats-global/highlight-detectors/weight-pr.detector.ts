@@ -14,11 +14,11 @@ function getMaxWeightForExercise(exercises: Exercise[], name: string): number {
 }
 
 /**
- * Detects a new weight PR: today's max weight beats the historical max by ≥ 2.5 kg.
+ * Detects new weight PRs: today's max weight beats the historical max by ≥ 2.5 kg.
  * Excludes cardio exercises.
- * Returns the exercise with the highest gain among all PRs.
+ * Returns up to 3 PRs sorted by gainKg descending.
  */
-export function weightPrDetector(ctx: DetectorContext): HighlightMetric | null {
+export function weightPrDetector(ctx: DetectorContext): HighlightMetric[] {
 	const { sessions, exercises, today } = ctx;
 
 	const { debugLog } = ctx;
@@ -33,8 +33,8 @@ export function weightPrDetector(ctx: DetectorContext): HighlightMetric | null {
 	);
 
 	if (todaySessionIds.size === 0) {
-		debugLog?.(`[weight-pr] ❌ NULL — aucune séance aujourd'hui (${today.toLocaleDateString()})`);
-		return null;
+		debugLog?.(`[weight-pr] ❌ — aucune séance aujourd'hui (${today.toLocaleDateString()})`);
+		return [];
 	}
 
 	const todayExercises = exercises.filter((e) => todaySessionIds.has(e.sessionId) && !e.isCardio && e.status === "validated");
@@ -43,7 +43,8 @@ export function weightPrDetector(ctx: DetectorContext): HighlightMetric | null {
 	const exerciseNames = new Set(todayExercises.map((e) => e.name));
 	debugLog?.(`[weight-pr] Séance aujourd'hui ✅ — ${todayExercises.length} exercice(s) validés : ${[...exerciseNames].join(", ")}`);
 
-	let bestCandidate: { name: string; newMax: number; gain: number } | null = null;
+	const sessionById = new Map<string, Session>(sessions.map((s) => [s.id, s]));
+	const candidates: Array<{ name: string; newMax: number; gain: number; previousPrDate?: string }> = [];
 
 	for (const name of exerciseNames) {
 		const todayMax = getMaxWeightForExercise(todayExercises.filter((e) => e.name === name), name);
@@ -56,43 +57,44 @@ export function weightPrDetector(ctx: DetectorContext): HighlightMetric | null {
 			debugLog?.(`[weight-pr]   "${name}" — gain ${gain.toFixed(1)} kg < 2.5 kg requis (max actuel: ${todayMax} kg, historique: ${historicalMax} kg)`);
 		} else {
 			debugLog?.(`[weight-pr]   "${name}" ✅ PR +${gain.toFixed(1)} kg (${historicalMax} → ${todayMax} kg)`);
-			if (!bestCandidate || gain > bestCandidate.gain) {
-				bestCandidate = { name, newMax: todayMax, gain };
+
+			let previousPrDate: string | undefined;
+			for (const ex of historicalExercises.filter((e) => e.name === name)) {
+				const w = ex.isPyramid && ex.pyramidSets.length > 0
+					? Math.max(...ex.pyramidSets.map((s) => s.weightKg))
+					: ex.weightKg;
+				if (Math.abs(w - historicalMax) < 0.01) {
+					const session = sessionById.get(ex.sessionId);
+					if (session && (!previousPrDate || session.date > new Date(previousPrDate))) {
+						previousPrDate = session.date.toISOString();
+					}
+				}
 			}
+
+			candidates.push({ name, newMax: todayMax, gain, previousPrDate });
 		}
 	}
 
-	if (!bestCandidate) {
-		debugLog?.(`[weight-pr] ❌ NULL — aucun PR ≥ 2.5 kg trouvé aujourd'hui`);
-		return null;
+	if (candidates.length === 0) {
+		debugLog?.(`[weight-pr] ❌ — aucun PR ≥ 2.5 kg trouvé aujourd'hui`);
+		return [];
 	}
 
-	const historicalMax = bestCandidate.newMax - bestCandidate.gain;
-	const sessionById = new Map<string, Session>(sessions.map((s) => [s.id, s]));
-	let previousPrDate: string | undefined;
-	for (const ex of historicalExercises.filter((e) => e.name === bestCandidate!.name)) {
-		const w = ex.isPyramid && ex.pyramidSets.length > 0
-			? Math.max(...ex.pyramidSets.map((s) => s.weightKg))
-			: ex.weightKg;
-		if (Math.abs(w - historicalMax) < 0.01) {
-			const session = sessionById.get(ex.sessionId);
-			if (session && (!previousPrDate || session.date > new Date(previousPrDate))) {
-				previousPrDate = session.date.toISOString();
-			}
-		}
-	}
+	candidates.sort((a, b) => b.gain - a.gain);
+	const top3 = candidates.slice(0, 3);
 
-	debugLog?.(`[weight-pr] ✅ DÉCLENCHÉ — "${bestCandidate.name}" +${bestCandidate.gain.toFixed(1)} kg → ${bestCandidate.newMax} kg`);
-	return {
+	debugLog?.(`[weight-pr] ✅ DÉCLENCHÉ — ${top3.length} PR(s) : ${top3.map((c) => `"${c.name}" +${c.gain.toFixed(1)} kg`).join(", ")}`);
+
+	return top3.map((c) => ({
 		id: "weight-pr",
 		category: "perf",
-		impactScore: bestCandidate.gain,
-		exerciseName: bestCandidate.name,
+		impactScore: c.gain,
+		exerciseName: c.name,
 		payload: {
-			exerciseName: bestCandidate.name,
-			weightKg: bestCandidate.newMax,
-			gainKg: bestCandidate.gain,
-			previousPrDate,
+			exerciseName: c.name,
+			weightKg: c.newMax,
+			gainKg: c.gain,
+			previousPrDate: c.previousPrDate,
 		},
-	};
+	}));
 }

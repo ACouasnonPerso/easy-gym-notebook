@@ -1,8 +1,13 @@
 import { TestBed, ComponentFixture } from "@angular/core/testing";
 import { Component } from "@angular/core";
+import { By } from "@angular/platform-browser";
 import { StatsExerciseChartCardComponent } from "./stats-exercise-chart-card.component";
 import { ExerciseOccurrence, CardioOccurrence } from "../../core_logic/shared/models";
 import { ChartType } from "./chart-selection.service";
+import { GroupBy } from "../../core_logic/stats-exercise/group-by.model";
+import { ExerciseOccurrenceGroupingService } from "../../core_logic/stats-exercise/exercise-occurrence-grouping.service";
+import { VolumeLineChartComponent } from "./volume-line-chart.component";
+import { CardioTimeChartComponent } from "./cardio-time-chart.component";
 import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from "@ngx-translate/core";
 import { Observable, of } from "rxjs";
 
@@ -45,6 +50,7 @@ function setupI18n(): void {
 			[occurrences]="occurrences"
 			[cardioOccurrences]="cardioOccurrences"
 			[selectedChart]="selectedChart"
+			[groupBy]="groupBy"
 			(chartSelect)="lastChartSelect = $event"
 		/>
 	`,
@@ -54,6 +60,7 @@ class HostComponent {
 	occurrences: ExerciseOccurrence[] = [];
 	cardioOccurrences: CardioOccurrence[] = [];
 	selectedChart: ChartType = "volume";
+	groupBy: GroupBy = "session";
 	lastChartSelect: ChartType | null = null;
 }
 
@@ -94,6 +101,7 @@ describe("StatsExerciseChartCardComponent", () => {
 			occurrences: ExerciseOccurrence[];
 			cardioOccurrences: CardioOccurrence[];
 			selectedChart: ChartType;
+			groupBy: GroupBy;
 		}> = {}
 	) {
 		TestBed.configureTestingModule({
@@ -106,6 +114,7 @@ describe("StatsExerciseChartCardComponent", () => {
 		if (props.occurrences !== undefined) host.occurrences = props.occurrences;
 		if (props.cardioOccurrences !== undefined) host.cardioOccurrences = props.cardioOccurrences;
 		if (props.selectedChart !== undefined) host.selectedChart = props.selectedChart;
+		if (props.groupBy !== undefined) host.groupBy = props.groupBy;
 		hostFixture.detectChanges();
 	}
 
@@ -242,5 +251,120 @@ describe("StatsExerciseChartCardComponent", () => {
 		setup({ isCardio: true, selectedChart: "volume", cardioOccurrences: makeCardioOccurrences(2) });
 		const el: HTMLElement = hostFixture.nativeElement;
 		expect(el.querySelector("app-cardio-time-chart")).not.toBeNull();
+	});
+});
+
+// ── Block D ───────────────────────────────────────────────────────────────────
+
+describe("StatsExerciseChartCardComponent — groupBy input, mode musculation", () => {
+	let hostFixture: ComponentFixture<HostComponent>;
+	let host: HostComponent;
+	let groupingSpy: jasmine.SpyObj<ExerciseOccurrenceGroupingService>;
+
+	beforeEach(() => {
+		groupingSpy = jasmine.createSpyObj<ExerciseOccurrenceGroupingService>("ExerciseOccurrenceGroupingService", [
+			"groupExercise",
+			"groupCardio",
+		]);
+		groupingSpy.groupExercise.and.callFake((occ) => occ);
+		groupingSpy.groupCardio.and.callFake((occ) => occ);
+
+		TestBed.configureTestingModule({
+			imports: [HostComponent, translateModuleConfig],
+			providers: [{ provide: ExerciseOccurrenceGroupingService, useValue: groupingSpy }],
+		});
+		setupI18n();
+	});
+
+	function create(groupBy: GroupBy = "session") {
+		hostFixture = TestBed.createComponent(HostComponent);
+		host = hostFixture.componentInstance;
+		host.groupBy = groupBy;
+		hostFixture.detectChanges();
+	}
+
+	it("should call ExerciseOccurrenceGroupingService.groupExercise with occurrences and 'session' on first render", () => {
+		create("session");
+		expect(groupingSpy.groupExercise).toHaveBeenCalledWith([], "session");
+	});
+
+	it("should call groupExercise with 'week' when groupBy input is 'week'", () => {
+		create("week");
+		expect(groupingSpy.groupExercise).toHaveBeenCalledWith([], "week");
+	});
+
+	it("should call groupExercise with 'month' when groupBy input is 'month'", () => {
+		create("month");
+		expect(groupingSpy.groupExercise).toHaveBeenCalledWith([], "month");
+	});
+
+	it("should re-call groupExercise when groupBy changes from 'session' to 'year'", () => {
+		create("session");
+		groupingSpy.groupExercise.calls.reset();
+		host.groupBy = "year";
+		hostFixture.detectChanges();
+		expect(groupingSpy.groupExercise).toHaveBeenCalledWith([], "year");
+	});
+
+	it("should pass the return value of groupExercise to the rendered strength chart", () => {
+		const specificResult = makeOccurrences(2);
+		groupingSpy.groupExercise.and.returnValue(specificResult);
+		create("session");
+		const volumeChart = hostFixture.debugElement
+			.query(By.directive(VolumeLineChartComponent))
+			.componentInstance as VolumeLineChartComponent;
+		expect(volumeChart.occurrences()).toBe(specificResult);
+	});
+});
+
+// ── Block E ───────────────────────────────────────────────────────────────────
+
+describe("StatsExerciseChartCardComponent — groupBy input, mode cardio", () => {
+	let hostFixture: ComponentFixture<HostComponent>;
+	let host: HostComponent;
+	let groupingSpy: jasmine.SpyObj<ExerciseOccurrenceGroupingService>;
+
+	beforeEach(() => {
+		groupingSpy = jasmine.createSpyObj<ExerciseOccurrenceGroupingService>("ExerciseOccurrenceGroupingService", [
+			"groupExercise",
+			"groupCardio",
+		]);
+		groupingSpy.groupExercise.and.callFake((occ) => occ);
+		groupingSpy.groupCardio.and.callFake((occ) => occ);
+
+		TestBed.configureTestingModule({
+			imports: [HostComponent, translateModuleConfig],
+			providers: [{ provide: ExerciseOccurrenceGroupingService, useValue: groupingSpy }],
+		});
+		setupI18n();
+	});
+
+	function create(groupBy: GroupBy = "session") {
+		hostFixture = TestBed.createComponent(HostComponent);
+		host = hostFixture.componentInstance;
+		host.isCardio = true;
+		host.cardioOccurrences = makeCardioOccurrences(2);
+		host.groupBy = groupBy;
+		hostFixture.detectChanges();
+	}
+
+	it("should call groupCardio with occurrences and 'session' in cardio mode", () => {
+		create("session");
+		expect(groupingSpy.groupCardio).toHaveBeenCalledWith(jasmine.any(Array), "session");
+	});
+
+	it("should call groupCardio with 'week' when groupBy is 'week' in cardio mode", () => {
+		create("week");
+		expect(groupingSpy.groupCardio).toHaveBeenCalledWith(jasmine.any(Array), "week");
+	});
+
+	it("should pass the return value of groupCardio to the rendered cardio chart", () => {
+		const specificCardioResult = makeCardioOccurrences(3);
+		groupingSpy.groupCardio.and.returnValue(specificCardioResult);
+		create("session");
+		const cardioChart = hostFixture.debugElement
+			.query(By.directive(CardioTimeChartComponent))
+			.componentInstance as CardioTimeChartComponent;
+		expect(cardioChart.occurrences()).toEqual(specificCardioResult);
 	});
 });

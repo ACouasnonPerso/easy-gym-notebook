@@ -47,7 +47,8 @@
     "weekShort": "Н",
     "unitMin": "мин",
     "unitKg": "кг",
-    "unitSec": "с"
+    "unitSec": "с",
+    "numberThousandAbbreviation": "k"
   },
   "sessionList": {
     "title": "Тренировки",

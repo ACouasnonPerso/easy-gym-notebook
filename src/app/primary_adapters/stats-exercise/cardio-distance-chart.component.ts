@@ -3,6 +3,10 @@ import { CardioOccurrence } from "../../core_logic/shared/models";
 import { getLabelStep } from "./label-step";
 import { TranslateModule } from "@ngx-translate/core";
 import { DistanceDisplayPipe } from "../../core_logic/mass-unit/distance-display.pipe";
+import { GroupBy } from "../../core_logic/stats-exercise/group-by.model";
+import { getXAxisLabel } from "./x-axis-label";
+import { LinearRegressionService } from "../../core_logic/stats-exercise/linear-regression.service";
+import { computeRegressionOverlay, RegressionOverlay } from "./regression-overlay";
 
 @Component({
 	selector: "app-cardio-distance-chart",
@@ -15,7 +19,9 @@ import { DistanceDisplayPipe } from "../../core_logic/mass-unit/distance-display
 })
 export class CardioDistanceChartComponent {
 	private readonly distanceDisplay = inject(DistanceDisplayPipe);
+	private readonly regressionService = inject(LinearRegressionService);
 	readonly occurrences = input<CardioOccurrence[]>([]);
+	readonly groupBy = input<GroupBy>('session');
 
 	readonly chartData = computed(() => {
 		const data = this.occurrences().filter((o) => o.distanceKm !== null && o.distanceKm !== 0);
@@ -41,11 +47,14 @@ export class CardioDistanceChartComponent {
 			n > 1 ? distancePoints.map((p) => `${p.x},${p.y}`).join(" ") + ` ${xCoords[n - 1]},110 ${xCoords[0]},110` : "";
 		const xLabels = data.map((o, i) => ({
 			x: xCoords[i],
-			label:
-				i % labelStep === 0
-					? `${o.date.getDate().toString().padStart(2, "0")}/${(o.date.getMonth() + 1).toString().padStart(2, "0")}`
-					: "",
+			label: i % labelStep === 0 ? getXAxisLabel(o.date, this.groupBy()) : "",
 		}));
-		return { distancePoints, distancePolyline, distanceAreaPoints, xLabels, minD, maxD };
+		return { distancePoints, distancePolyline, distanceAreaPoints, xLabels, minD, maxD, distances };
+	});
+
+	readonly regressionOverlay = computed((): RegressionOverlay => {
+		const cd = this.chartData();
+		if (cd === null) return { visible: false };
+		return computeRegressionOverlay(cd.distancePoints, this.regressionService, cd.distances);
 	});
 }

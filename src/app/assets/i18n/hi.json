@@ -47,7 +47,8 @@
     "weekShort": "स",
     "unitMin": "मि",
     "unitKg": "किग्रा",
-    "unitSec": "से"
+    "unitSec": "से",
+    "numberThousandAbbreviation": "के"
   },
   "sessionList": {
     "title": "सत्र",

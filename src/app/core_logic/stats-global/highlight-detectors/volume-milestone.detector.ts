@@ -11,7 +11,7 @@ export function volumeMilestoneDetector(
 	ctx: DetectorContext,
 	getLastMilestoneKg: () => number,
 	setLastMilestoneKg: (kg: number) => void
-): HighlightMetric | null {
+): HighlightMetric[] {
 	const { exercises, debugLog } = ctx;
 
 	const totalVolumeKg = exercises
@@ -20,7 +20,7 @@ export function volumeMilestoneDetector(
 
 	if (totalVolumeKg === 0) {
 		debugLog?.(`[volume-milestone] ❌ NULL — volume total = 0`);
-		return null;
+		return [];
 	}
 
 	// Which milestone threshold has been crossed?
@@ -30,7 +30,7 @@ export function volumeMilestoneDetector(
 
 	if (currentMilestone === 0) {
 		debugLog?.(`[volume-milestone] ❌ NULL — premier palier (${MILESTONE_STEP_KG / 1000}t) pas encore atteint (${(totalVolumeKg / 1000).toFixed(1)}t / ${MILESTONE_STEP_KG / 1000}t)`);
-		return null;
+		return [];
 	}
 
 	const lastAcknowledged = getLastMilestoneKg();
@@ -38,14 +38,14 @@ export function volumeMilestoneDetector(
 
 	if (currentMilestone <= lastAcknowledged) {
 		debugLog?.(`[volume-milestone] ❌ NULL — palier ${currentMilestone / 1000}t déjà acquitté (modifie localStorage "highlight-milestone-kg" pour réinitialiser)`);
-		return null;
+		return [];
 	}
 
 	// New milestone crossed — acknowledge it
 	setLastMilestoneKg(currentMilestone);
 
 	debugLog?.(`[volume-milestone] ✅ DÉCLENCHÉ — nouveau palier ${currentMilestone / 1000}t franchi !`);
-	return {
+	return [{
 		id: "volume-milestone",
 		category: "perf",
 		impactScore: currentMilestone / 1000, // tonneage as score
@@ -54,5 +54,5 @@ export function volumeMilestoneDetector(
 			milestoneTonnes: currentMilestone / 1000,
 			totalVolumeKg,
 		},
-	};
+	}];
 }

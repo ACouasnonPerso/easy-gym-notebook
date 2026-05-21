@@ -57,4 +57,4 @@ export interface DetectorContext {
 }
 
 /** Type alias for a detector function. */
-export type Detector = (ctx: DetectorContext) => HighlightMetric | null;
+export type Detector = (ctx: DetectorContext) => HighlightMetric[];

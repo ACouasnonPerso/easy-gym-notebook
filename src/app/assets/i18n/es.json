@@ -47,7 +47,8 @@
     "weekShort": "S",
     "unitMin": "min",
     "unitKg": "kg",
-    "unitSec": "s"
+    "unitSec": "s",
+    "numberThousandAbbreviation": "k"
   },
   "sessionList": {
     "title": "Sesiones",

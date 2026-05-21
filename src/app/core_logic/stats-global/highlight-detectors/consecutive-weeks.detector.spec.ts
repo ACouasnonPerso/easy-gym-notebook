@@ -26,26 +26,26 @@ function makeCtx(sessions: Session[]): DetectorContext {
 }
 
 describe("consecutiveWeeksDetector", () => {
-	it("should return null when there are no sessions", () => {
-		expect(consecutiveWeeksDetector(makeCtx([]))).toBeNull();
+	it("should return [] when there are no sessions", () => {
+		expect(consecutiveWeeksDetector(makeCtx([]))).toEqual([]);
 	});
 
-	it("should return null when only 2 consecutive weeks have at least 2 sessions", () => {
+	it("should return [] when only 2 consecutive weeks have at least 2 sessions", () => {
 		const sessions = [
 			...makeSessionsForWeek(0, 2), // current week: 2 sessions
 			...makeSessionsForWeek(1, 2), // prev week: 2 sessions
 		];
-		expect(consecutiveWeeksDetector(makeCtx(sessions))).toBeNull();
+		expect(consecutiveWeeksDetector(makeCtx(sessions))).toEqual([]);
 	});
 
-	it("should return null when a week has only 1 session breaking the streak", () => {
+	it("should return [] when a week has only 1 session breaking the streak", () => {
 		const sessions = [
 			...makeSessionsForWeek(0, 2), // current: 2 ✓
 			...makeSessionsForWeek(1, 1), // prev: 1 ✗ — breaks streak
 			...makeSessionsForWeek(2, 3), // 2 weeks ago: 3 (irrelevant due to break)
 			...makeSessionsForWeek(3, 2),
 		];
-		expect(consecutiveWeeksDetector(makeCtx(sessions))).toBeNull();
+		expect(consecutiveWeeksDetector(makeCtx(sessions))).toEqual([]);
 	});
 
 	it("should detect 3 consecutive active weeks when each has at least 2 sessions", () => {
@@ -55,10 +55,10 @@ describe("consecutiveWeeksDetector", () => {
 			...makeSessionsForWeek(2, 2),
 		];
 		const result = consecutiveWeeksDetector(makeCtx(sessions));
-		expect(result).not.toBeNull();
-		expect(result!.id).toBe("consecutive-weeks");
-		expect(result!.category).toBe("regularity");
-		expect(result!.payload["weeks"]).toBe(3);
+		expect(result).not.toEqual([]);
+		expect(result[0].id).toBe("consecutive-weeks");
+		expect(result[0].category).toBe("regularity");
+		expect(result[0].payload["weeks"]).toBe(3);
 	});
 
 	it("should count all consecutive active weeks when the streak extends beyond 3 weeks", () => {
@@ -69,17 +69,17 @@ describe("consecutiveWeeksDetector", () => {
 			...makeSessionsForWeek(3, 2),
 		];
 		const result = consecutiveWeeksDetector(makeCtx(sessions));
-		expect(result!.payload["weeks"]).toBe(4);
-		expect(result!.impactScore).toBe(4);
+		expect(result[0].payload["weeks"]).toBe(4);
+		expect(result[0].impactScore).toBe(4);
 	});
 
-	it("should return null when the current week has fewer than 2 sessions", () => {
+	it("should return [] when the current week has fewer than 2 sessions", () => {
 		const sessions = [
 			...makeSessionsForWeek(0, 1), // current: 1 ✗
 			...makeSessionsForWeek(1, 3),
 			...makeSessionsForWeek(2, 3),
 		];
-		expect(consecutiveWeeksDetector(makeCtx(sessions))).toBeNull();
+		expect(consecutiveWeeksDetector(makeCtx(sessions))).toEqual([]);
 	});
 
 	it("should have category regularity", () => {
@@ -89,6 +89,6 @@ describe("consecutiveWeeksDetector", () => {
 			...makeSessionsForWeek(2, 2),
 		];
 		const result = consecutiveWeeksDetector(makeCtx(sessions));
-		expect(result!.category).toBe("regularity");
+		expect(result[0].category).toBe("regularity");
 	});
 });

@@ -22,19 +22,21 @@
 }
 
 <div class="page">
-	<app-session-exercises-list
-		[exercises]="exercises()"
-		[sessionId]="sessionId()"
-		(exerciseValidate)="onExerciseValidate($event)"
-		(exerciseCancel)="onExerciseCancel($event)"
-		(exerciseUpdate)="onExerciseUpdate($event.exercise, $event.changes)"
-		(exerciseDelete)="onExerciseDelete($event)"
-		(openChrono)="navigateToExerciseChrono($event)"
-		(openStats)="navigateToStats($event)"
-		(openRating)="openRatingPopup($event)"
-		(openComment)="openCommentPopup($event)"
-		(openPhoto)="openPhotoLightbox($event)"
-	/>
+	<div class="page-inner">
+		<app-session-exercises-list
+			[exercises]="exercises()"
+			[sessionId]="sessionId()"
+			(exerciseValidate)="onExerciseValidate($event)"
+			(exerciseCancel)="onExerciseCancel($event)"
+			(exerciseUpdate)="onExerciseUpdate($event.exercise, $event.changes)"
+			(exerciseDelete)="onExerciseDelete($event)"
+			(openChrono)="navigateToExerciseChrono($event)"
+			(openStats)="navigateToStats($event)"
+			(openRating)="openRatingPopup($event)"
+			(openComment)="openCommentPopup($event)"
+			(openPhoto)="openPhotoLightbox($event)"
+		/>
+	</div>
 </div>
 
 @if (endSessionUseCase.showManualOverride()) {

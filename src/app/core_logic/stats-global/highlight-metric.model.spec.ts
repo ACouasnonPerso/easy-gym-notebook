@@ -50,8 +50,8 @@ describe("HighlightMetric model types", () => {
 		expect(vm.labelKey).toBe("statsGlobal.highlights.weightPr");
 	});
 
-	it("should allow a placeholder detector to consume the DetectorContext and return null", () => {
-		const placeholderDetector: Detector = (_ctx: DetectorContext) => null;
+	it("should allow a placeholder detector to consume the DetectorContext and return []", () => {
+		const placeholderDetector: Detector = (_ctx: DetectorContext) => [];
 
 		const sessions: Session[] = [];
 		const exercises: Exercise[] = [];
@@ -63,7 +63,7 @@ describe("HighlightMetric model types", () => {
 		};
 
 		const result = placeholderDetector(ctx);
-		expect(result).toBeNull();
+		expect(result).toEqual([]);
 	});
 
 	it("should expose sessions, exercises, today and favoriteBonus on DetectorContext", () => {

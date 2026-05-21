@@ -5,14 +5,16 @@ import { signal } from "@angular/core";
 import { CardioPaceChartComponent } from "./cardio-pace-chart.component";
 import { CardioOccurrence } from "../../core_logic/shared/models";
 import { MassUnitService } from "../../core_logic/mass-unit/mass-unit.service";
+import { GroupBy } from "../../core_logic/stats-exercise/group-by.model";
 
 @Component({
 	standalone: true,
 	imports: [CardioPaceChartComponent],
-	template: `<app-cardio-pace-chart [occurrences]="occurrences" />`,
+	template: `<app-cardio-pace-chart [occurrences]="occurrences" [groupBy]="groupBy" />`,
 })
 class HostComponent {
 	occurrences: CardioOccurrence[] = [];
+	groupBy: GroupBy = 'session';
 }
 
 function makeOccurrence(
@@ -24,7 +26,11 @@ function makeOccurrence(
 }
 
 describe("CardioPaceChartComponent", () => {
-	function setup(occurrences: CardioOccurrence[], unit: "metric" | "imperial" | "us" = "metric") {
+	function setup(
+		occurrences: CardioOccurrence[],
+		unit: "metric" | "imperial" | "us" = "metric",
+		groupBy: GroupBy = 'session'
+	) {
 		TestBed.configureTestingModule({
 			imports: [HostComponent],
 			providers: [
@@ -34,6 +40,7 @@ describe("CardioPaceChartComponent", () => {
 		});
 		const fixture: ComponentFixture<HostComponent> = TestBed.createComponent(HostComponent);
 		fixture.componentInstance.occurrences = occurrences;
+		fixture.componentInstance.groupBy = groupBy;
 		fixture.detectChanges();
 		return fixture;
 	}
@@ -57,5 +64,62 @@ describe("CardioPaceChartComponent", () => {
 		const el: HTMLElement = fixture.nativeElement;
 		const texts = Array.from(el.querySelectorAll("text")).map((t) => t.textContent?.trim());
 		expect(texts).toContain("8:03/mi");
+	});
+
+	describe("labels de l'axe X selon la granularité (groupBy)", () => {
+		it("T23: avec groupBy='week', les labels de l'axe X sont au format S{n}", () => {
+			const fixture = setup([makeOccurrence(10, 3600, new Date(2026, 2, 16))], "metric", 'week');
+			const el = fixture.nativeElement as HTMLElement;
+			const labels = Array.from(el.querySelectorAll("text")).filter((t) =>
+				/^S\d+$/.test(t.textContent?.trim() ?? "")
+			);
+			expect(labels.length).toBe(1);
+			expect(labels[0].textContent?.trim()).toBe("S12");
+		});
+
+		it("T24: avec groupBy='month', les labels de l'axe X sont les noms de mois abrégés", () => {
+			const fixture = setup([makeOccurrence(10, 3600, new Date(2026, 2, 16))], "metric", 'month');
+			const el = fixture.nativeElement as HTMLElement;
+			const labels = Array.from(el.querySelectorAll("text")).filter((t) =>
+				/^[A-Z][a-z]{2}$/.test(t.textContent?.trim() ?? "")
+			);
+			expect(labels.length).toBe(1);
+			expect(labels[0].textContent?.trim()).toBe("Mar");
+		});
+	});
+});
+
+describe("CardioPaceChartComponent — regression overlay smoke tests", () => {
+	function makeOccurrences(count: number): CardioOccurrence[] {
+		return Array.from({ length: count }, (_, i) => ({
+			date: new Date(2026, 0, i + 1),
+			durationSeconds: 3600,
+			distanceKm: 5 + i,
+		}));
+	}
+
+	function setupSmoke(occurrences: CardioOccurrence[]) {
+		TestBed.configureTestingModule({
+			imports: [HostComponent],
+			providers: [
+				provideTranslateService({ defaultLanguage: "fr" }),
+				{ provide: MassUnitService, useValue: { activeMassUnit: signal("metric" as const) } },
+			],
+		});
+		const fixture = TestBed.createComponent(HostComponent);
+		fixture.componentInstance.occurrences = occurrences;
+		fixture.componentInstance.groupBy = 'session';
+		fixture.detectChanges();
+		return fixture.nativeElement as HTMLElement;
+	}
+
+	it("should render regression-line when 6 occurrences with valid distanceKm", () => {
+		const el = setupSmoke(makeOccurrences(6));
+		expect(el.querySelector(".regression-line")).not.toBeNull();
+	});
+
+	it("should NOT render regression-line when only 5 occurrences with valid distanceKm", () => {
+		const el = setupSmoke(makeOccurrences(5));
+		expect(el.querySelector(".regression-line")).toBeNull();
 	});
 });

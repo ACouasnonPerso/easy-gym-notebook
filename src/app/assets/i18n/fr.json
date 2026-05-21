@@ -47,7 +47,8 @@
     "weekShort": "S",
     "unitMin": "min",
     "unitKg": "kg",
-    "unitSec": "s"
+    "unitSec": "s",
+    "numberThousandAbbreviation": "k"
   },
   "sessionList": {
     "title": "Sessions",
@@ -118,10 +119,10 @@
     "highlights": {
       "weightPr": "Poids PR",
       "volumeProgression": "Volume en hausse cette semaine",
-      "mostImproved": "Le plus amélioré",
+      "mostImproved": "La meilleure progression",
       "sevenDayStreak": "Sessions dans 7 jours",
-      "consecutiveWeeks": "Semaines actives d'affilée",
-      "volumeMilestone": "Volume total de l'étape"
+      "consecutiveWeeks": "Semaines actives d'affilée \uD83D\uDD25",
+      "volumeMilestone": "Volume total"
     }
   },
   "import": {

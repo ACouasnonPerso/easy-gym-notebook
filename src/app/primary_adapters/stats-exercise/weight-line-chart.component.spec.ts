@@ -4,6 +4,7 @@ import { WeightLineChartComponent } from "./weight-line-chart.component";
 import { ExerciseOccurrence } from "../../core_logic/shared/models";
 import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from "@ngx-translate/core";
 import { Observable, of } from "rxjs";
+import { GroupBy } from "../../core_logic/stats-exercise/group-by.model";
 
 const FR_TRANSLATIONS = {
 	common: { weight: "Poids", noData: "Aucune donnée" },
@@ -27,10 +28,11 @@ function setupI18n(): void {
 @Component({
 	standalone: true,
 	imports: [WeightLineChartComponent],
-	template: `<app-weight-line-chart [occurrences]="occurrences" />`,
+	template: `<app-weight-line-chart [occurrences]="occurrences" [groupBy]="groupBy" />`,
 })
 class HostComponent {
 	occurrences: ExerciseOccurrence[] = [];
+	groupBy: GroupBy = 'session';
 }
 
 function makeOccurrences(count: number, baseWeightKg = 80): ExerciseOccurrence[] {
@@ -54,13 +56,14 @@ function makeOccurrences(count: number, baseWeightKg = 80): ExerciseOccurrence[]
 describe("WeightLineChartComponent — graphique de progression du poids", () => {
 	let hostFixture: ComponentFixture<HostComponent>;
 
-	function setup(occurrences: ExerciseOccurrence[]) {
+	function setup(occurrences: ExerciseOccurrence[], groupBy: GroupBy = 'session') {
 		TestBed.configureTestingModule({
 			imports: [HostComponent, translateModuleConfig],
 		});
 		setupI18n();
 		hostFixture = TestBed.createComponent(HostComponent);
 		hostFixture.componentInstance.occurrences = occurrences;
+		hostFixture.componentInstance.groupBy = groupBy;
 		hostFixture.detectChanges();
 	}
 
@@ -146,5 +149,87 @@ describe("WeightLineChartComponent — graphique de progression du poids", () =>
 			// step=5 : index 0,5,10,15,20 => 5 labels
 			expect(weightTexts.length).toBe(5);
 		});
+	});
+
+	describe("labels de l'axe X selon la granularité (groupBy)", () => {
+		const occ16Mar: ExerciseOccurrence = {
+			exerciseId: "ex1",
+			sessionId: "s1",
+			date: new Date(2026, 2, 16),
+			name: "Squat",
+			weightKg: 80,
+			sets: 3,
+			reps: 5,
+			breakDurationSeconds: 90,
+			volumeKg: 1200,
+			status: "validated",
+			rating: null,
+			comment: null,
+			setBreakdown: [],
+		};
+
+		it("T15: avec groupBy='week', les labels de l'axe X sont au format S{n}", () => {
+			setup([occ16Mar], 'week');
+			const el = hostFixture.nativeElement as HTMLElement;
+			const labels = Array.from(el.querySelectorAll("text")).filter((t) =>
+				/^S\d+$/.test(t.textContent?.trim() ?? "")
+			);
+			expect(labels.length).toBe(1);
+			expect(labels[0].textContent?.trim()).toBe("S12");
+		});
+
+		it("T16: avec groupBy='month', les labels de l'axe X sont les noms de mois abrégés", () => {
+			setup([occ16Mar], 'month');
+			const el = hostFixture.nativeElement as HTMLElement;
+			const labels = Array.from(el.querySelectorAll("text")).filter((t) =>
+				/^[A-Z][a-z]{2}$/.test(t.textContent?.trim() ?? "")
+			);
+			expect(labels.length).toBe(1);
+			expect(labels[0].textContent?.trim()).toBe("Mar");
+		});
+	});
+
+	describe("ordre chronologique des dates sur l'axe X", () => {
+		it("devrait afficher la date la plus ancienne à gauche et la plus récente à droite", () => {
+			setup(makeOccurrences(3));
+
+			const el: HTMLElement = hostFixture.nativeElement;
+			const dateTexts = Array.from(el.querySelectorAll('text[y="126"]'));
+			expect(dateTexts.length).toBe(3);
+
+			const xs = dateTexts.map((t) => parseFloat(t.getAttribute("x") ?? "0"));
+			expect(xs[0]).toBeLessThan(xs[1]);
+			expect(xs[1]).toBeLessThan(xs[2]);
+			expect(dateTexts[0].textContent?.trim()).toBe("01/01");
+			expect(dateTexts[2].textContent?.trim()).toBe("03/01");
+		});
+	});
+});
+
+describe("WeightLineChartComponent — regression overlay smoke tests", () => {
+	function setup(occurrences: ExerciseOccurrence[], groupBy: GroupBy = 'session') {
+		TestBed.configureTestingModule({
+			imports: [HostComponent, translateModuleConfig],
+		});
+		const translate = TestBed.inject(TranslateService);
+		translate.setDefaultLang("fr");
+		translate.use("fr");
+		const fixture = TestBed.createComponent(HostComponent);
+		fixture.componentInstance.occurrences = occurrences;
+		fixture.componentInstance.groupBy = groupBy;
+		fixture.detectChanges();
+		return fixture.nativeElement as HTMLElement;
+	}
+
+	it("should render regression-line when 6 occurrences with varying weights", () => {
+		const occs = makeOccurrences(6, 80);
+		const el = setup(occs);
+		expect(el.querySelector(".regression-line")).not.toBeNull();
+	});
+
+	it("should NOT render regression-line when only 5 occurrences", () => {
+		const occs = makeOccurrences(5, 80);
+		const el = setup(occs);
+		expect(el.querySelector(".regression-line")).toBeNull();
 	});
 });

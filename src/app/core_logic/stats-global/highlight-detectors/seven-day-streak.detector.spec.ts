@@ -16,17 +16,17 @@ function makeCtx(sessions: Session[]): DetectorContext {
 }
 
 describe("sevenDayStreakDetector", () => {
-	it("should return null when there are no sessions", () => {
-		expect(sevenDayStreakDetector(makeCtx([]))).toBeNull();
+	it("should return [] when there are no sessions", () => {
+		expect(sevenDayStreakDetector(makeCtx([]))).toEqual([]);
 	});
 
-	it("should return null when there are only 3 sessions in the last 7 days", () => {
+	it("should return [] when there are only 3 sessions in the last 7 days", () => {
 		const sessions = [
 			makeSession("s1", 0),
 			makeSession("s2", 2),
 			makeSession("s3", 5),
 		];
-		expect(sevenDayStreakDetector(makeCtx(sessions))).toBeNull();
+		expect(sevenDayStreakDetector(makeCtx(sessions))).toEqual([]);
 	});
 
 	it("should detect a streak when there are exactly 4 sessions in a 7-day window ending today", () => {
@@ -37,10 +37,10 @@ describe("sevenDayStreakDetector", () => {
 			makeSession("s4", 6),
 		];
 		const result = sevenDayStreakDetector(makeCtx(sessions));
-		expect(result).not.toBeNull();
-		expect(result!.id).toBe("seven-day-streak");
-		expect(result!.category).toBe("regularity");
-		expect(result!.payload["sessionCount"]).toBe(4);
+		expect(result).not.toEqual([]);
+		expect(result[0].id).toBe("seven-day-streak");
+		expect(result[0].category).toBe("regularity");
+		expect(result[0].payload["sessionCount"]).toBe(4);
 	});
 
 	it("should return the maximum session count when multiple rolling windows qualify", () => {
@@ -53,11 +53,11 @@ describe("sevenDayStreakDetector", () => {
 			makeSession("s5", 6),
 		];
 		const result = sevenDayStreakDetector(makeCtx(sessions));
-		expect(result!.payload["sessionCount"]).toBe(5);
-		expect(result!.impactScore).toBe(5);
+		expect(result[0].payload["sessionCount"]).toBe(5);
+		expect(result[0].impactScore).toBe(5);
 	});
 
-	it("should return null when sessions are outside the rolling window from this week", () => {
+	it("should return [] when sessions are outside the rolling window from this week", () => {
 		// Sessions from 8, 9, 10, 11 days ago — outside any window from Mon Jan 29 to today Jan 31
 		const sessions = [
 			makeSession("s1", 8),
@@ -65,7 +65,7 @@ describe("sevenDayStreakDetector", () => {
 			makeSession("s3", 10),
 			makeSession("s4", 11),
 		];
-		expect(sevenDayStreakDetector(makeCtx(sessions))).toBeNull();
+		expect(sevenDayStreakDetector(makeCtx(sessions))).toEqual([]);
 	});
 
 	it("should have category regularity", () => {
@@ -76,6 +76,6 @@ describe("sevenDayStreakDetector", () => {
 			makeSession("s4", 3),
 		];
 		const result = sevenDayStreakDetector(makeCtx(sessions));
-		expect(result!.category).toBe("regularity");
+		expect(result[0].category).toBe("regularity");
 	});
 });

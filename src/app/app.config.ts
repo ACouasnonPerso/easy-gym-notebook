@@ -24,6 +24,8 @@ import { ExercisePhotoRepository } from "./secondary_ports/exercise-photo/exerci
 import { ExercisePhotoService } from "./core_logic/exercise-photo/exercise-photo.service";
 import { MILESTONE_REPOSITORY } from "./secondary_ports/highlight-stats/milestone-repository.interface";
 import { LocalStorageMilestoneRepository } from "./secondary_adapters/highlight-stats/local-storage-milestone.repository";
+import { RECENT_HIGHLIGHTS_REPOSITORY } from "./secondary_ports/highlight-stats/recent-highlights-repository.interface";
+import { LocalStorageRecentHighlightsRepository } from "./secondary_adapters/highlight-stats/local-storage-recent-highlights.repository";
 
 export const FIRESTORE = new InjectionToken<Firestore>("Firestore");
 
@@ -57,5 +59,6 @@ export const appConfig: ApplicationConfig = {
 		ExercisePhotoService,
 		{ provide: EXERCISE_PHOTO_REPOSITORY, useClass: ExercisePhotoRepository },
 		{ provide: MILESTONE_REPOSITORY, useClass: LocalStorageMilestoneRepository },
+		{ provide: RECENT_HIGHLIGHTS_REPOSITORY, useClass: LocalStorageRecentHighlightsRepository },
 	],
 };

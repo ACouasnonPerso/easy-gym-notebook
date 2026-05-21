@@ -2,11 +2,14 @@ import { DetectorContext, HighlightMetric } from "../highlight-metric.model";
 import { Session } from "../../shared/models";
 
 /**
- * Detects the most improved exercise of the current month vs the previous month.
+ * Detects the most improved exercises of the current month vs the previous month.
  * "Improvement" is measured by max weight increase, excluding cardio.
- * Returns null if no improvement of ≥ 2.5 kg is found.
+ * Selects 1 random candidate from the top-4 qualifying exercises (>= 2.5 kg threshold),
+ * using coldStartSeed (a value in [0, 1) generated once per app cold start) so the
+ * pick is stable during a session but varies across page reloads.
+ * Returns [] if no exercise meets the threshold.
  */
-export function mostImprovedDetector(ctx: DetectorContext): HighlightMetric | null {
+export function mostImprovedDetector(ctx: DetectorContext, coldStartSeed: number): HighlightMetric[] {
 	const { sessions, exercises, today, debugLog } = ctx;
 
 	const currentMonth = today.getMonth();
@@ -47,7 +50,7 @@ export function mostImprovedDetector(ctx: DetectorContext): HighlightMetric | nu
 	const prevMonthName = `${prevYear}-${String(prevMonth + 1).padStart(2, "0")}`;
 	debugLog?.(`[most-improved] Comparaison mois actuel (${currentMonthName}) vs précédent (${prevMonthName})`);
 
-	let bestCandidate: { name: string; currentMax: number; gain: number } | null = null;
+	const candidates: { name: string; currentMax: number; gain: number }[] = [];
 
 	for (const [name, monthMap] of maxByNameAndMonth) {
 		const currentMax = monthMap.get("current") ?? 0;
@@ -66,28 +69,31 @@ export function mostImprovedDetector(ctx: DetectorContext): HighlightMetric | nu
 			continue;
 		}
 		debugLog?.(`[most-improved]   "${name}" ✅ +${gain.toFixed(1)} kg (${prevMax} → ${currentMax} kg)`);
-		if (!bestCandidate || gain > bestCandidate.gain) {
-			bestCandidate = { name, currentMax, gain };
-		}
+		candidates.push({ name, currentMax, gain });
 	}
 
-	if (!bestCandidate) {
-		debugLog?.(`[most-improved] ❌ NULL — aucune progression ≥ 2.5 kg ce mois vs le mois précédent`);
-		return null;
+	if (candidates.length === 0) {
+		debugLog?.(`[most-improved] ❌ [] — aucune progression ≥ 2.5 kg ce mois vs le mois précédent`);
+		return [];
 	}
 
-	debugLog?.(`[most-improved] ✅ DÉCLENCHÉ — "${bestCandidate.name}" +${bestCandidate.gain.toFixed(1)} kg`);
-	return {
+	candidates.sort((a, b) => b.gain - a.gain);
+	const top4 = candidates.slice(0, 4);
+	const picked = top4[Math.floor(coldStartSeed * top4.length)];
+
+	debugLog?.(`[most-improved] ✅ DÉCLENCHÉ — pool top-4: ${top4.map((c) => `"${c.name}" +${c.gain.toFixed(1)} kg`).join(", ")} → choix: "${picked.name}"`);
+
+	return [{
 		id: "most-improved",
 		category: "perf",
-		impactScore: bestCandidate.gain,
-		exerciseName: bestCandidate.name,
+		impactScore: picked.gain,
+		exerciseName: picked.name,
 		payload: {
-			exerciseName: bestCandidate.name,
-			currentMaxKg: bestCandidate.currentMax,
-			gainKg: bestCandidate.gain,
+			exerciseName: picked.name,
+			currentMaxKg: picked.currentMax,
+			gainKg: picked.gain,
 			prevYear,
 			prevMonth,
 		},
-	};
+	}];
 }

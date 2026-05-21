@@ -1,21 +1,30 @@
-import { Component, ChangeDetectionStrategy, input, computed } from "@angular/core";
+import { Component, ChangeDetectionStrategy, input, computed, inject } from "@angular/core";
 import { ExerciseOccurrence } from "../../core_logic/shared/models";
 import { getLabelStep } from "./label-step";
 import { TranslateModule } from "@ngx-translate/core";
+import { GroupBy } from "../../core_logic/stats-exercise/group-by.model";
+import { getXAxisLabel } from "./x-axis-label";
+import { LinearRegressionService } from "../../core_logic/stats-exercise/linear-regression.service";
+import { computeRegressionOverlay, RegressionOverlay } from "./regression-overlay";
+import { WeightDisplayPipe } from "../../core_logic/mass-unit/weight-display.pipe";
 
 @Component({
 	selector: "app-volume-line-chart",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [TranslateModule],
+	providers: [WeightDisplayPipe],
 	templateUrl: "./volume-line-chart.component.html",
 	styleUrl: "./volume-line-chart.component.scss",
 })
 export class VolumeLineChartComponent {
+	private readonly weightDisplay = inject(WeightDisplayPipe);
+	private readonly regressionService = inject(LinearRegressionService);
 	readonly occurrences = input<ExerciseOccurrence[]>([]);
+	readonly groupBy = input<GroupBy>('session');
 
 	readonly chartData = computed(() => {
-		const data = [...this.occurrences()].reverse();
+		const data = [...this.occurrences()];
 		if (data.length === 0) return null;
 
 		const n = data.length;
@@ -36,7 +45,7 @@ export class VolumeLineChartComponent {
 		const volumePoints = data.map((o, i) => ({
 			x: xCoords[i],
 			y: yVolume(o.volumeKg),
-			label: i % labelStep === 0 ? `${parseFloat(o.volumeKg.toFixed(2))} kg` : "",
+			label: i % labelStep === 0 ? (this.weightDisplay.transform(o.volumeKg / 1000, "t") ?? "") : "",
 		}));
 
 		const volumePolyline = n > 1 ? volumePoints.map((p) => `${p.x},${p.y}`).join(" ") : "";
@@ -46,10 +55,7 @@ export class VolumeLineChartComponent {
 
 		const xLabels = data.map((o, i) => ({
 			x: xCoords[i],
-			label:
-				i % labelStep === 0
-					? `${o.date.getDate().toString().padStart(2, "0")}/${(o.date.getMonth() + 1).toString().padStart(2, "0")}`
-					: "",
+			label: i % labelStep === 0 ? getXAxisLabel(o.date, this.groupBy()) : "",
 		}));
 
 		return {
@@ -59,6 +65,13 @@ export class VolumeLineChartComponent {
 			xLabels,
 			minV,
 			maxV,
+			volumes,
 		};
+	});
+
+	readonly regressionOverlay = computed((): RegressionOverlay => {
+		const cd = this.chartData();
+		if (cd === null) return { visible: false };
+		return computeRegressionOverlay(cd.volumePoints, this.regressionService, cd.volumes);
 	});
 }

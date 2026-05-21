@@ -5,12 +5,12 @@ import { DetectorContext, HighlightMetric } from "../highlight-metric.model";
  * Triggers when there are ≥ 4 sessions in any rolling 7-day window ending today or earlier this week.
  * Returns the highest count found.
  */
-export function sevenDayStreakDetector(ctx: DetectorContext): HighlightMetric | null {
+export function sevenDayStreakDetector(ctx: DetectorContext): HighlightMetric[] {
 	const { sessions, today, debugLog } = ctx;
 
 	if (sessions.length === 0) {
 		debugLog?.(`[seven-day-streak] ❌ NULL — aucune séance enregistrée`);
-		return null;
+		return [];
 	}
 
 	// Build unique day keys for all sessions
@@ -48,14 +48,14 @@ export function sevenDayStreakDetector(ctx: DetectorContext): HighlightMetric | 
 
 	if (maxSessionsIn7Days < 4) {
 		debugLog?.(`[seven-day-streak] ❌ NULL — ${maxSessionsIn7Days} séances < 4 requises sur 7 jours (fenêtre limitée à la semaine courante lundi→aujourd'hui)`);
-		return null;
+		return [];
 	}
 
 	debugLog?.(`[seven-day-streak] ✅ DÉCLENCHÉ — ${maxSessionsIn7Days} séances en 7 jours`);
-	return {
+	return [{
 		id: "seven-day-streak",
 		category: "regularity",
 		impactScore: maxSessionsIn7Days,
 		payload: { sessionCount: maxSessionsIn7Days },
-	};
+	}];
 }

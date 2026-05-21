@@ -23,12 +23,12 @@ function getMondayTime(date: Date): number {
  * Triggers when there are ≥ 3 consecutive ISO weeks, each with ≥ 2 sessions.
  * Returns the count of consecutive active weeks (up to and including the current week).
  */
-export function consecutiveWeeksDetector(ctx: DetectorContext): HighlightMetric | null {
+export function consecutiveWeeksDetector(ctx: DetectorContext): HighlightMetric[] {
 	const { sessions, today, debugLog } = ctx;
 
 	if (sessions.length === 0) {
 		debugLog?.(`[consecutive-weeks] ❌ NULL — aucune séance enregistrée`);
-		return null;
+		return [];
 	}
 
 	// Count sessions per week key
@@ -61,14 +61,14 @@ export function consecutiveWeeksDetector(ctx: DetectorContext): HighlightMetric 
 
 	if (consecutiveCount < 3) {
 		debugLog?.(`[consecutive-weeks] ❌ NULL — ${consecutiveCount} semaine(s) consécutive(s) < 3 requises (chaque semaine doit avoir ≥ 2 séances)`);
-		return null;
+		return [];
 	}
 
 	debugLog?.(`[consecutive-weeks] ✅ DÉCLENCHÉ — ${consecutiveCount} semaines consécutives`);
-	return {
+	return [{
 		id: "consecutive-weeks",
 		category: "regularity",
 		impactScore: consecutiveCount,
 		payload: { weeks: consecutiveCount },
-	};
+	}];
 }

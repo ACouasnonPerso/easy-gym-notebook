@@ -47,7 +47,8 @@
     "weekShort": "주",
     "unitMin": "분",
     "unitKg": "kg",
-    "unitSec": "초"
+    "unitSec": "초",
+    "numberThousandAbbreviation": "k"
   },
   "sessionList": {
     "title": "세션",

@@ -26,9 +26,9 @@ function getMondayOfWeek(date: Date): Date {
  * Compares current week's volume to the average of the previous 4 weeks.
  * Only triggers if current week volume is meaningfully higher (> 10% increase).
  * Excludes cardio exercises with zero totalVolumeKg.
- * Returns the exercise with the highest percentage increase.
+ * Returns up to 3 exercises sorted by percentage gain descending.
  */
-export function volumeProgressionDetector(ctx: DetectorContext): HighlightMetric | null {
+export function volumeProgressionDetector(ctx: DetectorContext): HighlightMetric[] {
 	const { sessions, exercises, today, debugLog } = ctx;
 
 	const currentWeekMonday = getMondayOfWeek(today);
@@ -64,7 +64,7 @@ export function volumeProgressionDetector(ctx: DetectorContext): HighlightMetric
 
 	debugLog?.(`[volume-progression] Semaine courante: ${currentWeekKey} | Semaines précédentes: ${prev4Keys.join(", ")}`);
 
-	let bestCandidate: { name: string; currentVolume: number; avgPrev: number; pctGain: number } | null = null;
+	const qualifiedCandidates: { name: string; currentVolume: number; avgPrev: number; pctGain: number }[] = [];
 
 	for (const [name, weekMap] of volumeByNameAndWeek) {
 		const currentVol = weekMap.get(currentWeekKey) ?? 0;
@@ -91,27 +91,29 @@ export function volumeProgressionDetector(ctx: DetectorContext): HighlightMetric
 		}
 
 		debugLog?.(`[volume-progression]   "${name}" ✅ +${pctGainRounded}% (semaine: ${Math.round(currentVol)} kg vs moy. ${Math.round(avgPrev)} kg)`);
-		if (!bestCandidate || pctGain > bestCandidate.pctGain) {
-			bestCandidate = { name, currentVolume: currentVol, avgPrev, pctGain };
-		}
+		qualifiedCandidates.push({ name, currentVolume: currentVol, avgPrev, pctGain });
 	}
 
-	if (!bestCandidate) {
-		debugLog?.(`[volume-progression] ❌ NULL — aucune progression > 10% cette semaine`);
-		return null;
+	if (qualifiedCandidates.length === 0) {
+		debugLog?.(`[volume-progression] ❌ EMPTY — aucune progression > 10% cette semaine`);
+		return [];
 	}
 
-	debugLog?.(`[volume-progression] ✅ DÉCLENCHÉ — "${bestCandidate.name}" +${Math.round(bestCandidate.pctGain * 100)}%`);
-	return {
+	qualifiedCandidates.sort((a, b) => b.pctGain - a.pctGain);
+	const top3 = qualifiedCandidates.slice(0, 3);
+
+	debugLog?.(`[volume-progression] ✅ DÉCLENCHÉ — ${top3.length} exercice(s) : ${top3.map((c) => `"${c.name}" +${Math.round(c.pctGain * 100)}%`).join(", ")}`);
+
+	return top3.map((candidate) => ({
 		id: "volume-progression",
 		category: "perf",
-		impactScore: bestCandidate.pctGain * 100, // percentage as score
-		exerciseName: bestCandidate.name,
+		impactScore: candidate.pctGain * 100,
+		exerciseName: candidate.name,
 		payload: {
-			exerciseName: bestCandidate.name,
-			currentVolumeKg: bestCandidate.currentVolume,
-			avgPrevVolumeKg: bestCandidate.avgPrev,
-			pctGain: Math.round(bestCandidate.pctGain * 100),
+			exerciseName: candidate.name,
+			currentVolumeKg: candidate.currentVolume,
+			avgPrevVolumeKg: candidate.avgPrev,
+			pctGain: Math.round(candidate.pctGain * 100),
 		},
-	};
+	}));
 }

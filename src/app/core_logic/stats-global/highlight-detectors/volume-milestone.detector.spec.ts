@@ -31,38 +31,38 @@ function makeCtx(exercises: Exercise[]): DetectorContext {
 }
 
 describe("volumeMilestoneDetector", () => {
-	it("should return null when there are no exercises", () => {
-		expect(volumeMilestoneDetector(makeCtx([]), () => 0, () => {})).toBeNull();
+	it("should return [] when there are no exercises", () => {
+		expect(volumeMilestoneDetector(makeCtx([]), () => 0, () => {})).toEqual([]);
 	});
 
-	it("should return null when total volume has not yet reached the first 50-tonne threshold", () => {
+	it("should return [] when total volume has not yet reached the first 50-tonne threshold", () => {
 		// 49 000 kg < 50 000 kg
 		const ex = makeExercise("e1", 100, 10, 49); // 49 000 kg
-		expect(volumeMilestoneDetector(makeCtx([ex]), () => 0, () => {})).toBeNull();
+		expect(volumeMilestoneDetector(makeCtx([ex]), () => 0, () => {})).toEqual([]);
 	});
 
 	it("should detect the first 50-tonne milestone when total volume crosses 50 000 kg", () => {
 		// 50 001 kg
 		const ex = makeExercise("e1", 100, 10, 51); // 51 000 kg — crosses 50t
 		const result = volumeMilestoneDetector(makeCtx([ex]), () => 0, () => {});
-		expect(result).not.toBeNull();
-		expect(result!.id).toBe("volume-milestone");
-		expect(result!.payload["milestoneTonnes"]).toBe(50);
+		expect(result).not.toEqual([]);
+		expect(result[0].id).toBe("volume-milestone");
+		expect(result[0].payload["milestoneTonnes"]).toBe(50);
 	});
 
-	it("should return null on subsequent calls when the milestone has already been acknowledged", () => {
+	it("should return [] on subsequent calls when the milestone has already been acknowledged", () => {
 		const ex = makeExercise("e1", 100, 10, 51); // 51 000 kg
 		// lastMilestone already at 50 000
 		const result = volumeMilestoneDetector(makeCtx([ex]), () => 50_000, () => {});
-		expect(result).toBeNull();
+		expect(result).toEqual([]);
 	});
 
 	it("should detect the 100-tonne milestone when the 50-tonne one was already acknowledged", () => {
 		// total 102 000 kg → crosses 100 000 threshold; last acknowledged = 50 000
 		const ex = makeExercise("e1", 100, 20, 51); // 102 000 kg
 		const result = volumeMilestoneDetector(makeCtx([ex]), () => 50_000, () => {});
-		expect(result).not.toBeNull();
-		expect(result!.payload["milestoneTonnes"]).toBe(100);
+		expect(result).not.toEqual([]);
+		expect(result[0].payload["milestoneTonnes"]).toBe(100);
 	});
 
 	it("should call setLastMilestoneKg with the newly crossed threshold when a milestone fires", () => {
@@ -77,7 +77,7 @@ describe("volumeMilestoneDetector", () => {
 		const pending: Exercise = { ...makeExercise("e2", 100, 10, 51), status: "pending" };
 		// Only validated counts → 51 000 kg → crosses 50t
 		const result = volumeMilestoneDetector(makeCtx([validated, pending]), () => 0, () => {});
-		expect(result).not.toBeNull();
-		expect(result!.payload["milestoneTonnes"]).toBe(50);
+		expect(result).not.toEqual([]);
+		expect(result[0].payload["milestoneTonnes"]).toBe(50);
 	});
 });

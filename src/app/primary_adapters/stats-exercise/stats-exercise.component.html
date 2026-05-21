@@ -2,11 +2,17 @@
 	<div class="back-btn" (click)="goBack()"><span class="back-arrow">←</span> {{ "common.back" | translate }}</div>
 	<div class="page-title">{{ exerciseName }}</div>
 
+	<app-group-by-selector
+		[selected]="groupBy()"
+		(groupByChange)="onGroupByChange($event)"
+	/>
+
 	<app-stats-exercise-chart-card
 		[isCardio]="useCase.isCardio()"
 		[occurrences]="useCase.occurrences()"
 		[cardioOccurrences]="useCase.cardioOccurrences()"
 		[selectedChart]="chartSelection.selectedChart()"
+		[groupBy]="groupBy()"
 		(chartSelect)="chartSelection.select($event)"
 	/>
 

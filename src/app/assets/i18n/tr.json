@@ -47,7 +47,8 @@
     "weekShort": "H",
     "unitMin": "dak",
     "unitKg": "kg",
-    "unitSec": "s"
+    "unitSec": "s",
+    "numberThousandAbbreviation": "k"
   },
   "sessionList": {
     "title": "Seanslar",

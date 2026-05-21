@@ -3,6 +3,10 @@ import { CardioOccurrence } from "../../core_logic/shared/models";
 import { getLabelStep } from "./label-step";
 import { TranslateModule } from "@ngx-translate/core";
 import { MassUnitService } from "../../core_logic/mass-unit/mass-unit.service";
+import { GroupBy } from "../../core_logic/stats-exercise/group-by.model";
+import { getXAxisLabel } from "./x-axis-label";
+import { LinearRegressionService } from "../../core_logic/stats-exercise/linear-regression.service";
+import { computeRegressionOverlay, RegressionOverlay } from "./regression-overlay";
 
 function formatPace(secondsPerUnit: number, unit: string): string {
 	const total = Math.round(secondsPerUnit);
@@ -21,7 +25,9 @@ function formatPace(secondsPerUnit: number, unit: string): string {
 })
 export class CardioPaceChartComponent {
 	private readonly massUnitService = inject(MassUnitService);
+	private readonly regressionService = inject(LinearRegressionService);
 	readonly occurrences = input<CardioOccurrence[]>([]);
+	readonly groupBy = input<GroupBy>('session');
 
 	readonly chartData = computed(() => {
 		const massUnit = this.massUnitService.activeMassUnit();
@@ -53,11 +59,14 @@ export class CardioPaceChartComponent {
 			n > 1 ? pacePoints.map((p) => `${p.x},${p.y}`).join(" ") + ` ${xCoords[n - 1]},110 ${xCoords[0]},110` : "";
 		const xLabels = data.map((o, i) => ({
 			x: xCoords[i],
-			label:
-				i % labelStep === 0
-					? `${o.date.getDate().toString().padStart(2, "0")}/${(o.date.getMonth() + 1).toString().padStart(2, "0")}`
-					: "",
+			label: i % labelStep === 0 ? getXAxisLabel(o.date, this.groupBy()) : "",
 		}));
-		return { pacePoints, pacePolyline, paceAreaPoints, xLabels, unit };
+		return { pacePoints, pacePolyline, paceAreaPoints, xLabels, unit, paces };
+	});
+
+	readonly regressionOverlay = computed((): RegressionOverlay => {
+		const cd = this.chartData();
+		if (cd === null) return { visible: false };
+		return computeRegressionOverlay(cd.pacePoints, this.regressionService, cd.paces);
 	});
 }
