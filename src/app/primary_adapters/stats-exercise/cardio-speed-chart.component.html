@@ -30,13 +30,13 @@
 
 			<!-- Area fill -->
 			@if (cd.speedPolyline) {
-				<polygon [attr.points]="cd.speedAreaPoints" fill="url(#amberGrad)" />
+				<path [attr.d]="cd.speedAreaPoints" fill="url(#amberGrad)" />
 			}
 
 			<!-- Line -->
 			@if (cd.speedPolyline) {
-				<polyline
-					[attr.points]="cd.speedPolyline"
+				<path
+					[attr.d]="cd.speedPolyline"
 					fill="none"
 					stroke="#f59e0b"
 					stroke-width="2.5"

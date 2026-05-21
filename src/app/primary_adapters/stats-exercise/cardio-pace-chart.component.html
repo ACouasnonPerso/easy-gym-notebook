@@ -30,13 +30,13 @@
 
 			<!-- Area fill -->
 			@if (cd.pacePolyline) {
-				<polygon [attr.points]="cd.paceAreaPoints" fill="url(#roseGrad)" />
+				<path [attr.d]="cd.paceAreaPoints" fill="url(#roseGrad)" />
 			}
 
 			<!-- Line -->
 			@if (cd.pacePolyline) {
-				<polyline
-					[attr.points]="cd.pacePolyline"
+				<path
+					[attr.d]="cd.pacePolyline"
 					fill="none"
 					stroke="#f43f5e"
 					stroke-width="2.5"

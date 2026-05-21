@@ -14,7 +14,7 @@ export class LinearRegressionService {
     points: { x: number; y: number }[]
   ): RegressionResult | null {
     const n = points.length;
-    if (n < 4) return null;
+    if (n < 2) return null;
 
     let sumX = 0;
     let sumY = 0;

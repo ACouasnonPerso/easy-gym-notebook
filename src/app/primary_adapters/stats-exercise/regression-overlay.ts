@@ -1,4 +1,5 @@
 import { LinearRegressionService } from "../../core_logic/stats-exercise/linear-regression.service";
+import { GroupBy } from "../../core_logic/stats-exercise/group-by.model";
 
 export interface RegressionOverlay {
 	visible: boolean;
@@ -14,8 +15,11 @@ export interface RegressionOverlay {
 export function computeRegressionOverlay(
 	chartPoints: Array<{ x: number; y: number }>,
 	service: LinearRegressionService,
-	domainValues?: number[]
+	domainValues?: number[],
+	groupBy?: GroupBy
 ): RegressionOverlay {
+	const minPoints = (!groupBy || groupBy === 'session') ? 4 : 2;
+	if (chartPoints.length < minPoints) return { visible: false };
 	const indexedPoints = chartPoints.map((p, i) => ({ x: i, y: p.y }));
 	const result = service.compute(indexedPoints);
 

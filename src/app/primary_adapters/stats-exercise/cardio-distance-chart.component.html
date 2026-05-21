@@ -30,13 +30,13 @@
 
 			<!-- Area fill -->
 			@if (cd.distancePolyline) {
-				<polygon [attr.points]="cd.distanceAreaPoints" fill="url(#cyanGrad)" />
+				<path [attr.d]="cd.distanceAreaPoints" fill="url(#cyanGrad)" />
 			}
 
 			<!-- Line -->
 			@if (cd.distancePolyline) {
-				<polyline
-					[attr.points]="cd.distancePolyline"
+				<path
+					[attr.d]="cd.distancePolyline"
 					fill="none"
 					stroke="#06b6d4"
 					stroke-width="2.5"

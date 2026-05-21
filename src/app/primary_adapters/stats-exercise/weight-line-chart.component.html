@@ -36,13 +36,13 @@
 
 			<!-- Area fill -->
 			@if (cd.weightPolyline) {
-				<polygon [attr.points]="cd.weightAreaPoints" fill="url(#orangeGrad)" />
+				<path [attr.d]="cd.weightAreaPoints" fill="url(#orangeGrad)" />
 			}
 
 			<!-- Line -->
 			@if (cd.weightPolyline) {
-				<polyline
-					[attr.points]="cd.weightPolyline"
+				<path
+					[attr.d]="cd.weightPolyline"
 					fill="none"
 					stroke="#f97316"
 					stroke-width="2.5"

@@ -36,13 +36,13 @@
 
 			<!-- Area fill -->
 			@if (cd.repsPolyline) {
-				<polygon [attr.points]="cd.repsAreaPoints" fill="url(#blueGrad)" />
+				<path [attr.d]="cd.repsAreaPoints" fill="url(#blueGrad)" />
 			}
 
 			<!-- Line -->
 			@if (cd.repsPolyline) {
-				<polyline
-					[attr.points]="cd.repsPolyline"
+				<path
+					[attr.d]="cd.repsPolyline"
 					fill="none"
 					stroke="#38bdf8"
 					stroke-width="2.5"

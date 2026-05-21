@@ -36,13 +36,13 @@
 
 			<!-- Area fill -->
 			@if (cd.timePolyline) {
-				<polygon [attr.points]="cd.timeAreaPoints" fill="url(#purpleGrad)" />
+				<path [attr.d]="cd.timeAreaPoints" fill="url(#purpleGrad)" />
 			}
 
 			<!-- Line -->
 			@if (cd.timePolyline) {
-				<polyline
-					[attr.points]="cd.timePolyline"
+				<path
+					[attr.d]="cd.timePolyline"
 					fill="none"
 					stroke="#8b5cf6"
 					stroke-width="2.5"

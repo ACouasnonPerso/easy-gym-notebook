@@ -1,11 +1,12 @@
 <div class="page">
 	<div class="back-btn" (click)="goBack()"><span class="back-arrow">←</span> {{ "common.back" | translate }}</div>
-	<div class="page-title">{{ exerciseName }}</div>
-
-	<app-group-by-selector
-		[selected]="groupBy()"
-		(groupByChange)="onGroupByChange($event)"
-	/>
+	<div class="page-header">
+		<div class="page-title">{{ exerciseName }}</div>
+		<app-group-by-selector
+			[selected]="groupBy()"
+			(groupByChange)="onGroupByChange($event)"
+		/>
+	</div>
 
 	<app-stats-exercise-chart-card
 		[isCardio]="useCase.isCardio()"
