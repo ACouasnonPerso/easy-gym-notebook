@@ -158,6 +158,7 @@ Story format:
 - [ ] [testable behavior]
 - [ ] [testable behavior]
 **Depends on:** [Story N, or none]
+**Skills:** [ui-angular — if the story adds or modifies any HTML template; omit otherwise]
 
 ### Story 2 — [Short title]
 …
@@ -168,6 +169,7 @@ Rules:
 - **Prefer small stories** — a story should fit in one orchestrator cycle (one test plan + one dev pass)
 - **No implementation details** — stories describe behavior and scope, not code
 - **Acceptance criteria are testable** — each one maps to at least one unit or component test
+- **HTML stories must declare `ui-angular`** — any story whose scope includes a `.html` template file **must** include `**Skills:** ui-angular` so the implementing agent reads the design system before touching markup
 
 Then immediately proceed to SAVE.
 

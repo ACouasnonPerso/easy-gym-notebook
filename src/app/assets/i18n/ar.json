@@ -112,7 +112,17 @@
     "thisWeek": "هذا الأسبوع",
     "noDataMonth": "لا توجد بيانات هذا الشهر",
     "trainingTime": "وقت التدريب",
-    "searchPlaceholder": "تمارين البحث..."
+    "searchPlaceholder": "تمارين البحث...",
+    "showMore": "اعرض المزيد",
+    "showLess": "إظهار أقل",
+    "highlights": {
+      "weightPr": "الوزن",
+      "volumeProgression": "زاد الحجم هذا الأسبوع",
+      "mostImproved": "الأكثر تحسناً",
+      "sevenDayStreak": "الجلسات في 7 أيام",
+      "consecutiveWeeks": "الأسابيع النشطة على التوالي",
+      "volumeMilestone": "إجمالي حجم الإنجاز"
+    }
   },
   "import": {
     "cardTitle": "Import / Export",

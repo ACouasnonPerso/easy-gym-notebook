@@ -112,7 +112,17 @@
     "thisWeek": "इस सप्ताह",
     "noDataMonth": "इस महीने कोई डेटा नहीं",
     "trainingTime": "प्रशिक्षण समय",
-    "searchPlaceholder": "व्यायाम खोजें..."
+    "searchPlaceholder": "व्यायाम खोजें...",
+    "showMore": "और दिखाएँ",
+    "showLess": "कम दिखाएँ",
+    "highlights": {
+      "weightPr": "वज़न पीआर",
+      "volumeProgression": "इस सप्ताह वॉल्यूम बढ़ा",
+      "mostImproved": "सबसे अधिक सुधार",
+      "sevenDayStreak": "7 दिनों में सत्र",
+      "consecutiveWeeks": "लगातार सक्रिय सप्ताह",
+      "volumeMilestone": "कुल वॉल्यूम मील का पत्थर"
+    }
   },
   "import": {
     "cardTitle": "Import / Export",

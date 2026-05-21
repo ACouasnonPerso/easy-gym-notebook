@@ -6,6 +6,9 @@
 		(monthChange)="onMonthChange($event)"
 	/>
 
+	<!-- Highlights (dynamic positive metrics) -->
+	<app-stats-highlights-card [highlights]="getGlobalStatsUseCase.highlights()" />
+
 	<!-- Heatmap -->
 	@if (showHeatmap()) {
 		<app-stats-heatmap-card [data]="getGlobalStatsUseCase.heatmapData()" />

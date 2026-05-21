@@ -112,7 +112,17 @@
     "thisWeek": "이번 주",
     "noDataMonth": "이번 달 데이터 없음",
     "trainingTime": "운동 시간",
-    "searchPlaceholder": "검색 연습..."
+    "searchPlaceholder": "검색 연습...",
+    "showMore": "더 보기",
+    "showLess": "덜 표시",
+    "highlights": {
+      "weightPr": "체중 홍보",
+      "volumeProgression": "이번 주 볼륨 업",
+      "mostImproved": "가장 개선됨",
+      "sevenDayStreak": "7일 동안의 세션",
+      "consecutiveWeeks": "연속으로 활동한 주 수",
+      "volumeMilestone": "총 볼륨 마일스톤"
+    }
   },
   "import": {
     "cardTitle": "Import / Export",

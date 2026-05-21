@@ -16,6 +16,7 @@ import { StatsExerciseListCardComponent, MergeSubmitEvent } from "./stats-exerci
 import { StatsMonthSelectorComponent } from "./stats-month-selector.component";
 import { StatsImportExportCardComponent } from "./stats-import-export-card.component";
 import { StatsYearlyHeatmapCardComponent } from "./stats-yearly-heatmap-card.component";
+import { StatsHighlightsCardComponent } from "./stats-highlights-card.component";
 
 @Component({
 	selector: "app-stats-global",
@@ -30,6 +31,7 @@ import { StatsYearlyHeatmapCardComponent } from "./stats-yearly-heatmap-card.com
 		StatsMonthSelectorComponent,
 		StatsImportExportCardComponent,
 		StatsYearlyHeatmapCardComponent,
+		StatsHighlightsCardComponent,
 		TranslateModule,
 	],
 	templateUrl: "./stats-global.component.html",

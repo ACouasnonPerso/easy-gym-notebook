@@ -112,7 +112,17 @@
     "thisWeek": "Cette semaine",
     "noDataMonth": "Aucune donnée ce mois-ci",
     "trainingTime": "Temps d'entraînement",
-    "searchPlaceholder": "Rechercher des exercices..."
+    "searchPlaceholder": "Rechercher des exercices...",
+    "showMore": "Montrer plus",
+    "showLess": "Montrer moins",
+    "highlights": {
+      "weightPr": "Poids PR",
+      "volumeProgression": "Volume en hausse cette semaine",
+      "mostImproved": "Le plus amélioré",
+      "sevenDayStreak": "Sessions dans 7 jours",
+      "consecutiveWeeks": "Semaines actives d'affilée",
+      "volumeMilestone": "Volume total de l'étape"
+    }
   },
   "import": {
     "cardTitle": "Import / Export",

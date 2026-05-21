@@ -112,7 +112,17 @@
     "thisWeek": "На этой неделе",
     "noDataMonth": "Нет данных за этот месяц",
     "trainingTime": "Время тренировки",
-    "searchPlaceholder": "Поисковые упражнения..."
+    "searchPlaceholder": "Поисковые упражнения...",
+    "showMore": "Показать еще",
+    "showLess": "Показать меньше",
+    "highlights": {
+      "weightPr": "Вес PR",
+      "volumeProgression": "Увеличение объема на этой неделе",
+      "mostImproved": "Больше всего улучшений",
+      "sevenDayStreak": "Сессии за 7 дней",
+      "consecutiveWeeks": "Активные недели подряд",
+      "volumeMilestone": "Общий объем вехи"
+    }
   },
   "import": {
     "cardTitle": "Import / Export",

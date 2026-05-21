@@ -84,6 +84,7 @@ function makeGetGlobalStatsUseCaseSpy() {
 		exerciseSummaries: signal([]),
 		sessionDurationsInMonth: signal([] as { date: Date; durationSeconds: number }[]),
 		selectedMonth: signal(new Date()),
+		highlights: signal([] as any[]),
 		execute: jasmine.createSpy("execute").and.returnValue(Promise.resolve()),
 	};
 }
@@ -786,5 +787,51 @@ describe("StatsGlobalComponent — graphique de durée des séances", () => {
 		const el: HTMLElement = fixture.nativeElement;
 		const chart = el.querySelector('[data-testid="training-time-bar-chart"]');
 		expect(chart).toBeTruthy();
+	});
+});
+
+describe("StatsGlobalComponent — highlights card", () => {
+	function setup(highlights: any[] = []) {
+		const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+		statsUseCaseSpy.highlights = signal(highlights) as any;
+
+		TestBed.configureTestingModule({
+			imports: [StatsGlobalComponent, translateModuleConfig],
+			providers: [
+				{ provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+				{ provide: SelectMonthUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: MergeExercisesUseCase, useValue: makeMergeExercisesUseCaseSpy() },
+				{ provide: Router, useValue: { navigate: jasmine.createSpy("navigate") } },
+				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
+			],
+		});
+		setupI18n();
+		const fixture = TestBed.createComponent(StatsGlobalComponent);
+		fixture.detectChanges();
+		return fixture;
+	}
+
+	it("should mount the highlights card component above the summary card in the DOM", () => {
+		const fixture = setup([]);
+		const el: HTMLElement = fixture.nativeElement;
+		const card = el.querySelector("app-stats-highlights-card");
+		expect(card).toBeTruthy();
+	});
+
+	it("should hide the highlights card content when highlights are empty", () => {
+		const fixture = setup([]);
+		const el: HTMLElement = fixture.nativeElement;
+		const innerCard = el.querySelector(".highlights-card");
+		expect(innerCard).toBeNull();
+	});
+
+	it("should render highlight tiles when highlights are provided", () => {
+		const fixture = setup([
+			{ id: "weight-pr", category: "perf", labelKey: "statsGlobal.highlights.weightPr", value: "100 kg", icon: "🥳" },
+		]);
+		const el: HTMLElement = fixture.nativeElement;
+		const tiles = el.querySelectorAll(".highlight-tile");
+		expect(tiles.length).toBe(1);
 	});
 });

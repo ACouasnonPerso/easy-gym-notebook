@@ -112,7 +112,17 @@
     "thisWeek": "Deze week",
     "noDataMonth": "Geen gegevens deze maand",
     "trainingTime": "Trainingstijd",
-    "searchPlaceholder": "Zoekoefeningen..."
+    "searchPlaceholder": "Zoekoefeningen...",
+    "showMore": "Meer tonen",
+    "showLess": "Minder tonen",
+    "highlights": {
+      "weightPr": "Gewicht PR",
+      "volumeProgression": "Volume omhoog deze week",
+      "mostImproved": "Meest verbeterd",
+      "sevenDayStreak": "Sessies in 7 dagen",
+      "consecutiveWeeks": "Actieve weken achter elkaar",
+      "volumeMilestone": "Totaal volume mijlpaal"
+    }
   },
   "import": {
     "cardTitle": "Import / Export",

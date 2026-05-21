@@ -112,7 +112,17 @@
     "thisWeek": "Denna vecka",
     "noDataMonth": "Inga data denna månad",
     "trainingTime": "Träningstid",
-    "searchPlaceholder": "Sök övningar..."
+    "searchPlaceholder": "Sök övningar...",
+    "showMore": "Visa mer",
+    "showLess": "Visa mindre",
+    "highlights": {
+      "weightPr": "Vikt PR",
+      "volumeProgression": "Volymen upp denna vecka",
+      "mostImproved": "Mest förbättrad",
+      "sevenDayStreak": "Sessioner om 7 dagar",
+      "consecutiveWeeks": "Aktiva veckor i rad",
+      "volumeMilestone": "Milstolpe för total volym"
+    }
   },
   "import": {
     "cardTitle": "Import / Export",

@@ -112,7 +112,17 @@
     "thisWeek": "Ten tydzień",
     "noDataMonth": "Brak danych w tym miesiącu",
     "trainingTime": "Czas treningu",
-    "searchPlaceholder": "Wyszukiwanie ćwiczeń..."
+    "searchPlaceholder": "Wyszukiwanie ćwiczeń...",
+    "showMore": "Pokaż więcej",
+    "showLess": "Pokaż mniej",
+    "highlights": {
+      "weightPr": "Waga PR",
+      "volumeProgression": "Zwiększona objętość w tym tygodniu",
+      "mostImproved": "Największa poprawa",
+      "sevenDayStreak": "Sesje w ciągu 7 dni",
+      "consecutiveWeeks": "Aktywne tygodnie z rzędu",
+      "volumeMilestone": "Całkowity kamień milowy wolumenu"
+    }
   },
   "import": {
     "cardTitle": "Import / Export",

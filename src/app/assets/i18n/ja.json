@@ -112,7 +112,17 @@
     "thisWeek": "今週",
     "noDataMonth": "今月のデータがありません",
     "trainingTime": "トレーニング時間",
-    "searchPlaceholder": "検索演習..."
+    "searchPlaceholder": "検索演習...",
+    "showMore": "もっと見る",
+    "showLess": "もっと見る",
+    "highlights": {
+      "weightPr": "体重PR",
+      "volumeProgression": "今週は増量",
+      "mostImproved": "最も向上した",
+      "sevenDayStreak": "7日間のセッション",
+      "consecutiveWeeks": "連続活動週",
+      "volumeMilestone": "総量マイルストーン"
+    }
   },
   "import": {
     "cardTitle": "Import / Export",

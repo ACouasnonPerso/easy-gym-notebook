@@ -112,7 +112,17 @@
     "thisWeek": "Bu hafta",
     "noDataMonth": "Bu ay veri yok",
     "trainingTime": "Antrenman süresi",
-    "searchPlaceholder": "Arama egzersizleri..."
+    "searchPlaceholder": "Arama egzersizleri...",
+    "showMore": "Daha fazla göster",
+    "showLess": "Daha az göster",
+    "highlights": {
+      "weightPr": "Ağırlık PR",
+      "volumeProgression": "Bu hafta hacim arttı",
+      "mostImproved": "En gelişmiş",
+      "sevenDayStreak": "7 gün içinde seanslar",
+      "consecutiveWeeks": "Arka arkaya aktif haftalar",
+      "volumeMilestone": "Toplam hacim kilometre taşı"
+    }
   },
   "import": {
     "cardTitle": "Import / Export",

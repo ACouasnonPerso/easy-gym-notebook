@@ -22,6 +22,8 @@ import { FirestoreAnalyticsRepository } from "./secondary_adapters/analytics/fir
 import { EXERCISE_PHOTO_REPOSITORY } from "./secondary_ports/exercise-photo/exercise-photo.repository.interface";
 import { ExercisePhotoRepository } from "./secondary_ports/exercise-photo/exercise-photo.repository";
 import { ExercisePhotoService } from "./core_logic/exercise-photo/exercise-photo.service";
+import { MILESTONE_REPOSITORY } from "./secondary_ports/highlight-stats/milestone-repository.interface";
+import { LocalStorageMilestoneRepository } from "./secondary_adapters/highlight-stats/local-storage-milestone.repository";
 
 export const FIRESTORE = new InjectionToken<Firestore>("Firestore");
 
@@ -54,5 +56,6 @@ export const appConfig: ApplicationConfig = {
 		ImportService,
 		ExercisePhotoService,
 		{ provide: EXERCISE_PHOTO_REPOSITORY, useClass: ExercisePhotoRepository },
+		{ provide: MILESTONE_REPOSITORY, useClass: LocalStorageMilestoneRepository },
 	],
 };
