@@ -266,5 +266,15 @@
     "title": "댓글 추가",
     "placeholder": "이 운동에 대한 메모를 작성하세요...",
     "save": "저장"
+  },
+  "deleteAllData": {
+    "buttonLabel": "모든 데이터 삭제",
+    "title": "모든 데이터 삭제",
+    "body": "모든 세션과 운동이 영구적으로 삭제됩니다. 이 작업은 실행 취소할 수 없습니다.",
+    "inputLabel": "«삭제»를 입력하여 확인",
+    "inputPlaceholder": "삭제",
+    "confirmWord": "삭제",
+    "successMessage": "모든 데이터가 삭제되었습니다",
+    "errorMessage": "오류가 발생했습니다. 다시 시도해 주세요."
   }
 }

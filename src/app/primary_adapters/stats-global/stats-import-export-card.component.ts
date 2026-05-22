@@ -1,9 +1,22 @@
-import { Component, ChangeDetectionStrategy, inject, signal, viewChild, ElementRef, output } from "@angular/core";
+import {
+	Component,
+	ChangeDetectionStrategy,
+	inject,
+	signal,
+	computed,
+	viewChild,
+	ElementRef,
+	output,
+} from "@angular/core";
+import { Router } from "@angular/router";
 import { ImportDataUseCase } from "../../primary_ports/stats-global/import-data.usecase";
+import { DeleteAllDataUseCase } from "../../primary_ports/stats-global/delete-all-data.usecase";
+import { GetSessionsUseCase } from "../../primary_ports/session-list/get-sessions.usecase";
 import { SESSION_REPOSITORY } from "../../secondary_ports/session/session.repository.interface";
 import { EXERCISE_REPOSITORY } from "../../secondary_ports/exercise/exercise.repository.interface";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ImportConfirmModalComponent } from "./import-confirm-modal.component";
+import { DeleteAllModalComponent } from "../shared/delete-all-modal.component";
 import { ToastComponent, ToastType } from "../shared/toast.component";
 import { Capacitor } from "@capacitor/core";
 import { Share } from "@capacitor/share";
@@ -13,21 +26,29 @@ import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 	selector: "app-stats-import-export-card",
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [ImportConfirmModalComponent, ToastComponent, TranslateModule],
+	imports: [ImportConfirmModalComponent, DeleteAllModalComponent, ToastComponent, TranslateModule],
 	templateUrl: "./stats-import-export-card.component.html",
 	styleUrl: "./stats-import-export-card.component.scss",
 })
 export class StatsImportExportCardComponent {
 	readonly importDataUseCase = inject(ImportDataUseCase);
+	private readonly deleteAllDataUseCase = inject(DeleteAllDataUseCase);
+	private readonly getSessionsUseCase = inject(GetSessionsUseCase);
 	private readonly sessionRepo = inject(SESSION_REPOSITORY);
 	private readonly exerciseRepo = inject(EXERCISE_REPOSITORY);
 	private readonly translate = inject(TranslateService);
+	private readonly router = inject(Router);
 
 	readonly fileInput = viewChild<ElementRef<HTMLInputElement>>("fileInput");
+
+	readonly sessions = this.getSessionsUseCase.sessions;
+	readonly hasSessions = computed(() => this.sessions().length > 0);
 
 	readonly showImportModal = signal<boolean>(false);
 	readonly importSessionCount = signal<number>(0);
 	readonly importExerciseCount = signal<number>(0);
+
+	readonly showDeleteAllModal = signal<boolean>(false);
 
 	readonly toastVisible = signal<boolean>(false);
 	readonly toastMessage = signal<string>("");
@@ -103,6 +124,25 @@ export class StatsImportExportCardComponent {
 
 	onImportCancelled(): void {
 		this.showImportModal.set(false);
+	}
+
+	onDeleteAllClicked(): void {
+		this.showDeleteAllModal.set(true);
+	}
+
+	async onDeleteAllConfirmed(): Promise<void> {
+		this.showDeleteAllModal.set(false);
+		try {
+			await this.deleteAllDataUseCase.execute();
+			await this.router.navigate(["/sessions"]);
+			this.showToast(this.translate.instant("deleteAllData.successMessage"), "success");
+		} catch {
+			this.showToast(this.translate.instant("deleteAllData.errorMessage"), "error");
+		}
+	}
+
+	onDeleteAllCancelled(): void {
+		this.showDeleteAllModal.set(false);
 	}
 
 	onToastDismissed(): void {

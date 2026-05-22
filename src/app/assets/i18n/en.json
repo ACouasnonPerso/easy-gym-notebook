@@ -127,7 +127,7 @@
       "volumeProgression": "Volume up this week",
       "mostImproved": "Most improved",
       "sevenDayStreak": "Sessions in 7 days",
-      "consecutiveWeeks": "Active weeks in a row \uD83D\uDD25",
+      "consecutiveWeeks": "Active weeks in a row 🔥",
       "volumeMilestone": "Total volume"
     }
   },
@@ -266,5 +266,15 @@
     "title": "Add a comment",
     "placeholder": "Write a note about this exercise...",
     "save": "Save"
+  },
+  "deleteAllData": {
+    "buttonLabel": "Delete all data",
+    "title": "Delete all data",
+    "body": "This will permanently delete all your sessions and exercises. This action cannot be undone.",
+    "inputLabel": "Type «Supprimer» to confirm",
+    "inputPlaceholder": "Supprimer",
+    "confirmWord": "Supprimer",
+    "successMessage": "All data deleted",
+    "errorMessage": "An error occurred. Please try again."
   }
 }

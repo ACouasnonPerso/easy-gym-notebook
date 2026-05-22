@@ -266,5 +266,15 @@
     "title": "Dodaj komentarz",
     "placeholder": "Napisz notatkę na temat tego ćwiczenia...",
     "save": "Zapisz"
+  },
+  "deleteAllData": {
+    "buttonLabel": "Usuń wszystkie dane",
+    "title": "Usuń wszystkie dane",
+    "body": "Spowoduje to trwałe usunięcie wszystkich sesji i ćwiczeń. Tej czynności nie można cofnąć.",
+    "inputLabel": "Wpisz «Usuń» aby potwierdzić",
+    "inputPlaceholder": "Usuń",
+    "confirmWord": "Usuń",
+    "successMessage": "Wszystkie dane usunięte",
+    "errorMessage": "Wystąpił błąd. Spróbuj ponownie."
   }
 }

@@ -80,3 +80,13 @@
 		transform: rotate(360deg);
 	}
 }
+
+.import-btn--danger {
+	color: #e53935;
+	border-color: rgba(229, 57, 53, 0.3);
+}
+.import-btn--danger:hover:not(:disabled) {
+	border-color: #e53935;
+	color: #e53935;
+	background: rgba(229, 57, 53, 0.07);
+}

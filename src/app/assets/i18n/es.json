@@ -266,5 +266,15 @@
     "title": "Añade un comentario",
     "placeholder": "Escribe una nota sobre este ejercicio...",
     "save": "Guardar"
+  },
+  "deleteAllData": {
+    "buttonLabel": "Eliminar todos los datos",
+    "title": "Eliminar todos los datos",
+    "body": "Esto eliminará permanentemente todas sus sesiones y ejercicios. Esta acción no se puede deshacer.",
+    "inputLabel": "Escriba «Eliminar» para confirmar",
+    "inputPlaceholder": "Eliminar",
+    "confirmWord": "Eliminar",
+    "successMessage": "Todos los datos eliminados",
+    "errorMessage": "Ocurrió un error. Por favor, inténtelo de nuevo."
   }
 }

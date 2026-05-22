@@ -266,5 +266,15 @@
     "title": "Bir yorum ekleyin",
     "placeholder": "Bu alıştırma hakkında bir not yazın...",
     "save": "Kaydet"
+  },
+  "deleteAllData": {
+    "buttonLabel": "Tüm verileri sil",
+    "title": "Tüm verileri sil",
+    "body": "Bu, tüm oturumlarınızı ve egzersizlerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.",
+    "inputLabel": "Onaylamak için «Sil» yazın",
+    "inputPlaceholder": "Sil",
+    "confirmWord": "Sil",
+    "successMessage": "Tüm veriler silindi",
+    "errorMessage": "Bir hata oluştu. Lütfen tekrar deneyin."
   }
 }

@@ -1,0 +1,37 @@
+<div class="popup-backdrop" (click)="onCancel()" data-testid="backdrop">
+	<div class="popup" (click)="$event.stopPropagation()">
+		<div class="popup-title" data-testid="modal-title">{{ "deleteAllData.title" | translate }}</div>
+		<div class="popup-body" data-testid="modal-body">{{ "deleteAllData.body" | translate }}</div>
+		<div class="popup-input-group">
+			<label class="popup-input-label" for="delete-confirm-input">
+				{{ "deleteAllData.inputLabel" | translate }}
+			</label>
+			<input
+				id="delete-confirm-input"
+				class="popup-input"
+				type="text"
+				[placeholder]="'deleteAllData.inputPlaceholder' | translate"
+				[value]="typedValue()"
+				(input)="onInputChange($event)"
+				data-testid="confirm-input"
+				autocomplete="off"
+				autocorrect="off"
+				autocapitalize="off"
+				spellcheck="false"
+			/>
+		</div>
+		<div class="popup-actions">
+			<button class="popup-cancel-btn" data-testid="cancel-btn" (click)="onCancel()">
+				{{ "common.cancel" | translate }}
+			</button>
+			<button
+				class="popup-ok-btn popup-ok-btn--danger"
+				data-testid="confirm-btn"
+				[disabled]="!isMatch()"
+				(click)="onConfirm()"
+			>
+				{{ "common.delete" | translate }}
+			</button>
+		</div>
+	</div>
+</div>

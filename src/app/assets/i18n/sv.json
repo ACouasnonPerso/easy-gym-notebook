@@ -266,5 +266,15 @@
     "title": "Lägg till en kommentar",
     "placeholder": "Skriv en anteckning om denna övning...",
     "save": "Spara"
+  },
+  "deleteAllData": {
+    "buttonLabel": "Ta bort alla data",
+    "title": "Ta bort alla data",
+    "body": "Detta kommer permanent att ta bort alla dina sessioner och övningar. Denna åtgärd kan inte ångras.",
+    "inputLabel": "Skriv «Ta bort» för att bekräfta",
+    "inputPlaceholder": "Ta bort",
+    "confirmWord": "Ta bort",
+    "successMessage": "All data borttagen",
+    "errorMessage": "Ett fel uppstod. Försök igen."
   }
 }

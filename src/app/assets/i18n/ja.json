@@ -266,5 +266,15 @@
     "title": "コメントを追加",
     "placeholder": "この練習についてのメモを書く",
     "save": "保存する"
+  },
+  "deleteAllData": {
+    "buttonLabel": "すべてのデータを削除",
+    "title": "すべてのデータを削除",
+    "body": "すべてのセッションとエクササイズが完全に削除されます。この操作は元に戻せません。",
+    "inputLabel": "«削除»と入力して確認",
+    "inputPlaceholder": "削除",
+    "confirmWord": "削除",
+    "successMessage": "すべてのデータが削除されました",
+    "errorMessage": "エラーが発生しました。もう一度お試しください。"
   }
 }

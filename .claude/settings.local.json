@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Skill(orchestrate)",
+      "Skill(orchestrate:*)"
     ]
   }
 }

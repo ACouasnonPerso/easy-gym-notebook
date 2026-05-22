@@ -266,5 +266,15 @@
     "title": "Commentaar toevoegen",
     "placeholder": "Schrijf een opmerking over deze oefening...",
     "save": "Opslaan"
+  },
+  "deleteAllData": {
+    "buttonLabel": "Alle gegevens verwijderen",
+    "title": "Alle gegevens verwijderen",
+    "body": "Dit zal al uw sessies en oefeningen permanent verwijderen. Deze actie kan niet ongedaan worden gemaakt.",
+    "inputLabel": "Typ «Verwijderen» om te bevestigen",
+    "inputPlaceholder": "Verwijderen",
+    "confirmWord": "Verwijderen",
+    "successMessage": "Alle gegevens verwijderd",
+    "errorMessage": "Er is een fout opgetreden. Probeer het opnieuw."
   }
 }

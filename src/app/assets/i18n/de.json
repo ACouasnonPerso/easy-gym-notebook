@@ -266,5 +266,15 @@
     "title": "Einen Kommentar hinzufügen",
     "placeholder": "Schreiben Sie eine Notiz zu dieser Übung...",
     "save": "Speichern"
+  },
+  "deleteAllData": {
+    "buttonLabel": "Alle Daten löschen",
+    "title": "Alle Daten löschen",
+    "body": "Dadurch werden alle Ihre Einheiten und Übungen dauerhaft gelöscht. Diese Aktion kann nicht rükgängig gemacht werden.",
+    "inputLabel": "Geben Sie «Löschen» ein, um zu bestätigen",
+    "inputPlaceholder": "Löschen",
+    "confirmWord": "Löschen",
+    "successMessage": "Alle Daten gelöscht",
+    "errorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
   }
 }
