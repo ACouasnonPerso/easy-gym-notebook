@@ -5,6 +5,7 @@ import { ExerciseSummaryRowComponent } from "./exercise-summary-row.component";
 import { ExerciseSummary } from "../../core_logic/stats-global/stats.service";
 import { MuscleGroup } from "../../core_logic/shared/models";
 import { muscleGroupChipStyle } from "../../core_logic/shared/muscle-group-colors";
+import { normalizeExerciseName } from "../../core_logic/shared/utils";
 
 export interface MergeSubmitEvent {
 	names: string[];
@@ -50,17 +51,21 @@ export class StatsExerciseListCardComponent {
 
 	readonly filteredExercises = computed((): ExerciseSummary[] => {
 		const selected = this.selectedTags();
-		const normalize = (s: string) =>
-			s
-				.normalize("NFD")
-				.replace(/\p{Diacritic}/gu, "")
-				.toLowerCase();
-		const query = normalize(this.searchQuery().trim());
+		const query = normalizeExerciseName(this.searchQuery().trim());
 
 		let exercises = this.exercises();
 
 		if (query) {
-			exercises = exercises.filter((e) => normalize(e.name).includes(query));
+			const tokens = query.split(/\s+/).filter(Boolean);
+			const scored = exercises
+				.map((e) => {
+					const normalizedName = normalizeExerciseName(e.name);
+					const score = tokens.filter((token) => normalizedName.includes(token)).length;
+					return { exercise: e, score };
+				})
+				.filter((item) => item.score > 0);
+			scored.sort((a, b) => b.score - a.score);
+			exercises = scored.map((item) => item.exercise);
 		}
 
 		if (selected.size === 0) return exercises;

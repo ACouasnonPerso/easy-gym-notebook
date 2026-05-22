@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, computed, inject, InjectionToken } from "@angular/core";
+import { Component, ChangeDetectionStrategy, input, output, computed, inject, InjectionToken } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
 import { HighlightViewModel } from "../../core_logic/stats-global/highlight-metric.model";
@@ -23,6 +23,7 @@ export class StatsHighlightsCardComponent {
 	private readonly palette = inject(HIGHLIGHTS_PALETTE);
 
 	highlights = input<HighlightViewModel[]>([]);
+	highlightClicked = output<HighlightViewModel>();
 
 	tileColors = computed(() => {
 		const shuffled = [...this.palette].sort(() => Math.random() - 0.5);

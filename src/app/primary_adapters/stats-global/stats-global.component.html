@@ -7,7 +7,7 @@
 	/>
 
 	<!-- Highlights (dynamic positive metrics) -->
-	<app-stats-highlights-card [highlights]="getGlobalStatsUseCase.highlights()" />
+	<app-stats-highlights-card [highlights]="getGlobalStatsUseCase.highlights()" (highlightClicked)="onHighlightClicked($event)" />
 
 	<!-- Heatmap -->
 	@if (showHeatmap()) {

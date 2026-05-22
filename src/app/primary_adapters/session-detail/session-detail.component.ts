@@ -138,7 +138,9 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 	}
 
 	navigateToExerciseChrono(exercise: Exercise): void {
-		this.router.navigate(["/chrono/exercise"], { queryParams: { breakDuration: exercise.breakDurationSeconds } });
+		this.router.navigate(["/chrono/exercise"], {
+			queryParams: { breakDuration: exercise.breakDurationSeconds, exerciseName: encodeURIComponent(exercise.name) },
+		});
 	}
 
 	navigateToStats(exercise: Exercise): void {

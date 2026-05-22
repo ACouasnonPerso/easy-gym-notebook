@@ -36,11 +36,21 @@
 			</button>
 		</div>
 		@if (selectedChart() === "volume") {
-			<app-volume-line-chart [occurrences]="groupedOccurrences()" [groupBy]="groupBy()" />
+			<div class="chart-wrapper">
+				@if (groupBy() !== "session") {
+					<app-aggregation-toggle class="chart-toggle" [value]="volumeMode()" [averageEqualsSum]="volumeAverageEqualsSum()" (aggregationChange)="volumeMode.set($event)" />
+				}
+				<app-volume-line-chart [occurrences]="groupedOccurrencesVolume()" [groupBy]="groupBy()" />
+			</div>
 		} @else if (selectedChart() === "reps") {
-			<app-total-reps-line-chart [occurrences]="groupedOccurrences()" [groupBy]="groupBy()" />
+			<div class="chart-wrapper">
+				@if (groupBy() !== "session") {
+					<app-aggregation-toggle class="chart-toggle" [value]="repsMode()" [averageEqualsSum]="repsAverageEqualsSum()" (aggregationChange)="repsMode.set($event)" />
+				}
+				<app-total-reps-line-chart [occurrences]="groupedOccurrencesReps()" [groupBy]="groupBy()" />
+			</div>
 		} @else {
-			<app-weight-line-chart [occurrences]="groupedOccurrences()" [groupBy]="groupBy()" />
+			<app-weight-line-chart [occurrences]="groupedOccurrencesWeight()" [groupBy]="groupBy()" />
 		}
 	}
 </div>

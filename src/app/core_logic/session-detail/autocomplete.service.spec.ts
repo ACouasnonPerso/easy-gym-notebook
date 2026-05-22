@@ -158,6 +158,77 @@ describe("AutocompleteService", () => {
 		});
 	});
 
+	describe("getSuggestions — multi-word OR search", () => {
+		it("should return an exercise that contains only the first token of a two-token query", async () => {
+			repoSpy.getAll.and.returnValue(
+				Promise.resolve([
+					makeExercise({ name: "Tractions" }),
+					makeExercise({ name: "DC sur le banc" }),
+				])
+			);
+
+			const result = await service.getSuggestions("trac banc");
+
+			expect(result).toContain("Tractions");
+		});
+
+		it("should return an exercise whose name contains both tokens of the query", async () => {
+			repoSpy.getAll.and.returnValue(
+				Promise.resolve([
+					makeExercise({ name: "Tractions avec saut sur le banc" }),
+				])
+			);
+
+			const result = await service.getSuggestions("trac banc");
+
+			expect(result).toContain("Tractions avec saut sur le banc");
+		});
+
+		it("should return an exercise that contains only the second token of a two-token query", async () => {
+			repoSpy.getAll.and.returnValue(
+				Promise.resolve([
+					makeExercise({ name: "DC sur le banc" }),
+					makeExercise({ name: "Squat" }),
+				])
+			);
+
+			const result = await service.getSuggestions("trac banc");
+
+			expect(result).toContain("DC sur le banc");
+			expect(result).not.toContain("Squat");
+		});
+	});
+
+	describe("getSuggestions — tri par score (nombre de tokens matchés)", () => {
+		it("should return the exercise matching the most tokens first even when a lower-scoring exercise appears first in the repository", async () => {
+			repoSpy.getAll.and.returnValue(
+				Promise.resolve([
+					makeExercise({ name: "Fente bulgare fessiers" }),   // score 1 : contient "t"
+					makeExercise({ name: "Tirage dos vers le haut (T-Bar row)" }), // score 3 : contient "t", "bar", "row"
+				])
+			);
+
+			const result = await service.getSuggestions("t bar row");
+
+			expect(result[0]).toBe("Tirage dos vers le haut (T-Bar row)");
+		});
+	});
+
+	describe("getSuggestions — tiret traité comme espace", () => {
+		it("should find an exercise whose name uses a space when the query uses only a dash-joined token", async () => {
+			repoSpy.getAll.and.returnValue(
+				Promise.resolve([
+					makeExercise({ name: "T bar" }),
+					makeExercise({ name: "Squat" }),
+				])
+			);
+
+			const result = await service.getSuggestions("t-bar");
+
+			expect(result).toContain("T bar");
+		});
+	});
+
 	describe("getSuggestions — fuzzy matching", () => {
 		it("should return an exercise when the search term appears in the middle of the name, not just at the start", async () => {
 			repoSpy.getAll.and.returnValue(

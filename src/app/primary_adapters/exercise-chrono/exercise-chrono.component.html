@@ -9,6 +9,9 @@
 		(decrementSeries)="exerciseChronoUseCase.decrementSeriesCount()"
 		(openSettings)="showSettingsPanel.set(true)"
 	/>
+	@if (exerciseName()) {
+		<button class="exercise-recap" (click)="showHistoryDetailPopup.set(true)">{{ exerciseName() }}</button>
+	}
 	@if (isIos) {
 		<p class="ios-silent-warning">{{ "chrono.iosSilentWarning" | translate }}</p>
 	}
@@ -48,5 +51,12 @@
 		[initialSettings]="settings()"
 		(confirmed)="onSettingsConfirmed($event)"
 		(cancelled)="onSettingsCancelled()"
+	/>
+}
+
+@if (showHistoryDetailPopup() && latestOccurrence()) {
+	<app-exercise-history-detail-popup
+		[occurrence]="latestOccurrence()!"
+		(close)="showHistoryDetailPopup.set(false)"
 	/>
 }

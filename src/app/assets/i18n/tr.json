@@ -100,6 +100,11 @@
       "week": "Hafta",
       "month": "Ay",
       "year": "Yıl"
+    },
+    "aggregation": {
+      "average": "Ortalama",
+      "sum": "Toplam",
+      "sameToast": "Ortalama = Bu dönem için toplam"
     }
   },
   "statsGlobal": {

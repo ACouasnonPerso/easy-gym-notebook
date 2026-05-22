@@ -6,8 +6,10 @@ import { Location } from "@angular/common";
 import { Capacitor } from "@capacitor/core";
 import { ExerciseChronoComponent } from "./exercise-chrono.component";
 import { ExerciseChronoUseCase } from "../../primary_ports/exercise-chrono/exercise-chrono.usecase";
+import { GetExerciseStatsUseCase } from "../../primary_ports/stats-exercise/get-exercise-stats.usecase";
 import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from "@ngx-translate/core";
 import { Observable, of } from "rxjs";
+import { ExerciseOccurrence } from "../../core_logic/shared/models";
 
 class FakeTranslateLoader implements TranslateLoader {
 	getTranslation(_lang: string): Observable<TranslationObject> {
@@ -51,8 +53,18 @@ function buildUseCase() {
 	};
 }
 
-function createComponent(queryParams: Record<string, string> = {}) {
+function buildStatsUseCase(occurrences: ExerciseOccurrence[] = []) {
+	return {
+		occurrences: signal(occurrences),
+		cardioOccurrences: signal([]),
+		isCardio: signal(false),
+		execute: jasmine.createSpy("execute").and.returnValue(Promise.resolve()),
+	};
+}
+
+function createComponent(queryParams: Record<string, string> = {}, occurrences: ExerciseOccurrence[] = []) {
 	const useCaseSpy = buildUseCase();
+	const statsUseCaseSpy = buildStatsUseCase(occurrences);
 	const locationSpy = { back: jasmine.createSpy("back") };
 
 	TestBed.configureTestingModule({
@@ -64,6 +76,7 @@ function createComponent(queryParams: Record<string, string> = {}) {
 			{ provide: ActivatedRoute, useValue: { snapshot: { queryParams } } },
 			{ provide: Location, useValue: locationSpy },
 			{ provide: ExerciseChronoUseCase, useValue: useCaseSpy },
+			{ provide: GetExerciseStatsUseCase, useValue: statsUseCaseSpy },
 		],
 	});
 
@@ -73,7 +86,7 @@ function createComponent(queryParams: Record<string, string> = {}) {
 
 	const fixture = TestBed.createComponent(ExerciseChronoComponent);
 	fixture.detectChanges();
-	return { fixture, useCaseSpy, locationSpy };
+	return { fixture, useCaseSpy, locationSpy, statsUseCaseSpy };
 }
 
 describe("ExerciseChronoComponent — hasExercise", () => {
@@ -335,6 +348,7 @@ function buildUseCaseWithSettings(queryParams: Record<string, string> = {}, pers
 		localStorage.removeItem("egn_chrono_custom_settings");
 	}
 
+	const statsUseCaseSpy = buildStatsUseCase();
 	const locationSpy = { back: jasmine.createSpy("back") };
 	TestBed.configureTestingModule({
 		imports: [
@@ -345,6 +359,7 @@ function buildUseCaseWithSettings(queryParams: Record<string, string> = {}, pers
 			{ provide: ActivatedRoute, useValue: { snapshot: { queryParams } } },
 			{ provide: Location, useValue: locationSpy },
 			{ provide: ExerciseChronoUseCase, useValue: useCaseSpy },
+			{ provide: GetExerciseStatsUseCase, useValue: statsUseCaseSpy },
 		],
 	});
 
@@ -444,5 +459,66 @@ describe("ExerciseChronoComponent Story 6 - restart", () => {
 		fixture.detectChanges();
 
 		expect(useCaseSpy.restart).toHaveBeenCalledTimes(1);
+	});
+});
+
+describe("ExerciseChronoComponent — exercise recap", () => {
+	afterEach(() => localStorage.clear());
+
+	it("should display .exercise-recap with exercise name when exerciseName query param is provided", () => {
+		const { fixture } = createComponent({ breakDuration: "60", exerciseName: "Bench Press" });
+
+		const recap = fixture.debugElement.query(By.css(".exercise-recap"));
+
+		expect(recap).not.toBeNull();
+		expect(recap.nativeElement.textContent.trim()).toContain("Bench Press");
+	});
+
+	it("should NOT display .exercise-recap when no exerciseName query param is provided", () => {
+		const { fixture } = createComponent({ breakDuration: "60" });
+
+		const recap = fixture.debugElement.query(By.css(".exercise-recap"));
+
+		expect(recap).toBeNull();
+	});
+
+	it("should open app-exercise-history-detail-popup when clicking the exercise recap", () => {
+		const anOccurrence: ExerciseOccurrence = {
+			exerciseId: "e1",
+			sessionId: "s1",
+			date: new Date("2026-01-01"),
+			name: "Bench Press",
+			weightKg: 80,
+			sets: 4,
+			reps: 8,
+			breakDurationSeconds: 60,
+			volumeKg: 2560,
+			status: "validated",
+			rating: null,
+			comment: null,
+			setBreakdown: [{ weightKg: 80, reps: 8 }],
+		};
+		const { fixture } = createComponent({ breakDuration: "60", exerciseName: "Bench Press" }, [anOccurrence]);
+
+		const recap = fixture.debugElement.query(By.css(".exercise-recap"));
+		recap.triggerEventHandler("click", null);
+		fixture.detectChanges();
+
+		const popup = fixture.debugElement.query(By.css("app-exercise-history-detail-popup"));
+		expect(popup).not.toBeNull();
+	});
+
+	it("should render .exercise-recap before .ios-silent-warning in the DOM", () => {
+		spyOn(Capacitor, "getPlatform").and.returnValue("ios");
+		const { fixture } = createComponent({ breakDuration: "60", exerciseName: "Bench Press" });
+
+		const page = fixture.debugElement.query(By.css(".page")).nativeElement as HTMLElement;
+		const children = Array.from(page.children);
+		const recapIndex = children.findIndex((el) => el.classList.contains("exercise-recap"));
+		const warningIndex = children.findIndex((el) => el.classList.contains("ios-silent-warning"));
+
+		expect(recapIndex).toBeGreaterThanOrEqual(0);
+		expect(warningIndex).toBeGreaterThanOrEqual(0);
+		expect(recapIndex).toBeLessThan(warningIndex);
 	});
 });

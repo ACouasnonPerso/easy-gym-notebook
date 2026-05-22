@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CardioOccurrence, ExerciseOccurrence } from '../shared/models';
-import { GroupBy } from './group-by.model';
+import { AggregationMode, GroupBy } from './group-by.model';
 
 function getISOWeekKey(date: Date): string {
 	const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
@@ -30,7 +30,7 @@ function bucketKey(date: Date, groupBy: GroupBy): string {
 
 @Injectable({ providedIn: 'root' })
 export class ExerciseOccurrenceGroupingService {
-	groupExercise(occurrences: ExerciseOccurrence[], groupBy: GroupBy): ExerciseOccurrence[] {
+	groupExercise(occurrences: ExerciseOccurrence[], groupBy: GroupBy, mode: AggregationMode = 'sum'): ExerciseOccurrence[] {
 		const sorted = [...occurrences].sort((a, b) => a.date.getTime() - b.date.getTime());
 
 		if (groupBy === 'session') {
@@ -53,8 +53,10 @@ export class ExerciseOccurrenceGroupingService {
 			const group = buckets.get(key)!;
 			const first = group[0];
 			const weightKg = group.reduce((sum, o) => sum + o.weightKg, 0) / group.length;
-			const volumeKg = group.reduce((sum, o) => sum + o.volumeKg, 0);
-			const totalReps = group.reduce((sum, o) => sum + (o.totalReps ?? 0), 0);
+			const volumeKgSum = group.reduce((sum, o) => sum + o.volumeKg, 0);
+			const totalRepsSum = group.reduce((sum, o) => sum + (o.totalReps ?? 0), 0);
+			const volumeKg = mode === 'average' ? volumeKgSum / group.length : volumeKgSum;
+			const totalReps = mode === 'average' ? totalRepsSum / group.length : totalRepsSum;
 			return { ...first, weightKg, volumeKg, totalReps };
 		});
 	}

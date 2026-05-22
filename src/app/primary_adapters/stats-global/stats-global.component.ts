@@ -17,6 +17,7 @@ import { StatsMonthSelectorComponent } from "./stats-month-selector.component";
 import { StatsImportExportCardComponent } from "./stats-import-export-card.component";
 import { StatsYearlyHeatmapCardComponent } from "./stats-yearly-heatmap-card.component";
 import { StatsHighlightsCardComponent } from "./stats-highlights-card.component";
+import { HighlightViewModel } from "../../core_logic/stats-global/highlight-metric.model";
 
 @Component({
 	selector: "app-stats-global",
@@ -133,6 +134,12 @@ export class StatsGlobalComponent implements OnInit, OnDestroy {
 
 	navigateToExerciseStats(exerciseName: string): void {
 		this.router.navigate(["/stats/", encodeURIComponent(exerciseName)]);
+	}
+
+	onHighlightClicked(highlight: HighlightViewModel): void {
+		if (highlight.exerciseName) {
+			this.navigateToExerciseStats(highlight.exerciseName);
+		}
 	}
 
 	async onMergeSubmit(event: MergeSubmitEvent): Promise<void> {

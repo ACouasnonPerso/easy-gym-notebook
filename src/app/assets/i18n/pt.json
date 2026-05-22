@@ -100,6 +100,11 @@
       "week": "Semana",
       "month": "Mês",
       "year": "Ano"
+    },
+    "aggregation": {
+      "average": "Média",
+      "sum": "Soma",
+      "sameToast": "Média = Soma para este período"
     }
   },
   "statsGlobal": {

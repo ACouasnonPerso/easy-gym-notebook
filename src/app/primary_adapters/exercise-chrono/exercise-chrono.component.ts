@@ -3,6 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 import { Capacitor } from "@capacitor/core";
 import { ExerciseChronoUseCase } from "../../primary_ports/exercise-chrono/exercise-chrono.usecase";
+import { GetExerciseStatsUseCase } from "../../primary_ports/stats-exercise/get-exercise-stats.usecase";
 import { EditDurationPopupComponent } from "../session-detail/edit-duration-popup.component";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { HapticService } from "../../core_logic/shared/haptic.service";
@@ -10,6 +11,7 @@ import { ChronoHeaderComponent } from "./chrono-header.component";
 import { ChronoRingComponent } from "./chrono-ring.component";
 import { ChronoActionsComponent } from "./chrono-actions.component";
 import { ChronoCustomSettingsPanelComponent } from "./chrono-custom-settings-panel.component";
+import { ExerciseHistoryDetailPopupComponent } from "../stats-exercise/exercise-history-detail-popup.component";
 import {
 	ChronoCustomSettings,
 	loadCustomSettings,
@@ -26,6 +28,7 @@ import {
 		ChronoRingComponent,
 		ChronoActionsComponent,
 		ChronoCustomSettingsPanelComponent,
+		ExerciseHistoryDetailPopupComponent,
 		TranslatePipe,
 	],
 	templateUrl: "./exercise-chrono.component.html",
@@ -33,6 +36,7 @@ import {
 })
 export class ExerciseChronoComponent implements OnInit {
 	protected readonly exerciseChronoUseCase = inject(ExerciseChronoUseCase);
+	protected readonly getExerciseStatsUseCase = inject(GetExerciseStatsUseCase);
 	private readonly route = inject(ActivatedRoute);
 	protected readonly location = inject(Location);
 	private readonly translate = inject(TranslateService);
@@ -41,8 +45,12 @@ export class ExerciseChronoComponent implements OnInit {
 	readonly isIos = Capacitor.getPlatform() === "ios";
 	readonly _breakDuration = signal(60);
 	readonly hasExercise = signal(false);
+	readonly exerciseName = signal<string | null>(null);
 	readonly showBreakDurationPopup = signal(false);
 	readonly showSettingsPanel = signal(false);
+	readonly showHistoryDetailPopup = signal(false);
+
+	readonly latestOccurrence = computed(() => this.getExerciseStatsUseCase.occurrences()[0] ?? null);
 
 	readonly circumference = 2 * Math.PI * 90;
 
@@ -97,6 +105,12 @@ export class ExerciseChronoComponent implements OnInit {
 		const parsed = parseInt(raw, 10);
 		const hasParam = raw !== undefined && raw !== null && !isNaN(parsed);
 		this.hasExercise.set(hasParam);
+
+		const rawExerciseName = this.route.snapshot.queryParams["exerciseName"];
+		if (rawExerciseName) {
+			this.exerciseName.set(decodeURIComponent(rawExerciseName));
+			this.getExerciseStatsUseCase.execute(decodeURIComponent(rawExerciseName));
+		}
 
 		// Priority: persisted settings > route param seed > default
 		const persisted = loadCustomSettings();

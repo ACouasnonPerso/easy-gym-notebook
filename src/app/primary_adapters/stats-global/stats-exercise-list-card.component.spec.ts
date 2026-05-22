@@ -423,6 +423,64 @@ describe("StatsExerciseListCardComponent — search bar visibility and filtering
 	});
 });
 
+describe("StatsExerciseListCardComponent — recherche multi-mots (OR)", () => {
+	let fixture: ReturnType<typeof TestBed.createComponent<StatsExerciseListCardComponent>>;
+
+	function setup(exercises: ExerciseSummary[]) {
+		TestBed.configureTestingModule({
+			imports: [StatsExerciseListCardComponent, translateModuleConfig],
+		});
+		setupI18n();
+		fixture = TestBed.createComponent(StatsExerciseListCardComponent);
+		fixture.componentRef.setInput("exercises", exercises);
+		fixture.detectChanges();
+	}
+
+	it("doit retourner les exercices contenant au moins un des tokens de la query (logique OR)", () => {
+		const exercises = [
+			...makeExercises(21),
+			makeExercise({ name: "Tractions" }),
+			makeExercise({ name: "DC sur le banc" }),
+			makeExercise({ name: "Squat" }),
+		];
+		setup(exercises);
+
+		const el: HTMLElement = fixture.nativeElement;
+		const searchBar = el.querySelector<HTMLInputElement>('[data-testid="exercise-search-input"]')!;
+
+		searchBar.value = "trac banc";
+		searchBar.dispatchEvent(new Event("input"));
+		fixture.detectChanges();
+
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		const names = Array.from(rows).map((r) => r.getAttribute("ng-reflect-exercise-name"));
+		expect(names).toContain("Tractions");
+		expect(names).toContain("DC sur le banc");
+		expect(names).not.toContain("Squat");
+	});
+
+	it("doit trouver un exercice dont le nom utilise un espace quand la query utilise un tiret comme séparateur", () => {
+		const exercises = [
+			...makeExercises(21),
+			makeExercise({ name: "Bent over row" }),
+			makeExercise({ name: "Squat" }),
+		];
+		setup(exercises);
+
+		const el: HTMLElement = fixture.nativeElement;
+		const searchBar = el.querySelector<HTMLInputElement>('[data-testid="exercise-search-input"]')!;
+
+		searchBar.value = "bent-over";
+		searchBar.dispatchEvent(new Event("input"));
+		fixture.detectChanges();
+
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		const names = Array.from(rows).map((r) => r.getAttribute("ng-reflect-exercise-name"));
+		expect(names).toContain("Bent over row");
+		expect(names).not.toContain("Squat");
+	});
+});
+
 describe("StatsExerciseListCardComponent — merge button visibility", () => {
 	let fixture: ReturnType<typeof TestBed.createComponent<StatsExerciseListCardComponent>>;
 
@@ -612,5 +670,39 @@ describe("StatsExerciseListCardComponent - liste tronquee et bouton afficher plu
 		toggle.click();
 		fixture.detectChanges();
 		expect(exercises.length).toBe(originalLength);
+	});
+});
+
+describe("StatsExerciseListCardComponent — tri par pertinence (score tokens)", () => {
+	let fixture: ReturnType<typeof TestBed.createComponent<StatsExerciseListCardComponent>>;
+
+	function setup(exercises: ExerciseSummary[]) {
+		TestBed.configureTestingModule({
+			imports: [StatsExerciseListCardComponent, translateModuleConfig],
+		});
+		setupI18n();
+		fixture = TestBed.createComponent(StatsExerciseListCardComponent);
+		fixture.componentRef.setInput("exercises", exercises);
+		fixture.detectChanges();
+	}
+
+	it("doit afficher en premier l'exercice qui correspond au plus grand nombre de tokens de la query", () => {
+		const exercises = [
+			...makeExercises(21),
+			makeExercise({ name: "Tractions larges" }),                     // score 1: contient "trac"
+			makeExercise({ name: "Tractions prise large barre" }),           // score 2: contient "trac" et "barre"
+		];
+		setup(exercises);
+
+		const el: HTMLElement = fixture.nativeElement;
+		const searchBar = el.querySelector<HTMLInputElement>('[data-testid="exercise-search-input"]')!;
+		searchBar.value = "trac barre";
+		searchBar.dispatchEvent(new Event("input"));
+		fixture.detectChanges();
+
+		const rows = el.querySelectorAll("app-exercise-summary-row");
+		const names = Array.from(rows).map((r) => r.getAttribute("ng-reflect-exercise-name"));
+		expect(names[0]).toBe("Tractions prise large barre");
+		expect(names[1]).toBe("Tractions larges");
 	});
 });

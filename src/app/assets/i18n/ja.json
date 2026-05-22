@@ -100,6 +100,11 @@
       "week": "週間",
       "month": "月",
       "year": "年"
+    },
+    "aggregation": {
+      "average": "平均",
+      "sum": "合計",
+      "sameToast": "平均＝この期間の合計"
     }
   },
   "statsGlobal": {

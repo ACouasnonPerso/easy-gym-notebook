@@ -100,6 +100,11 @@
       "week": "सप्ताह",
       "month": "महीना",
       "year": "वर्ष"
+    },
+    "aggregation": {
+      "average": "औसत",
+      "sum": "योग",
+      "sameToast": "औसत = इस अवधि का योग"
     }
   },
   "statsGlobal": {

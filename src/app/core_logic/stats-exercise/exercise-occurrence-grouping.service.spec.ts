@@ -241,6 +241,103 @@ describe('ExerciseOccurrenceGroupingService', () => {
 				expect(result.length).toBe(2);
 			});
 		});
+
+		describe('aggregation mode', () => {
+			it("26. 'sum' mode, 'week': sums volumeKg across two occurrences in the same ISO week", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), volumeKg: 1000 });
+				const occ2 = makeOcc({ date: new Date('2026-01-07'), volumeKg: 2000 });
+				const result = service.groupExercise([occ1, occ2], 'week', 'sum');
+				expect(result[0].volumeKg).toBe(3000);
+			});
+
+			it("27. 'sum' mode, 'week': sums totalReps across two occurrences in the same ISO week", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), totalReps: 10 });
+				const occ2 = makeOcc({ date: new Date('2026-01-07'), totalReps: 15 });
+				const result = service.groupExercise([occ1, occ2], 'week', 'sum');
+				expect(result[0].totalReps).toBe(25);
+			});
+
+			it("28. 'sum' mode, 'week': weightKg is still averaged", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), weightKg: 80 });
+				const occ2 = makeOcc({ date: new Date('2026-01-07'), weightKg: 100 });
+				const result = service.groupExercise([occ1, occ2], 'week', 'sum');
+				expect(result[0].weightKg).toBe(90);
+			});
+
+			it("29. 'average' mode, 'week': averages volumeKg across two occurrences in the same ISO week", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), volumeKg: 1000 });
+				const occ2 = makeOcc({ date: new Date('2026-01-07'), volumeKg: 3000 });
+				const result = service.groupExercise([occ1, occ2], 'week', 'average');
+				expect(result[0].volumeKg).toBe(2000);
+			});
+
+			it("30. 'average' mode, 'week': averages totalReps across two occurrences in the same ISO week", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), totalReps: 10 });
+				const occ2 = makeOcc({ date: new Date('2026-01-07'), totalReps: 30 });
+				const result = service.groupExercise([occ1, occ2], 'week', 'average');
+				expect(result[0].totalReps).toBe(20);
+			});
+
+			it("31. 'average' mode, 'week': weightKg is averaged (same result as 'sum' mode)", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), weightKg: 80 });
+				const occ2 = makeOcc({ date: new Date('2026-01-07'), weightKg: 100 });
+				const result = service.groupExercise([occ1, occ2], 'week', 'average');
+				expect(result[0].weightKg).toBe(90);
+			});
+
+			it("32. 'average' mode, 'week': averages volumeKg correctly across three occurrences (true mean)", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), volumeKg: 600 });
+				const occ2 = makeOcc({ date: new Date('2026-01-06'), volumeKg: 900 });
+				const occ3 = makeOcc({ date: new Date('2026-01-07'), volumeKg: 1500 });
+				const result = service.groupExercise([occ1, occ2, occ3], 'week', 'average');
+				expect(result[0].volumeKg).toBe(1000);
+			});
+
+			it("33. 'average' mode, 'month': averages volumeKg across two occurrences in the same calendar month", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), volumeKg: 1000 });
+				const occ2 = makeOcc({ date: new Date('2026-01-20'), volumeKg: 3000 });
+				const result = service.groupExercise([occ1, occ2], 'month', 'average');
+				expect(result[0].volumeKg).toBe(2000);
+			});
+
+			it("34. 'average' mode, 'month': averages totalReps across two occurrences in the same calendar month", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), totalReps: 10 });
+				const occ2 = makeOcc({ date: new Date('2026-01-20'), totalReps: 30 });
+				const result = service.groupExercise([occ1, occ2], 'month', 'average');
+				expect(result[0].totalReps).toBe(20);
+			});
+
+			it("35. 'average' mode, 'year': averages both volumeKg and totalReps for two occurrences in the same year", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), weightKg: 80, volumeKg: 1000, totalReps: 10 });
+				const occ2 = makeOcc({ date: new Date('2026-06-15'), weightKg: 100, volumeKg: 3000, totalReps: 30 });
+				const result = service.groupExercise([occ1, occ2], 'year', 'average');
+				expect(result[0].volumeKg).toBe(2000);
+				expect(result[0].totalReps).toBe(20);
+				expect(result[0].weightKg).toBe(90);
+			});
+
+			it("36. 'session' groupBy with mode='average': returns occurrences unchanged", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), volumeKg: 1000, totalReps: 10 });
+				const occ2 = makeOcc({ date: new Date('2026-01-07'), volumeKg: 2000, totalReps: 20 });
+				const result = service.groupExercise([occ1, occ2], 'session', 'average');
+				expect(result.length).toBe(2);
+				expect(result[0].volumeKg).toBe(1000);
+				expect(result[0].totalReps).toBe(10);
+				expect(result[1].volumeKg).toBe(2000);
+				expect(result[1].totalReps).toBe(20);
+			});
+
+			it("37. 'session' groupBy with mode='sum': returns occurrences unchanged", () => {
+				const occ1 = makeOcc({ date: new Date('2026-01-05'), volumeKg: 1000, totalReps: 10 });
+				const occ2 = makeOcc({ date: new Date('2026-01-07'), volumeKg: 2000, totalReps: 20 });
+				const result = service.groupExercise([occ1, occ2], 'session', 'sum');
+				expect(result.length).toBe(2);
+				expect(result[0].volumeKg).toBe(1000);
+				expect(result[0].totalReps).toBe(10);
+				expect(result[1].volumeKg).toBe(2000);
+				expect(result[1].totalReps).toBe(20);
+			});
+		});
 	});
 
 	describe('groupCardio', () => {

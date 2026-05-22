@@ -2,8 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(find:*)",
+      "Edit",
+      "Write",
       "Skill(orchestrate)",
-      "Skill(orchestrate:*)"
+      "Skill(orchestrate:*)",
+      "Skill(tdd-auto)",
+      "Skill(tdd-auto:*)",
+      "Skill(ui-angular)",
+      "Skill(ui-angular:*)"
     ]
   }
 }

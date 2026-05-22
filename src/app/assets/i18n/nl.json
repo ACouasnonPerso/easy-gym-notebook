@@ -100,6 +100,11 @@
       "week": "Week",
       "month": "Maand",
       "year": "Jaar"
+    },
+    "aggregation": {
+      "average": "Gemiddelde",
+      "sum": "Som",
+      "sameToast": "Gemiddelde = som voor deze periode"
     }
   },
   "statsGlobal": {

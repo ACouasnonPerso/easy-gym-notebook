@@ -1,5 +1,9 @@
 import { Exercise, PyramidSet } from "./models";
 
+export function normalizeExerciseName(text: string): string {
+	return text.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().replace(/-/g, " ");
+}
+
 export function computePyramidWeightedAverage(sets: PyramidSet[]): number {
 	const totalReps = sets.reduce((sum, s) => sum + s.reps, 0);
 	if (totalReps === 0) return 0;

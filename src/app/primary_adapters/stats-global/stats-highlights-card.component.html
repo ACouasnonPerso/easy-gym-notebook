@@ -1,7 +1,7 @@
 @if (highlights().length) {
   <div class="highlights-card">
     @for (highlight of highlights(); track highlight.id; let i = $index) {
-      <div class="highlight-tile" [style.--tile-color]="tileColors()[i]" [class.highlight-tile--perf]="highlight.category === 'perf'" [class.highlight-tile--regularity]="highlight.category === 'regularity'">
+      <div class="highlight-tile" [style.--tile-color]="tileColors()[i]" [class.highlight-tile--perf]="highlight.category === 'perf'" [class.highlight-tile--regularity]="highlight.category === 'regularity'" [class.highlight-tile--clickable]="!!highlight.exerciseName" (click)="highlightClicked.emit(highlight)">
         <span class="tile-label">{{ highlight.labelKey | translate }}</span>
         @if (highlight.exerciseName) {
           <span class="tile-exercise">{{ highlight.exerciseName }}</span>

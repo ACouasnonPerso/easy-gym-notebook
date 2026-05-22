@@ -835,3 +835,53 @@ describe("StatsGlobalComponent — highlights card", () => {
 		expect(tiles.length).toBe(1);
 	});
 });
+
+describe("StatsGlobalComponent — highlight navigation", () => {
+	let routerSpy: { navigate: jasmine.Spy };
+
+	function setup(highlights: any[] = []) {
+		const statsUseCaseSpy = makeGetGlobalStatsUseCaseSpy();
+		statsUseCaseSpy.highlights = signal(highlights) as any;
+		routerSpy = { navigate: jasmine.createSpy("navigate") };
+
+		TestBed.configureTestingModule({
+			imports: [StatsGlobalComponent, translateModuleConfig],
+			providers: [
+				{ provide: GetGlobalStatsUseCase, useValue: statsUseCaseSpy },
+				{ provide: SelectMonthUseCase, useValue: { execute: jasmine.createSpy("execute") } },
+				{ provide: MergeExercisesUseCase, useValue: makeMergeExercisesUseCaseSpy() },
+				{ provide: Router, useValue: routerSpy },
+				{ provide: ImportDataUseCase, useValue: makeImportDataUseCaseSpy() },
+				...makeRepoProviders(),
+			],
+		});
+		setupI18n();
+		const fixture = TestBed.createComponent(StatsGlobalComponent);
+		fixture.detectChanges();
+		return fixture;
+	}
+
+	it("should navigate to the exercise stats page when clicking a highlight tile that has an exerciseName", () => {
+		const fixture = setup([
+			{ id: "weight-pr", category: "perf", labelKey: "statsGlobal.highlights.weightPr", value: "100 kg", icon: "🥳", exerciseName: "Squat" },
+		]);
+		const el: HTMLElement = fixture.nativeElement;
+		const tile = el.querySelector<HTMLElement>(".highlight-tile");
+		tile!.click();
+		fixture.detectChanges();
+
+		expect(routerSpy.navigate).toHaveBeenCalledWith(["/stats/", encodeURIComponent("Squat")]);
+	});
+
+	it("should not navigate when clicking a highlight tile that has no exerciseName", () => {
+		const fixture = setup([
+			{ id: "consecutive-weeks", category: "regularity", labelKey: "statsGlobal.highlights.consecutiveWeeks", value: "3", icon: "📅" },
+		]);
+		const el: HTMLElement = fixture.nativeElement;
+		const tile = el.querySelector<HTMLElement>(".highlight-tile");
+		tile!.click();
+		fixture.detectChanges();
+
+		expect(routerSpy.navigate).not.toHaveBeenCalled();
+	});
+});

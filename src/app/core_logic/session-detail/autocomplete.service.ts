@@ -1,6 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { Exercise } from "../shared/models";
 import { EXERCISE_REPOSITORY } from "../../secondary_ports/exercise/exercise.repository.interface";
+import { normalizeExerciseName } from "../shared/utils";
 
 @Injectable({ providedIn: "root" })
 export class AutocompleteService {
@@ -9,21 +10,19 @@ export class AutocompleteService {
 	async getSuggestions(prefix: string): Promise<string[]> {
 		if (!prefix.trim()) return [];
 		const all = await this.exerciseRepo.getAll();
-		const normalizedPrefix = this._normalize(prefix);
+		const tokens = normalizeExerciseName(prefix).split(/\s+/).filter(Boolean);
 		const seen = new Set<string>();
-		const suggestions: string[] = [];
+		const scored: { name: string; score: number }[] = [];
 		for (const exercise of all) {
-			const normalizedName = this._normalize(exercise.name);
-			if (!normalizedName.includes(normalizedPrefix) || seen.has(normalizedName)) continue;
+			const normalizedName = normalizeExerciseName(exercise.name);
+			if (seen.has(normalizedName)) continue;
+			const score = tokens.filter((token) => normalizedName.includes(token)).length;
+			if (score === 0) continue;
 			seen.add(normalizedName);
-			suggestions.push(exercise.name);
-			if (suggestions.length === 8) break;
+			scored.push({ name: exercise.name, score });
 		}
-		return suggestions;
-	}
-
-	private _normalize(text: string): string {
-		return text.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+		scored.sort((a, b) => b.score - a.score);
+		return scored.slice(0, 8).map((e) => e.name);
 	}
 
 	async getDefaultsByExactName(name: string): Promise<Partial<Exercise> | null> {

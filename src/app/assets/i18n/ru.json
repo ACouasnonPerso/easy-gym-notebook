@@ -100,6 +100,11 @@
       "week": "Неделя",
       "month": "Месяц",
       "year": "Год"
+    },
+    "aggregation": {
+      "average": "Среднее",
+      "sum": "Сумма",
+      "sameToast": "Среднее = Сумма за данный период"
     }
   },
   "statsGlobal": {

@@ -1,0 +1,6 @@
+<button class="aggregation-btn" (click)="toggle()">
+	{{ label() | translate }}
+</button>
+@if (showToast()) {
+	<div class="aggregation-toast">{{ "statsExercise.aggregation.sameToast" | translate }}</div>
+}
