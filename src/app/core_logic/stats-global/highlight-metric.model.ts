@@ -32,8 +32,12 @@ export interface HighlightViewModel {
 	value: string;
 	/** Sub-value / gain line (e.g. '+5 kg') — optional */
 	subValue?: string;
-	/** Time context appended to subValue (e.g. 'vs last month', 'in 3 weeks') — optional */
+	/** i18n key for the time context appended to subValue (e.g. 'statsGlobal.highlights.context.inWeeks') — optional */
 	subContext?: string;
+	/** Interpolation params for subContext translation (e.g. { count: 3 } for inWeeks, { year: '25' } for vsMonthYear) */
+	subContextParams?: Record<string, string | number>;
+	/** Root-level i18n key for the month name param (e.g. 'months.3') — resolved separately so language changes re-translate it */
+	subContextMonthKey?: string;
 	/** Exercise name shown below the label — optional */
 	exerciseName?: string;
 	/** Icon name or emoji character */

@@ -124,16 +124,25 @@
     "thisWeek": "今週",
     "noDataMonth": "今月のデータがありません",
     "trainingTime": "トレーニング時間",
-    "searchPlaceholder": "検索演習...",
+    "searchPlaceholder": "エクササイズを検索...",
     "showMore": "もっと見る",
-    "showLess": "もっと見る",
+    "showLess": "閉じる",
     "highlights": {
-      "weightPr": "体重PR",
+      "weightPr": "重量PR",
       "volumeProgression": "今週は増量",
       "mostImproved": "最も向上した",
       "sevenDayStreak": "7日間のセッション",
       "consecutiveWeeks": "連続活動週",
-      "volumeMilestone": "総量マイルストーン"
+      "volumeMilestone": "総ボリューム",
+      "context": {
+        "thisWeek": "今週",
+        "inWeeks": "{{count}}週間で",
+        "inMonths": "{{count}}ヶ月で",
+        "fromStart": "スタートから",
+        "allTime": "ずっと",
+        "vsMonth": "対 {{month}}",
+        "vsMonthYear": "vs {{month}} '{{year}}"
+      }
     }
   },
   "import": {
@@ -234,7 +243,7 @@
     "LowerBack": "腰部"
   },
   "months": {
-    "0": "ヤン",
+    "0": "1月",
     "1": "2月",
     "2": "3月",
     "3": "4月",
@@ -260,9 +269,9 @@
     "16": "ハードでも2レップは可能",
     "17": "本当にキツい、あと1レップは可能",
     "18": "次のレップは厳しい",
-    "19": "♪ 本当に辛かった もう1回も",
+    "19": "本当にキツい、もう1レップも無理",
     "20": "無理だった",
-    "title": "レート運動",
+    "title": "エクササイズを評価",
     "10_11": "簡単、定員を大きく下回る",
     "7_9": "簡単なウォーミングアップ",
     "1_6": "無理せず"

@@ -133,7 +133,16 @@
       "mostImproved": "Meest verbeterd",
       "sevenDayStreak": "Sessies in 7 dagen",
       "consecutiveWeeks": "Actieve weken achter elkaar",
-      "volumeMilestone": "Totaal volume mijlpaal"
+      "volumeMilestone": "Totaal volume mijlpaal",
+      "context": {
+        "thisWeek": "deze week",
+        "inWeeks": "in {{count}} weken",
+        "inMonths": "in {{count}} maanden",
+        "fromStart": "vanaf het begin",
+        "allTime": "all-time",
+        "vsMonth": "vs {{month}}",
+        "vsMonthYear": "vs {{month}} '{{year}}"
+      }
     }
   },
   "import": {

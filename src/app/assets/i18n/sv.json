@@ -133,7 +133,16 @@
       "mostImproved": "Mest förbättrad",
       "sevenDayStreak": "Sessioner om 7 dagar",
       "consecutiveWeeks": "Aktiva veckor i rad",
-      "volumeMilestone": "Milstolpe för total volym"
+      "volumeMilestone": "Milstolpe för total volym",
+      "context": {
+        "thisWeek": "denna vecka",
+        "inWeeks": "i {{count}} veckor",
+        "inMonths": "om {{count}} månader",
+        "fromStart": "från start",
+        "allTime": "hela tiden",
+        "vsMonth": "mot {{month}}",
+        "vsMonthYear": "mot {{month}} '{{year}}"
+      }
     }
   },
   "import": {

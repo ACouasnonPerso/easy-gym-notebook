@@ -133,7 +133,16 @@
       "mostImproved": "Największa poprawa",
       "sevenDayStreak": "Sesje w ciągu 7 dni",
       "consecutiveWeeks": "Aktywne tygodnie z rzędu",
-      "volumeMilestone": "Całkowity kamień milowy wolumenu"
+      "volumeMilestone": "Całkowity kamień milowy wolumenu",
+      "context": {
+        "thisWeek": "w tym tygodniu",
+        "inWeeks": "w {{count}} tygodniach",
+        "inMonths": "za {{count}} miesięcy",
+        "fromStart": "od początku",
+        "allTime": "cały czas",
+        "vsMonth": "vs {{month}}",
+        "vsMonthYear": "vs {{month}} '{{year}}"
+      }
     }
   },
   "import": {

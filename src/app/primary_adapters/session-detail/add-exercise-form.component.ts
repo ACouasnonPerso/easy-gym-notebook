@@ -107,6 +107,10 @@ export class AddExerciseFormComponent {
 		this.distanceKm.set(v === null ? null : +v);
 	}
 
+	onNameBlur(): void {
+		setTimeout(() => this.suggestions.set([]), 150);
+	}
+
 	async onNameInput(event: Event): Promise<void> {
 		const value = (event.target as HTMLInputElement).value.slice(0, 60);
 		this.name.set(value);
@@ -115,7 +119,7 @@ export class AddExerciseFormComponent {
 			Promise.resolve(this.muscleDetector.detect(value)),
 			this.autocompleteService.getDefaultsByExactName(value),
 		]);
-		this.suggestions.set(fetchedSuggestions);
+		this.suggestions.set(fetchedSuggestions.slice(0, 6));
 		this.isCardio.set(detection.isCardio);
 		this.detectedGroups.set(detection.isCardio ? [] : detection.muscleGroups);
 		if (!detection.isCardio && defaults) {

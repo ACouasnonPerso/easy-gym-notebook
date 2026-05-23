@@ -133,7 +133,16 @@
       "mostImproved": "सबसे अधिक सुधार",
       "sevenDayStreak": "7 दिनों में सत्र",
       "consecutiveWeeks": "लगातार सक्रिय सप्ताह",
-      "volumeMilestone": "कुल वॉल्यूम मील का पत्थर"
+      "volumeMilestone": "कुल वॉल्यूम मील का पत्थर",
+      "context": {
+        "thisWeek": "इस सप्ताह",
+        "inWeeks": "{{count}} सप्ताह में",
+        "inMonths": "{{count}} महीने में",
+        "fromStart": "शुरुआत से",
+        "allTime": "कुल मिलाकर",
+        "vsMonth": "{{month}} के खिलाफ",
+        "vsMonthYear": "{{month}} और {{year}} के खिलाफ"
+      }
     }
   },
   "import": {
