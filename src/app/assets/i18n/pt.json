@@ -133,7 +133,16 @@
       "mostImproved": "Mais melhorado",
       "sevenDayStreak": "Sessões em 7 dias",
       "consecutiveWeeks": "Semanas activas seguidas",
-      "volumeMilestone": "Marco de volume total"
+      "volumeMilestone": "Marco de volume total",
+      "context": {
+        "thisWeek": "esta semana",
+        "inWeeks": "em {{count}} semanas",
+        "inMonths": "em {{count}} meses",
+        "fromStart": "desde o início",
+        "allTime": "em todos os tempos",
+        "vsMonth": "vs {{month}}",
+        "vsMonthYear": "vs {{month}} '{{year}}"
+      }
     }
   },
   "import": {

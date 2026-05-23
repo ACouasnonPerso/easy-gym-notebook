@@ -11,7 +11,13 @@
           <span class="tile-sub-value">
             {{ highlight.subValue }}
             @if (highlight.subContext) {
-              <span class="tile-sub-context">{{ highlight.subContext }}</span>
+              <span class="tile-sub-context">
+                @if (highlight.subContextMonthKey) {
+                  {{ highlight.subContext | translate: { month: (highlight.subContextMonthKey | translate), year: highlight.subContextParams?.['year'] } }}
+                } @else {
+                  {{ highlight.subContext | translate: highlight.subContextParams }}
+                }
+              </span>
             }
           </span>
         }

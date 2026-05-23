@@ -65,7 +65,7 @@
       "4": "Essayez de sélectionner l'année en cours dans les statistiques pour voir votre carte thermique annuelle 😉",
       "5": "Appuyez longuement sur une session pour la supprimer"
     },
-    "reviewTip": "Vous aimez l'app ? Pensez à mettre 5 ⭐ et un com ça nous aide beaucoup 🙏",
+    "reviewTip": "Vous aimez l'app ? Pensez à mettre 5 ⭐ et un com. L'app est gratuite c'est une belle façon de nous aider en échange 🙏",
     "reviewThanks": "Merci pour votre avis !",
     "reviewConfirmTitle": "Vous aimez cette app ?",
     "reviewConfirmYes": "Oui, noter l'app",
@@ -133,7 +133,16 @@
       "mostImproved": "La meilleure progression",
       "sevenDayStreak": "Sessions dans 7 jours",
       "consecutiveWeeks": "Semaines actives d'affilée 🔥",
-      "volumeMilestone": "Volume total"
+      "volumeMilestone": "Volume total",
+      "context": {
+        "thisWeek": "cette semaine",
+        "inWeeks": "dans les semaines {{count}}",
+        "inMonths": "dans {{count}} mois",
+        "fromStart": "à partir du début",
+        "allTime": "de tous les temps",
+        "vsMonth": "vs {{month}}",
+        "vsMonthYear": "vs {{month}} '{{year}}"
+      }
     }
   },
   "import": {

@@ -34,6 +34,7 @@
 				type="text"
 				[value]="name()"
 				(input)="onNameInput($event)"
+				(blur)="onNameBlur()"
 				[placeholder]="'exercise.namePlaceholder' | translate"
 				class="input"
 				[class.input--error]="nameInputError()"

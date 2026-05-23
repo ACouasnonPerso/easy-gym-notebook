@@ -133,7 +133,16 @@
       "mostImproved": "الأكثر تحسناً",
       "sevenDayStreak": "الجلسات في 7 أيام",
       "consecutiveWeeks": "الأسابيع النشطة على التوالي",
-      "volumeMilestone": "إجمالي حجم الإنجاز"
+      "volumeMilestone": "إجمالي حجم الإنجاز",
+      "context": {
+        "thisWeek": "هذا الأسبوع",
+        "inWeeks": "في {{count}} أسابيع",
+        "inMonths": "في {{count}}} شهرًا",
+        "fromStart": "من البداية",
+        "allTime": "كل الوقت",
+        "vsMonth": "مقابل {{month}}}",
+        "vsMonthYear": "ضد {{month}} مقابل {{year}} & apos؛ {undefined}"
+      }
     }
   },
   "import": {

@@ -15,14 +15,13 @@ import { sevenDayStreakDetector } from "./highlight-detectors/seven-day-streak.d
 import { consecutiveWeeksDetector } from "./highlight-detectors/consecutive-weeks.detector";
 import { volumeMilestoneDetector } from "./highlight-detectors/volume-milestone.detector";
 
-const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-function formatTimeSince(date: Date, today: Date): string {
+function formatTimeSince(date: Date, today: Date): { key: string; params?: Record<string, number> } {
 	const diffDays = Math.floor((today.getTime() - date.getTime()) / 86_400_000);
-	if (diffDays < 14) return "this week";
-	if (diffDays < 55) return `in ${Math.round(diffDays / 7)} weeks`;
-	if (diffDays < 365) return `in ${Math.round(diffDays / 30)} months`;
-	return "from start";
+	if (diffDays < 14) return { key: "statsGlobal.highlights.context.thisWeek" };
+	if (diffDays < 55) return { key: "statsGlobal.highlights.context.inWeeks", params: { count: Math.round(diffDays / 7) } };
+	if (diffDays < 365) return { key: "statsGlobal.highlights.context.inMonths", params: { count: Math.round(diffDays / 30) } };
+	return { key: "statsGlobal.highlights.context.fromStart" };
 }
 
 function toViewModel(metric: HighlightMetric): HighlightViewModel {
@@ -49,13 +48,21 @@ function toViewModel(metric: HighlightMetric): HighlightViewModel {
 	let value = "";
 	let subValue: string | undefined;
 	let subContext: string | undefined;
+	let subContextParams: Record<string, string | number> | undefined;
+	let subContextMonthKey: string | undefined;
 
 	switch (metric.id) {
 		case "weight-pr": {
 			value = `${payload["weightKg"]} kg`;
 			subValue = `+${payload["gainKg"]} kg`;
 			const previousPrDate = payload["previousPrDate"] as string | undefined;
-			subContext = previousPrDate ? formatTimeSince(new Date(previousPrDate), today) : "all-time";
+			if (previousPrDate) {
+				const ctx = formatTimeSince(new Date(previousPrDate), today);
+				subContext = ctx.key;
+				subContextParams = ctx.params;
+			} else {
+				subContext = "statsGlobal.highlights.context.allTime";
+			}
 			break;
 		}
 		case "volume-progression":
@@ -68,7 +75,13 @@ function toViewModel(metric: HighlightMetric): HighlightViewModel {
 			const prevMonth = payload["prevMonth"] as number;
 			const prevYear = payload["prevYear"] as number;
 			const currentYear = today.getFullYear();
-			subContext = `vs ${MONTH_NAMES[prevMonth]}${prevYear !== currentYear ? ` '${String(prevYear).slice(2)}` : ""}`;
+			subContextMonthKey = `months.${prevMonth}`;
+			if (prevYear !== currentYear) {
+				subContext = "statsGlobal.highlights.context.vsMonthYear";
+				subContextParams = { year: String(prevYear).slice(2) };
+			} else {
+				subContext = "statsGlobal.highlights.context.vsMonth";
+			}
 			break;
 		}
 		case "seven-day-streak":
@@ -89,6 +102,8 @@ function toViewModel(metric: HighlightMetric): HighlightViewModel {
 		value,
 		subValue,
 		subContext,
+		subContextParams,
+		subContextMonthKey,
 		exerciseName: metric.exerciseName,
 		icon: icons[metric.id] ?? "⭐",
 	};

@@ -133,7 +133,16 @@
       "mostImproved": "Больше всего улучшений",
       "sevenDayStreak": "Сессии за 7 дней",
       "consecutiveWeeks": "Активные недели подряд",
-      "volumeMilestone": "Общий объем вехи"
+      "volumeMilestone": "Общий объем вехи",
+      "context": {
+        "thisWeek": "на этой неделе",
+        "inWeeks": "за {{count}} недель",
+        "inMonths": "за {{count}} месяцев",
+        "fromStart": "с начала",
+        "allTime": "за все время",
+        "vsMonth": "против {{month}}",
+        "vsMonthYear": "vs {{month}} '{{year}}"
+      }
     }
   },
   "import": {

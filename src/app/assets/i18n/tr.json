@@ -133,7 +133,16 @@
       "mostImproved": "En gelişmiş",
       "sevenDayStreak": "7 gün içinde seanslar",
       "consecutiveWeeks": "Arka arkaya aktif haftalar",
-      "volumeMilestone": "Toplam hacim kilometre taşı"
+      "volumeMilestone": "Toplam hacim kilometre taşı",
+      "context": {
+        "thisWeek": "bu hafta",
+        "inWeeks": "{{count}} hafta içinde",
+        "inMonths": "{{count}} ay içinde",
+        "fromStart": "başlangıçtan itibaren",
+        "allTime": "her zaman",
+        "vsMonth": "vs {{month}}",
+        "vsMonthYear": "vs {{month}} '{{year}}"
+      }
     }
   },
   "import": {
