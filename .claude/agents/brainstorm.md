@@ -179,10 +179,15 @@ Then immediately proceed to SAVE.
 
 Write the complete document (plan + stories) to `.claude/brainstorming/[featureName].md` where `featureName` is a short kebab-case name derived from the feature (e.g., `streak-tracking`, `offline-mode`, `answer-review`).
 
-Confirm to the developer:
+Confirm to the developer with the exact command to run next. Replace `[featureName]` with the actual file name you used:
 
 > Plan and stories saved to `.claude/brainstorming/[featureName].md`.
-> Point `/orchestrator` to this file to start implementation.
+>
+> To start implementation, run:
+>
+> ```
+> /orchestrate .claude/brainstorming/[featureName].md
+> ```
 
 ---
 
