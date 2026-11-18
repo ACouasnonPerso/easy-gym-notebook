@@ -19,7 +19,47 @@
 		C5C1B72E2F77C9550097BA8D /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = C5C1B72D2F77C9550097BA8D /* FirebaseAppCheck */; };
 		C5C1B7302F77C9550097BA8D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C5C1B72F2F77C9550097BA8D /* FirebaseFirestore */; };
 		C5C1B7322F77C9AA0097BA8D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5C1B7312F77C9AA0097BA8D /* GoogleService-Info.plist */; };
+		EA6A7C000000000000000002 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000001 /* MainViewController.swift */; };
+		EA6A7C000000000000000004 /* WatchConnectivityPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000003 /* WatchConnectivityPlugin.swift */; };
+		EA6A7C000000000000000006 /* WatchSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000005 /* WatchSessionManager.swift */; };
+		EA6A7C000000000000000008 /* EasyGymWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000007 /* EasyGymWatchApp.swift */; };
+		EA6A7C00000000000000000A /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000009 /* RootView.swift */; };
+		EA6A7C00000000000000000C /* SessionViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C00000000000000000B /* SessionViews.swift */; };
+		EA6A7C00000000000000000E /* ExerciseHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C00000000000000000D /* ExerciseHomeView.swift */; };
+		EA6A7C000000000000000010 /* ChronoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C00000000000000000F /* ChronoView.swift */; };
+		EA6A7C000000000000000012 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000011 /* RatingView.swift */; };
+		EA6A7C000000000000000014 /* WatchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000013 /* WatchStore.swift */; };
+		EA6A7C000000000000000016 /* ChronoEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000015 /* ChronoEngine.swift */; };
+		EA6A7C000000000000000018 /* WatchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000017 /* WatchModels.swift */; };
+		EA6A7C00000000000000001A /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000019 /* Labels.swift */; };
+		EA6A7C00000000000000001C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C00000000000000001B /* Theme.swift */; };
+		EA6A7C00000000000000001E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA6A7C00000000000000001D /* Assets.xcassets */; };
+		EA6A7C000000000000000021 /* EasyGymWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000020 /* EasyGymWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EA6A7C000000000000000027 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 504EC2FC1FED79650016851F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA6A7C000000000000000022;
+			remoteInfo = EasyGymWatch;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		EA6A7C000000000000000026 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				EA6A7C000000000000000021 /* EasyGymWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
@@ -33,6 +73,22 @@
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		C5C1B7312F77C9AA0097BA8D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		EA6A7C000000000000000001 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000003 /* WatchConnectivityPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityPlugin.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000005 /* WatchSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSessionManager.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000007 /* EasyGymWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyGymWatchApp.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000009 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		EA6A7C00000000000000000B /* SessionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViews.swift; sourceTree = "<group>"; };
+		EA6A7C00000000000000000D /* ExerciseHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseHomeView.swift; sourceTree = "<group>"; };
+		EA6A7C00000000000000000F /* ChronoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronoView.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000011 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000013 /* WatchStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStore.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000015 /* ChronoEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronoEngine.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000017 /* WatchModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchModels.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000019 /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
+		EA6A7C00000000000000001B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		EA6A7C00000000000000001D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EA6A7C000000000000000020 /* EasyGymWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasyGymWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +103,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EA6A7C000000000000000024 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -56,6 +119,7 @@
 				C5C1B7312F77C9AA0097BA8D /* GoogleService-Info.plist */,
 				958DCC722DB07C7200EA8C5F /* debug.xcconfig */,
 				504EC3061FED79650016851F /* App */,
+				EA6A7C00000000000000001F /* EasyGymWatch */,
 				504EC3051FED79650016851F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				504EC3041FED79650016851F /* App.app */,
+				EA6A7C000000000000000020 /* EasyGymWatch.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,6 +138,9 @@
 			children = (
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
+				EA6A7C000000000000000001 /* MainViewController.swift */,
+				EA6A7C000000000000000003 /* WatchConnectivityPlugin.swift */,
+				EA6A7C000000000000000005 /* WatchSessionManager.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
@@ -81,6 +149,25 @@
 				50B271D01FEDC1A000F3C39B /* public */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		EA6A7C00000000000000001F /* EasyGymWatch */ = {
+			isa = PBXGroup;
+			children = (
+				EA6A7C000000000000000007 /* EasyGymWatchApp.swift */,
+				EA6A7C000000000000000009 /* RootView.swift */,
+				EA6A7C00000000000000000B /* SessionViews.swift */,
+				EA6A7C00000000000000000D /* ExerciseHomeView.swift */,
+				EA6A7C00000000000000000F /* ChronoView.swift */,
+				EA6A7C000000000000000011 /* RatingView.swift */,
+				EA6A7C000000000000000013 /* WatchStore.swift */,
+				EA6A7C000000000000000015 /* ChronoEngine.swift */,
+				EA6A7C000000000000000017 /* WatchModels.swift */,
+				EA6A7C000000000000000019 /* Labels.swift */,
+				EA6A7C00000000000000001B /* Theme.swift */,
+				EA6A7C00000000000000001D /* Assets.xcassets */,
+			);
+			path = EasyGymWatch;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -93,10 +180,12 @@
 				504EC3001FED79650016851F /* Sources */,
 				504EC3011FED79650016851F /* Frameworks */,
 				504EC3021FED79650016851F /* Resources */,
+				EA6A7C000000000000000026 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				EA6A7C000000000000000028 /* PBXTargetDependency */,
 			);
 			name = App;
 			packageProductDependencies = (
@@ -107,6 +196,23 @@
 			);
 			productName = App;
 			productReference = 504EC3041FED79650016851F /* App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EA6A7C000000000000000022 /* EasyGymWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA6A7C000000000000000029 /* Build configuration list for PBXNativeTarget "EasyGymWatch" */;
+			buildPhases = (
+				EA6A7C000000000000000023 /* Sources */,
+				EA6A7C000000000000000024 /* Frameworks */,
+				EA6A7C000000000000000025 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EasyGymWatch;
+			productName = EasyGymWatch;
+			productReference = EA6A7C000000000000000020 /* EasyGymWatch.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -122,6 +228,9 @@
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1100;
 						ProvisioningStyle = Automatic;
+					};
+					EA6A7C000000000000000022 = {
+						CreatedOnToolsVersion = 16.0;
 					};
 				};
 			};
@@ -143,6 +252,7 @@
 			projectRoot = "";
 			targets = (
 				504EC3031FED79650016851F /* App */,
+				EA6A7C000000000000000022 /* EasyGymWatch */,
 			);
 		};
 /* End PBXProject section */
@@ -162,6 +272,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EA6A7C000000000000000025 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA6A7C00000000000000001E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -170,10 +288,39 @@
 			buildActionMask = 2147483647;
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
+				EA6A7C000000000000000002 /* MainViewController.swift in Sources */,
+				EA6A7C000000000000000004 /* WatchConnectivityPlugin.swift in Sources */,
+				EA6A7C000000000000000006 /* WatchSessionManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA6A7C000000000000000023 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA6A7C000000000000000008 /* EasyGymWatchApp.swift in Sources */,
+				EA6A7C00000000000000000A /* RootView.swift in Sources */,
+				EA6A7C00000000000000000C /* SessionViews.swift in Sources */,
+				EA6A7C00000000000000000E /* ExerciseHomeView.swift in Sources */,
+				EA6A7C000000000000000010 /* ChronoView.swift in Sources */,
+				EA6A7C000000000000000012 /* RatingView.swift in Sources */,
+				EA6A7C000000000000000014 /* WatchStore.swift in Sources */,
+				EA6A7C000000000000000016 /* ChronoEngine.swift in Sources */,
+				EA6A7C000000000000000018 /* WatchModels.swift in Sources */,
+				EA6A7C00000000000000001A /* Labels.swift in Sources */,
+				EA6A7C00000000000000001C /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EA6A7C000000000000000028 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA6A7C000000000000000022 /* EasyGymWatch */;
+			targetProxy = EA6A7C000000000000000027 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		504EC30B1FED79650016851F /* Main.storyboard */ = {
@@ -350,6 +497,70 @@
 			};
 			name = Release;
 		};
+		EA6A7C00000000000000002A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_TEAM = R55RG26LAD;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Easy Gym";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = easy.gym.notebook;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.4;
+				PRODUCT_BUNDLE_IDENTIFIER = easy.gym.notebook.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		EA6A7C00000000000000002B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_TEAM = R55RG26LAD;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Easy Gym";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = easy.gym.notebook;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.4;
+				PRODUCT_BUNDLE_IDENTIFIER = easy.gym.notebook.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -367,6 +578,15 @@
 			buildConfigurations = (
 				504EC3171FED79650016851F /* Debug */,
 				504EC3181FED79650016851F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EA6A7C000000000000000029 /* Build configuration list for PBXNativeTarget "EasyGymWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA6A7C00000000000000002A /* Debug */,
+				EA6A7C00000000000000002B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

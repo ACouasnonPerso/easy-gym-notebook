@@ -9,6 +9,7 @@ import { ActiveLang } from "./core_logic/language/language.service";
 import { SessionChronoService } from "./core_logic/chrono/session-chrono.service";
 import { SessionService } from "./core_logic/session/session.service";
 import { ExercisePhotoService } from "./core_logic/exercise-photo/exercise-photo.service";
+import { StartWatchSyncUseCase } from "./primary_ports/watch/start-watch-sync.usecase";
 
 @Component({
 	selector: "app-root",
@@ -24,9 +25,11 @@ export class AppComponent {
 	private readonly sessionService = inject(SessionService);
 	private readonly sessionChronoService = inject(SessionChronoService);
 	private readonly exercisePhotoService = inject(ExercisePhotoService);
+	private readonly startWatchSyncUseCase = inject(StartWatchSyncUseCase);
 
 	constructor() {
 		this.exercisePhotoService.loadAll();
+		this.startWatchSyncUseCase.execute();
 		this.translate.addLangs([
 			"fr",
 			"en",
@@ -107,6 +110,8 @@ export class AppComponent {
 	onVisibilityChange(): void {
 		if (document.hidden) {
 			this.saveCurrentSessionDuration();
+		} else {
+			this.startWatchSyncUseCase.onAppVisible();
 		}
 	}
 

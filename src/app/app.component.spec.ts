@@ -9,6 +9,7 @@ import { TranslateLoader, TranslateModule, TranslateService, TranslationObject }
 import { Observable, of } from "rxjs";
 import { SESSION_REPOSITORY } from "./secondary_ports/session/session.repository.interface";
 import { EXERCISE_REPOSITORY } from "./secondary_ports/exercise/exercise.repository.interface";
+import { StartWatchSyncUseCase } from "./primary_ports/watch/start-watch-sync.usecase";
 
 class FakeTranslateLoader implements TranslateLoader {
 	getTranslation(_lang: string): Observable<TranslationObject> {
@@ -51,6 +52,10 @@ async function setup(initialUrl: string) {
 			]),
 			{ provide: CreateSessionUseCase, useValue: createCreateSessionSpy() },
 			{ provide: SessionDetailUiService, useValue: createUiServiceStub() },
+			{
+				provide: StartWatchSyncUseCase,
+				useValue: { execute: jasmine.createSpy("execute"), onAppVisible: jasmine.createSpy("onAppVisible") },
+			},
 			{
 				provide: SESSION_REPOSITORY,
 				useValue: {
