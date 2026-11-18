@@ -88,6 +88,11 @@
   "session": {
     "endConfirm": "セッションを終了しますか？"
   },
+  "sessionTemplates": {
+    "title": "過去のセッションから始める",
+    "times": "{{count}}回実施",
+    "other": "その他"
+  },
   "statsExercise": {
     "empty": "このエクササイズのデータがありません",
     "volumeFormula": "= 重量 x 回数 x セット",

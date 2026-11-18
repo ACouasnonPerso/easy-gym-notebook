@@ -88,6 +88,11 @@
   "session": {
     "endConfirm": "Завершить тренировку?"
   },
+  "sessionTemplates": {
+    "title": "Повторить прошлую тренировку",
+    "times": "Выполнено {{count}} раз",
+    "other": "Другое"
+  },
   "statsExercise": {
     "empty": "Нет данных для этого упражнения",
     "volumeFormula": "= Вес x Повт x Подходы",

@@ -88,6 +88,11 @@
   "session": {
     "endConfirm": "Terminer la séance ?"
   },
+  "sessionTemplates": {
+    "title": "Reprendre une séance déjà faite",
+    "times": "Faite {{count}} fois",
+    "other": "Autre"
+  },
   "statsExercise": {
     "empty": "Aucune donnée pour cet exercice",
     "volumeFormula": "= Poids x Rép x Séries",

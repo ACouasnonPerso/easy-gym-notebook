@@ -84,6 +84,11 @@
   "session": {
     "endConfirm": "สิ้นสุดเซสชัน?"
   },
+  "sessionTemplates": {
+    "title": "เริ่มจากเซสชันก่อนหน้า",
+    "times": "ทำแล้ว {{count}} ครั้ง",
+    "other": "อื่นๆ"
+  },
   "statsExercise": {
     "empty": "ไม่มีข้อมูลสำหรับการออกกำลังกายนี้",
     "volumeFormula": "= น้ำหนัก x ครั้ง x เซ็ต",

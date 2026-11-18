@@ -88,6 +88,11 @@
   "session": {
     "endConfirm": "Seansı bitir?"
   },
+  "sessionTemplates": {
+    "title": "Önceki bir antrenmanı tekrarla",
+    "times": "{{count}} kez yapıldı",
+    "other": "Diğer"
+  },
   "statsExercise": {
     "empty": "Bu egzersiz için veri yok",
     "volumeFormula": "= Ağırlık x Tekrar x Set",

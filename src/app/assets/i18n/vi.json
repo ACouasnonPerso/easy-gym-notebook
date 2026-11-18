@@ -84,6 +84,11 @@
   "session": {
     "endConfirm": "Kết thúc buổi tập?"
   },
+  "sessionTemplates": {
+    "title": "Bắt đầu từ buổi tập trước",
+    "times": "Đã tập {{count}} lần",
+    "other": "Khác"
+  },
   "statsExercise": {
     "empty": "Không có dữ liệu cho bài tập này",
     "volumeFormula": "= Tạ x Lần x Hiệp",

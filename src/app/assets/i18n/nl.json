@@ -88,6 +88,11 @@
   "session": {
     "endConfirm": "De sessie beëindigen?"
   },
+  "sessionTemplates": {
+    "title": "Een eerdere sessie herhalen",
+    "times": "{{count}} keer gedaan",
+    "other": "Overig"
+  },
   "statsExercise": {
     "empty": "Geen gegevens voor deze oefening",
     "volumeFormula": "= Gewicht x Herh x Sets",

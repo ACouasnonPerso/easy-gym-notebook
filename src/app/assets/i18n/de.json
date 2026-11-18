@@ -88,6 +88,11 @@
   "session": {
     "endConfirm": "Einheit beenden?"
   },
+  "sessionTemplates": {
+    "title": "Eine frühere Einheit wiederholen",
+    "times": "{{count}} Mal gemacht",
+    "other": "Andere"
+  },
   "statsExercise": {
     "empty": "Keine Daten für diese Übung",
     "volumeFormula": "= Gewicht x Wdh x Sätze",

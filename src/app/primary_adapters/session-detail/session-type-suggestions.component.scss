@@ -1,0 +1,129 @@
+.suggestions {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-top: 6px;
+}
+
+.suggestions-title {
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 9px;
+	font-weight: 600;
+	color: var(--muted);
+	letter-spacing: 1.2px;
+	text-transform: uppercase;
+}
+
+.suggestions-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.back-btn {
+	width: 32px;
+	height: 32px;
+	border-radius: 10px;
+	border: 1px solid var(--border);
+	background: var(--card2);
+	color: var(--text);
+	font-size: 20px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.type-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.type-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	border-radius: 20px;
+	border: 1px solid var(--border);
+	background: var(--card2);
+	color: var(--text);
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 13px;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.type-count {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	font-weight: 500;
+	opacity: 0.7;
+}
+
+.template-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.template-card {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
+	padding: 14px 16px;
+	border-radius: 16px;
+	border: 1px solid var(--border);
+	background: var(--card);
+	text-align: left;
+	cursor: pointer;
+
+	&:active {
+		border-color: var(--orange);
+		background: var(--orange-dim);
+	}
+
+	&:disabled {
+		opacity: 0.6;
+	}
+}
+
+.template-exercises {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.template-exercise {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	font-family: "DM Sans", sans-serif;
+	font-size: 14px;
+	color: var(--text);
+}
+
+.template-sets {
+	min-width: 26px;
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--orange);
+}
+
+.template-name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.template-meta {
+	display: flex;
+	justify-content: space-between;
+	font-family: "DM Sans", sans-serif;
+	font-size: 11px;
+	color: var(--muted);
+}

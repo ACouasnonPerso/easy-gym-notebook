@@ -88,6 +88,11 @@
   "session": {
     "endConfirm": "Avsluta passet?"
   },
+  "sessionTemplates": {
+    "title": "Upprepa ett tidigare pass",
+    "times": "Gjort {{count}} gånger",
+    "other": "Övrigt"
+  },
   "statsExercise": {
     "empty": "Inga data för denna övning",
     "volumeFormula": "= Vikt x Rep x Set",

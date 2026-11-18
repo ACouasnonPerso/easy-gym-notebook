@@ -5,6 +5,7 @@
 			<span class="exercise-empty-text">{{ "exercise.empty" | translate }}</span>
 			<span class="exercise-empty-hint">{{ "exercise.addHint" | translate }}</span>
 		</div>
+		<app-session-type-suggestions [sessionId]="sessionId()" />
 	}
 	@for (exercise of exercises(); track exercise.id) {
 		<app-exercise-card

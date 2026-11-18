@@ -88,6 +88,11 @@
   "session": {
     "endConfirm": "إنهاء الجلسة؟"
   },
+  "sessionTemplates": {
+    "title": "كرر حصة سابقة",
+    "times": "تمت {{count}} مرات",
+    "other": "أخرى"
+  },
   "statsExercise": {
     "empty": "لا توجد بيانات لهذا التمرين",
     "volumeFormula": "= الوزن × التكرارات × المجموعات",

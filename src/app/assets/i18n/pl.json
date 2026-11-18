@@ -88,6 +88,11 @@
   "session": {
     "endConfirm": "Zakończyć sesję?"
   },
+  "sessionTemplates": {
+    "title": "Powtórz wcześniejszy trening",
+    "times": "Wykonano {{count}} razy",
+    "other": "Inne"
+  },
   "statsExercise": {
     "empty": "Brak danych dla tego ćwiczenia",
     "volumeFormula": "= Ciężar x Powtórzenia x Serie",

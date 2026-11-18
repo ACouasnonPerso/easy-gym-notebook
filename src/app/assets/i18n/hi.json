@@ -88,6 +88,11 @@
   "session": {
     "endConfirm": "सत्र समाप्त करें?"
   },
+  "sessionTemplates": {
+    "title": "पिछला सत्र दोहराएं",
+    "times": "{{count}} बार किया",
+    "other": "अन्य"
+  },
   "statsExercise": {
     "empty": "इस व्यायाम के लिए कोई डेटा नहीं",
     "volumeFormula": "= भार x दोहराव x सेट",
