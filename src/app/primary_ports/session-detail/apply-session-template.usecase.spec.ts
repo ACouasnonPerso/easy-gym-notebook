@@ -1,11 +1,9 @@
 import { TestBed } from "@angular/core/testing";
-import { signal } from "@angular/core";
 import { ApplySessionTemplateUseCase } from "./apply-session-template.usecase";
 import { ExerciseService } from "../../core_logic/session-detail/exercise.service";
-import { SessionService } from "../../core_logic/session/session.service";
-import { AnalyticsService } from "../../core_logic/analytics/analytics.service";
+import { SessionExerciseEffectsService } from "../../core_logic/session-detail/session-exercise-effects.service";
 import { EXERCISE_REPOSITORY } from "../../secondary_ports/exercise/exercise.repository.interface";
-import { Exercise, MuscleGroup, Session } from "../../core_logic/shared/models";
+import { Exercise, MuscleGroup } from "../../core_logic/shared/models";
 
 function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 	return {
@@ -31,72 +29,68 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
 }
 
 describe("ApplySessionTemplateUseCase", () => {
-	let added: Exercise[];
-	let currentSession: ReturnType<typeof signal<Session | null>>;
-	let updateCurrentSession: jasmine.Spy;
-	let trackSessionStarted: jasmine.Spy;
+	let sourceExercises: Exercise[];
+	let currentExercises: Exercise[];
+	let addMany: jasmine.Spy;
+	let afterExercisesAdded: jasmine.Spy;
 
 	beforeEach(() => {
-		added = [];
-		currentSession = signal<Session | null>({
-			id: "target",
-			date: new Date(),
-			status: "active",
-			durationSeconds: 0,
-			muscleGroup: null,
-			exercises: [],
-		});
-		updateCurrentSession = jasmine.createSpy("updateCurrentSession").and.callFake(async (changes: Partial<Session>) => {
-			currentSession.set({ ...currentSession()!, ...changes });
-		});
-		trackSessionStarted = jasmine.createSpy("trackSessionStarted");
+		sourceExercises = [
+			makeExercise({ id: "a", name: "Biceps curl" }),
+			makeExercise({ id: "b", name: "Leg curl", status: "cancelled" }),
+			makeExercise({ id: "c", name: "Abandoned", status: "pending" }),
+			makeExercise({ id: "d", name: "Triceps poulie", muscleGroup: MuscleGroup.Triceps }),
+		];
+		currentExercises = [];
+		addMany = jasmine.createSpy("addMany").and.resolveTo();
+		afterExercisesAdded = jasmine.createSpy("afterExercisesAdded").and.resolveTo();
 
 		TestBed.configureTestingModule({
 			providers: [
-				{
-					provide: EXERCISE_REPOSITORY,
-					useValue: {
-						getBySessionId: async () => [
-							makeExercise({ id: "a", name: "Biceps curl" }),
-							makeExercise({ id: "b", name: "Leg curl", status: "cancelled" }),
-							makeExercise({ id: "c", name: "Triceps poulie", muscleGroup: MuscleGroup.Triceps, status: "pending" }),
-						],
-					},
-				},
-				{ provide: ExerciseService, useValue: { add: async (e: Exercise) => void added.push(e) } },
-				{ provide: SessionService, useValue: { currentSession, updateCurrentSession } },
-				{ provide: AnalyticsService, useValue: { trackSessionStarted } },
+				{ provide: EXERCISE_REPOSITORY, useValue: { getBySessionId: async () => sourceExercises } },
+				{ provide: ExerciseService, useValue: { addMany, exercises: () => currentExercises } },
+				{ provide: SessionExerciseEffectsService, useValue: { afterExercisesAdded } },
 			],
 		});
 	});
 
-	it("copies the non cancelled exercises of the source session as pending exercises of the target session", async () => {
+	it("copies only the validated exercises of the source session, in one batch, as pending exercises", async () => {
 		await TestBed.inject(ApplySessionTemplateUseCase).execute("target", "source");
 
+		expect(addMany).toHaveBeenCalledTimes(1);
+		const added: Exercise[] = addMany.calls.mostRecent().args[0];
 		expect(added.map((e) => e.name)).toEqual(["Biceps curl", "Triceps poulie"]);
 		for (const exercise of added) {
 			expect(exercise.sessionId).toBe("target");
 			expect(exercise.status).toBe("pending");
 			expect(exercise.rating).toBeNull();
 			expect(exercise.comment).toBeNull();
-			expect(["a", "c"]).not.toContain(exercise.id);
+			expect(["a", "d"]).not.toContain(exercise.id);
 		}
 		expect(added[0].sets).toBe(5);
 		expect(added[0].weightKg).toBe(20);
 	});
 
-	it("sets the session muscle group from the first exercise when it has none", async () => {
+	it("applies the shared session effects to the copied exercises, telling whether the session was empty", async () => {
 		await TestBed.inject(ApplySessionTemplateUseCase).execute("target", "source");
 
-		expect(updateCurrentSession).toHaveBeenCalledWith({ muscleGroup: MuscleGroup.Biceps });
-		expect(trackSessionStarted).toHaveBeenCalledTimes(1);
+		expect(afterExercisesAdded).toHaveBeenCalledOnceWith(addMany.calls.mostRecent().args[0], true);
 	});
 
-	it("keeps the session muscle group when it already has one", async () => {
-		currentSession.set({ ...currentSession()!, muscleGroup: MuscleGroup.Chest });
+	it("tells the shared effects the session was not empty when it already has exercises", async () => {
+		currentExercises = [makeExercise({ id: "existing", sessionId: "target" })];
 
 		await TestBed.inject(ApplySessionTemplateUseCase).execute("target", "source");
 
-		expect(updateCurrentSession).not.toHaveBeenCalled();
+		expect(afterExercisesAdded.calls.mostRecent().args[1]).toBeFalse();
+	});
+
+	it("does nothing when the source session has no validated exercise", async () => {
+		sourceExercises = [makeExercise({ status: "pending" })];
+
+		await TestBed.inject(ApplySessionTemplateUseCase).execute("target", "source");
+
+		expect(addMany).not.toHaveBeenCalled();
+		expect(afterExercisesAdded).not.toHaveBeenCalled();
 	});
 });

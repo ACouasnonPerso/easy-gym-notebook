@@ -19,6 +19,12 @@ export class ExerciseService {
 		this._exercises.update((list) => [...list, exercise]);
 	}
 
+	async addMany(exercises: Exercise[]): Promise<void> {
+		if (exercises.length === 0) return;
+		await this.exerciseRepo.saveMany(exercises);
+		this._exercises.update((list) => [...list, ...exercises]);
+	}
+
 	async update(exerciseId: string, changes: Partial<Exercise>): Promise<void> {
 		const cached = this._exercises().find((e) => e.id === exerciseId);
 		const exercise = cached ?? (await this.exerciseRepo.getById(exerciseId));

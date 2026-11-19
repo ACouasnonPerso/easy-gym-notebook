@@ -1,7 +1,6 @@
-import { Component, ChangeDetectionStrategy, OnInit, computed, inject, input, signal } from "@angular/core";
+import { Component, ChangeDetectionStrategy, computed, effect, inject, input, signal } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { MuscleGroup } from "../../core_logic/shared/models";
 import { SessionTemplate, SessionType } from "../../core_logic/session-template/session-template.service";
 import { muscleGroupChipStyle } from "../../core_logic/shared/muscle-group-colors";
 import { HapticService } from "../../core_logic/shared/haptic.service";
@@ -17,7 +16,7 @@ import { ApplySessionTemplateUseCase } from "../../primary_ports/session-detail/
 	templateUrl: "./session-type-suggestions.component.html",
 	styleUrl: "./session-type-suggestions.component.scss",
 })
-export class SessionTypeSuggestionsComponent implements OnInit {
+export class SessionTypeSuggestionsComponent {
 	private readonly getSessionTypesUseCase = inject(GetSessionTypesUseCase);
 	private readonly applySessionTemplateUseCase = inject(ApplySessionTemplateUseCase);
 	private readonly translate = inject(TranslateService);
@@ -26,26 +25,34 @@ export class SessionTypeSuggestionsComponent implements OnInit {
 
 	readonly sessionId = input.required<string>();
 
-	readonly sessionTypes = this.getSessionTypesUseCase.sessionTypes;
+	readonly sessionTypes = signal<SessionType[]>([]);
 	readonly selectedTypeKey = signal<string | null>(null);
 	readonly applying = signal(false);
 
 	readonly selectedType = computed(() => this.sessionTypes().find((t) => t.key === this.selectedTypeKey()) ?? null);
 
-	ngOnInit(): void {
-		this.selectedTypeKey.set(null);
-		this.getSessionTypesUseCase.execute(this.sessionId());
+	constructor() {
+		effect((onCleanup) => {
+			const sessionId = this.sessionId();
+			let stale = false;
+			onCleanup(() => (stale = true));
+			this.sessionTypes.set([]);
+			this.selectedTypeKey.set(null);
+			this.getSessionTypesUseCase.execute(sessionId).then((types) => {
+				if (!stale) this.sessionTypes.set(types);
+			});
+		});
 	}
 
 	typeLabel(type: SessionType): string {
-		this.languageService.activeLang();
+		this.languageService.activeLang(); // re-render the labels when the language changes
 		if (type.muscleGroups.length > 0)
 			return type.muscleGroups.map((m) => this.translate.instant(`muscleGroups.${m}`)).join(" / ");
 		return this.translate.instant(type.isCardio ? "common.cardio" : "sessionTemplates.other");
 	}
 
 	typeStyle(type: SessionType): Record<string, string> {
-		return type.muscleGroups.length > 0 ? muscleGroupChipStyle(type.muscleGroups[0] as MuscleGroup) : {};
+		return type.muscleGroups.length > 0 ? muscleGroupChipStyle(type.muscleGroups[0]) : {};
 	}
 
 	dateLabel(template: SessionTemplate): string {

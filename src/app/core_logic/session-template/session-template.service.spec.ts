@@ -81,21 +81,33 @@ describe("SessionTemplateService", () => {
 		expect(types.map((t) => t.key)).toEqual(["Quads+Hamstrings", "Biceps", "Biceps+Triceps"]);
 	});
 
-	it("excludes the current session, empty sessions and cancelled exercises", () => {
+	it("only keeps validated exercises and ignores the current session and sessions with nothing done", () => {
 		const types = service.buildSessionTypes(
 			[
 				makeSession("current", "2026-11-18", [curl()]),
 				makeSession("empty", "2026-11-10", []),
 				makeSession("only-cancelled", "2026-11-09", [legCurl({ status: "cancelled" })]),
-				makeSession("past", "2026-11-01", [curl(), legCurl({ status: "cancelled" })]),
+				makeSession("abandoned", "2026-11-08", [legCurl({ status: "pending" }), pushdown({ status: "pending" })]),
+				makeSession("past", "2026-11-01", [curl(), legCurl({ status: "cancelled" }), pushdown({ status: "pending" })]),
 			],
 			"current"
 		);
 
 		expect(types.length).toBe(1);
 		expect(types[0].muscleGroups).toEqual([MuscleGroup.Biceps]);
+		expect(types[0].occurrences).toBe(1);
 		expect(types[0].templates[0].sourceSessionId).toBe("past");
-		expect(types[0].templates[0].exercises.length).toBe(1);
+		expect(types[0].templates[0].exercises.map((e) => e.name)).toEqual(["Biceps curl barre en V"]);
+	});
+
+	it("does not merge sessions where an exercise is done a different number of times", () => {
+		const types = service.buildSessionTypes([
+			makeSession("twice", "2026-11-01", [curl(), curl(), pushdown()]),
+			makeSession("once", "2026-11-02", [curl(), pushdown()]),
+		]);
+
+		expect(types[0].templates.map((t) => t.sourceSessionId)).toEqual(["once", "twice"]);
+		expect(types[0].templates.every((t) => t.occurrences === 1)).toBeTrue();
 	});
 
 	it("uses the number of pyramid sets and puts cardio-only sessions in a cardio type", () => {

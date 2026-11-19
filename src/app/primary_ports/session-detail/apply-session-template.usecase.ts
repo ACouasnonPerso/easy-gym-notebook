@@ -1,38 +1,23 @@
 import { Injectable, inject } from "@angular/core";
-import { Exercise } from "../../core_logic/shared/models";
 import { ExerciseService } from "../../core_logic/session-detail/exercise.service";
-import { SessionService } from "../../core_logic/session/session.service";
-import { AnalyticsService } from "../../core_logic/analytics/analytics.service";
+import { SessionExerciseEffectsService } from "../../core_logic/session-detail/session-exercise-effects.service";
+import { copyExercisesToSession } from "../../core_logic/session/copy-exercises";
 import { EXERCISE_REPOSITORY } from "../../secondary_ports/exercise/exercise.repository.interface";
 
 @Injectable({ providedIn: "root" })
 export class ApplySessionTemplateUseCase {
 	private readonly exerciseRepo = inject(EXERCISE_REPOSITORY);
 	private readonly exerciseService = inject(ExerciseService);
-	private readonly sessionService = inject(SessionService);
-	private readonly analyticsService = inject(AnalyticsService);
+	private readonly sessionExerciseEffects = inject(SessionExerciseEffectsService);
 
 	async execute(targetSessionId: string, sourceSessionId: string): Promise<void> {
 		const sourceExercises = await this.exerciseRepo.getBySessionId(sourceSessionId);
-		const copies: Exercise[] = sourceExercises
-			.filter((e) => e.status !== "cancelled")
-			.map((e) => ({
-				...e,
-				id: crypto.randomUUID(),
-				sessionId: targetSessionId,
-				status: "pending",
-				rating: null,
-				comment: null,
-			}));
+		const doneExercises = sourceExercises.filter((e) => e.status === "validated");
+		const copies = copyExercisesToSession(doneExercises, targetSessionId);
+		if (copies.length === 0) return;
 
-		for (const exercise of copies) await this.exerciseService.add(exercise);
-
-		const session = this.sessionService.currentSession();
-		const muscleGroup = copies.find((e) => !e.isCardio && e.muscleGroup !== null)?.muscleGroup ?? null;
-		if (session && session.id === targetSessionId && !session.muscleGroup && muscleGroup) {
-			await this.sessionService.updateCurrentSession({ muscleGroup });
-			const updated = this.sessionService.currentSession();
-			if (updated) this.analyticsService.trackSessionStarted(updated);
-		}
+		const sessionWasEmpty = this.exerciseService.exercises().length === 0;
+		await this.exerciseService.addMany(copies);
+		await this.sessionExerciseEffects.afterExercisesAdded(copies, sessionWasEmpty);
 	}
 }

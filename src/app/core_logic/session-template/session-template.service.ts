@@ -37,7 +37,7 @@ export class SessionTemplateService {
 
 		for (const session of sortedSessions) {
 			if (session.id === excludedSessionId) continue;
-			const exercises = session.exercises.filter((e) => e.status !== "cancelled");
+			const exercises = session.exercises.filter((e) => e.status === "validated");
 			if (exercises.length === 0) continue;
 
 			const muscleGroups = this.muscleGroupsOf(exercises);
@@ -89,7 +89,10 @@ export class SessionTemplateService {
 	}
 
 	private signatureOf(exercises: Exercise[]): string {
-		return [...new Set(exercises.map((e) => this.normalize(e.name)))].sort().join("|");
+		return exercises
+			.map((e) => this.normalize(e.name))
+			.sort()
+			.join("|");
 	}
 
 	private normalize(text: string): string {
