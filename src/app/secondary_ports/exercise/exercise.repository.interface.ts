@@ -6,6 +6,7 @@ export interface IExerciseRepository {
 	getBySessionId(sessionId: string): Promise<Exercise[]>;
 	getById(id: string): Promise<Exercise | null>;
 	save(exercise: Exercise): Promise<void>;
+	saveMany(exercises: Exercise[]): Promise<void>;
 	delete(id: string): Promise<void>;
 }
 

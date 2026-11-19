@@ -22,7 +22,11 @@ function setupI18n(): void {
 	translate.use("fr");
 }
 
-@Component({ selector: "app-exercise-card", standalone: true, template: '<div class="card" [attr.data-expanded]="isExpanded()"></div>' })
+@Component({
+	selector: "app-exercise-card",
+	standalone: true,
+	template: '<div class="card" [attr.data-expanded]="isExpanded()"></div>',
+})
 class FakeExerciseCardComponent {
 	readonly exercise = input.required<Exercise>();
 	readonly isExpanded = input<boolean>(false);
@@ -43,6 +47,11 @@ class FakeAddExerciseFormComponent {
 	readonly sessionId = input.required<string>();
 	readonly exerciseAdded = output();
 	readonly cancelled = output();
+}
+
+@Component({ selector: "app-session-type-suggestions", standalone: true, template: "" })
+class FakeSessionTypeSuggestionsComponent {
+	readonly sessionId = input<string>();
 }
 
 @Component({ selector: "app-confirm-dialog", standalone: true, template: "" })
@@ -88,7 +97,13 @@ async function setup(expandedExerciseIdSignal = signal<string | null>(null)) {
 	})
 		.overrideComponent(SessionExercisesListComponent, {
 			set: {
-				imports: [FakeExerciseCardComponent, FakeAddExerciseFormComponent, FakeConfirmDialogComponent, TranslateModule],
+				imports: [
+					FakeExerciseCardComponent,
+					FakeAddExerciseFormComponent,
+					FakeConfirmDialogComponent,
+					FakeSessionTypeSuggestionsComponent,
+					TranslateModule,
+				],
 			},
 		})
 		.compileComponents();
