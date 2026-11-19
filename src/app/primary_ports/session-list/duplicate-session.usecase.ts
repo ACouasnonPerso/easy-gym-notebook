@@ -1,6 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { Router } from "@angular/router";
-import { Session, Exercise } from "../../core_logic/shared/models";
+import { Session } from "../../core_logic/shared/models";
+import { copyExercisesToSession } from "../../core_logic/session/copy-exercises";
 import { SessionService } from "../../core_logic/session/session.service";
 import { SESSION_REPOSITORY } from "../../secondary_ports/session/session.repository.interface";
 import { EXERCISE_REPOSITORY } from "../../secondary_ports/exercise/exercise.repository.interface";
@@ -31,15 +32,10 @@ export class DuplicateSessionUseCase {
 			exercises: [],
 		};
 
-		const copiedExercises: Exercise[] = sourceExercises.map((e) => ({
-			...e,
-			id: crypto.randomUUID(),
-			sessionId: newSession.id,
-			status: "pending",
-		}));
+		const copiedExercises = copyExercisesToSession(sourceExercises, newSession.id);
 
 		await this.sessionRepo.save(newSession);
-		await Promise.all(copiedExercises.map((e) => this.exerciseRepo.save(e)));
+		await this.exerciseRepo.saveMany(copiedExercises);
 		await this.sessionService.loadAll();
 		this.analyticsService.trackSessionStarted(newSession);
 		this.sessionChronoService.start();

@@ -1,0 +1,44 @@
+@if (sessionTypes().length > 0) {
+	<section class="suggestions">
+		@if (selectedType(); as type) {
+			<div class="suggestions-header">
+				<button type="button" class="back-btn" (click)="backToTypes()" [attr.aria-label]="'common.back' | translate">
+					‹
+				</button>
+				<span class="type-chip" [style]="typeStyle(type)">{{ typeLabel(type) }}</span>
+			</div>
+			<div class="template-list">
+				@for (template of type.templates; track template.sourceSessionId) {
+					<button type="button" class="template-card" [disabled]="applying()" (click)="applyTemplate(template)">
+						<ul class="template-exercises">
+							@for (exercise of template.exercises; track $index) {
+								<li class="template-exercise">
+									@if (!exercise.isCardio && exercise.sets > 0) {
+										<span class="template-sets">{{ exercise.sets }}x</span>
+									}
+									<span class="template-name">{{ exercise.name }}</span>
+								</li>
+							}
+						</ul>
+						<div class="template-meta">
+							<span>{{ dateLabel(template) }}</span>
+							@if (template.occurrences > 1) {
+								<span>{{ "sessionTemplates.times" | translate: { count: template.occurrences } }}</span>
+							}
+						</div>
+					</button>
+				}
+			</div>
+		} @else {
+			<span class="suggestions-title">{{ "sessionTemplates.title" | translate }}</span>
+			<div class="type-list">
+				@for (type of sessionTypes(); track type.key) {
+					<button type="button" class="type-chip" [style]="typeStyle(type)" (click)="selectType(type)">
+						{{ typeLabel(type) }}
+						<span class="type-count">{{ type.occurrences }}</span>
+					</button>
+				}
+			</div>
+		}
+	</section>
+}

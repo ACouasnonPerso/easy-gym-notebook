@@ -25,11 +25,17 @@ export class ExerciseRepository implements IExerciseRepository {
 	}
 
 	async save(exercise: Exercise): Promise<void> {
+		await this.saveMany([exercise]);
+	}
+
+	async saveMany(exercises: Exercise[]): Promise<void> {
 		const all = this.readFromStorage();
-		const index = all.findIndex((e) => e.id === exercise.id);
-		const raw = this.mapper.toStorage(exercise);
-		if (index === -1) all.push(raw);
-		else all[index] = raw;
+		for (const exercise of exercises) {
+			const index = all.findIndex((e) => e.id === exercise.id);
+			const raw = this.mapper.toStorage(exercise);
+			if (index === -1) all.push(raw);
+			else all[index] = raw;
+		}
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
 	}
 
