@@ -117,7 +117,7 @@ export class WatchSyncService {
 			return true;
 		}
 
-		if (exercise.status === "validated") return false;
+		if (exercise.status !== "pending") return false;
 		await this.exerciseService.update(exercise.id, { status: "validated" });
 		this.trackValidation(action.sessionId);
 		return true;
@@ -134,7 +134,11 @@ export class WatchSyncService {
 	}
 
 	private async pushSnapshot(): Promise<void> {
-		const session = findWatchActiveSession(await this.sessionRepo.getAll(), new Date());
+		const session = findWatchActiveSession(
+			await this.sessionRepo.getAll(),
+			new Date(),
+			this.sessionService.currentSession()?.id ?? null
+		);
 		const exercises = session ? await this.exerciseRepo.getBySessionId(session.id) : [];
 		const labels = await this.loadLabels();
 

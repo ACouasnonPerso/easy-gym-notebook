@@ -47,6 +47,10 @@ final class WatchSessionManager: NSObject {
               session.isWatchAppInstalled,
               let json = defaults.string(forKey: lastSnapshotKey) else { return }
 
+        if let sessionId = Self.sessionId(of: json) {
+            WatchWorkoutLauncher.shared.launchIfNeeded(sessionId: sessionId)
+        }
+
         let payload: [String: Any] = ["snapshot": json]
         do {
             try session.updateApplicationContext(payload)
@@ -89,6 +93,13 @@ final class WatchSessionManager: NSObject {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: Self.actionsAvailableNotification, object: nil)
         }
+    }
+
+    private static func sessionId(of snapshotJson: String) -> String? {
+        guard let data = snapshotJson.data(using: .utf8),
+              let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let session = object["session"] as? [String: Any] else { return nil }
+        return session["id"] as? String
     }
 
     private static func actionId(of raw: String) -> String? {

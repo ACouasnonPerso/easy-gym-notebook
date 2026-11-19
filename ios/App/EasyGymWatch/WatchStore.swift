@@ -115,10 +115,12 @@ final class WatchStore: NSObject, ObservableObject {
     /// Re-sends pending actions that are no longer queued (e.g. the app was killed).
     private func resendLostActions() {
         guard WCSession.isSupported(), WCSession.default.activationState == .activated else { return }
-        let queued = Set(WCSession.default.outstandingUserInfoTransfers.compactMap { $0.userInfo["action"] as? String })
-        for action in pendingActions {
-            guard let json = action.jsonString(), !queued.contains(json) else { continue }
-            WCSession.default.transferUserInfo(["action": json])
+        let queuedIds = Set(WCSession.default.outstandingUserInfoTransfers.compactMap { transfer -> String? in
+            guard let json = transfer.userInfo["action"] as? String, let data = json.data(using: .utf8) else { return nil }
+            return (try? JSONDecoder().decode(WatchAction.self, from: data))?.id
+        })
+        for action in pendingActions where !queuedIds.contains(action.id) {
+            transfer(action)
         }
     }
 

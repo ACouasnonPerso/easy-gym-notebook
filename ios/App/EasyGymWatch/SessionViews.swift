@@ -38,7 +38,7 @@ struct DetectionView: View {
                 Text(store.session?.title ?? "")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(Theme.orange)
-                Text("\(store.text("startedOnIphone")) · \(store.exercises.count) \(store.text("exercisesCount"))")
+                Text("\(store.text("startedOnIphone")) · \(store.exercises.count) \(store.text(store.exercises.count == 1 ? "exerciseCountOne" : "exercisesCount"))")
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.sub)
             }
@@ -130,6 +130,7 @@ private struct ExerciseRow: View {
 
 private struct SessionCompleteCard: View {
     @EnvironmentObject private var store: WatchStore
+    @EnvironmentObject private var workout: WorkoutManager
 
     var body: some View {
         VStack(spacing: 4) {
@@ -144,6 +145,13 @@ private struct SessionCompleteCard: View {
                 .font(.system(size: 12))
                 .foregroundStyle(Theme.sub)
                 .multilineTextAlignment(.center)
+            if workout.isRunning {
+                Button(store.text("endWorkout")) {
+                    workout.endByUser()
+                }
+                .buttonStyle(FilledCapsuleStyle(color: Theme.red, foreground: Theme.text))
+                .padding(.top, 4)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 8)

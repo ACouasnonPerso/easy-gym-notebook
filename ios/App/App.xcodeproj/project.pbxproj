@@ -35,6 +35,8 @@
 		EA6A7C00000000000000001C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C00000000000000001B /* Theme.swift */; };
 		EA6A7C00000000000000001E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA6A7C00000000000000001D /* Assets.xcassets */; };
 		EA6A7C000000000000000021 /* EasyGymWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000020 /* EasyGymWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EA6A7C000000000000000102 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000101 /* WorkoutManager.swift */; };
+		EA6A7C000000000000000104 /* WatchWorkoutLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6A7C000000000000000103 /* WatchWorkoutLauncher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +91,11 @@
 		EA6A7C00000000000000001B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		EA6A7C00000000000000001D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EA6A7C000000000000000020 /* EasyGymWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasyGymWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA6A7C000000000000000101 /* WorkoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000103 /* WatchWorkoutLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWorkoutLauncher.swift; sourceTree = "<group>"; };
+		EA6A7C000000000000000105 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
+		EA6A7C000000000000000106 /* EasyGymWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EasyGymWatch.entitlements; sourceTree = "<group>"; };
+		EA6A7C000000000000000107 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +148,8 @@
 				EA6A7C000000000000000001 /* MainViewController.swift */,
 				EA6A7C000000000000000003 /* WatchConnectivityPlugin.swift */,
 				EA6A7C000000000000000005 /* WatchSessionManager.swift */,
+				EA6A7C000000000000000103 /* WatchWorkoutLauncher.swift */,
+				EA6A7C000000000000000105 /* App.entitlements */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
@@ -165,6 +174,9 @@
 				EA6A7C000000000000000017 /* WatchModels.swift */,
 				EA6A7C000000000000000019 /* Labels.swift */,
 				EA6A7C00000000000000001B /* Theme.swift */,
+				EA6A7C000000000000000101 /* WorkoutManager.swift */,
+				EA6A7C000000000000000106 /* EasyGymWatch.entitlements */,
+				EA6A7C000000000000000107 /* Info.plist */,
 				EA6A7C00000000000000001D /* Assets.xcassets */,
 			);
 			path = EasyGymWatch;
@@ -291,6 +303,7 @@
 				EA6A7C000000000000000002 /* MainViewController.swift in Sources */,
 				EA6A7C000000000000000004 /* WatchConnectivityPlugin.swift in Sources */,
 				EA6A7C000000000000000006 /* WatchSessionManager.swift in Sources */,
+				EA6A7C000000000000000104 /* WatchWorkoutLauncher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +322,7 @@
 				EA6A7C000000000000000018 /* WatchModels.swift in Sources */,
 				EA6A7C00000000000000001A /* Labels.swift in Sources */,
 				EA6A7C00000000000000001C /* Theme.swift in Sources */,
+				EA6A7C000000000000000102 /* WorkoutManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,6 +469,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 958DCC722DB07C7200EA8C5F /* debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -478,6 +493,7 @@
 		504EC3181FED79650016851F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -502,12 +518,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = EasyGymWatch/EasyGymWatch.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = R55RG26LAD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EasyGymWatch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Easy Gym";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = easy.gym.notebook;
@@ -534,12 +552,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = EasyGymWatch/EasyGymWatch.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = R55RG26LAD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EasyGymWatch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Easy Gym";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = easy.gym.notebook;

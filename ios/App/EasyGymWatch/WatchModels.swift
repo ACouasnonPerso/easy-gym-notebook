@@ -39,6 +39,37 @@ struct WatchExercise: Codable, Equatable, Identifiable, Hashable {
     }
 }
 
+// Tolerant decoding: one odd number (null, decimal) must not drop the whole snapshot.
+extension WatchExercise {
+    enum CodingKeys: String, CodingKey {
+        case id, name, muscleLabel, muscleColor, sets, reps, loadLabel, isCardio, breakDurationSeconds, status, rating
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        name = (try? c.decode(String.self, forKey: .name)) ?? ""
+        muscleLabel = try? c.decodeIfPresent(String.self, forKey: .muscleLabel)
+        muscleColor = try? c.decodeIfPresent(String.self, forKey: .muscleColor)
+        sets = max(1, c.flexibleInt(.sets) ?? 1)
+        reps = c.flexibleInt(.reps) ?? 0
+        loadLabel = (try? c.decode(String.self, forKey: .loadLabel)) ?? ""
+        isCardio = (try? c.decode(Bool.self, forKey: .isCardio)) ?? false
+        breakDurationSeconds = c.flexibleInt(.breakDurationSeconds) ?? 90
+        status = (try? c.decode(String.self, forKey: .status)) ?? "pending"
+        rating = c.flexibleInt(.rating)
+    }
+}
+
+extension KeyedDecodingContainer {
+    /// Reads an integer sent as Int or Double; nil when missing, null or not a finite number.
+    func flexibleInt(_ key: Key) -> Int? {
+        if let value = try? decodeIfPresent(Int.self, forKey: key) { return value }
+        if let value = try? decodeIfPresent(Double.self, forKey: key), value.isFinite { return Int(value.rounded()) }
+        return nil
+    }
+}
+
 struct WatchRatingOption: Codable, Equatable, Identifiable {
     var value: Int
     var display: String

@@ -14,6 +14,7 @@ import {
 } from "../../secondary_ports/watch/watch.gateway.interface";
 import { ANALYTICS_REPOSITORY } from "../../secondary_ports/analytics/analytics.repository.interface";
 import { MassUnitService } from "../mass-unit/mass-unit.service";
+import { SessionService } from "../session/session.service";
 
 class FakeTranslateLoader implements TranslateLoader {
 	getTranslation(): Observable<TranslationObject> {
@@ -215,6 +216,21 @@ describe("WatchSyncService", () => {
 		await startAndSettle();
 		expect(exercises[0].status).toBe("validated");
 		expect(gateway.last.session?.exercises[0].status).toBe("validated");
+	});
+
+	it("does not validate an exercise cancelled on the phone", async () => {
+		exercises = [makeExercise({ status: "cancelled" })];
+		gateway.pending = [{ id: "a3", type: "validate", sessionId: "s1", exerciseId: "e1", at: "2026-11-18T18:01:00Z" }];
+		await startAndSettle();
+		expect(exercises[0].status).toBe("cancelled");
+		expect(gateway.acknowledged).toEqual(["a3"]);
+	});
+
+	it("pushes the session open on the phone even if its date is old", async () => {
+		sessions = [makeSession({ date: new Date("2020-01-01T00:00:00Z") })];
+		TestBed.inject(SessionService).currentSession.set(sessions[0]);
+		await startAndSettle();
+		expect(gateway.last.session?.id).toBe("s1");
 	});
 
 	it("applies actions in chronological order", async () => {

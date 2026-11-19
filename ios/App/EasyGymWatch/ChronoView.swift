@@ -5,8 +5,7 @@ import SwiftUI
 struct ChronoView: View {
     @EnvironmentObject private var store: WatchStore
     @EnvironmentObject private var chrono: ChronoEngine
-
-    private let ticker = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
+    @EnvironmentObject private var workout: WorkoutManager
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 0.5)) { context in
@@ -39,9 +38,6 @@ struct ChronoView: View {
             }
             ChronoEngine.requestNotificationPermission()
         }
-        .onReceive(ticker) { now in
-            chrono.tick(now: now)
-        }
     }
 
     // MARK: Parts
@@ -67,6 +63,15 @@ struct ChronoView: View {
                     .font(.system(size: 10, weight: .bold))
                     .tracking(1.2)
                     .foregroundStyle(ringColor)
+                if let bpm = workout.heartRate {
+                    HStack(spacing: 2) {
+                        Image(systemName: "heart.fill")
+                        Text("\(bpm)")
+                    }
+                    .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                    .foregroundStyle(Theme.red)
+                    .accessibilityLabel("\(bpm) BPM")
+                }
             }
         }
         .frame(width: 104, height: 104)

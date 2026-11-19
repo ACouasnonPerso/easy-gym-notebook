@@ -19,7 +19,18 @@ export interface WatchSnapshotContext {
 	appliedActionIds: string[];
 }
 
-export function findWatchActiveSession(sessions: Session[], now: Date): Session | null {
+/**
+ * The session to show on the watch: the session open on the phone when it is active
+ * (its date may have been edited), otherwise the most recent active session started
+ * less than 12 hours ago.
+ */
+export function findWatchActiveSession(
+	sessions: Session[],
+	now: Date,
+	openSessionId: string | null = null
+): Session | null {
+	const open = sessions.find((s) => s.id === openSessionId && s.status === "active");
+	if (open) return open;
 	const candidates = sessions
 		.filter((s) => s.status === "active")
 		.filter((s) => now.getTime() - new Date(s.date).getTime() <= WATCH_ACTIVE_SESSION_MAX_AGE_MS)
@@ -81,14 +92,20 @@ function toWatchExercise(exercise: Exercise, ctx: WatchSnapshotContext): WatchEx
 				? ctx.translate(`muscleGroups.${group}`)
 				: null,
 		muscleColor: exercise.isCardio ? CARDIO_COLOR : group ? muscleColor(group) : null,
-		sets: isPyramid ? exercise.pyramidSets.length : Math.max(1, exercise.sets),
-		reps: isPyramid ? exercise.pyramidSets[0].reps : exercise.reps,
+		sets: isPyramid ? exercise.pyramidSets.length : Math.max(1, toInt(exercise.sets, 1)),
+		reps: toInt(isPyramid ? exercise.pyramidSets[0].reps : exercise.reps, 0),
 		loadLabel: loadLabel(exercise, isPyramid, ctx),
 		isCardio: exercise.isCardio,
-		breakDurationSeconds: exercise.breakDurationSeconds > 0 ? exercise.breakDurationSeconds : DEFAULT_BREAK_SECONDS,
+		breakDurationSeconds:
+			toInt(exercise.breakDurationSeconds, 0) > 0 ? toInt(exercise.breakDurationSeconds, 0) : DEFAULT_BREAK_SECONDS,
 		status: exercise.status === "validated" ? "validated" : "pending",
-		rating: exercise.rating,
+		rating: exercise.rating === null || exercise.rating === undefined ? null : toInt(exercise.rating, 0) || null,
 	};
+}
+
+/** The watch decodes these fields as integers: never send NaN, null or decimals. */
+function toInt(value: number | null | undefined, fallback: number): number {
+	return typeof value === "number" && Number.isFinite(value) ? Math.round(value) : fallback;
 }
 
 function muscleColor(group: MuscleGroup): string {

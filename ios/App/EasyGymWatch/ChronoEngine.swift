@@ -31,12 +31,20 @@ final class ChronoEngine: ObservableObject {
     private let notificationId = "egn.watch.restOver"
     private var notificationTitle = ""
     private var notificationBody = ""
+    private var ticker: Timer?
 
     init() {
         if let data = UserDefaults.standard.data(forKey: storageKey),
            let saved = try? JSONDecoder().decode(State.self, from: data) {
             state = saved
         }
+        // Lives as long as the engine, whatever screen is shown, so the end of the rest
+        // is handled everywhere (and in the background while a workout session runs).
+        let timer = Timer(timeInterval: 0.5, repeats: true) { [weak self] _ in
+            Task { @MainActor in self?.tick(now: Date()) }
+        }
+        RunLoop.main.add(timer, forMode: .common)
+        ticker = timer
     }
 
     // MARK: Setup
@@ -117,6 +125,7 @@ final class ChronoEngine: ObservableObject {
 
     func reset() {
         cancelRestNotification()
+        state.currentSet = 1
         state.mode = .training
         state.isRunning = false
         state.hasStarted = false
@@ -130,18 +139,21 @@ final class ChronoEngine: ObservableObject {
         guard state.mode == .rest, state.isRunning, let start = state.segmentStart else { return }
         let restEnd = start.addingTimeInterval(state.restDuration - state.accumulated)
         if now >= restEnd {
-            startNextSet(at: restEnd)
-            WKInterfaceDevice.current().play(.notification)
+            startNextSet(at: restEnd, playHaptic: false)
+            // Do not buzz when coming back long after the end (the notification already did).
+            if now.timeIntervalSince(restEnd) < 5 {
+                WKInterfaceDevice.current().play(.notification)
+            }
         }
     }
 
-    private func startTraining(at date: Date) {
+    private func startTraining(at date: Date, playHaptic: Bool = true) {
         state.mode = .training
         state.accumulated = 0
         state.segmentStart = date
         state.isRunning = true
         state.hasStarted = true
-        WKInterfaceDevice.current().play(.start)
+        if playHaptic { WKInterfaceDevice.current().play(.start) }
         persist()
     }
 
@@ -156,10 +168,10 @@ final class ChronoEngine: ObservableObject {
         persist()
     }
 
-    private func startNextSet(at date: Date) {
+    private func startNextSet(at date: Date, playHaptic: Bool = true) {
         cancelRestNotification()
         state.currentSet = min(state.currentSet + 1, state.totalSets)
-        startTraining(at: date)
+        startTraining(at: date, playHaptic: playHaptic)
     }
 
     private func persist() {

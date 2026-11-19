@@ -10,6 +10,14 @@ App watchOS (SwiftUI) embarquée dans l'app iPhone. Cible Xcode : `EasyGymWatch`
 4. **Chrono** : entraînement (vert, compte) / repos (orange, décompte avec la durée de repos de l'exercice). Le bouton de droite est l'action principale, déclenchée aussi par le **double tap** (Series 9 / Ultra 2 et plus, watchOS 11+) : démarrer, puis repos, puis série suivante. Fin du repos : vibration, ou notification si l'app n'est pas à l'écran.
 5. **Difficulté** : même échelle /20 que l'app. Toucher à nouveau la valeur actuelle l'efface.
 
+## Entraînement HealthKit
+
+- Quand une nouvelle séance devient active sur l'iPhone, l'iPhone ouvre l'app sur la montre avec un entraînement « Renforcement musculaire » (`HKHealthStore.startWatchApp`, une fois par séance). Si l'app montre est ouverte à la main, l'entraînement démarre aussi.
+- Pendant l'entraînement, l'app reste à l'écran quand on lève le poignet et continue de tourner en arrière-plan (fin du repos, vibrations). Le cœur s'affiche dans le chrono.
+- L'entraînement s'arrête quand la séance est terminée sur l'iPhone, avec le bouton « Terminer l'entraînement » (séance terminée sur la montre), ou au bout de 4 h par sécurité. Il est enregistré dans Santé (supprimé s'il dure moins de 2 min).
+- Autorisations : Santé sur l'iPhone (écriture des entraînements) et sur la montre (entraînements, fréquence cardiaque, calories actives).
+- Configuration : capacité HealthKit sur les deux cibles (`App/App.entitlements`, `EasyGymWatch/EasyGymWatch.entitlements`), mode d'arrière-plan `workout-processing` dans `EasyGymWatch/Info.plist`. Le Bundle ID doit avoir HealthKit activé sur le portail Apple Developer (la signature automatique d'Xcode le fait).
+
 ## Synchronisation
 
 ```
@@ -27,6 +35,6 @@ Angular ◀──actions (note, validation)── WatchSessionManager (file pers
 1. Ouvrir `ios/App/App.xcodeproj` dans Xcode.
 2. Signature : choisir l'équipe pour la cible `EasyGymWatch` (bundle id `easy.gym.notebook.watchkitapp`).
 3. Lancer le schéma `App` sur un iPhone appairé à une montre (ou sur un simulateur iPhone appairé à un simulateur Watch), puis le schéma `EasyGymWatch` sur la montre.
-4. Créer une séance sur l'iPhone : elle apparaît sur la montre.
+4. Créer une séance sur l'iPhone : l'app s'ouvre sur la montre (accepter les autorisations Santé la première fois) et la séance apparaît.
 
 À chaque nouvelle version, garder `MARKETING_VERSION` et `CURRENT_PROJECT_VERSION` identiques entre les cibles `App` et `EasyGymWatch` (sinon App Store Connect refuse l'envoi).

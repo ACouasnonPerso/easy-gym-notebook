@@ -8,6 +8,7 @@ enum WatchRoute: Hashable {
 
 struct RootView: View {
     @EnvironmentObject private var store: WatchStore
+    @EnvironmentObject private var workout: WorkoutManager
     @State private var path: [WatchRoute] = []
 
     var body: some View {
@@ -32,6 +33,10 @@ struct RootView: View {
         }
         .onChange(of: store.session?.id) { _, _ in
             path = []
+        }
+        .task(id: store.session?.id) {
+            // Start / stop the HealthKit workout with the session of the iPhone.
+            await workout.sync(with: store.session?.id)
         }
         .onChange(of: store.selectedExerciseId) { _, id in
             if id == nil && !path.isEmpty { path = [] }

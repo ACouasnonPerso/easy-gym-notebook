@@ -63,6 +63,16 @@ describe("findWatchActiveSession", () => {
 		expect(findWatchActiveSession([abandoned], NOW)).toBeNull();
 	});
 
+	it("keeps the session open on the phone even when its date was edited", () => {
+		const edited = makeSession({ id: "open", date: new Date("2026-11-17T00:00:00Z") });
+		expect(findWatchActiveSession([edited], NOW, "open")?.id).toBe("open");
+	});
+
+	it("ignores the open session when it is completed", () => {
+		const done = makeSession({ id: "open", status: "completed" });
+		expect(findWatchActiveSession([done], NOW, "open")).toBeNull();
+	});
+
 	it("returns the most recent active session", () => {
 		const older = makeSession({ id: "old", date: new Date("2026-11-18T10:00:00Z") });
 		const newer = makeSession({ id: "new", date: new Date("2026-11-18T17:30:00Z") });
@@ -115,6 +125,20 @@ describe("buildWatchSnapshot", () => {
 		];
 		const snapshot = buildWatchSnapshot(makeSession(), exercises, makeContext());
 		expect(snapshot.session?.exercises.map((e) => e.id)).toEqual(["keep"]);
+	});
+
+	it("only sends integers the watch can decode", () => {
+		const broken = makeExercise({
+			sets: undefined as unknown as number,
+			reps: 8.6,
+			breakDurationSeconds: Number.NaN,
+			rating: 15.2,
+		});
+		const watchExercise = buildWatchSnapshot(makeSession(), [broken], makeContext()).session?.exercises[0];
+		expect(watchExercise?.sets).toBe(1);
+		expect(watchExercise?.reps).toBe(9);
+		expect(watchExercise?.breakDurationSeconds).toBe(90);
+		expect(watchExercise?.rating).toBe(15);
 	});
 
 	it("uses the bodyweight label when there is no load", () => {

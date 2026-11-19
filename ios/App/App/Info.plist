@@ -42,6 +42,10 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to take a photo for your exercise</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Easy Gym reads your heart rate and active calories during your workouts on Apple Watch.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Easy Gym saves your strength training workouts from Apple Watch in the Health app.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to choose a photo for your exercise</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

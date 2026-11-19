@@ -257,6 +257,8 @@
 		"sessionDetected": "Workout detected",
 		"startedOnIphone": "Started on iPhone",
 		"exercisesCount": "exercises",
+		"exerciseCountOne": "exercise",
+		"endWorkout": "End workout",
 		"followSession": "Follow workout",
 		"pickExercise": "Pick an exercise",
 		"chrono": "Timer",
