@@ -1,4 +1,4 @@
-import { Injectable, Injector, effect, inject, untracked } from "@angular/core";
+import { Injectable, Injector, effect, inject, signal, untracked } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { firstValueFrom } from "rxjs";
 import { SESSION_REPOSITORY } from "../../secondary_ports/session/session.repository.interface";
@@ -9,10 +9,11 @@ import { ExerciseService } from "../session-detail/exercise.service";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { MassUnitService } from "../mass-unit/mass-unit.service";
 import { isValidRating } from "../shared/rating-options";
-import { WatchAction } from "./watch.models";
+import { WatchAction, WatchError } from "./watch.models";
 import { buildWatchSnapshot, findWatchActiveSession } from "./watch-snapshot.builder";
 
 const ACKNOWLEDGED_IDS_SENT_TO_WATCH = 50;
+const MAX_ERRORS = 10;
 
 /**
  * Keeps the Apple Watch in sync with the active session:
@@ -38,6 +39,10 @@ export class WatchSyncService {
 	private queue: Promise<void> = Promise.resolve();
 	private lastPushed: string | null = null;
 	private refreshScheduled = false;
+
+	private readonly _errors = signal<WatchError[]>([]);
+	/** Sync errors of the web app side, most recent first (status screen). */
+	readonly errors = this._errors.asReadonly();
 
 	start(): void {
 		if (this.started || !this.gateway.isAvailable()) return;
@@ -75,8 +80,20 @@ export class WatchSyncService {
 	}
 
 	private enqueue(task: () => Promise<void>): Promise<void> {
-		this.queue = this.queue.then(task).catch((error) => console.warn("[WatchSync]", error));
+		this.queue = this.queue.then(task).catch((error) => {
+			console.warn("[WatchSync]", error);
+			this.recordError(error);
+		});
 		return this.queue;
+	}
+
+	clearErrors(): void {
+		this._errors.set([]);
+	}
+
+	private recordError(error: unknown): void {
+		const message = error instanceof Error ? error.message : String(error);
+		this._errors.update((errors) => [{ at: new Date().toISOString(), message }, ...errors].slice(0, MAX_ERRORS));
 	}
 
 	private scheduleRefresh(): void {

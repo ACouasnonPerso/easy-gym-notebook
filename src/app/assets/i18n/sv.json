@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "Upprepa ett tidigare pass",
 		"times": "Gjort {{count}} gånger",
-		"other": "Övrigt"
+		"other": "Övrigt",
+		"showMore": "Visa fler ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "Inga data för denna övning",
@@ -254,5 +255,32 @@
 		"title": "Lägg till en kommentar",
 		"placeholder": "Skriv en anteckning om denna övning...",
 		"save": "Spara"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "Parkopplad",
+		"appInstalled": "Appen installerad",
+		"reachable": "Appen öppen",
+		"lastSent": "Senast skickat till klockan",
+		"lastReceived": "Senast mottagna åtgärd",
+		"pending": "Väntande åtgärder",
+		"never": "Aldrig",
+		"errors": "Senaste fel",
+		"noErrors": "Inga fel",
+		"clearErrors": "Rensa",
+		"level": {
+			"connected": "Klockan ansluten",
+			"standby": "Klockan parkopplad",
+			"notInstalled": "Appen saknas på klockan",
+			"notPaired": "Ingen klocka parkopplad",
+			"inactive": "Anslutningen har inte startat"
+		},
+		"hint": {
+			"connected": "Appen är öppen på klockan: allt synkas direkt.",
+			"standby": "Appen är inte öppen på klockan. Passet skickas så snart den öppnas.",
+			"notInstalled": "Installera Easy Gym på klockan från Watch-appen på iPhone.",
+			"notPaired": "Parkoppla en Apple Watch med denna iPhone för att följa dina pass på handleden.",
+			"inactive": "Anslutningen till klockan är inte aktiv ännu. Öppna appen igen om det fortsätter."
+		}
 	}
 }

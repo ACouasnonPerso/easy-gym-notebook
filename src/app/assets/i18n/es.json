@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "Repetir una sesión anterior",
 		"times": "Hecha {{count}} veces",
-		"other": "Otro"
+		"other": "Otro",
+		"showMore": "Ver más ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "Sin datos para este ejercicio",
@@ -291,6 +292,41 @@
 		"reset": "Reiniciar",
 		"pause": "Pausa",
 		"resume": "Reanudar",
-		"back": "Volver"
+		"back": "Volver",
+		"auto": "Auto",
+		"setLabel": "Serie",
+		"finished": "TERMINADO",
+		"doubleTapRestart": "Doble toque: empezar de nuevo",
+		"setOver": "Serie terminada",
+		"setOverBody": "Hora de descansar",
+		"exerciseFinished": "Ejercicio terminado",
+		"exerciseFinishedBody": "Todas las series están hechas"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "Enlazado",
+		"appInstalled": "App instalada",
+		"reachable": "App abierta",
+		"lastSent": "Último envío al reloj",
+		"lastReceived": "Última acción recibida",
+		"pending": "Acciones pendientes",
+		"never": "Nunca",
+		"errors": "Errores recientes",
+		"noErrors": "Sin errores",
+		"clearErrors": "Borrar",
+		"level": {
+			"connected": "Reloj conectado",
+			"standby": "Reloj enlazado",
+			"notInstalled": "App no instalada en el reloj",
+			"notPaired": "Ningún reloj enlazado",
+			"inactive": "Conexión no iniciada"
+		},
+		"hint": {
+			"connected": "La app está abierta en el reloj: todo se sincroniza en directo.",
+			"standby": "La app no está abierta en el reloj. El entrenamiento se enviará en cuanto se abra.",
+			"notInstalled": "Instala Easy Gym en el reloj desde la app Watch del iPhone.",
+			"notPaired": "Enlaza un Apple Watch con este iPhone para seguir tus entrenamientos en la muñeca.",
+			"inactive": "La conexión con el reloj aún no está activa. Vuelve a abrir la app si persiste."
+		}
 	}
 }

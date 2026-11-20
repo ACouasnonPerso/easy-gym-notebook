@@ -1,0 +1,89 @@
+@if (available) {
+	<button
+		type="button"
+		class="watch-btn"
+		data-testid="watch-status-btn"
+		[attr.aria-label]="'watchStatus.title' | translate"
+		(click)="open()"
+	>
+		<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+			<rect x="6" y="5" width="12" height="14" rx="3.5" stroke="currentColor" stroke-width="1.8" />
+			<path
+				d="M9 5 9.6 2h4.8L15 5M9 19l.6 3h4.8l.6-3"
+				stroke="currentColor"
+				stroke-width="1.8"
+				stroke-linejoin="round"
+			/>
+			<path d="M18 10.5h1.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+		</svg>
+		<span class="dot" [attr.data-level]="level()"></span>
+		@if (errors().length > 0) {
+			<span class="error-badge" data-testid="watch-error-badge">!</span>
+		}
+	</button>
+}
+
+@if (showSheet()) {
+	<div class="overlay" (click)="close()">
+		<div class="sheet" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+			<h2 class="sheet-title">{{ "watchStatus.title" | translate }}</h2>
+
+			<div class="state-card" [attr.data-level]="level()">
+				<span class="dot" [attr.data-level]="level()"></span>
+				<div class="state-text">
+					<span class="state-label" data-testid="watch-level">{{ "watchStatus.level." + level() | translate }}</span>
+					<span class="state-hint">{{ "watchStatus.hint." + level() | translate }}</span>
+				</div>
+			</div>
+
+			<ul class="checks">
+				@for (check of checks(); track check.key) {
+					<li class="check" [class.ok]="check.ok">
+						<span class="check-icon">{{ check.ok ? "✓" : "✕" }}</span>
+						{{ check.key | translate }}
+					</li>
+				}
+			</ul>
+
+			<dl class="details">
+				<div class="detail">
+					<dt>{{ "watchStatus.lastSent" | translate }}</dt>
+					<dd>{{ dateLabel(status()?.lastSnapshotSentAt) ?? ("watchStatus.never" | translate) }}</dd>
+				</div>
+				<div class="detail">
+					<dt>{{ "watchStatus.lastReceived" | translate }}</dt>
+					<dd>{{ dateLabel(status()?.lastActionReceivedAt) ?? ("watchStatus.never" | translate) }}</dd>
+				</div>
+				@if ((status()?.pendingActions ?? 0) > 0) {
+					<div class="detail">
+						<dt>{{ "watchStatus.pending" | translate }}</dt>
+						<dd>{{ status()?.pendingActions }}</dd>
+					</div>
+				}
+			</dl>
+
+			<div class="errors-header">
+				<span class="section-title">{{ "watchStatus.errors" | translate }}</span>
+				@if (errors().length > 0) {
+					<button type="button" class="link-btn" data-testid="clear-errors" (click)="clearErrors()">
+						{{ "watchStatus.clearErrors" | translate }}
+					</button>
+				}
+			</div>
+			@if (errors().length === 0) {
+				<p class="no-errors">{{ "watchStatus.noErrors" | translate }}</p>
+			} @else {
+				<ul class="errors">
+					@for (error of errors(); track $index) {
+						<li class="error">
+							<span class="error-date">{{ dateLabel(error.at) }}</span>
+							<span class="error-message">{{ error.message }}</span>
+						</li>
+					}
+				</ul>
+			}
+
+			<button type="button" class="btn-close" (click)="close()">{{ "common.close" | translate }}</button>
+		</div>
+	</div>
+}

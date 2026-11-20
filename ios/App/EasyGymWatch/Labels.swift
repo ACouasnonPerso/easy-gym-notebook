@@ -39,7 +39,15 @@ enum Labels {
         "reset": "Réinitialiser",
         "pause": "Pause",
         "resume": "Reprendre",
-        "back": "Retour"
+        "back": "Retour",
+        "auto": "Auto",
+        "setLabel": "Série",
+        "finished": "TERMINÉ",
+        "doubleTapRestart": "Double tap : recommencer",
+        "setOver": "Série terminée",
+        "setOverBody": "Place au repos",
+        "exerciseFinished": "Exercice terminé",
+        "exerciseFinishedBody": "Toutes les séries sont faites"
     ]
 
     private static let english: [String: String] = [
@@ -78,7 +86,15 @@ enum Labels {
         "reset": "Reset",
         "pause": "Pause",
         "resume": "Resume",
-        "back": "Back"
+        "back": "Back",
+        "auto": "Auto",
+        "setLabel": "Set",
+        "finished": "DONE",
+        "doubleTapRestart": "Double tap: start over",
+        "setOver": "Set is over",
+        "setOverBody": "Time to rest",
+        "exerciseFinished": "Exercise complete",
+        "exerciseFinishedBody": "All sets are done"
     ]
 
     static var fallback: [String: String] {

@@ -1,0 +1,263 @@
+.watch-btn {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: var(--text);
+	cursor: pointer;
+
+	svg {
+		width: 22px;
+		height: 22px;
+	}
+
+	> .dot {
+		position: absolute;
+		right: 4px;
+		bottom: 5px;
+		border: 2px solid var(--bg);
+	}
+}
+
+.dot {
+	display: inline-block;
+	flex-shrink: 0;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: var(--muted);
+
+	&[data-level="connected"] {
+		background: var(--green);
+	}
+	&[data-level="standby"] {
+		background: var(--blue);
+	}
+	&[data-level="notInstalled"],
+	&[data-level="notPaired"] {
+		background: var(--orange);
+	}
+}
+
+.error-badge {
+	position: absolute;
+	top: 2px;
+	right: 0;
+	min-width: 14px;
+	height: 14px;
+	border-radius: 7px;
+	background: var(--red);
+	color: #fff;
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 10px;
+	font-weight: 800;
+	line-height: 14px;
+	text-align: center;
+}
+
+.overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.7);
+	display: flex;
+	align-items: flex-end;
+	z-index: 400;
+}
+
+.sheet {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	width: 100%;
+	max-height: 85vh;
+	overflow-y: auto;
+	padding: 24px 20px 36px;
+	border-radius: 20px 20px 0 0;
+	background: var(--card);
+}
+
+.sheet-title {
+	margin: 0;
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 18px;
+	font-weight: 800;
+	letter-spacing: -0.3px;
+	color: var(--text);
+}
+
+.state-card {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 14px 16px;
+	border-radius: 14px;
+	border: 1px solid var(--border);
+	background: var(--card2);
+
+	.dot {
+		margin-top: 4px;
+	}
+}
+
+.state-text {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.state-label {
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 15px;
+	font-weight: 700;
+	color: var(--text);
+}
+
+.state-hint {
+	font-family: "DM Sans", sans-serif;
+	font-size: 13px;
+	line-height: 1.4;
+	color: var(--sub);
+}
+
+.checks {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.check {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 10px;
+	border-radius: 14px;
+	background: var(--card2);
+	font-family: "DM Sans", sans-serif;
+	font-size: 12px;
+	color: var(--muted);
+
+	.check-icon {
+		font-weight: 700;
+		color: var(--red);
+	}
+
+	&.ok {
+		color: var(--text);
+
+		.check-icon {
+			color: var(--green);
+		}
+	}
+}
+
+.details {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin: 0;
+}
+
+.detail {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	font-family: "DM Sans", sans-serif;
+	font-size: 13px;
+
+	dt {
+		color: var(--sub);
+	}
+
+	dd {
+		margin: 0;
+		font-family: "IBM Plex Mono", monospace;
+		font-size: 12px;
+		color: var(--text);
+		text-align: right;
+	}
+}
+
+.errors-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.section-title {
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 9px;
+	font-weight: 600;
+	letter-spacing: 1.2px;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.link-btn {
+	padding: 0;
+	border: none;
+	background: none;
+	color: var(--orange);
+	font-family: "DM Sans", sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.no-errors {
+	margin: 0;
+	font-family: "DM Sans", sans-serif;
+	font-size: 13px;
+	color: var(--muted);
+}
+
+.errors {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.error {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 10px 12px;
+	border-radius: 12px;
+	border: 1px solid rgba(239, 68, 68, 0.3);
+	background: rgba(239, 68, 68, 0.08);
+}
+
+.error-date {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 11px;
+	color: var(--sub);
+}
+
+.error-message {
+	font-family: "DM Sans", sans-serif;
+	font-size: 13px;
+	color: var(--text);
+	overflow-wrap: anywhere;
+}
+
+.btn-close {
+	padding: 14px;
+	border: none;
+	border-radius: 14px;
+	background: var(--card2);
+	color: var(--text);
+	font-family: "Space Grotesk", sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+}

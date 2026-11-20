@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "Een eerdere sessie herhalen",
 		"times": "{{count}} keer gedaan",
-		"other": "Overig"
+		"other": "Overig",
+		"showMore": "Meer tonen ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "Geen gegevens voor deze oefening",
@@ -254,5 +255,32 @@
 		"title": "Commentaar toevoegen",
 		"placeholder": "Schrijf een opmerking over deze oefening...",
 		"save": "Opslaan"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "Gekoppeld",
+		"appInstalled": "App geïnstalleerd",
+		"reachable": "App geopend",
+		"lastSent": "Laatst naar horloge verzonden",
+		"lastReceived": "Laatste ontvangen actie",
+		"pending": "Acties in wachtrij",
+		"never": "Nooit",
+		"errors": "Recente fouten",
+		"noErrors": "Geen fouten",
+		"clearErrors": "Wissen",
+		"level": {
+			"connected": "Horloge verbonden",
+			"standby": "Horloge gekoppeld",
+			"notInstalled": "App niet op het horloge",
+			"notPaired": "Geen horloge gekoppeld",
+			"inactive": "Verbinding niet gestart"
+		},
+		"hint": {
+			"connected": "De app is open op het horloge: alles synchroniseert live.",
+			"standby": "De app is niet open op het horloge. De training wordt verzonden zodra hij opent.",
+			"notInstalled": "Installeer Easy Gym op het horloge via de Watch-app op je iPhone.",
+			"notPaired": "Koppel een Apple Watch aan deze iPhone om je trainingen om je pols te volgen.",
+			"inactive": "De verbinding met het horloge is nog niet actief. Open de app opnieuw als dit aanhoudt."
+		}
 	}
 }

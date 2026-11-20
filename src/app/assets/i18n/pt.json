@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "Repetir uma sessão anterior",
 		"times": "Feita {{count}} vezes",
-		"other": "Outro"
+		"other": "Outro",
+		"showMore": "Ver mais ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "Sem dados para este exercício",
@@ -254,5 +255,32 @@
 		"title": "Adicionar um comentário",
 		"placeholder": "Escreve uma nota sobre este exercício...",
 		"save": "Guardar"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "Emparelhado",
+		"appInstalled": "App instalado",
+		"reachable": "App aberto",
+		"lastSent": "Último envio ao relógio",
+		"lastReceived": "Última ação recebida",
+		"pending": "Ações pendentes",
+		"never": "Nunca",
+		"errors": "Erros recentes",
+		"noErrors": "Nenhum erro",
+		"clearErrors": "Limpar",
+		"level": {
+			"connected": "Relógio conectado",
+			"standby": "Relógio emparelhado",
+			"notInstalled": "App ausente no relógio",
+			"notPaired": "Nenhum relógio emparelhado",
+			"inactive": "Conexão não iniciada"
+		},
+		"hint": {
+			"connected": "O app está aberto no relógio: tudo sincroniza ao vivo.",
+			"standby": "O app não está aberto no relógio. O treino será enviado assim que abrir.",
+			"notInstalled": "Instale o Easy Gym no relógio pelo app Watch do iPhone.",
+			"notPaired": "Emparelhe um Apple Watch com este iPhone para acompanhar seus treinos no pulso.",
+			"inactive": "A conexão com o relógio ainda não está ativa. Reabra o app se continuar."
+		}
 	}
 }

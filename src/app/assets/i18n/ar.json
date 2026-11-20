@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "كرر حصة سابقة",
 		"times": "تمت {{count}} مرات",
-		"other": "أخرى"
+		"other": "أخرى",
+		"showMore": "عرض المزيد ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "لا توجد بيانات لهذا التمرين",
@@ -254,5 +255,32 @@
 		"title": "أضف تعليقاً",
 		"placeholder": "اكتب ملاحظة حول هذا التمرين...",
 		"save": "حفظ"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "مقترنة",
+		"appInstalled": "التطبيق مثبت",
+		"reachable": "التطبيق مفتوح",
+		"lastSent": "آخر إرسال إلى الساعة",
+		"lastReceived": "آخر إجراء مستلم",
+		"pending": "إجراءات معلقة",
+		"never": "أبدًا",
+		"errors": "الأخطاء الأخيرة",
+		"noErrors": "لا توجد أخطاء",
+		"clearErrors": "مسح",
+		"level": {
+			"connected": "الساعة متصلة",
+			"standby": "الساعة مقترنة",
+			"notInstalled": "التطبيق غير موجود على الساعة",
+			"notPaired": "لا توجد ساعة مقترنة",
+			"inactive": "لم يبدأ الاتصال"
+		},
+		"hint": {
+			"connected": "التطبيق مفتوح على الساعة: تتم المزامنة مباشرة.",
+			"standby": "التطبيق غير مفتوح على الساعة. سيتم إرسال الحصة فور فتحه.",
+			"notInstalled": "ثبّت Easy Gym على الساعة من تطبيق Watch على iPhone.",
+			"notPaired": "اقرن Apple Watch بهذا الـ iPhone لمتابعة تمارينك على معصمك.",
+			"inactive": "الاتصال بالساعة غير نشط بعد. أعد فتح التطبيق إذا استمر ذلك."
+		}
 	}
 }

@@ -14,6 +14,17 @@ import { ReviewService } from "../../core_logic/review/review.service";
 import { REVIEW_REPOSITORY } from "../../secondary_ports/review/review.repository.interface";
 import { Router } from "@angular/router";
 import { MassUnitService } from "../../core_logic/mass-unit/mass-unit.service";
+import { WatchStatusUseCase } from "../../primary_ports/watch/watch-status.usecase";
+
+/** The watch icon is hidden outside the iOS app. */
+const watchStatusStub = {
+	isAvailable: () => false,
+	level: signal("inactive"),
+	status: signal(null),
+	errors: signal([]),
+	refresh: async () => {},
+	clearErrors: async () => {},
+};
 
 class FakeTranslateLoader implements TranslateLoader {
 	getTranslation(_lang: string): Observable<TranslationObject> {
@@ -118,6 +129,7 @@ describe("SessionListComponent — sélecteur de langue", () => {
 				{ provide: ReviewService, useValue: reviewServiceSpy },
 				{ provide: REVIEW_REPOSITORY, useValue: { hasRequested: async () => false, markAsRequested: async () => {} } },
 				{ provide: Router, useValue: routerSpy },
+				{ provide: WatchStatusUseCase, useValue: watchStatusStub },
 			],
 		});
 
@@ -202,6 +214,7 @@ describe("SessionListComponent — sélecteur d'unité de masse", () => {
 				{ provide: ReviewService, useValue: providers.reviewServiceSpy },
 				{ provide: REVIEW_REPOSITORY, useValue: { hasRequested: async () => false, markAsRequested: async () => {} } },
 				{ provide: Router, useValue: providers.routerSpy },
+				{ provide: WatchStatusUseCase, useValue: watchStatusStub },
 			],
 		});
 

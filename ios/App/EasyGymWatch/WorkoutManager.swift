@@ -38,7 +38,7 @@ final class WorkoutManager: NSObject, ObservableObject {
     /// Safety net if the session is never ended on the iPhone.
     private static let maximumDuration: TimeInterval = 4 * 60 * 60
 
-    static var configuration: HKWorkoutConfiguration {
+    nonisolated static var configuration: HKWorkoutConfiguration {
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = .traditionalStrengthTraining
         configuration.locationType = .indoor
@@ -172,10 +172,10 @@ final class WorkoutManager: NSObject, ObservableObject {
             clear()
             return
         }
-        let start = builder.startDate ?? (defaults.object(forKey: startDateKey) as? Date) ?? date
+        let startDate = builder.startDate ?? (defaults.object(forKey: startDateKey) as? Date) ?? date
         do {
             try await builder.endCollection(at: date)
-            if date.timeIntervalSince(start) < Self.minimumDuration {
+            if date.timeIntervalSince(startDate) < Self.minimumDuration {
                 builder.discardWorkout()
             } else {
                 _ = try await builder.finishWorkout()

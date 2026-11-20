@@ -2,6 +2,7 @@
 	<div class="page-header">
 		<div class="page-title">{{ "sessionList.title" | translate }}</div>
 		<div class="header-selectors">
+			<app-watch-status-button />
 			<app-mass-unit-selector (massUnitChange)="changeMassUnit($event)" />
 			<app-language-selector
 				[langs]="['fr', 'en', 'es', 'pt', 'de', 'it', 'ko', 'ja', 'nl', 'ar', 'hi', 'pl', 'sv', 'tr', 'vi']"

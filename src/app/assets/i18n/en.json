@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "Start from a past session",
 		"times": "Done {{count}} times",
-		"other": "Other"
+		"other": "Other",
+		"showMore": "Show more ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "No data for this exercise",
@@ -293,6 +294,41 @@
 		"reset": "Reset",
 		"pause": "Pause",
 		"resume": "Resume",
-		"back": "Back"
+		"back": "Back",
+		"auto": "Auto",
+		"setLabel": "Set",
+		"finished": "DONE",
+		"doubleTapRestart": "Double tap: start over",
+		"setOver": "Set is over",
+		"setOverBody": "Time to rest",
+		"exerciseFinished": "Exercise complete",
+		"exerciseFinishedBody": "All sets are done"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "Paired",
+		"appInstalled": "App installed",
+		"reachable": "App open",
+		"lastSent": "Last sent to the watch",
+		"lastReceived": "Last action received",
+		"pending": "Pending actions",
+		"never": "Never",
+		"errors": "Recent errors",
+		"noErrors": "No errors",
+		"clearErrors": "Clear",
+		"level": {
+			"connected": "Watch connected",
+			"standby": "Watch paired",
+			"notInstalled": "App not on the watch",
+			"notPaired": "No paired watch",
+			"inactive": "Connection not started"
+		},
+		"hint": {
+			"connected": "The app is open on the watch: everything syncs live.",
+			"standby": "The app is not open on the watch. The workout will be sent as soon as it opens.",
+			"notInstalled": "Install Easy Gym on the watch from the Watch app on your iPhone.",
+			"notPaired": "Pair an Apple Watch with this iPhone to follow your workouts on your wrist.",
+			"inactive": "The connection with the watch is not active yet. Reopen the app if it lasts."
+		}
 	}
 }

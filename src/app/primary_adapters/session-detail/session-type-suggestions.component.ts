@@ -8,6 +8,11 @@ import { LanguageService } from "../../core_logic/language/language.service";
 import { GetSessionTypesUseCase } from "../../primary_ports/session-detail/get-session-types.usecase";
 import { ApplySessionTemplateUseCase } from "../../primary_ports/session-detail/apply-session-template.usecase";
 
+/** Session types shown before "Show more" (most done first). */
+export const VISIBLE_TYPES_LIMIT = 10;
+/** Past sessions shown for a type before "Show more" (most done first). */
+export const VISIBLE_TEMPLATES_LIMIT = 3;
+
 @Component({
 	selector: "app-session-type-suggestions",
 	standalone: true,
@@ -28,8 +33,24 @@ export class SessionTypeSuggestionsComponent {
 	readonly sessionTypes = signal<SessionType[]>([]);
 	readonly selectedTypeKey = signal<string | null>(null);
 	readonly applying = signal(false);
+	readonly showAllTypes = signal(false);
+	readonly showAllTemplates = signal(false);
 
 	readonly selectedType = computed(() => this.sessionTypes().find((t) => t.key === this.selectedTypeKey()) ?? null);
+
+	readonly visibleTypes = computed(() => {
+		const types = this.sessionTypes();
+		return this.showAllTypes() ? types : types.slice(0, VISIBLE_TYPES_LIMIT);
+	});
+	readonly hiddenTypesCount = computed(() => this.sessionTypes().length - this.visibleTypes().length);
+
+	readonly visibleTemplates = computed(() => {
+		const templates = this.selectedType()?.templates ?? [];
+		return this.showAllTemplates() ? templates : templates.slice(0, VISIBLE_TEMPLATES_LIMIT);
+	});
+	readonly hiddenTemplatesCount = computed(
+		() => (this.selectedType()?.templates.length ?? 0) - this.visibleTemplates().length
+	);
 
 	constructor() {
 		effect((onCleanup) => {
@@ -38,6 +59,8 @@ export class SessionTypeSuggestionsComponent {
 			onCleanup(() => (stale = true));
 			this.sessionTypes.set([]);
 			this.selectedTypeKey.set(null);
+			this.showAllTypes.set(false);
+			this.showAllTemplates.set(false);
 			this.getSessionTypesUseCase.execute(sessionId).then((types) => {
 				if (!stale) this.sessionTypes.set(types);
 			});
@@ -61,7 +84,18 @@ export class SessionTypeSuggestionsComponent {
 
 	selectType(type: SessionType): void {
 		this.haptic.vibrate();
+		this.showAllTemplates.set(false);
 		this.selectedTypeKey.set(type.key);
+	}
+
+	showMoreTypes(): void {
+		this.haptic.vibrate();
+		this.showAllTypes.set(true);
+	}
+
+	showMoreTemplates(): void {
+		this.haptic.vibrate();
+		this.showAllTemplates.set(true);
 	}
 
 	backToTypes(): void {

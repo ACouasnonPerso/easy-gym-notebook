@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "過去のセッションから始める",
 		"times": "{{count}}回実施",
-		"other": "その他"
+		"other": "その他",
+		"showMore": "もっと見る（{{count}}）"
 	},
 	"statsExercise": {
 		"empty": "このエクササイズのデータがありません",
@@ -254,5 +255,32 @@
 		"title": "コメントを追加",
 		"placeholder": "この練習についてのメモを書く",
 		"save": "保存する"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "ペアリング済み",
+		"appInstalled": "アプリインストール済み",
+		"reachable": "アプリ起動中",
+		"lastSent": "ウォッチへの最終送信",
+		"lastReceived": "最後に受信した操作",
+		"pending": "保留中の操作",
+		"never": "なし",
+		"errors": "最近のエラー",
+		"noErrors": "エラーなし",
+		"clearErrors": "消去",
+		"level": {
+			"connected": "ウォッチ接続中",
+			"standby": "ウォッチとペアリング済み",
+			"notInstalled": "ウォッチにアプリがありません",
+			"notPaired": "ペアリングされたウォッチなし",
+			"inactive": "接続が開始されていません"
+		},
+		"hint": {
+			"connected": "ウォッチでアプリが開いています。すべてリアルタイムで同期されます。",
+			"standby": "ウォッチでアプリが開いていません。開いたらすぐにワークアウトが送信されます。",
+			"notInstalled": "iPhoneのWatchアプリからウォッチにEasy Gymをインストールしてください。",
+			"notPaired": "手首でワークアウトを確認するには、このiPhoneとApple Watchをペアリングしてください。",
+			"inactive": "ウォッチとの接続はまだ有効ではありません。続く場合はアプリを開き直してください。"
+		}
 	}
 }
