@@ -13,3 +13,7 @@ Ces fichiers ne sont pas versionnés (`.gitignore`). Ils doivent être obtenus d
 | `firebase.config.ts` | `src/environments/firebase.config.ts` | Même source |
 | `google-services.json` | `android/app/google-services.json` | Console Firebase → Paramètres du projet → ton app Android → **Télécharger google-services.json** |
 | `GoogleService-Info.plist` | `ios/App/App/GoogleService-Info.plist` | Console Firebase → Paramètres du projet → ton app iOS → **Télécharger GoogleService-Info.plist** |
+
+## Apple Watch
+
+L'app watchOS est dans `ios/App/EasyGymWatch` (cible Xcode `EasyGymWatch`). Fonctionnement, synchronisation et tests : voir [ios/App/EasyGymWatch/README.md](ios/App/EasyGymWatch/README.md).

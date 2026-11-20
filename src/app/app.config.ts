@@ -22,6 +22,9 @@ import { FirestoreAnalyticsRepository } from "./secondary_adapters/analytics/fir
 import { EXERCISE_PHOTO_REPOSITORY } from "./secondary_ports/exercise-photo/exercise-photo.repository.interface";
 import { ExercisePhotoRepository } from "./secondary_ports/exercise-photo/exercise-photo.repository";
 import { ExercisePhotoService } from "./core_logic/exercise-photo/exercise-photo.service";
+import { WATCH_ACTION_LOG_REPOSITORY, WATCH_GATEWAY } from "./secondary_ports/watch/watch.gateway.interface";
+import { WatchGateway } from "./secondary_ports/watch/watch.gateway";
+import { WatchActionLogRepository } from "./secondary_ports/watch/watch-action-log.repository";
 
 export const FIRESTORE = new InjectionToken<Firestore>("Firestore");
 
@@ -54,5 +57,7 @@ export const appConfig: ApplicationConfig = {
 		ImportService,
 		ExercisePhotoService,
 		{ provide: EXERCISE_PHOTO_REPOSITORY, useClass: ExercisePhotoRepository },
+		{ provide: WATCH_GATEWAY, useClass: WatchGateway },
+		{ provide: WATCH_ACTION_LOG_REPOSITORY, useClass: WatchActionLogRepository },
 	],
 };
