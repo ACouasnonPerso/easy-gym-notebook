@@ -1,5 +1,5 @@
 import { InjectionToken } from "@angular/core";
-import { WatchAction, WatchSnapshot } from "../../core_logic/watch/watch.models";
+import { WatchAction, WatchSnapshot, WatchStatus } from "../../core_logic/watch/watch.models";
 
 export interface IWatchGateway {
 	/** True only when running on iOS with the native WatchConnectivity plugin. */
@@ -9,6 +9,10 @@ export interface IWatchGateway {
 	getPendingActions(): Promise<WatchAction[]>;
 	acknowledgeActions(ids: string[]): Promise<void>;
 	onActionsAvailable(listener: () => void): void;
+	getStatus(): Promise<WatchStatus>;
+	clearErrors(): Promise<void>;
+	/** Connection state changed or an error was recorded on the native side. */
+	onStatusChanged(listener: () => void): void;
 }
 
 export const WATCH_GATEWAY = new InjectionToken<IWatchGateway>("WATCH_GATEWAY");

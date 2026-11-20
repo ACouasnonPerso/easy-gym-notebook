@@ -58,3 +58,23 @@ export interface WatchValidateAction {
 }
 
 export type WatchAction = WatchRateAction | WatchValidateAction;
+
+/** Connection state of the Apple Watch, read from the native WatchConnectivity session. */
+export interface WatchStatus {
+	supported: boolean;
+	activation: "activated" | "inactive" | "notActivated";
+	paired: boolean;
+	appInstalled: boolean;
+	/** The watch app is running and can receive messages right now. */
+	reachable: boolean;
+	lastSnapshotSentAt: string | null;
+	lastActionReceivedAt: string | null;
+	pendingActions: number;
+	/** Most recent first. */
+	errors: WatchError[];
+}
+
+export interface WatchError {
+	at: string;
+	message: string;
+}

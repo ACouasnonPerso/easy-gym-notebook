@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "이전 세션으로 시작하기",
 		"times": "{{count}}회 수행",
-		"other": "기타"
+		"other": "기타",
+		"showMore": "더 보기 ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "이 운동에 대한 데이터가 없습니다",
@@ -254,5 +255,32 @@
 		"title": "댓글 추가",
 		"placeholder": "이 운동에 대한 메모를 작성하세요...",
 		"save": "저장"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "페어링됨",
+		"appInstalled": "앱 설치됨",
+		"reachable": "앱 열림",
+		"lastSent": "워치로 마지막 전송",
+		"lastReceived": "마지막으로 받은 동작",
+		"pending": "대기 중인 동작",
+		"never": "없음",
+		"errors": "최근 오류",
+		"noErrors": "오류 없음",
+		"clearErrors": "지우기",
+		"level": {
+			"connected": "워치 연결됨",
+			"standby": "워치 페어링됨",
+			"notInstalled": "워치에 앱 없음",
+			"notPaired": "페어링된 워치 없음",
+			"inactive": "연결이 시작되지 않음"
+		},
+		"hint": {
+			"connected": "워치에서 앱이 열려 있어 모든 것이 실시간으로 동기화됩니다.",
+			"standby": "워치에서 앱이 열려 있지 않습니다. 열리는 즉시 운동이 전송됩니다.",
+			"notInstalled": "iPhone의 Watch 앱에서 워치에 Easy Gym을 설치하세요.",
+			"notPaired": "손목에서 운동을 확인하려면 이 iPhone과 Apple Watch를 페어링하세요.",
+			"inactive": "워치와의 연결이 아직 활성화되지 않았습니다. 계속되면 앱을 다시 여세요."
+		}
 	}
 }

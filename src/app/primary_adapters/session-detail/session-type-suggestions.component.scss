@@ -129,3 +129,21 @@
 	font-size: 11px;
 	color: var(--muted);
 }
+
+.show-more-btn {
+	align-self: flex-start;
+	padding: 6px 12px;
+	border-radius: 14px;
+	border: 1px solid var(--border);
+	background: transparent;
+	color: var(--muted);
+	font-family: "DM Sans", sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+
+	&:active {
+		color: var(--orange);
+		border-color: var(--orange);
+	}
+}

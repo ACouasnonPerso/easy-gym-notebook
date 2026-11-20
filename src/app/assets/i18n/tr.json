@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "Önceki bir antrenmanı tekrarla",
 		"times": "{{count}} kez yapıldı",
-		"other": "Diğer"
+		"other": "Diğer",
+		"showMore": "Daha fazla göster ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "Bu egzersiz için veri yok",
@@ -254,5 +255,32 @@
 		"title": "Bir yorum ekleyin",
 		"placeholder": "Bu alıştırma hakkında bir not yazın...",
 		"save": "Kaydet"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "Eşlendi",
+		"appInstalled": "Uygulama yüklü",
+		"reachable": "Uygulama açık",
+		"lastSent": "Saate son gönderim",
+		"lastReceived": "Son alınan işlem",
+		"pending": "Bekleyen işlemler",
+		"never": "Hiç",
+		"errors": "Son hatalar",
+		"noErrors": "Hata yok",
+		"clearErrors": "Temizle",
+		"level": {
+			"connected": "Saat bağlı",
+			"standby": "Saat eşlendi",
+			"notInstalled": "Uygulama saatte yok",
+			"notPaired": "Eşlenmiş saat yok",
+			"inactive": "Bağlantı başlamadı"
+		},
+		"hint": {
+			"connected": "Uygulama saatte açık: her şey canlı senkronize ediliyor.",
+			"standby": "Uygulama saatte açık değil. Antrenman açılır açılmaz gönderilecek.",
+			"notInstalled": "Easy Gym'i iPhone'daki Watch uygulamasından saate yükle.",
+			"notPaired": "Antrenmanlarını bileğinden takip etmek için bu iPhone ile bir Apple Watch eşle.",
+			"inactive": "Saatle bağlantı henüz etkin değil. Devam ederse uygulamayı yeniden aç."
+		}
 	}
 }

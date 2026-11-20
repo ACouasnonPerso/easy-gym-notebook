@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "Reprendre une séance déjà faite",
 		"times": "Faite {{count}} fois",
-		"other": "Autre"
+		"other": "Autre",
+		"showMore": "Voir plus ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "Aucune donnée pour cet exercice",
@@ -291,6 +292,41 @@
 		"reset": "Réinitialiser",
 		"pause": "Pause",
 		"resume": "Reprendre",
-		"back": "Retour"
+		"back": "Retour",
+		"auto": "Auto",
+		"setLabel": "Série",
+		"finished": "TERMINÉ",
+		"doubleTapRestart": "Double tap : recommencer",
+		"setOver": "Série terminée",
+		"setOverBody": "Place au repos",
+		"exerciseFinished": "Exercice terminé",
+		"exerciseFinishedBody": "Toutes les séries sont faites"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "Appairée",
+		"appInstalled": "App installée",
+		"reachable": "App ouverte",
+		"lastSent": "Dernier envoi à la montre",
+		"lastReceived": "Dernière action reçue",
+		"pending": "Actions en attente",
+		"never": "Jamais",
+		"errors": "Erreurs récentes",
+		"noErrors": "Aucune erreur",
+		"clearErrors": "Effacer",
+		"level": {
+			"connected": "Montre connectée",
+			"standby": "Montre appairée",
+			"notInstalled": "App absente de la montre",
+			"notPaired": "Aucune montre appairée",
+			"inactive": "Connexion non démarrée"
+		},
+		"hint": {
+			"connected": "L'app est ouverte sur la montre : tout se synchronise en direct.",
+			"standby": "L'app n'est pas ouverte sur la montre. La séance lui sera envoyée dès son ouverture.",
+			"notInstalled": "Installe Easy Gym sur la montre depuis l'app Watch de l'iPhone.",
+			"notPaired": "Appaire une Apple Watch avec cet iPhone pour suivre tes séances au poignet.",
+			"inactive": "La connexion avec la montre n'est pas encore active. Rouvre l'app si ça dure."
+		}
 	}
 }

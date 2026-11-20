@@ -2,7 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { TranslateLoader, TranslateModule, TranslateService, TranslationObject } from "@ngx-translate/core";
 import { Observable, of } from "rxjs";
 import { WatchSyncService } from "./watch-sync.service";
-import { WatchAction, WatchSnapshot } from "./watch.models";
+import { WatchAction, WatchSnapshot, WatchStatus } from "./watch.models";
 import { Exercise, MuscleGroup, Session } from "../shared/models";
 import { SESSION_REPOSITORY } from "../../secondary_ports/session/session.repository.interface";
 import { EXERCISE_REPOSITORY } from "../../secondary_ports/exercise/exercise.repository.interface";
@@ -47,6 +47,11 @@ class FakeWatchGateway implements IWatchGateway {
 	onActionsAvailable(listener: () => void): void {
 		this.listener = listener;
 	}
+	async getStatus(): Promise<WatchStatus> {
+		throw new Error("not used");
+	}
+	async clearErrors(): Promise<void> {}
+	onStatusChanged(): void {}
 	get last(): WatchSnapshot {
 		return this.pushed[this.pushed.length - 1];
 	}

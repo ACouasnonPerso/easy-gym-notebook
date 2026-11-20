@@ -13,9 +13,15 @@ import WatchConnectivity
 final class WatchSessionManager: NSObject {
     static let shared = WatchSessionManager()
     static let actionsAvailableNotification = Notification.Name("EGNWatchActionsAvailable")
+    /// Posted when the connection state changes or an error is recorded (status screen).
+    static let statusChangedNotification = Notification.Name("EGNWatchStatusChanged")
 
     private let pendingActionsKey = "egn.watch.pendingActions"
     private let lastSnapshotKey = "egn.watch.lastSnapshot"
+    private let lastSnapshotSentAtKey = "egn.watch.lastSnapshotSentAt"
+    private let lastActionReceivedAtKey = "egn.watch.lastActionReceivedAt"
+    private let errorsKey = "egn.watch.errors"
+    private static let maxErrors = 10
     private let lock = NSLock()
     private let defaults = UserDefaults.standard
 
@@ -54,12 +60,79 @@ final class WatchSessionManager: NSObject {
         let payload: [String: Any] = ["snapshot": json]
         do {
             try session.updateApplicationContext(payload)
+            defaults.set(Date(), forKey: lastSnapshotSentAtKey)
+            postStatusChanged()
         } catch {
             NSLog("[EGNWatch] updateApplicationContext failed: \(error.localizedDescription)")
+            recordError("Sync: \(error.localizedDescription)")
         }
         if session.isReachable {
-            session.sendMessage(payload, replyHandler: nil, errorHandler: nil)
+            session.sendMessage(payload, replyHandler: nil) { [weak self] error in
+                self?.recordError("Message: \(error.localizedDescription)")
+            }
         }
+    }
+
+    // MARK: Status (shown on the iPhone, watch icon of the session list)
+
+    func status() -> [String: Any] {
+        var status: [String: Any] = [
+            "supported": WCSession.isSupported(),
+            "activation": "notActivated",
+            "paired": false,
+            "appInstalled": false,
+            "reachable": false,
+            "pendingActions": pendingActions().count,
+            "errors": recentErrors()
+        ]
+        if let date = defaults.object(forKey: lastSnapshotSentAtKey) as? Date {
+            status["lastSnapshotSentAt"] = Self.iso(date)
+        }
+        if let date = defaults.object(forKey: lastActionReceivedAtKey) as? Date {
+            status["lastActionReceivedAt"] = Self.iso(date)
+        }
+        guard WCSession.isSupported() else { return status }
+        let session = WCSession.default
+        switch session.activationState {
+        case .activated: status["activation"] = "activated"
+        case .inactive: status["activation"] = "inactive"
+        default: status["activation"] = "notActivated"
+        }
+        status["paired"] = session.isPaired
+        status["appInstalled"] = session.isWatchAppInstalled
+        status["reachable"] = session.isReachable
+        return status
+    }
+
+    /// Keeps the last errors (most recent first) so they can be shown on the iPhone.
+    func recordError(_ message: String) {
+        lock.lock()
+        var errors = defaults.array(forKey: errorsKey) as? [[String: String]] ?? []
+        errors.insert(["at": Self.iso(Date()), "message": message], at: 0)
+        defaults.set(Array(errors.prefix(Self.maxErrors)), forKey: errorsKey)
+        lock.unlock()
+        postStatusChanged()
+    }
+
+    func clearErrors() {
+        defaults.removeObject(forKey: errorsKey)
+        postStatusChanged()
+    }
+
+    private func recentErrors() -> [[String: String]] {
+        lock.lock()
+        defer { lock.unlock() }
+        return defaults.array(forKey: errorsKey) as? [[String: String]] ?? []
+    }
+
+    private func postStatusChanged() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Self.statusChangedNotification, object: nil)
+        }
+    }
+
+    private static func iso(_ date: Date) -> String {
+        ISO8601DateFormatter().string(from: date)
     }
 
     // MARK: Actions (watch -> iPhone)
@@ -110,19 +183,27 @@ final class WatchSessionManager: NSObject {
 
     private func handleIncoming(_ payload: [String: Any]) {
         if let action = payload["action"] as? String {
+            defaults.set(Date(), forKey: lastActionReceivedAtKey)
             enqueue(action: action)
+            postStatusChanged()
         }
     }
 }
 
 extension WatchSessionManager: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        if let error {
+            recordError("Activation: \(error.localizedDescription)")
+        }
         if activationState == .activated {
             sendLatestSnapshot()
         }
+        postStatusChanged()
     }
 
-    func sessionDidBecomeInactive(_ session: WCSession) {}
+    func sessionDidBecomeInactive(_ session: WCSession) {
+        postStatusChanged()
+    }
 
     func sessionDidDeactivate(_ session: WCSession) {
         // Switching to another paired watch: reactivate for the new one.
@@ -131,12 +212,14 @@ extension WatchSessionManager: WCSessionDelegate {
 
     func sessionWatchStateDidChange(_ session: WCSession) {
         sendLatestSnapshot()
+        postStatusChanged()
     }
 
     func sessionReachabilityDidChange(_ session: WCSession) {
         if session.isReachable {
             sendLatestSnapshot()
         }
+        postStatusChanged()
     }
 
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {

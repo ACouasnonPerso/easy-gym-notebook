@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "पिछला सत्र दोहराएं",
 		"times": "{{count}} बार किया",
-		"other": "अन्य"
+		"other": "अन्य",
+		"showMore": "और देखें ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "इस व्यायाम के लिए कोई डेटा नहीं",
@@ -254,5 +255,32 @@
 		"title": "एक टिप्पणी जोड़ें",
 		"placeholder": "इस व्यायाम के बारे में एक नोट लिखें...",
 		"save": "सहेजें"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "पेयर्ड",
+		"appInstalled": "ऐप इंस्टॉल है",
+		"reachable": "ऐप खुला है",
+		"lastSent": "घड़ी को आखिरी बार भेजा",
+		"lastReceived": "आखिरी प्राप्त क्रिया",
+		"pending": "लंबित क्रियाएँ",
+		"never": "कभी नहीं",
+		"errors": "हाल की त्रुटियाँ",
+		"noErrors": "कोई त्रुटि नहीं",
+		"clearErrors": "साफ़ करें",
+		"level": {
+			"connected": "घड़ी कनेक्टेड",
+			"standby": "घड़ी पेयर्ड",
+			"notInstalled": "घड़ी पर ऐप नहीं है",
+			"notPaired": "कोई घड़ी पेयर्ड नहीं",
+			"inactive": "कनेक्शन शुरू नहीं हुआ"
+		},
+		"hint": {
+			"connected": "घड़ी पर ऐप खुला है: सब कुछ लाइव सिंक होता है।",
+			"standby": "घड़ी पर ऐप खुला नहीं है। खुलते ही वर्कआउट भेज दिया जाएगा।",
+			"notInstalled": "iPhone के Watch ऐप से घड़ी पर Easy Gym इंस्टॉल करें।",
+			"notPaired": "कलाई पर वर्कआउट देखने के लिए इस iPhone से Apple Watch पेयर करें।",
+			"inactive": "घड़ी से कनेक्शन अभी सक्रिय नहीं है। ऐसा रहे तो ऐप फिर से खोलें।"
+		}
 	}
 }

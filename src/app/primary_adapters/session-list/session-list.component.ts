@@ -18,6 +18,7 @@ import { TipsBannerComponent } from "./tips-banner.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { ReviewService } from "../../core_logic/review/review.service";
 import { HapticService } from "../../core_logic/shared/haptic.service";
+import { WatchStatusButtonComponent } from "../watch-status/watch-status-button.component";
 
 const PAGE_SIZE = 20;
 
@@ -34,6 +35,7 @@ const PAGE_SIZE = 20;
 		TranslateModule,
 		LanguageSelectorComponent,
 		MassUnitSelectorComponent,
+		WatchStatusButtonComponent,
 	],
 	templateUrl: "./session-list.component.html",
 	styleUrl: "./session-list.component.scss",

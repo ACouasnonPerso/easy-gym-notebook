@@ -28,6 +28,7 @@ final class WatchWorkoutLauncher {
                 self.healthStore.startWatchApp(with: configuration) { _, error in
                     if let error {
                         NSLog("[EGNWatch] startWatchApp failed: \(error.localizedDescription)")
+                        WatchSessionManager.shared.recordError("Workout: \(error.localizedDescription)")
                     }
                 }
             }

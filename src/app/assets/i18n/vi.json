@@ -87,7 +87,8 @@
 	"sessionTemplates": {
 		"title": "Bắt đầu từ buổi tập trước",
 		"times": "Đã tập {{count}} lần",
-		"other": "Khác"
+		"other": "Khác",
+		"showMore": "Xem thêm ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "Không có dữ liệu cho bài tập này",
@@ -220,5 +221,32 @@
 		"us": "US"
 	},
 	"rating": {},
-	"comment": {}
+	"comment": {},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "Đã ghép đôi",
+		"appInstalled": "Đã cài ứng dụng",
+		"reachable": "Ứng dụng đang mở",
+		"lastSent": "Lần gửi gần nhất tới đồng hồ",
+		"lastReceived": "Thao tác nhận gần nhất",
+		"pending": "Thao tác đang chờ",
+		"never": "Chưa bao giờ",
+		"errors": "Lỗi gần đây",
+		"noErrors": "Không có lỗi",
+		"clearErrors": "Xóa",
+		"level": {
+			"connected": "Đồng hồ đã kết nối",
+			"standby": "Đồng hồ đã ghép đôi",
+			"notInstalled": "Chưa có ứng dụng trên đồng hồ",
+			"notPaired": "Chưa ghép đôi đồng hồ",
+			"inactive": "Chưa bắt đầu kết nối"
+		},
+		"hint": {
+			"connected": "Ứng dụng đang mở trên đồng hồ: mọi thứ đồng bộ trực tiếp.",
+			"standby": "Ứng dụng chưa mở trên đồng hồ. Buổi tập sẽ được gửi ngay khi mở.",
+			"notInstalled": "Cài Easy Gym lên đồng hồ từ ứng dụng Watch trên iPhone.",
+			"notPaired": "Ghép đôi Apple Watch với iPhone này để theo dõi buổi tập trên cổ tay.",
+			"inactive": "Kết nối với đồng hồ chưa hoạt động. Mở lại ứng dụng nếu vẫn vậy."
+		}
+	}
 }

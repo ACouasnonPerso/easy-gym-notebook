@@ -8,7 +8,7 @@
 				<span class="type-chip" [style]="typeStyle(type)">{{ typeLabel(type) }}</span>
 			</div>
 			<div class="template-list">
-				@for (template of type.templates; track template.sourceSessionId) {
+				@for (template of visibleTemplates(); track template.sourceSessionId) {
 					<button type="button" class="template-card" [disabled]="applying()" (click)="applyTemplate(template)">
 						<ul class="template-exercises">
 							@for (exercise of template.exercises; track $index) {
@@ -29,16 +29,26 @@
 					</button>
 				}
 			</div>
+			@if (hiddenTemplatesCount() > 0) {
+				<button type="button" class="show-more-btn" data-testid="show-more-templates" (click)="showMoreTemplates()">
+					{{ "sessionTemplates.showMore" | translate: { count: hiddenTemplatesCount() } }}
+				</button>
+			}
 		} @else {
 			<span class="suggestions-title">{{ "sessionTemplates.title" | translate }}</span>
 			<div class="type-list">
-				@for (type of sessionTypes(); track type.key) {
+				@for (type of visibleTypes(); track type.key) {
 					<button type="button" class="type-chip" [style]="typeStyle(type)" (click)="selectType(type)">
 						{{ typeLabel(type) }}
 						<span class="type-count">{{ type.occurrences }}</span>
 					</button>
 				}
 			</div>
+			@if (hiddenTypesCount() > 0) {
+				<button type="button" class="show-more-btn" data-testid="show-more-types" (click)="showMoreTypes()">
+					{{ "sessionTemplates.showMore" | translate: { count: hiddenTypesCount() } }}
+				</button>
+			}
 		}
 	</section>
 }

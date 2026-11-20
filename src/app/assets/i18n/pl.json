@@ -91,7 +91,8 @@
 	"sessionTemplates": {
 		"title": "Powtórz wcześniejszy trening",
 		"times": "Wykonano {{count}} razy",
-		"other": "Inne"
+		"other": "Inne",
+		"showMore": "Pokaż więcej ({{count}})"
 	},
 	"statsExercise": {
 		"empty": "Brak danych dla tego ćwiczenia",
@@ -254,5 +255,32 @@
 		"title": "Dodaj komentarz",
 		"placeholder": "Napisz notatkę na temat tego ćwiczenia...",
 		"save": "Zapisz"
+	},
+	"watchStatus": {
+		"title": "Apple Watch",
+		"paired": "Sparowany",
+		"appInstalled": "Aplikacja zainstalowana",
+		"reachable": "Aplikacja otwarta",
+		"lastSent": "Ostatnio wysłano do zegarka",
+		"lastReceived": "Ostatnia odebrana akcja",
+		"pending": "Oczekujące akcje",
+		"never": "Nigdy",
+		"errors": "Ostatnie błędy",
+		"noErrors": "Brak błędów",
+		"clearErrors": "Wyczyść",
+		"level": {
+			"connected": "Zegarek połączony",
+			"standby": "Zegarek sparowany",
+			"notInstalled": "Brak aplikacji na zegarku",
+			"notPaired": "Brak sparowanego zegarka",
+			"inactive": "Połączenie nie rozpoczęte"
+		},
+		"hint": {
+			"connected": "Aplikacja jest otwarta na zegarku: wszystko synchronizuje się na żywo.",
+			"standby": "Aplikacja nie jest otwarta na zegarku. Trening zostanie wysłany po jej otwarciu.",
+			"notInstalled": "Zainstaluj Easy Gym na zegarku z aplikacji Watch na iPhonie.",
+			"notPaired": "Sparuj Apple Watch z tym iPhonem, aby śledzić treningi na nadgarstku.",
+			"inactive": "Połączenie z zegarkiem nie jest jeszcze aktywne. Otwórz aplikację ponownie, jeśli to trwa."
+		}
 	}
 }
